@@ -23,7 +23,7 @@ export class SequenceEditor extends React.Component
     	this.textRows = [];
 	    jQuery("body").append(`<div id="bp1" style="display:inline-block" font="fontFamily:'Lucida Console, Monaco, monospace'" font-size="15">A</div>`);
 	    var width = document.getElementById('bp1').offsetWidth;
-	    console.log("bp1Size,",width);
+	    //console.log("bp1Size,",width);
 	    this.unitWidth = width;
 
 	}
@@ -31,7 +31,7 @@ export class SequenceEditor extends React.Component
 	isOverlap(a1,b1,a2,b2){
 		let a3 = Math.max(a1,a2);
 		let b3 = Math.min(b1,b2);
-		console.log(a1,a2,b1,b2);
+		//console.log(a1,a2,b1,b2);
 		if(a3<b3){
 			return {start:a3,end:b3}
 		}
@@ -42,16 +42,16 @@ export class SequenceEditor extends React.Component
 
 
 	findFeaturesInRow(start,len){
-		console.log("sss",start,len,this.props.features);
+		//console.log("sss",start,len,this.props.features);
 		let re = [];
 		for(let i in this.props.features){
 			let f = this.props.features[i];
 			let overlap = this.isOverlap(start,start+len,f.start,f.end)
 			if(overlap){
-				re.push({start:overlap.start,len:overlap.end-overlap.start,color:f.color,text:f.text});
+				re.push({start:overlap.start,len:overlap.end-overlap.start,color:f.color,text:f.text,textColor:f.textColor});
 			}
 		}
-		console.log(re);
+		//console.log(re);
 		return re;
 	}
 
@@ -69,13 +69,11 @@ export class SequenceEditor extends React.Component
 					features = {featureFrags}
 			        unitWidth={this.unitWidth}
     			>
-
 				</SequenceRow>);
     	}
     }
 
-
-    render(){
+	render(){
     	this.splitRows(50);
     	return (
     		<div>

@@ -237,7 +237,7 @@ export class OnionCommander extends React.Component {
                     <div>{this.state.mode}</div>
                       <div style={{display: 'flex', overflow: 'auto'}}>
                     
-                    {<PlasmidViewer
+                    {false & <PlasmidViewer
                         mode={this.state.mode}
                         plasmidR = {250}
                         width={1024}
@@ -259,7 +259,7 @@ export class OnionCommander extends React.Component {
                         onWheel={this.onPVWheel.bind(this)}
                      ></PlasmidViewer>}
                      </div>
-                     {false && <SequenceEditor
+                     {true && <SequenceEditor
                         sequence={onionFile.seq}
                         showComplement={true}
                         features={onionFile.features}

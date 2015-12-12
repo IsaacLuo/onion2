@@ -47,6 +47,7 @@ export class SequenceRow extends React.Component
 					strand = {feature.strand}
 					color = {feature.color}
 					text = {feature.text}
+					textColor = {feature.textColor}
 				    key={i}
 				>
 				</SequenceFeatureArrow>
@@ -86,7 +87,7 @@ export class SequenceRow extends React.Component
 	    		}}
 				x="0"
 				y="0"
-				ref="ccc"
+
 			>
 	    		{sequence}
 	    	</text>
@@ -102,12 +103,12 @@ export class SequenceRow extends React.Component
 	    		{this.complement(sequence)}
 	    	</text>}
     	</svg>
-		    <SequenceFeatureSVG
+		    <svg
 			    width={sequenceRowWidth}
 		        height={30}
 		    >
     	        {this.generateFeatures()}
-			    </SequenceFeatureSVG>
+			    </svg>
     	</div>
 
     	)

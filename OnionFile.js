@@ -1,7 +1,6 @@
 var onionFile = {
 		name:"pIB2-SEC13-mEGFP",
 		features : [
-			{start:1,end:52,strand:"+",row:0,color:"#FFFFFF",text:"test",textColor:"black",type:"promoter"},
 			{start:186,end:672,strand:"+",row:0,color:"#FFFFFF",text:"GAP promoter",textColor:"black",type:"promoter"}
 			,{start:690,end:1631,strand:"+",row:0,color:"rgb(153,51,102)",text:"SEC13",textColor:"yellow",type:"CDS",
 				segments:[
