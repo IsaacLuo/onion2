@@ -58,7 +58,7 @@ export class SequenceRow extends React.Component
 
 	calcCursorPos(e){
 		let thisDOM = this.refs.SequenceRow;
-		let clickedPos = (e.pageX - thisDOM.offsetLeft);
+		let clickedPos = (e.pageX - thisDOM.getBoundingClientRect().left+document.documentElement.scrollLeft);
 		let cursorPos = Math.round(clickedPos / this.props.unitWidth);
 		return cursorPos;
 	}
