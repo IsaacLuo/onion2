@@ -25,6 +25,12 @@ export class SequenceEditor extends React.Component
 	    var width = document.getElementById('bp1').offsetWidth;
 	    //console.log("bp1Size,",width);
 	    this.unitWidth = width;
+		this.state={
+			cursorPos:0,
+			selectStartPos:0,
+			showCursor:false,
+			showSelection:false
+		}
 
 	}
 
@@ -38,6 +44,14 @@ export class SequenceEditor extends React.Component
 		else {
 			return undefined;
 		}
+	}
+
+	componentWillMount(){
+
+	}
+
+	componentWillReceiveProps(nextProps){
+
 	}
 
 
@@ -55,21 +69,69 @@ export class SequenceEditor extends React.Component
 		return re;
 	}
 
+	onSetCursor(cursorPos,rowNumber){
+		console.log(cursorPos,rowNumber);
+		this.setState({cursorPos:cursorPos,showCursor:true,selectStartPos:cursorPos,showSelection:false});
+	}
+	onSelecting(cursorPos,rowNumber){
+		console.log(cursorPos,rowNumber);
+		this.setState({cursorPos:cursorPos,showCursor:true,showSelection:true});
+	}
+
 
 	splitRows(colNum=50){
     	let {sequence} = this.props;
+		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
     	this.textRows =[];
+		let j=0;
     	for(let i=0;i<sequence.length;i+=colNum){
 			let featureFrags = this.findFeaturesInRow(i,colNum);
-    		this.textRows.push(
-    			<SequenceRow
-    				sequence={sequence.substr(i,colNum)}
-    				idxStart={i}
-    				key={`sequenceRow_${i}`}
-					features = {featureFrags}
-			        unitWidth={this.unitWidth}
-    			>
-				</SequenceRow>);
+			let rowCursorPos,rowSelectStartPos;
+			if(cursorPos>selectStartPos) {
+				rowCursorPos = colNum;
+				rowSelectStartPos = 0;
+			}
+			else{
+				rowCursorPos = 0;
+				rowSelectStartPos = colNum;
+			}
+			let rowShowStartPos = false;
+			let rowShowCursor = false;
+			let rowShowSelection = false;
+			if(showCursor && cursorPos>i && cursorPos<=i+colNum) {
+				rowCursorPos = cursorPos - i;
+				rowShowCursor =true;
+				rowShowSelection = showSelection;
+			}
+			if(showSelection){
+				if(selectStartPos>i && selectStartPos<=i+colNum){
+					rowSelectStartPos = selectStartPos -i;
+					rowShowStartPos = true;
+					rowShowSelection = true;
+				}
+				if(i+colNum<=Math.max(selectStartPos,cursorPos) && i>=Math.min(selectStartPos,cursorPos)){
+					rowShowSelection = true;
+				}
+			}
+				this.textRows.push(
+					<SequenceRow
+						sequence={sequence.substr(i,colNum)}
+						idxStart={i}
+						key={`sequenceRow_${j}`}
+						rowNumber={j}
+						features={featureFrags}
+						unitWidth={this.unitWidth}
+						onSetCursor={this.onSetCursor.bind(this)}
+						onSetCursorMoving={this.onSelecting.bind(this)}
+						cursorPos={rowCursorPos}
+						showCursor={rowShowCursor}
+						selectStartPos={rowSelectStartPos}
+						showSelection={rowShowSelection}
+						showStartPos={rowShowStartPos}
+					>
+					</SequenceRow>);
+
+			j++;
     	}
     }
 

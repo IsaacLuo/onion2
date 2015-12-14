@@ -56,26 +56,71 @@ export class SequenceRow extends React.Component
 		return re;
 	}
 
+	calcCursorPos(e){
+		let thisDOM = this.refs.SequenceRow;
+		let clickedPos = (e.pageX - thisDOM.offsetLeft);
+		let cursorPos = Math.round(clickedPos / this.props.unitWidth);
+		return cursorPos;
+	}
+
+	onMouseDown(e) {
+		let cursorPos = this.calcCursorPos(e);
+		console.log(cursorPos);
+		//this.setState(cursorPos)
+		this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+	}
+	onMouseMove(e){
+		//if(this.mouseDownFlag){
+		if(e.buttons==1) {
+			let cursorPos = this.calcCursorPos(e);
+			this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
+		}
+		//}
+	}
+
+	onSelect(e){
+		console.log(this,e);
+	}
+
+	shouldComponentUpdate(np,nextState){
+		let a = JSON.stringify(this.props);
+		let b = JSON.stringify(np)
+		return a!=b;
+	}
+
     render(){
-    	let {sequence,fontFamily,showComplement,unitWidth} = this.props;
+    	let {sequence,fontFamily,showComplement,unitWidth,showCursor,cursorPos,idxStart,showSelection,selectStartPos,showStartPos} = this.props;
 
 
 		let textRows = 1;
+		let cols = sequence.length;
 		let sequenceRowWidth = sequence.length*unitWidth;
 			textRows = 2;
+
+		let height = textRows*16+10;
+
+		let cursorX =  cursorPos*unitWidth;
+		let cursor0 = selectStartPos*unitWidth;
+
+		let cursorLeft = Math.min(cursorX,cursor0);
+		let cursorRight = Math.max(cursorX,cursor0);
+
     	return(
     	<div
     		style={{
     			marginLeft:15,
     			marginBottom:15
     		}}
+			ref="SequenceRow"
     	>
     	<svg
-			width={sequenceRowWidth+10}
-			height={textRows*16}
+			width={sequenceRowWidth+50}
+			height={height}
 			style={{
 				display:"block"
 				}}
+			onMouseDown={this.onMouseDown.bind(this)}
+			onMouseMove={this.onMouseMove.bind(this)}
     	>
 	    	<text
 	    		style={{
@@ -83,11 +128,12 @@ export class SequenceRow extends React.Component
 	    			fontSize:15,
 	    			letterSpacing:0,
 	    			fill:"black",
-	    			alignmentBaseline:"before-edge"
+	    			alignmentBaseline:"before-edge",
+	    			WebkitUserSelect:"none"
 	    		}}
 				x="0"
-				y="0"
-
+				y="5"
+				onSelect={this.onSelect.bind(this)}
 			>
 	    		{sequence}
 	    	</text>
@@ -98,10 +144,66 @@ export class SequenceRow extends React.Component
 	    			alignmentBaseline:"before-edge",
 	    			WebkitUserSelect:"none"
 	    		}}
-				y="15"
+				y="20"
 	    	>
 	    		{this.complement(sequence)}
 	    	</text>}
+
+			{showCursor && cursorX<=sequenceRowWidth &&
+				<g>
+				<path
+					d={`M ${cursorX} 5 L ${cursorX-5} 0 L ${cursorX+5} 0 L ${cursorX} 5 L ${cursorX} ${height}`}
+					stroke="red"
+					strokeWidth="1"
+					fill="red"
+				>
+				</path>
+				<text
+					x={cursorX+3}
+					y={height}
+					fontSize="10"
+					fill="red"
+					style={{
+						WebkitUserSelect:"none"
+					}}
+				>
+					{cursorPos+idxStart}
+				</text>
+				</g>
+			}
+			{showStartPos && cursor0<=sequenceRowWidth &&
+			<g>
+				<path
+					d={`M ${cursor0} 5 L ${cursor0-5} 0 L ${cursor0+5} 0 L ${cursor0} 5 L ${cursor0} ${height}`}
+					stroke="red"
+					strokeWidth="1"
+					fill="#cc0000"
+				>
+				</path>
+				<text
+					x={cursor0+3}
+					y={height}
+					fontSize="10"
+					fill="#cc0000"
+					style={{
+						WebkitUserSelect:"none"
+					}}
+				>
+					{selectStartPos+idxStart}
+				</text>
+			</g>
+			}
+			{showSelection &&
+				<rect
+					x={cursorLeft}
+					y={0}
+					width={cursorRight-cursorLeft}
+					height={height}
+					fill="rgba(0,255,255,0.2)"
+				>
+
+				</rect>
+			}
     	</svg>
 		    <svg
 			    width={sequenceRowWidth}

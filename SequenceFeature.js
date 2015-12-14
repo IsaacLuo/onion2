@@ -73,6 +73,7 @@ export class SequenceFeatureArrow extends React.Component
                 >
                     {text}
                 </text>}
+
 			</g>
 		)
 	}
