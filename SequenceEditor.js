@@ -70,12 +70,18 @@ export class SequenceEditor extends React.Component
 	}
 
 	onSetCursor(cursorPos,rowNumber){
-		console.log(cursorPos,rowNumber);
+		//console.log(cursorPos,rowNumber);
 		this.setState({cursorPos:cursorPos,showCursor:true,selectStartPos:cursorPos,showSelection:false});
+		if(this.props.onSetCursor){
+			this.props.onSetCursor(cursorPos);
+		}
 	}
 	onSelecting(cursorPos,rowNumber){
-		console.log(cursorPos,rowNumber);
+		//console.log(cursorPos,rowNumber);
 		this.setState({cursorPos:cursorPos,showCursor:true,showSelection:true});
+		if(this.props.onSelecting){
+			this.props.onSelecting(cursorPos,this.state.selectStartPos);
+		}
 	}
 
 

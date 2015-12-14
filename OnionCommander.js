@@ -239,10 +239,8 @@ export class OnionCommander extends React.Component {
                     
                     {false & <PlasmidViewer
                         mode={this.state.mode}
-                        plasmidR = {250}
                         width={1024}
                         height={768}
-                        theme={this.state.theme}
                         theme={this.state.theme}
                         rotateAngle={this.state.rotateAngle}
                         plasmidR={this.state.plasmidR}

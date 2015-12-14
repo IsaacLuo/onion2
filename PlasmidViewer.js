@@ -8,7 +8,7 @@ import {PlasmidViewerCursorMeter,PlasmidViewerCursorGeneral} from './PlasmidView
 import {PlasmidViewerSelectionGeneral} from './PlasmidViewerSelection'
 import {PlasmidViewerVisibleArea} from './PlasmidViewerVisibleArea'
 
-class PlasmidViewer extends React.Component {
+export class PlasmidViewer extends React.Component {
 	
 	static defaultProps = {
 		width:500,
@@ -49,7 +49,7 @@ class PlasmidViewer extends React.Component {
 
 	render() {
 		var {width,height,mode} = this.props;
-		var {name,features,seqLength,rotateAngle,plasmidR,theme,selectedFeature,cursorPos,selectionStart,selectionLength} = this.props;
+		var {name,features,seqLength,rotateAngle,plasmidR,theme,selectedFeature,cursorPos,selectionStart,selectionLength,showViewAngle} = this.props;
 
 		var enzymes = this.props.enzymes;
 		let enzymeRootR = plasmidR;
@@ -120,7 +120,7 @@ class PlasmidViewer extends React.Component {
 								x={0}
 								y={0}
 								fontSize={16}
-								style={{dominantBaseline:"text-after-edge",textAnchor:"middle"}}
+								style={{dominantBaseline:"text-after-edge",textAnchor:"middle",WebkitUserSelect:"none",}}
 							>
 							{name}
 							</text>
@@ -128,7 +128,7 @@ class PlasmidViewer extends React.Component {
 								x={0}
 								y={0}
 								fontSize={10}
-								style={{dominantBaseline:"text-before-edge",textAnchor:"middle"}}
+								style={{dominantBaseline:"text-before-edge",textAnchor:"middle",WebkitUserSelect:"none",}}
 							>
 								{seqLength+" bp"}
 							</text>
@@ -254,11 +254,12 @@ class PlasmidViewer extends React.Component {
 							>
 							</FeatureGroup>}
 
-							<PlasmidViewerVisibleArea
+							{showViewAngle && <PlasmidViewerVisibleArea
 								angle={0}
 								angleSelected={120}
-								radius = {plasmidR-20}
+								radius={plasmidR-20}
 							></PlasmidViewerVisibleArea>
+							}
 							<g className="cursor">
 							<PlasmidViewerCursorMeter
 								angle={cursorPos*324/seqLength}
@@ -267,11 +268,11 @@ class PlasmidViewer extends React.Component {
 
 							</g>
 							<g className="selection">
-							<PlasmidViewerSelectionGeneral
+								{<PlasmidViewerSelectionGeneral
 								angle={selectionStart*324/seqLength}
 								angleSelected={selectionLength*324/seqLength}
 								radius = {plasmidR}
-							></PlasmidViewerSelectionGeneral>
+							></PlasmidViewerSelectionGeneral>}
 							</g>
 
 						</g>
@@ -289,6 +290,9 @@ class PlasmidViewer extends React.Component {
 				    			x="0"
 				    			y={plasmidR*0.618}
 				    			fill="black"
+								style={{
+								WebkitUserSelect:"none"
+								}}
 				    		>
 				    			{Math.round(cursorPos)}
 				    		</text>
@@ -378,5 +382,5 @@ class PlasmidViewer extends React.Component {
 	}
 }
 
-module.exports = PlasmidViewer;
+//module.exports = PlasmidViewer;
 

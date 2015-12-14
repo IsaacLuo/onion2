@@ -19,16 +19,16 @@ export class PlasmidViewerCursor extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState){
-    	console.log(nextProps,nextState);
+    	//console.log(nextProps,nextState);
     	if(nextProps.angle!=this.props.angle){ //upading angle
     		let targetAngle = nextProps.angle;
 			let nowAngle = this.state.angle;
 			this.angleD = (targetAngle-nowAngle)/20;
 			this.timerCount = 0;
-			console.log("newTarget");
+			//console.log("newTarget");
     		if(this.updateInterval==undefined){
 	    		this.updateInterval = setInterval(()=>{
-	    			console.log(`anlgeD=${this.angleD},${this.timerCount}`);
+	    			//console.log(`anlgeD=${this.angleD},${this.timerCount}`);
 	    			this.timerCount++;
 	    			let nowAngle = this.state.angle;
 					let nextAngle;
@@ -51,7 +51,7 @@ export class PlasmidViewerCursor extends React.Component {
     componentDidUpdate(){
     	if(this.state.angle==this.props.angle){
     		clearInterval(this.updateInterval);
-    		console.log("cleaned");
+    		//console.log("cleaned");
     		this.updateInterval = undefined;
     	}
     }

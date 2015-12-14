@@ -65,7 +65,7 @@ export class SequenceRow extends React.Component
 
 	onMouseDown(e) {
 		let cursorPos = this.calcCursorPos(e);
-		console.log(cursorPos);
+		//console.log(cursorPos);
 		//this.setState(cursorPos)
 		this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
 	}
@@ -79,7 +79,7 @@ export class SequenceRow extends React.Component
 	}
 
 	onSelect(e){
-		console.log(this,e);
+		//console.log(this,e);
 	}
 
 	shouldComponentUpdate(np,nextState){

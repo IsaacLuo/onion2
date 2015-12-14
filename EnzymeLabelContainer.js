@@ -85,7 +85,7 @@ export class EnzymeLabelContainer extends React.Component
 				for(let j in enzymePos.items){
 					names+=` ${enzymePos.items[j].name}`
 				}
-				console.log(enzymePos.items[0].rootPos)
+				//console.log(enzymePos.items[0].rootPos)
 				this.textPath.push(this.genTextPath(enzymePos.items[0].rootPos.x, enzymePos.items[0].rootPos.y, enzymePos.x, enzymePos.y,100,Math.random()+i,names));
 			}
 		}

@@ -293,7 +293,7 @@ export class Feature extends React.Component {
 				<text
 					fill={strokeColor}
 					textAnchor = {anchor}
-					style={{dominantBaseline:"central",cursor:"default"}}
+					style={{dominantBaseline:"central",cursor:"default",WebkitUserSelect:"none",}}
 				>
 				<textPath
 					featureID = {this.props.featureID}
