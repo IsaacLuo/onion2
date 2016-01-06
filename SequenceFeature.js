@@ -29,7 +29,8 @@ export class SequenceFeatureArrow extends React.Component
 	render(){
 		let {unitWidth,height,len,start,color,text,textColor} = this.props;
 		let width = unitWidth*len;
-        let fontFamily = 'Lucida Console, Monaco, monospace';
+        let fontFamily = 'Cousine';
+		let fontSize = 12;
         let titleOpacity,textAnchor;
         if( len>text.length){
             titleOpacity = 1;
@@ -61,7 +62,7 @@ export class SequenceFeatureArrow extends React.Component
                 {<text
                     style={{
                     fontFamily:fontFamily,
-                    fontSize:15,
+                    fontSize:fontSize,
                     fill:finalTextColor,
                     alignmentBaseline:"middle",
                     WebkitUserSelect:"none",

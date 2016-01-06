@@ -12,10 +12,16 @@ export class SequenceRow extends React.Component
         sequence:"NOTHING",
         features:[],
         enzymes:[],
-        fontFamily:'Lucida Console, Monaco, monospace',
+        fontFamily:'Cousine,Monospace',
+		fontSize:12,
         showComplement:true,
         showFeatures:true,
         showEnzymes:true,
+		showRuler:true,
+		showRuler2:true,
+		cursorColor:"#4E77BA",
+		selectionColor:"#EDF2F8",
+		featureHeight:18,
     };
 
     constructor(props){
@@ -87,9 +93,38 @@ export class SequenceRow extends React.Component
 		let b = JSON.stringify(np)
 		return a!=b;
 	}
+	generateRuler(x,y,w,h,unitWidth){
+		let my = y+h/2;
+		let re = `M ${x} ${my} L ${x+w} ${my}`;
+		for(let xx=x;xx<x+w;xx+=unitWidth) {
+			re += `M ${xx} ${y+4} L ${xx} ${y+h-4}`;
+		}
+		return re;
+	}
+	generateRuler2(x,y,w,h,d){
+		let re = `M ${x} ${y} L ${x+w} ${y}`;
+		for(let xx=x+d;xx<x+w-d;xx+=d){
+			re+= `M ${xx} ${y} L ${xx} ${y+h}`
+		}
+		return re;
+	}
 
     render(){
-    	let {sequence,fontFamily,showComplement,unitWidth,showCursor,cursorPos,idxStart,showSelection,selectStartPos,showStartPos} = this.props;
+    	let {sequence,
+			showComplement,
+			unitWidth,
+			showCursor,
+			cursorPos,
+			idxStart,
+			showSelection,
+			selectStartPos,
+			showStartPos,
+			seqMainStyle,
+			seqCompStyle,
+			showRuler,
+			showRuler2,
+			cursorColor,
+			} = this.props;
 
 
 		let textRows = 1;
@@ -97,13 +132,51 @@ export class SequenceRow extends React.Component
 		let sequenceRowWidth = sequence.length*unitWidth;
 			textRows = 2;
 
-		let height = textRows*16+10;
+		let unitHeight = 13.5;
+		let height = textRows*16+15+15;
 
 		let cursorX =  cursorPos*unitWidth;
 		let cursor0 = selectStartPos*unitWidth;
 
 		let cursorLeft = Math.min(cursorX,cursor0);
 		let cursorRight = Math.max(cursorX,cursor0);
+
+
+		let elementPoses = ()=>{
+			let re = {};
+			let y = 0;
+			re.selectionY = y;
+			y+=5;
+			re.seqY = 5;
+			y+=unitHeight;
+			re.seqH = unitHeight;
+			re.rulerY = y;
+			y+=15;
+			re.rulerH = 15;
+			re.compY = y;
+			y+=unitHeight;
+			re.compH = unitHeight;
+			y+=15;
+			re.featureY = y;
+			re.featureH = this.props.featureHeight;
+			y+=re.featureH;
+			y+=10;
+
+			re.selectionH = y;
+
+			re.ruler2Y = y;
+			re.ruler2H = 10;
+			y+=10;
+
+
+			y+=20;
+			re.totalH = y;
+			return re;
+		}();
+
+		let ep = elementPoses;
+
+		height = ep.totalH;
 
     	return(
     	<div
@@ -122,49 +195,69 @@ export class SequenceRow extends React.Component
 			onMouseDown={this.onMouseDown.bind(this)}
 			onMouseMove={this.onMouseMove.bind(this)}
     	>
+			{showSelection &&
+			<rect
+				x={cursorLeft}
+				y={0}
+				width={cursorRight-cursorLeft}
+				height={ep.selectionH}
+				fill={this.props.selectionColor}
+			>
+			</rect>
+			}
+
 	    	<text
-	    		style={{
-	    			fontFamily:fontFamily,
-	    			fontSize:15,
+	    		style={
+	    			Object.assign(seqMainStyle,{
 	    			letterSpacing:0,
-	    			fill:"black",
 	    			alignmentBaseline:"before-edge",
 	    			WebkitUserSelect:"none"
-	    		}}
+	    		})}
 				x="0"
-				y="5"
+				y={ep.seqY}
 				onSelect={this.onSelect.bind(this)}
 			>
 	    		{sequence}
 	    	</text>
 	    	{showComplement && <text
-	    		style={{fontFamily:fontFamily,
-	    			fontSize:15,
-	    			fill:"grey",
+	    		style={
+	    			Object.assign(seqCompStyle,{
+	    			letterSpacing:0,
 	    			alignmentBaseline:"before-edge",
 	    			WebkitUserSelect:"none"
-	    		}}
-				y="20"
+	    		})}
+				x="0"
+				y={ep.compY}
 	    	>
 	    		{this.complement(sequence)}
 	    	</text>}
 
+			{showRuler && <path
+				d={this.generateRuler(0,ep.rulerY,sequenceRowWidth,ep.rulerH,unitWidth)}
+				stroke-width="1"
+				stroke="#E6E7E8"
+			>
+			</path>
+			}
+
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>
 				<path
-					d={`M ${cursorX} 5 L ${cursorX-5} 0 L ${cursorX+5} 0 L ${cursorX} 5 L ${cursorX} ${height}`}
-					stroke="red"
+					d={`M ${cursorX} 5 L ${cursorX-5} 0 L ${cursorX+5} 0 L ${cursorX} 5 L ${cursorX} ${ep.selectionH}`}
+					stroke={this.props.cursorColor}
 					strokeWidth="1"
-					fill="red"
+					fill={this.props.cursorColor}
 				>
 				</path>
 				<text
 					x={cursorX+3}
-					y={height}
-					fontSize="10"
-					fill="red"
+					y={ep.selectionH}
+
+					fill={this.props.cursorColor}
 					style={{
-						WebkitUserSelect:"none"
+						WebkitUserSelect:"none",
+						fontSize:10,
+
 					}}
 				>
 					{cursorPos+idxStart}
@@ -174,36 +267,38 @@ export class SequenceRow extends React.Component
 			{showStartPos && cursor0<=sequenceRowWidth &&
 			<g>
 				<path
-					d={`M ${cursor0} 5 L ${cursor0-5} 0 L ${cursor0+5} 0 L ${cursor0} 5 L ${cursor0} ${height}`}
-					stroke="red"
+					d={`M ${cursor0} 5 L ${cursor0-5} 0 L ${cursor0+5} 0 L ${cursor0} 5 L ${cursor0} ${ep.selectionH}`}
+					stroke={this.props.cursorColor}
 					strokeWidth="1"
-					fill="#cc0000"
+					fill={this.props.cursorColor}
 				>
 				</path>
 				<text
 					x={cursor0+3}
-					y={height}
-					fontSize="10"
-					fill="#cc0000"
+					y={ep.selectionH}
+					fill={this.props.cursorColor}
 					style={{
-						WebkitUserSelect:"none"
+						WebkitUserSelect:"none",
+						fontSize:10,
 					}}
 				>
 					{selectStartPos+idxStart}
 				</text>
 			</g>
 			}
-			{showSelection &&
-				<rect
-					x={cursorLeft}
-					y={0}
-					width={cursorRight-cursorLeft}
-					height={height}
-					fill="rgba(0,255,255,0.2)"
-				>
+			{showRuler2 &&
+				<g>
+					<path
+						d={this.generateRuler2(0,ep.ruler2Y,sequenceRowWidth,ep.ruler2H,10*unitWidth)}
+						stroke="#D8D9D8"
+						stroke-width="1"
+					></path>
 
-				</rect>
+				</g>
 			}
+
+
+
     	</svg>
 		    <svg
 			    width={sequenceRowWidth}

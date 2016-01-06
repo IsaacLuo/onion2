@@ -21,16 +21,41 @@ export class SequenceEditor extends React.Component
     constructor(props){
     	super(props)
     	this.textRows = [];
-	    jQuery("body").append(`<div id="bp1" style="display:inline-block" font="fontFamily:'Lucida Console, Monaco, monospace'" font-size="15">A</div>`);
-	    var width = document.getElementById('bp1').offsetWidth;
-	    //console.log("bp1Size,",width);
-	    this.unitWidth = width;
+		this.mycss = {
+			seqFontFamily : 'Cousine,Monospace',
+			seqFontSize : 12,
+			seqFontUnitWidth:7.203125
+		}
+		this.seqMainStyleStr = `display:inline-block;font-family:${this.mycss.seqFontFamily};font-size:${this.mycss.seqFontSize};color:'#2C3543';letterSpacing:0`;
+		this.seqMainStyle = {
+			display: "inline-block",
+			fontFamily: this.mycss.seqFontFamily,
+			fontSize: this.mycss.seqFontSize,
+			fill: '#2C3543'
+		}
+		this.seqCompStyle = {
+			display: "inline-block",
+			fontFamily: this.mycss.seqFontFamily,
+			fontSize: this.mycss.seqFontSize,
+			fill: '#B7BBC2'
+		}
+
+	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>`);
+		jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
+
+		//jQuery("body").append(<div id="bp1" style={this.seqMainStyle}>A</div>);
+	    var width = document.getElementById('bp1').getBoundingClientRect().width;
+	    //console.log("bp1Size,",jQuery("#bp1").width());
+		console.log("unitWidth",width);
+	    this.unitWidth = this.mycss.seqFontUnitWidth;
 		this.state={
 			cursorPos:0,
 			selectStartPos:0,
 			showCursor:false,
 			showSelection:false
 		}
+
+
 
 	}
 
@@ -134,6 +159,8 @@ export class SequenceEditor extends React.Component
 						selectStartPos={rowSelectStartPos}
 						showSelection={rowShowSelection}
 						showStartPos={rowShowStartPos}
+						seqMainStyle={this.seqMainStyle}
+						seqCompStyle={this.seqCompStyle}
 					>
 					</SequenceRow>);
 
