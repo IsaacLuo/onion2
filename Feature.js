@@ -277,7 +277,7 @@ export class Feature extends React.Component {
 			>
 				<path
 					d={arrowD}
-					strokeWidth={1}
+					strokeWidth={0}
 					stroke={strokeColor}
 					fill={this.props.color}
 				>

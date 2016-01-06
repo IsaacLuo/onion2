@@ -1,17 +1,17 @@
 var onionFile = {
 		name:"pIB2-SEC13-mEGFP",
 		features : [
-			{start:186,end:672,strand:"+",row:0,color:"#FFFFFF",text:"GAP promoter",textColor:"black",type:"promoter"}
-			,{start:690,end:1631,strand:"+",row:0,color:"rgb(153,51,102)",text:"SEC13",textColor:"yellow",type:"CDS",
+			{start:186,end:672,strand:"+",row:0,color:"#C5C4C1",text:"GAP promoter",textColor:"black",type:"promoter"}
+			,{start:690,end:1631,strand:"+",row:0,color:"#D28482",text:"SEC13",textColor:"yellow",type:"CDS",
 				segments:[
-					{start:690,end:693,name:"name1",color:"rgb(153,51,102)"},
-					{start:767,end:1631,name:"name2",color:"rgb(153,51,102)"}
+					{start:690,end:693,name:"name1",color:"#D28482"},
+					{start:767,end:1631,name:"name2",color:"#D28482"}
 				]}
-			,{start:1652,end:2372,strand:"+",row:0,color:"#00FF00",text:"mEGFP",textColor:"black",type:"CDS"}
-			,{start:2758,end:3347,strand:"-",row:0,color:"#FFFF00",text:"ori",textColor:"black",type:"rep_origin"}
-			,{start:2481,end:2696,strand:".",row:0,color:"#FFFFFF",text:"AOX1 Terminator",textColor:"black",type:"terminator"}
-			,{start:3517,end:4378,strand:"-",row:0,color:"rgb(204,255,204)",text:"AmpR",textColor:"black",type:"CDS"}
-			,{start:4477,end:7012,strand:"+",row:0,color:"#FF8800",text:"PpHIS4",textColor:"black",type:"CDS"}
+			,{start:1652,end:2372,strand:"+",row:0,color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"}
+			,{start:2758,end:3347,strand:"-",row:0,color:"#C5C4C1",text:"ori",textColor:"black",type:"rep_origin"}
+			,{start:2481,end:2696,strand:".",row:0,color:"#EFAC7E",text:"AOX1 Terminator",textColor:"black",type:"terminator"}
+			,{start:3517,end:4378,strand:"-",row:0,color:"#8EC78D",text:"AmpR",textColor:"black",type:"CDS"}
+			,{start:4477,end:7012,strand:"+",row:0,color:"#EFAC7E",text:"PpHIS4",textColor:"black",type:"CDS"}
 			//,{start:7013,end:112,strand:".",row:0,color:"#FF8800",text:"PpHIS4",textColor:"black",isORF:false,type:"CDS"}
 			//,{start:4433,end:5299,strand:"+",row:0,color:"#000000",text:"Test05",textColor:"white",isORF:false}
 			//,{start:5233,end:6649,strand:"-",row:0,color:"#FFaaaa",text:"Test06",textColor:"black",isORF:false}

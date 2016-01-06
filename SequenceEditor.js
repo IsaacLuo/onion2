@@ -23,21 +23,27 @@ export class SequenceEditor extends React.Component
     	this.textRows = [];
 		this.mycss = {
 			seqFontFamily : 'Cousine,Monospace',
-			seqFontSize : 12,
-			seqFontUnitWidth:7.203125
+			seqFontSize : 16,
+			seqFontUnitWidth:10,//9.609375,
 		}
 		this.seqMainStyleStr = `display:inline-block;font-family:${this.mycss.seqFontFamily};font-size:${this.mycss.seqFontSize};color:'#2C3543';letterSpacing:0`;
 		this.seqMainStyle = {
 			display: "inline-block",
 			fontFamily: this.mycss.seqFontFamily,
 			fontSize: this.mycss.seqFontSize,
-			fill: '#2C3543'
+			fill: '#2C3543',
+			letterSpacing:(10-9.609375),
+			alignmentBaseline:"before-edge",
+			WebkitUserSelect:"none"
 		}
 		this.seqCompStyle = {
 			display: "inline-block",
 			fontFamily: this.mycss.seqFontFamily,
 			fontSize: this.mycss.seqFontSize,
-			fill: '#B7BBC2'
+			fill: '#B7BBC2',
+			letterSpacing:(10-9.609375),
+			alignmentBaseline:"before-edge",
+			WebkitUserSelect:"none"
 		}
 
 	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>`);

@@ -11,7 +11,8 @@ export class SequenceFeatureArrow extends React.Component
 	};
 	static defaultProps = {
 		height:20,
-		width:0
+		width:0,
+		y:0,
 	};
 
 	constructor(props){
@@ -49,6 +50,7 @@ export class SequenceFeatureArrow extends React.Component
 			<g
                 onMouseEnter={this.onMouseEnter.bind(this)}
                 onMouseLeave={this.onMouseLeave.bind(this)}
+				transform={`translate(0,${this.props.y})`}
             >
 				<rect
 					x={unitWidth*start}
@@ -56,14 +58,14 @@ export class SequenceFeatureArrow extends React.Component
 					width={width}
 					height={height}
 					stroke={stroke}
-					strokeWidth="1"
+					strokeWidth="0"
 					fill={color}
 				></rect>
                 {<text
                     style={{
                     fontFamily:fontFamily,
                     fontSize:fontSize,
-                    fill:finalTextColor,
+                    fill:"black",
                     alignmentBaseline:"middle",
                     WebkitUserSelect:"none",
                     textAnchor:textAnchor,
