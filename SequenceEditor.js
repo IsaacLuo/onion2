@@ -58,7 +58,7 @@ export class SequenceEditor extends React.Component
 			cursorPos:0,
 			selectStartPos:0,
 			showCursor:false,
-			showSelection:false
+			showSelection:false,
 		}
 
 
@@ -119,8 +119,19 @@ export class SequenceEditor extends React.Component
 	splitRows(colNum=50){
     	let {sequence} = this.props;
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
+
     	this.textRows =[];
 		let j=0;
+		if(showSelection){
+			if(cursorPos == selectStartPos){
+				showCursor = true;
+				showSelection = false;
+			}
+			else {
+				showCursor = false;
+			}
+		}
+
     	for(let i=0;i<sequence.length;i+=colNum){
 			let featureFrags = this.findFeaturesInRow(i,colNum);
 			let rowCursorPos,rowSelectStartPos;
@@ -135,20 +146,36 @@ export class SequenceEditor extends React.Component
 			let rowShowStartPos = false;
 			let rowShowCursor = false;
 			let rowShowSelection = false;
+
+			let rowSelectLeftPos = 0;
+			let rowSelectRightPos = colNum;
+			let rowShowLeftCursor = false;
+			let rowShowRightCursor = false;
+
 			if(showCursor && cursorPos>i && cursorPos<=i+colNum) {
 				rowCursorPos = cursorPos - i;
 				rowShowCursor =true;
-				rowShowSelection = showSelection;
+				rowShowSelection = false;
 			}
 			if(showSelection){
-				if(selectStartPos>i && selectStartPos<=i+colNum){
-					rowSelectStartPos = selectStartPos -i;
-					rowShowStartPos = true;
+				let selectLeftPos = Math.min(selectStartPos,cursorPos);
+				let selectRightPos = Math.max(selectStartPos,cursorPos);
+				rowShowCursor = false;
+				if(selectLeftPos>=i && selectLeftPos<=i+colNum){
+					rowSelectLeftPos = selectLeftPos -i;
+					rowShowLeftCursor = true;
 					rowShowSelection = true;
 				}
-				if(i+colNum<=Math.max(selectStartPos,cursorPos) && i>=Math.min(selectStartPos,cursorPos)){
+				if(selectRightPos>i && selectRightPos<=i+colNum){
+					rowSelectRightPos = selectRightPos -i;
+					rowShowRightCursor = true;
 					rowShowSelection = true;
 				}
+				if(i+colNum<=selectRightPos && i>=selectLeftPos){
+					console.log(i);
+					rowShowSelection = true;
+				}
+
 			}
 				this.textRows.push(
 					<SequenceRow
@@ -162,7 +189,10 @@ export class SequenceEditor extends React.Component
 						onSetCursorMoving={this.onSelecting.bind(this)}
 						cursorPos={rowCursorPos}
 						showCursor={rowShowCursor}
-						selectStartPos={rowSelectStartPos}
+						selectLeftPos={rowSelectLeftPos}
+						selectRightPos={rowSelectRightPos}
+						showLeftCursor={rowShowLeftCursor}
+						showRightCursor={rowShowRightCursor}
 						showSelection={rowShowSelection}
 						showStartPos={rowShowStartPos}
 						seqMainStyle={this.seqMainStyle}

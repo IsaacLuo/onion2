@@ -135,6 +135,10 @@ export class SequenceRow extends React.Component
 			showRuler,
 			showRuler2,
 			cursorColor,
+			selectLeftPos,
+			selectRightPos,
+			showLeftCursor,
+			showRightCursor,
 			ruler2d,
 			} = this.props;
 
@@ -150,9 +154,13 @@ export class SequenceRow extends React.Component
 		let cursorX =  cursorPos*unitWidth;
 		let cursor0 = selectStartPos*unitWidth;
 
-		let cursorLeft = Math.min(cursorX,cursor0);
-		let cursorRight = Math.max(cursorX,cursor0);
+		let cursorLeft = selectLeftPos*unitWidth;
+		let cursorRight = selectRightPos*unitWidth;
 
+		let showRightCursorText = true;
+		if(selectRightPos-selectLeftPos<4){
+			showRightCursorText = false;
+		}
 
 		let elementPoses = ()=>{
 			let re = {};
@@ -257,34 +265,36 @@ export class SequenceRow extends React.Component
 					fill={this.props.cursorColor}
 				>
 				</path>
-				<text
-					x={cursorX}
-					y={ep.selectionH}
 
-					fill={this.props.cursorColor}
-					style={{
+						<text
+							x={cursorX}
+							y={ep.selectionH}
+
+							fill={this.props.cursorColor}
+							style={{
 						WebkitUserSelect:"none",
 						fontSize:13,
 						alignmentBaseline:"before-edge",
 						textAnchor:"middle",
 
 					}}
-				>
-					{cursorPos+idxStart+1}
-				</text>
+						>
+							{cursorPos + idxStart}
+						</text>
+
 				</g>
 			}
-			{showStartPos && cursor0<=sequenceRowWidth &&
+			{showLeftCursor  &&
 			<g>
 				<path
-					d={`M ${cursor0} 5 L ${cursor0-1} 0 L ${cursor0+1} 0 L ${cursor0} 5 L ${cursor0} ${ep.selectionH}`}
+					d={`M ${cursorLeft} 5 L ${cursorLeft-1} 0 L ${cursorLeft+1} 0 L ${cursorLeft} 5 L ${cursorLeft} ${ep.selectionH}`}
 					stroke={this.props.cursorColor}
 					strokeWidth="2"
 					fill={this.props.cursorColor}
 				>
 				</path>
 				<text
-					x={cursor0}
+					x={cursorLeft+unitWidth/2}
 					y={ep.selectionH}
 					fill={this.props.cursorColor}
 					style={{
@@ -294,8 +304,36 @@ export class SequenceRow extends React.Component
 						textAnchor:"middle",
 					}}
 				>
-					{selectStartPos+idxStart+1}
+					{selectLeftPos + idxStart + 1}
 				</text>
+			</g>
+			}
+			{showRightCursor &&
+			<g>
+				<path
+					d={`M ${cursorRight} 5 L ${cursorRight-1} 0 L ${cursorRight+1} 0 L ${cursorRight} 5 L ${cursorRight} ${ep.selectionH}`}
+					stroke={this.props.cursorColor}
+					strokeWidth="2"
+					fill={this.props.cursorColor}
+				>
+				</path>
+				{showRightCursorText &&
+				<text
+					x={cursorRight-unitWidth/2}
+					y={ep.selectionH}
+
+					fill={this.props.cursorColor}
+					style={{
+						WebkitUserSelect:"none",
+						fontSize:13,
+						alignmentBaseline:"before-edge",
+						textAnchor:"middle",
+
+					}}
+				>
+					{selectRightPos + idxStart}
+				</text>
+				}
 			</g>
 			}
 			{showRuler2 &&
