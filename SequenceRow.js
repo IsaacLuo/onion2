@@ -270,7 +270,7 @@ export class SequenceRow extends React.Component
 
 					}}
 				>
-					{cursorPos+idxStart}
+					{cursorPos+idxStart+1}
 				</text>
 				</g>
 			}
@@ -294,7 +294,7 @@ export class SequenceRow extends React.Component
 						textAnchor:"middle",
 					}}
 				>
-					{selectStartPos+idxStart}
+					{selectStartPos+idxStart+1}
 				</text>
 			</g>
 			}

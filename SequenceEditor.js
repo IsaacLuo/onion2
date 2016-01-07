@@ -26,7 +26,7 @@ export class SequenceEditor extends React.Component
 			seqFontSize : 16,
 			seqFontUnitWidth:10,//9.609375,
 		}
-		this.seqMainStyleStr = `display:inline-block;font-family:${this.mycss.seqFontFamily};font-size:${this.mycss.seqFontSize};color:'#2C3543';letterSpacing:0`;
+		this.seqMainStyleStr = `display:inline-block;font-family:${this.mycss.seqFontFamily};font-size:${this.mycss.seqFontSize};color:'#2C3543';letterSpacing:0;position:absolute;left:0px;top:-100px`;
 		this.seqMainStyle = {
 			display: "inline-block",
 			fontFamily: this.mycss.seqFontFamily,

@@ -60,7 +60,7 @@ export class RulerLocation extends React.Component
 					WebkitUserSelect:"none",
 				}}
 			>
-				{texts[i]}
+				{texts[i]+1}
 			</text>);
 		}
 		return re;
