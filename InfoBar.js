@@ -47,10 +47,10 @@ export class InfoBar extends React.Component
 
 		let dna = new DNA(seq);
 		let gc = dna.getGCPercentage();
-		let tm = dna.getTM();
-
-
-
+		let tm = 0;
+		if(length=>10 && length<=50) {
+			tm = dna.getTM();
+		}
 
 		return (
 			<div
@@ -70,14 +70,14 @@ export class InfoBar extends React.Component
 					<div
 						style={itemStyle}
 					>
-						end: {endPos}
+						end: {length>0?endPos:"-"}
 					</div>
 				}
 				{showLength &&
 					<div
 						style={itemStyle}
 					>
-					length: {endPos-startPos}bp
+					length: {length}bp
 					</div>
 				}
 				{showGC &&
@@ -91,7 +91,7 @@ export class InfoBar extends React.Component
 				<div
 					style={itemStyle}
 				>
-					TM: {tm.toFixed(1)}°C
+					TM: {length>=10 && length<=50? tm.toFixed(1)+"°C":"-"}
 				</div>
 				}
 			</div>

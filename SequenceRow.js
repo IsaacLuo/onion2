@@ -24,6 +24,7 @@ export class SequenceRow extends React.Component
 		selectionColor:"#EDF2F8",
 		featureHeight:18,
 		ruler2d:10,
+		translateX:10,
     };
 
     constructor(props){
@@ -68,7 +69,12 @@ export class SequenceRow extends React.Component
 	calcCursorPos(e){
 		let thisDOM = this.refs.SequenceRow;
 		let clickedPos = (e.pageX - thisDOM.getBoundingClientRect().left+document.documentElement.scrollLeft);
+		clickedPos-=this.props.translateX;
 		let cursorPos = Math.round(clickedPos / this.props.unitWidth);
+		let seqLen = this.props.sequence.length;
+		if(cursorPos>=seqLen){
+			cursorPos = seqLen;
+		}
 		return cursorPos;
 	}
 
@@ -214,6 +220,10 @@ export class SequenceRow extends React.Component
 			onMouseDown={this.onMouseDown.bind(this)}
 			onMouseMove={this.onMouseMove.bind(this)}
     	>
+			<g
+				id="mainArea"
+				transform="translate(10,0)"
+			>
 			{showSelection &&
 			<rect
 				x={cursorLeft}
@@ -354,8 +364,7 @@ export class SequenceRow extends React.Component
 				>
 				</RulerLocation>
 			}
-
-
+		</g>
 
 
     	</svg>

@@ -152,7 +152,7 @@ export class SequenceEditor extends React.Component
 			let rowShowLeftCursor = false;
 			let rowShowRightCursor = false;
 
-			if(showCursor && cursorPos>i && cursorPos<=i+colNum) {
+			if(showCursor && cursorPos>=i && cursorPos<=i+colNum) {
 				rowCursorPos = cursorPos - i;
 				rowShowCursor =true;
 				rowShowSelection = false;
