@@ -105,7 +105,7 @@ export class SequenceRow extends React.Component
 	generateRuler(x,y,w,h,unitWidth){
 		let my = y+h/2;
 		let re = `M ${x} ${my} L ${x+w} ${my}`;
-		for(let xx=x;xx<x+w;xx+=unitWidth) {
+		for(let xx=x+unitWidth/2;xx<x+w;xx+=unitWidth) {
 			re += `M ${xx} ${y+4} L ${xx} ${y+h-4}`;
 		}
 		return re;
@@ -258,7 +258,7 @@ export class SequenceRow extends React.Component
 
 			{showRuler && <path
 				d={this.generateRuler(0,ep.rulerY,sequenceRowWidth,ep.rulerH,unitWidth)}
-				stroke-width="1"
+				strokeWidth="1"
 				stroke="#E6E7E8"
 			>
 			</path>
@@ -275,23 +275,6 @@ export class SequenceRow extends React.Component
 					fill={this.props.cursorColor}
 				>
 				</path>
-
-						<text
-							x={cursorX}
-							y={ep.selectionH}
-
-							fill={this.props.cursorColor}
-							style={{
-						WebkitUserSelect:"none",
-						fontSize:13,
-						alignmentBaseline:"before-edge",
-						textAnchor:"middle",
-
-					}}
-						>
-							{cursorPos + idxStart}
-						</text>
-
 				</g>
 			}
 			{showLeftCursor  &&
@@ -352,7 +335,8 @@ export class SequenceRow extends React.Component
 					y = {ep.ruler2Y}
 					width = {sequenceRowWidth}
 					height = {ep.ruler2H}
-					d = {ruler2d*unitWidth}
+					d = {ruler2d}
+					unitWidth={unitWidth}
 					texts = {(()=>{
 						let re = [];
 						for(let i=idxStart;i<idxStart+sequence.length;i+=ruler2d){

@@ -28,10 +28,10 @@ export class RulerLocation extends React.Component
 		super(props);
 	}
 
-	generatePath(x,y,w,h,d){
+	generatePath(x,y,w,h,d,u){
 
 		let re = `M ${x} ${y} L ${x+w} ${y}`;
-		for(let xx=x+d;xx<(x+w);xx+=d){
+		for(let xx=x+d*u-u/2;xx<(x+w);xx+=d*u){
 
 			re+= `M ${xx} ${y} L ${xx} ${(y+h)}`;
 		}
@@ -41,12 +41,12 @@ export class RulerLocation extends React.Component
 			strokeWidth="1"
 		></path>
 	}
-	generateTexts(x,y,w,h,d){
+	generateTexts(x,y,w,h,d,u){
 		let {texts} = this.props;
 
 		let re = [];
 		let i = 0;
-		for(let xx=x+d;xx<(x+w);xx+=d){
+		for(let xx=x+d*u-u/2;xx<(x+w);xx+=d*u){
 			i++;
 			re.push(<text
 				x={xx}
@@ -67,11 +67,11 @@ export class RulerLocation extends React.Component
 	}
 
 	render(){
-		let {x,y,width,height,d} = this.props;
+		let {x,y,width,height,d,unitWidth} = this.props;
 		return (
 			<g>
-				{this.generatePath(x,y,width,height,d)}
-				{this.generateTexts(x,y,width,height,d)}
+				{this.generatePath(x,y,width,height,d,unitWidth)}
+				{this.generateTexts(x,y,width,height,d,unitWidth)}
 			</g>
 		)
 	}
