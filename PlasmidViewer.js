@@ -32,7 +32,7 @@ export class PlasmidViewer extends React.Component {
 	calcEnzymeRoot(enzymes,r){
 		let {rotateAngle,seqLength} = this.props;
 		let plasmidR = r;
-		let la = new LA(seqLength,true);
+		let la = new LA(seqLength,0,360);
 		let xy = (a)=>{return{x:plasmidR*Math.cos((90-a)*Math.PI/180),y:-plasmidR*Math.sin((90-a)*Math.PI/180)};};
 		for(let i in enzymes){
 			enzymes[i].rootPos = xy(la.a(enzymes[i].pos[0])+rotateAngle);
@@ -247,10 +247,11 @@ export class PlasmidViewer extends React.Component {
 							{<FeatureGroup
 								radius = {plasmidR}
 								features = {features}
-								seqLength = {seqLength*1.1}
+								seqLength = {seqLength}
 								selectedFeature = {selectedFeature}
 								globalRotateAngle = {rotateAngle}
 								theme = {"NA"}
+								angleSpan = {[0,360-36]}
 							>
 							</FeatureGroup>}
 
@@ -361,7 +362,6 @@ export class PlasmidViewer extends React.Component {
 								{seqLength+" bp"}
 							</text>
 						</g>
-						
 						<g className="enzyme">
 							{mode == "normal" && <EnzymeLabelContainer
 								enzymeR={plasmidR+50}

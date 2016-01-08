@@ -12,14 +12,18 @@ var $ = require('jquery');
 export class FeatureGroup extends React.Component {
     constructor(props){
         super(props);
-        
         this.state = {selectedFeature:this.props.selectedFeature}
     }
 
+	static defaultProps = {
+		angleSpan : [0,360]
+	}
+
     calcFeaturePos(){
+		let {angleSpan} = this.props;
     	var featureArrows = [];
     	let seqLength = this.props.seqLength;
-        this.la = new LA(this.props.seqLength,true);
+        this.la = new LA(this.props.seqLength,angleSpan[0],angleSpan[1]);
     	for(let i in this.props.features){
     		let feature = this.props.features[i];
     		let arrow = Object.assign({},feature);
