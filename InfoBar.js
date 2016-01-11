@@ -6,7 +6,7 @@
  */
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {DNA} from './Bio'
+import {DNASeq} from './Bio/DNASeq'
 
 export class InfoBar extends React.Component
 {
@@ -45,7 +45,7 @@ export class InfoBar extends React.Component
 
 		let length = endPos-startPos;
 
-		let dna = new DNA(seq);
+		let dna = new DNASeq(seq);
 		let gc = dna.getGCPercentage();
 		let tm = 0;
 		if(length=>10 && length<=50) {

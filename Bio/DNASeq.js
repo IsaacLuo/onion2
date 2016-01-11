@@ -1,23 +1,7 @@
+import {Seq} from "./Seq"
+import {EnzymeSite} from "./Enzyme"
 
-export class Seq
-{
-	constructor(o = ""){
-		this.seq = this.removeInvalidLetter(o);
-	}
-	removeInvalidLetter(src){
-		return src;
-	}
-
-	toString(){
-		return this.seq;
-	}
-
-	length(){
-		return this.seq.length;
-	}
-}
-
-export class DNA2 extends Seq
+export class DNASeq extends Seq
 {
 	static complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
@@ -32,9 +16,9 @@ export class DNA2 extends Seq
 	reverseComplement(){
 		let out = [];
 		for(let n of this.seq){
-			out.push(DNA.complementDict[n]);
+			out.push(DNASeq.complementDict[n]);
 		}
-		return out.reverse().join("");
+		return new DNASeq(out.reverse().join(""));
 	}
 
 	complement(){
@@ -42,7 +26,7 @@ export class DNA2 extends Seq
 		for(let n of this.seq){
 			out.push(DNA.complementDict[n]);
 		}
-		return out.join("");
+		return new DNASeq(out.join(""));
 	}
 
 	getGCCount(){
@@ -69,8 +53,22 @@ export class DNA2 extends Seq
 		}
 	}
 
-	calcEnzymeLocation(enzymeList){
-
+	calcEnzymeSites(enzymeList){
+		this.enzymeSites = [];
+		for(let e of enzymeList){
+			let rsxf = new RegExp(e.rf,"gi");
+			let r = null;
+			while(r = rsxf.exec(this.seq)){
+				this.enzymeSites.push(new EnzymeSite(e,r.index,0));
+			}
+			if(e.csNumber==2){
+				let rsxr = new RegExp(e.rr,"gi");
+				while(r = rsxr.exec(this.seq)){
+					this.enzymeSites.push(new EnzymeSite(e,r.index,1));
+				}
+			}
+		}
+		return this.enzymeSites;
 	}
 
 }
