@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import {SequenceRow} from './SequenceRow'
 import jQuery from 'jquery';
+import {DNASeq} from './Bio/DNASeq'
 
 
 export class SequenceEditor extends React.Component
@@ -61,6 +62,9 @@ export class SequenceEditor extends React.Component
 			showSelection:false,
 		}
 
+		this.sequence = new DNASeq(this.props.sequence);
+		this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+		//console.log(this.enzymeSites)
 
 
 	}
@@ -82,7 +86,12 @@ export class SequenceEditor extends React.Component
 	}
 
 	componentWillReceiveProps(nextProps){
+		if(nextProps.sequence != this.props.sequence){
+			//calculate all enzymeSites
+			this.sequence = new DNASeq(this.props.sequence);
+			this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
 
+		}
 	}
 
 
@@ -117,7 +126,7 @@ export class SequenceEditor extends React.Component
 
 
 	splitRows(colNum=50){
-    	let {sequence} = this.props;
+    	let sequence = this.sequence.toString();
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
 
     	this.textRows =[];
@@ -151,6 +160,8 @@ export class SequenceEditor extends React.Component
 			let rowSelectRightPos = colNum;
 			let rowShowLeftCursor = false;
 			let rowShowRightCursor = false;
+
+			let showEnzyme = true;
 
 			if(showCursor && cursorPos>=i && cursorPos<=i+colNum) {
 				rowCursorPos = cursorPos - i;
@@ -197,6 +208,7 @@ export class SequenceEditor extends React.Component
 						showStartPos={rowShowStartPos}
 						seqMainStyle={this.seqMainStyle}
 						seqCompStyle={this.seqCompStyle}
+
 					>
 					</SequenceRow>);
 
@@ -205,7 +217,14 @@ export class SequenceEditor extends React.Component
     }
 
 	render(){
-    	this.splitRows(50);
+
+		let {width} = this.props;
+		this.colNum = Math.floor(width/this.unitWidth)-10;
+		console.log(this.colNum,width,this.unitWidth);
+		if(this.colNum<20)
+			this.colNum = 20;
+
+    	this.splitRows(this.colNum);
     	return (
     		<div>
 				{this.textRows}

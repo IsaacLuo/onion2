@@ -146,8 +146,10 @@ export class SequenceRow extends React.Component
 			showLeftCursor,
 			showRightCursor,
 			ruler2d,
+			enzymes,
 			} = this.props;
 
+		//console.log("enzyme count", enzymes.length);
 
 		let textRows = 1;
 		let cols = sequence.length;

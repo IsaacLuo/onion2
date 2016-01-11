@@ -1,3 +1,5 @@
+import {g_enzymeList} from './EnzymeList'
+
 export class Enzyme
 {
 	constructor(name, restrictionSite, regexForward, regexReverse, cuttingSite, symmetry=true){
@@ -63,7 +65,7 @@ export class EnzymeSite
 
 export function loadEnzymeList(){
 	let re = [];
-	for(let e of g_enzymeList){
+	for(let e of g_enzymeList.enzymes){
 		if(e.c==0) {
 			re.push(new Enzyme(e.n, e.s, e.fr, e.rr, [e.ds.df, e.ds.dr], e.m));
 		}
