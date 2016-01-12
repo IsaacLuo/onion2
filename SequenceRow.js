@@ -138,8 +138,6 @@ export class SequenceRow extends React.Component
 			showStartPos,
 			seqMainStyle,
 			seqCompStyle,
-			showRuler,
-			showRuler2,
 			cursorColor,
 			selectLeftPos,
 			selectRightPos,
@@ -148,6 +146,7 @@ export class SequenceRow extends React.Component
 			ruler2d,
 			enzymes,
 			} = this.props;
+		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,onSelect} = this.props;
 
 		//console.log("enzyme count", enzymes.length);
 
@@ -178,23 +177,29 @@ export class SequenceRow extends React.Component
 			re.seqY = 5;
 			y+=unitHeight;
 			re.seqH = unitHeight;
-			re.rulerY = y;
-			y+=15;
-			re.rulerH = 15;
-			re.compY = y;
-			y+=unitHeight;
-			re.compH = unitHeight;
+			if(showLadder) {
+				re.rulerY = y;
+				y += 15;
+				re.rulerH = 15;
+			}
+			if(showRS) {
+				re.compY = y;
+				y += unitHeight;
+				re.compH = unitHeight;
+			}
 			y+=5;
-			re.featureY = y;
-			re.featureH = this.calcFeatureHeight();
-			y+=re.featureH;
-			y+=10;
-			re.selectionH = y;
-
-			re.ruler2Y = y;
-			re.ruler2H = 10;
-			y+=10;
-
+			if(showFeatures) {
+				re.featureY = y;
+				re.featureH = this.calcFeatureHeight();
+				y += re.featureH;
+				y += 10;
+				re.selectionH = y;
+			}
+			if(showRuler) {
+				re.ruler2Y = y;
+				re.ruler2H = 10;
+				y+=10;
+			}
 
 			y+=20;
 			re.totalH = y;
@@ -248,7 +253,7 @@ export class SequenceRow extends React.Component
 			>
 	    		{sequence}
 	    	</text>
-	    	{showComplement && <text
+	    	{showRS && <text
 	    		style={
 	    			Object.assign(seqCompStyle,{
 	    		})}
@@ -257,8 +262,7 @@ export class SequenceRow extends React.Component
 	    	>
 	    		{this.complement(sequence)}
 	    	</text>}
-
-			{showRuler && <path
+			{showLadder && <path
 				d={this.generateRuler(0,ep.rulerY,sequenceRowWidth,ep.rulerH,unitWidth)}
 				strokeWidth="1"
 				stroke="#E6E7E8"
@@ -266,7 +270,7 @@ export class SequenceRow extends React.Component
 			</path>
 			}
 
-			{this.generateFeatures(ep.featureY)}
+			{showFeatures && this.generateFeatures(ep.featureY)}
 
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>
@@ -331,7 +335,7 @@ export class SequenceRow extends React.Component
 				}
 			</g>
 			}
-			{showRuler2 &&
+			{showRuler &&
 				<RulerLocation
 					x={0}
 					y = {ep.ruler2Y}

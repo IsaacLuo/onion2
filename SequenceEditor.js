@@ -128,8 +128,9 @@ export class SequenceEditor extends React.Component
 	splitRows(colNum=50){
     	let sequence = this.sequence.toString();
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
+		let {showEnzymes, showLadder, showRS, showFeatures, showRuler} = this.props;
 
-    	this.textRows =[];
+		this.textRows =[];
 		let j=0;
 		if(showSelection){
 			if(cursorPos == selectStartPos){
@@ -209,6 +210,11 @@ export class SequenceEditor extends React.Component
 						seqMainStyle={this.seqMainStyle}
 						seqCompStyle={this.seqCompStyle}
 
+						showEnzymes={showEnzymes}
+						showLadder={showLadder}
+						showRS={showRS}
+						showFeatures={showFeatures}
+						showRuler={showRuler}
 					>
 					</SequenceRow>);
 
