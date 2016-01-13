@@ -2,7 +2,13 @@
  * Created by luoyi on 1/12/2016.
  */
 import React, { PropTypes } from 'react';
+global.jQuery = require('jquery');
+require('bootstrap');
+var bt = require('bootstrap');
+console.log(bt);
 import { ButtonGroup, DropdownButton, MenuItem, Button, Input} from 'react-bootstrap';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export class MenuBar extends React.Component
 {

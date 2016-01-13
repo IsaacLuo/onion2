@@ -169,12 +169,15 @@ export class SequenceRow extends React.Component
 			showRightCursorText = false;
 		}
 
-		let elementPoses = ()=>{
+		let elementPoses = ()=> {
 			let re = {};
 			let y = 0;
+
 			re.selectionY = y;
-			y+=5;
-			re.seqY = 5;
+			if (showEnzymes) {
+				y += 5;
+				re.seqY = 5;
+			}
 			y+=unitHeight;
 			re.seqH = unitHeight;
 			if(showLadder) {
@@ -193,15 +196,15 @@ export class SequenceRow extends React.Component
 				re.featureH = this.calcFeatureHeight();
 				y += re.featureH;
 				y += 10;
-				re.selectionH = y;
 			}
+			re.selectionH = y;
 			if(showRuler) {
 				re.ruler2Y = y;
 				re.ruler2H = 10;
 				y+=10;
+				y+=20;
 			}
 
-			y+=20;
 			re.totalH = y;
 			return re;
 		}();
@@ -214,13 +217,13 @@ export class SequenceRow extends React.Component
     	<div
     		style={{
     			marginLeft:15,
-    			marginBottom:15
+    			marginBottom:5
     		}}
 			ref="SequenceRow"
     	>
     	<svg
 			width={sequenceRowWidth+50}
-			height={height}
+			height={ep.totalH}
 			style={{
 				display:"block"
 				}}

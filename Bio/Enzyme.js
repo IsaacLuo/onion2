@@ -1,4 +1,4 @@
-import {g_enzymeList} from './EnzymeList'
+import {g_enzymeList,g_enzymeSet} from './EnzymeList'
 
 export class Enzyme
 {
@@ -63,15 +63,19 @@ export class EnzymeSite
 	}
 }
 
-export function loadEnzymeList(){
+export function loadEnzymeList(filterName="All Commercial"){
 	let re = [];
+	let filter = g_enzymeSet[filterName];
 	for(let e of g_enzymeList.enzymes){
-		if(e.c==0) {
-			re.push(new Enzyme(e.n, e.s, e.fr, e.rr, [e.ds.df, e.ds.dr], e.m));
-		}
-		else{
-			re.push(new Enzyme(e.n, e.s, e.fr, e.rr, [e.ds.df, e.ds.dr,e.us.uf, e.us.ur], e.m));
+		if(filter.indexOf(e.n)>=0) {
+			if (e.c == 0) {
+				re.push(new Enzyme(e.n, e.s, e.fr, e.rr, [e.ds.df, e.ds.dr], e.m));
+			}
+			else {
+				re.push(new Enzyme(e.n, e.s, e.fr, e.rr, [e.ds.df, e.ds.dr, e.us.uf, e.us.ur], e.m));
+			}
 		}
 	}
+	console.log("loaded enzyme list",re,re.length);
 	return re;
 }
