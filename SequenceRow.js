@@ -213,6 +213,8 @@ export class SequenceRow extends React.Component
 
 		height = ep.totalH;
 
+
+
     	return(
     	<div
     		style={{
