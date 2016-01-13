@@ -4,6 +4,8 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 
+
+// the ruler on the bottom of each SequenceRow
 export class RulerLocation extends React.Component
 {
 	static propTypes = {

@@ -4,6 +4,8 @@ import {SequenceFeatureSVG} from './SequenceFeature'
 import {RulerLocation} from './RulerLocation'
 var complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
+
+//rows of sequence Editor
 export class SequenceRow extends React.Component
 {
 	static propTypes = {
@@ -213,21 +215,20 @@ export class SequenceRow extends React.Component
 
 		height = ep.totalH;
 
+		let divStyle = this.props.theme=="nowrap"?{display:"inline-block",whiteSpace:"nowrap"}:{marginLeft:15,marginBottom:5};
 
 
     	return(
     	<div
-    		style={{
-    			marginLeft:15,
-    			marginBottom:5
-    		}}
+    		style={divStyle}
 			ref="SequenceRow"
     	>
+
     	<svg
 			width={sequenceRowWidth+50}
 			height={ep.totalH}
 			style={{
-				display:"block"
+				//display:"block",
 				}}
 			onMouseDown={this.onMouseDown.bind(this)}
 			onMouseMove={this.onMouseMove.bind(this)}
@@ -247,18 +248,19 @@ export class SequenceRow extends React.Component
 			</rect>
 			}
 
-	    	<text
-	    		style={
-	    			Object.assign(seqMainStyle,{
-
-	    		})}
+			<text
+				style={
+				Object.assign(seqMainStyle,{
+			})}
 				x="0"
 				y={ep.seqY}
 				onSelect={this.onSelect.bind(this)}
 			>
-	    		{sequence}
-	    	</text>
-	    	{showRS && <text
+				{sequence}
+			</text>
+
+
+				{showRS && <text
 	    		style={
 	    			Object.assign(seqCompStyle,{
 	    		})}
@@ -359,10 +361,11 @@ export class SequenceRow extends React.Component
 				>
 				</RulerLocation>
 			}
+
 		</g>
 
-
     	</svg>
+
     	</div>
 
     	)

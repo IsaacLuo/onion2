@@ -1,3 +1,5 @@
+
+// some data for testing
 var onionFile = {
 		name:"pIB2-SEC13-mEGFP",
 		features : [

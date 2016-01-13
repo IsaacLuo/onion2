@@ -8,6 +8,9 @@ import {PlasmidViewerCursorMeter,PlasmidViewerCursorGeneral} from './PlasmidView
 import {PlasmidViewerSelectionGeneral} from './PlasmidViewerSelection'
 import {PlasmidViewerVisibleArea} from './PlasmidViewerVisibleArea'
 
+
+
+//the PlasmidViewer component of onion
 export class PlasmidViewer extends React.Component {
 	
 	static defaultProps = {

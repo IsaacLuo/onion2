@@ -8,6 +8,7 @@ import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import {DNASeq} from './Bio/DNASeq'
 
+//The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component
 {
 	static propTypes = {

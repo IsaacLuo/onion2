@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react';
 
+
+//Emzyme label is a text showing enzyme restriction site and cutting site on a strand, a part of PlasmidViewer
 export class EnzymeLabel extends React.Component
 {
 	constructor(props){

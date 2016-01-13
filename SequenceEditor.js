@@ -5,6 +5,7 @@ import jQuery from 'jquery';
 import {DNASeq} from './Bio/DNASeq'
 
 
+//one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component
 {
 	static propTypes = {
@@ -16,7 +17,8 @@ export class SequenceEditor extends React.Component
 		fontSize:React.PropTypes.number
 		};
 	static defaultProps = {
-        sequence:"NOTHING"
+        sequence:"NOTHING",
+		theme:"nowrap1",
     };
 
     constructor(props){
@@ -29,7 +31,7 @@ export class SequenceEditor extends React.Component
 		}
 		this.seqMainStyleStr = `display:inline-block;font-family:${this.mycss.seqFontFamily};font-size:${this.mycss.seqFontSize};color:'#2C3543';letterSpacing:0;position:absolute;left:0px;top:-100px`;
 		this.seqMainStyle = {
-			display: "inline-block",
+		//	display: "inline-block",
 			fontFamily: this.mycss.seqFontFamily,
 			fontSize: this.mycss.seqFontSize,
 			fill: '#2C3543',
@@ -38,7 +40,7 @@ export class SequenceEditor extends React.Component
 			WebkitUserSelect:"none"
 		}
 		this.seqCompStyle = {
-			display: "inline-block",
+		//	display: "inline-block",
 			fontFamily: this.mycss.seqFontFamily,
 			fontSize: this.mycss.seqFontSize,
 			fill: '#B7BBC2',
@@ -125,7 +127,7 @@ export class SequenceEditor extends React.Component
 	}
 
 
-	splitRows(colNum=50){
+	splitRows(colNum){
     	let sequence = this.sequence.toString();
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
 		let {showEnzymes, showLadder, showRS, showFeatures, showRuler} = this.props;
@@ -215,6 +217,7 @@ export class SequenceEditor extends React.Component
 						showRS={showRS}
 						showFeatures={showFeatures}
 						showRuler={showRuler}
+						theme={this.props.theme}
 					>
 					</SequenceRow>);
 
@@ -223,14 +226,16 @@ export class SequenceEditor extends React.Component
     }
 
 	render(){
-
+		let {theme} = this.props;
 		let {width} = this.props;
-		this.colNum = Math.floor(width/this.unitWidth)-10;
-		console.log(this.colNum,width,this.unitWidth);
-		if(this.colNum<20)
+		this.colNum = Math.floor(width / this.unitWidth) - 10;
+		console.log(this.colNum, width, this.unitWidth);
+		if (this.colNum < 20)
 			this.colNum = 20;
+		this.splitRows(this.colNum);
+		//this.splitRows(this.sequence.length());
 
-    	this.splitRows(this.colNum);
+
     	return (
     		<div>
 				{this.textRows}

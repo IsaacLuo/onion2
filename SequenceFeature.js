@@ -1,5 +1,7 @@
 import React from 'react';
 
+
+//the arrow on PlasmidViewer
 export class SequenceFeatureArrow extends React.Component
 {
 	static propTypes = {

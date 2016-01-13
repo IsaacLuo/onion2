@@ -9,6 +9,8 @@ import {onionFile} from './OnionFile';
 //import PlasmidViewer from './PlasmidViewer';
 var PlasmidViewer = require('./PlasmidViewer');
 
+
+//for unit testing
 export class OnionCommander extends React.Component {
 
     static defaultProps = {        

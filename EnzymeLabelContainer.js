@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import EnzymeLabel from './EnzymeLabel'
 
+
+//Enzyme label container is used to find the available location to put the enzyme lables
 export class EnzymeLabelContainer extends React.Component
 {
 	constructor(props){

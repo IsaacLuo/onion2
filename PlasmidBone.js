@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {LA} from "./LA";
 
 
+// the plasmid circle component
 export class PlasmidBone extends React.Component {
 	constructor(props) {
 		super(props);

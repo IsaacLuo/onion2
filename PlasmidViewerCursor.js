@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import {LA} from "./LA";
 
+
+// the cursor of plasmidViewer
 export class PlasmidViewerCursor extends React.Component {
 	static propTypes = {
 		//angle: React.PropTypes.number.required,

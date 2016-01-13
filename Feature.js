@@ -27,6 +27,7 @@ class FeatureTextPath extends React.Component{
 
 }
 
+// Feature is an arrow to show the site of annotations on the PlasmidViewer
 export class Feature extends React.Component {
 	 constructor(props){
 		super(props);
@@ -226,16 +227,7 @@ export class Feature extends React.Component {
 			d += `M ${arcEnd.x} ${arcEnd.y}`
 			d += `A ${r} ${r} 0 ${longThan50} 0 ${arcStart.x} ${arcStart.y}`;
 		}
-		
-		// else{
-		// 	if(inside){
-		   //  	let r = radius - 20;
-		   //  	let arcEnd = this.angle2XY(r,arcLen*Math.PI/180);
-		   //  	d += `M ${arcEnd.x} ${arcEnd.y}`;
-		   //  	let textEnd = this.angle2XY(r,arcLen*Math.PI/180 + textLen*8);
-		// 		d += `A ${r} ${r} 0 ${longThan50} 1 ${textEnd.x} ${textEnd.y}`;
-		// 	}
-		// }
+
 		return d;
 	}
 	calcAnchor(){

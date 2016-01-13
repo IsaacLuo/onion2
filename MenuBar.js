@@ -10,6 +10,8 @@ import { ButtonGroup, DropdownButton, MenuItem, Button, Input} from 'react-boots
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+// SequenceEditor Menu
 export class MenuBar extends React.Component
 {
     constructor(props){
@@ -20,7 +22,7 @@ export class MenuBar extends React.Component
         let cb = (v)=>{return v?<input type="checkbox" checked/>:<input type="checkbox"/>};
         return(
         <ButtonGroup>
-            <DropdownButton bsStyle="success" title="Layer">
+            <DropdownButton bsStyle="default" title="Layer">
                 <MenuItem key="1" eventKey={["showEnzymes",!showEnzymes]} onSelect = {onSelect}>{cb(showEnzymes)}Enzymes</MenuItem>
                 <MenuItem key="2" eventKey={["showLadder",!showLadder]} onSelect = {onSelect}>{cb(showLadder)}Ladder</MenuItem>
                 <MenuItem key="3" eventKey={["showRS",!showRS]} onSelect = {onSelect}>{cb(showRS)}Reverse Strand</MenuItem>

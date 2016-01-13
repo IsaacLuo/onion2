@@ -4,11 +4,8 @@ import {LA} from "./LA";
 import Feature from "./Feature";
 var $ = require('jquery');
 
-// @propTypes({
-//     features: PropTypes.array.isRequired,
-//     seqLength: PropTypes.number.isRequired,
-// })
 
+// this is a feature builder
 export class FeatureGroup extends React.Component {
     constructor(props){
         super(props);
