@@ -22,6 +22,7 @@ export class SequenceRow extends React.Component
         showEnzymes:true,
 		showRuler:true,
 		showRuler2:true,
+		showBlockBar:true,
 		cursorColor:"#4E77BA",
 		selectionColor:"#EDF2F8",
 		featureHeight:18,
@@ -65,6 +66,27 @@ export class SequenceRow extends React.Component
 				</SequenceFeatureArrow>
 			);
 		}
+		return re;
+	}
+
+	generateBlockBars(y0){
+		let {blocks,unitWidth} = this.props;
+		let re = [];
+
+		for(let i in blocks){
+			let b = blocks[i];
+			re.push(
+				<rect
+					x={b.start*unitWidth}
+					y={y0}
+					width={b.len*unitWidth}
+					height={9}
+					fill={b.color}
+					key={i}
+				></rect>
+			);
+		}
+
 		return re;
 	}
 
@@ -130,14 +152,13 @@ export class SequenceRow extends React.Component
 
     render(){
     	let {sequence,
-			showComplement,
 			unitWidth,
 			showCursor,
 			cursorPos,
 			idxStart,
 			showSelection,
 			selectStartPos,
-			showStartPos,
+			showBlockBar,
 			seqMainStyle,
 			seqCompStyle,
 			cursorColor,
@@ -171,6 +192,7 @@ export class SequenceRow extends React.Component
 			showRightCursorText = false;
 		}
 
+		//calculate element Y poses
 		let elementPoses = ()=> {
 			let re = {};
 			let y = 0;
@@ -193,6 +215,10 @@ export class SequenceRow extends React.Component
 				re.compH = unitHeight;
 			}
 			y+=5;
+			if(showBlockBar){
+				re.blockBarY = y;
+				y+=9;
+			}
 			if(showFeatures) {
 				re.featureY = y;
 				re.featureH = this.calcFeatureHeight();
@@ -278,6 +304,10 @@ export class SequenceRow extends React.Component
 			}
 
 			{showFeatures && this.generateFeatures(ep.featureY)}
+
+				{showBlockBar &&
+					this.generateBlockBars(ep.blockBarY)
+				}
 
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>

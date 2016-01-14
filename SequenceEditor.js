@@ -19,6 +19,7 @@ export class SequenceEditor extends React.Component
 	static defaultProps = {
         sequence:"NOTHING",
 		theme:"nowrap1",
+		showBlockBar:true,
     };
 
     constructor(props){
@@ -130,7 +131,7 @@ export class SequenceEditor extends React.Component
 	splitRows(colNum){
     	let sequence = this.sequence.toString();
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
-		let {showEnzymes, showLadder, showRS, showFeatures, showRuler} = this.props;
+		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,blocks} = this.props;
 
 		this.textRows =[];
 		let j=0;
@@ -144,7 +145,29 @@ export class SequenceEditor extends React.Component
 			}
 		}
 
-    	for(let i=0;i<sequence.length;i+=colNum){
+		let splittedBlocks = [];
+		for(let j=0;j<sequence.length;j+=colNum){
+			splittedBlocks.push([]);
+		}
+		if(blocks) {
+			for (let i = 0; i < blocks.length; i++) {
+				let start = blocks[i].start;
+				let len = blocks[i].len;
+				let blockRowIdx = Math.floor(start / colNum);
+				for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
+					let start = Math.max(blocks[i].start - j * colNum, 0);
+					splittedBlocks.push({
+						color: blocks[i].color,
+						name: blocks[i].name,
+						start: start,
+						len: Math.min(blocks[i].start + blocks[i].len - j * colNum, colNum) - start,
+					})
+				}
+			}
+		}
+
+    	for(let i=0,rowCount=0;i<sequence.length;i+=colNum,rowCount++){
+
 			let featureFrags = this.findFeaturesInRow(i,colNum);
 			let rowCursorPos,rowSelectStartPos;
 			if(cursorPos>selectStartPos) {
@@ -189,11 +212,18 @@ export class SequenceEditor extends React.Component
 					console.log(i);
 					rowShowSelection = true;
 				}
-
 			}
-				this.textRows.push(
+
+			let subSequence = sequence.substr(i,colNum);
+
+			let rowBlocks = [];
+			if(showBlockBar && blocks && blocks[0]){
+					rowBlocks = [{color:blocks[0].color,name:blocks[0].name,start:0,len:subSequence.length}]
+				}
+
+			this.textRows.push(
 					<SequenceRow
-						sequence={sequence.substr(i,colNum)}
+						sequence={subSequence}
 						idxStart={i}
 						key={`sequenceRow_${j}`}
 						rowNumber={j}
@@ -218,6 +248,9 @@ export class SequenceEditor extends React.Component
 						showFeatures={showFeatures}
 						showRuler={showRuler}
 						theme={this.props.theme}
+
+						showBlockBar={true}
+						blocks = {rowBlocks}
 					>
 					</SequenceRow>);
 
