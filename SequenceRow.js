@@ -218,6 +218,7 @@ export class SequenceRow extends React.Component
 			if(showBlockBar){
 				re.blockBarY = y;
 				y+=9;
+				y+=5;
 			}
 			if(showFeatures) {
 				re.featureY = y;
