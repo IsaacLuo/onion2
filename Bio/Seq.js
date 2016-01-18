@@ -17,4 +17,7 @@ export class Seq
 	length(){
 		return this.seq.length;
 	}
+	substr(start,len){
+		return new Seq(this.seq.substr(start,len));
+	}
 }

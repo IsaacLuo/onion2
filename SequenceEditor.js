@@ -93,10 +93,23 @@ export class SequenceEditor extends React.Component
 			//calculate all enzymeSites
 			this.sequence = new DNASeq(this.props.sequence);
 			this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
-
 		}
+		this.aas = this.calcAAs(nextProps.sequence,nextProps.features);
 	}
 
+	calcAAs(sequence,features){
+		let s = new DNASeq(sequence);
+		let re = [];
+		for(let i in features){
+			if(features[i].type=="CDS"){
+				let f = features[i];
+				let l = f.end-f.start;
+				let aa = s.substr(f.start,l).toAASeq();
+				re.push({seq:aa,start:f.start,len:l});
+			}
+		}
+		return re;
+	}
 
 	findFeaturesInRow(start,len){
 		//console.log("sss",start,len,this.props.features);
@@ -105,12 +118,38 @@ export class SequenceEditor extends React.Component
 			let f = this.props.features[i];
 			let overlap = this.isOverlap(start,start+len,f.start,f.end)
 			if(overlap){
-				re.push({start:overlap.start,len:overlap.end-overlap.start,color:f.color,text:f.text,textColor:f.textColor});
+				re.push({start:overlap.start,len:overlap.end-overlap.start,color:f.color,text:f.text,textColor:f.textColor,type:f.type});
 			}
 		}
 		//console.log(re);
 		return re;
 	}
+	findAAInRow(start,len){
+		let re = [];
+
+		for(let i in this.aas){
+			let aa = this.aas[i];
+			let overlap = this.isOverlap(start,start+len,aa.start,aa.start+aa.len)
+			console.log("aas",this.aas,overlap);
+			if(overlap){
+				let len=overlap.end-overlap.start;
+				if(len%3==0)
+				len=Math.ceil(len/3);
+				re.push({start:overlap.start,len:overlap.end-overlap.start,sequence:aa.seq.substr(overlap.start,overlap.end-overlap.start)});
+			}
+		}
+		return re;
+	}
+	splitAAs(colNum){
+		let aas = this.aas;
+		for(let i=0;i<aas.length;i++){
+			let aa = aas[i];
+			let row = Math.floor(aa.start/colNum);
+			let startIdx = aa.start%colNum;
+			let endRow = Math.ceil(aa.end/colNum);
+		}
+	}
+
 
 	onSetCursor(cursorPos,rowNumber){
 		//console.log(cursorPos,rowNumber);
@@ -169,6 +208,7 @@ export class SequenceEditor extends React.Component
     	for(let i=0,rowCount=0;i<sequence.length;i+=colNum,rowCount++){
 
 			let featureFrags = this.findFeaturesInRow(i,colNum);
+			let aaFrags = this.findAAInRow(i,colNum);
 			let rowCursorPos,rowSelectStartPos;
 			if(cursorPos>selectStartPos) {
 				rowCursorPos = colNum;
@@ -221,6 +261,8 @@ export class SequenceEditor extends React.Component
 					rowBlocks = [{color:blocks[0].color,name:blocks[0].name,start:0,len:subSequence.length}]
 				}
 
+
+
 			this.textRows.push(
 					<SequenceRow
 						sequence={subSequence}
@@ -251,6 +293,8 @@ export class SequenceEditor extends React.Component
 
 						showBlockBar={true}
 						blocks = {rowBlocks}
+						aas={aaFrags}
+
 					>
 					</SequenceRow>);
 

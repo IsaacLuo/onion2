@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import {SequenceFeatureArrow} from './SequenceFeature'
 import {SequenceFeatureSVG} from './SequenceFeature'
 import {RulerLocation} from './RulerLocation'
+import {CDSBar} from './CDSBar'
 var complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
 
@@ -23,6 +24,7 @@ export class SequenceRow extends React.Component
 		showRuler:true,
 		showRuler2:true,
 		showBlockBar:true,
+		showAA:true,
 		cursorColor:"#4E77BA",
 		selectionColor:"#EDF2F8",
 		featureHeight:18,
@@ -65,6 +67,26 @@ export class SequenceRow extends React.Component
 				>
 				</SequenceFeatureArrow>
 			);
+		}
+		return re;
+	}
+	generateAABars(y0,h0){
+		let {aas,unitWidth,idxStart} = this.props;
+		let re = [];
+		console.log(aas);
+		for(let i in aas){
+			let aa = aas[i];
+			console.log(aa);
+				re.push(
+					<CDSBar
+						x={(aa.start-idxStart)*unitWidth}
+						y={y0}
+						sequence="FLIMAYHQCWRSVSPTNKDEG"
+						unitWidth={unitWidth*3}
+						height={h0}
+					></CDSBar>
+				);
+
 		}
 		return re;
 	}
@@ -166,6 +188,7 @@ export class SequenceRow extends React.Component
 			selectRightPos,
 			showLeftCursor,
 			showRightCursor,
+			showAA,
 			ruler2d,
 			enzymes,
 			} = this.props;
@@ -219,6 +242,11 @@ export class SequenceRow extends React.Component
 				re.blockBarY = y;
 				y+=9;
 				y+=5;
+			}
+			if(showAA){
+				re.aaY = y;
+				re.aaH = 18;
+				y+=20;
 			}
 			if(showFeatures) {
 				re.featureY = y;
@@ -304,6 +332,10 @@ export class SequenceRow extends React.Component
 			</path>
 			}
 
+			{showAA &&
+				this.generateAABars(ep.aaY,ep.aaH)
+			}
+
 			{showFeatures && this.generateFeatures(ep.featureY)}
 
 				{showBlockBar &&
@@ -373,6 +405,7 @@ export class SequenceRow extends React.Component
 				}
 			</g>
 			}
+
 			{showRuler &&
 				<RulerLocation
 					x={0}
