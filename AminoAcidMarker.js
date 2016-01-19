@@ -10,6 +10,7 @@ export class AminoAcidMarker extends React.Component
 	};
 	static defaultProps = {
 		h:18,
+		style:"full"
 	};
 
 	static colorDict = {
@@ -34,23 +35,15 @@ export class AminoAcidMarker extends React.Component
 		D:"#B1DDE7",
 		E:"#BADAA9",
 		G:"#DBDBDB",
-		X:"#777777",
+		"*":"#777777",
 	};
 
 	constructor(props){
 		super(props);
 	}
 	render(){
-		let {x,y,w,h,aa} = this.props;
+		let {x,y,w,h,aa,style} = this.props;
 
-		let pts=[
-			{x:-0.1*w,y:0},
-			{x:w*0.9,y:0},
-			{x:w*1.2,y:9},
-			{x:w*0.9,y:18},
-			{x:-0.1*w,y:18},
-			{x:w*0.2,y:9},
-		]
 		let genPath = (pts) => {
 			let re = `M ${pts[0].x} ${pts[0].y}`;
 			for(let i=1;i<pts.length;i++) {
@@ -59,25 +52,115 @@ export class AminoAcidMarker extends React.Component
 			re+="Z";
 			return re;
 		};
+		let genPathWithStyle = (style)=>{
+			if(style=="full"){
+				return genPath([
+					{x:-0.1*w,y:0},
+					{x:w*0.9,y:0},
+					{x:w*1.2,y:9},
+					{x:w*0.9,y:18},
+					{x:-0.1*w,y:18},
+					{x:w*0.2,y:9}
+				]);
+			}
+			else if(style=="left2"){
+				return genPath([
+					{x:-0.1*w,y:0},
+					{x:w*0.566,y:0},
+					{x:w*0.866,y:9},
+					{x:w*0.566,y:18},
+					{x:-0.1*w,y:18},
+					{x:w*0.2,y:9},
+				]);
+			}
+			else if(style=="left1"){
+				return genPath([
+					{x:-0.1*w,y:0},
+					{x:w*0.333,y:0},
+					{x:w*0.633,y:9},
+					{x:w*0.333,y:18},
+					{x:-0.1*w,y:18},
+					{x:w*0.2,y:9},
+				]);
+			}
+			else if(style=="right1"){
+				return genPath([
+					{x:w*0.766,y:9},
+					{x:w*0.466,y:0},
+					{x:w*0.9,y:0},
+					{x:w*1.2,y:9},
+					{x:w*0.9,y:18},
+					{x:w*0.466,y:18},
+				]);
+			}
+			else if(style=="right2"){
+				return genPath([
+					{x:w*0.433,y:9},
+					{x:w*0.133,y:0},
+					{x:w*0.9,y:0},
+					{x:w*1.2,y:9},
+					{x:w*0.9,y:18},
+					{x:w*0.133,y:18}
+				]);
+			}
+			else if(style=="left3"){
+				return genPath([
+					{x:0,y:0},
+					{x:w*0.9,y:0},
+					{x:w*1.2,y:9},
+					{x:w*0.9,y:18},
+					{x:0,y:18},
+				]);
+			}
+			else if(style=="right3"){
+				return genPath([
+					{x:-0.1*w,y:0},
+					{x:w*1.0,y:0},
+					{x:w*1.0,y:18},
+					{x:-0.1*w,y:18},
+					{x:w*0.2,y:9},
+				]);
+			}
+		}
+
+		let textPos = (style,w)=>{
+			switch(style){
+				case "full":
+					return w/2;
+				case "left1":
+					return w/6;
+				case "left2":
+					return w/3;
+				case "right1":
+					return 5*w/6;
+				case "right2":
+					return 2*w/3;
+				case "left3":
+					return w/2;
+				case "right3":
+					return w/2;
+			}
+		}
 		return (
-			<g
-				transform={`translate(${x},${y})`}
-			>
-				<path
-					d={genPath(pts)}
-					fill={AminoAcidMarker.colorDict[aa]}
-				></path>
-				<text
-					x={w/2}
-					y={h/2}
-					style={{
+				<g
+					transform={`translate(${x},${y})`}
+				>
+					<path
+						d={genPathWithStyle(style)}
+						fill={AminoAcidMarker.colorDict[aa]}
+					></path>
+					{(style!="left1" && style!="right1") && <text
+						x={textPos(style,w)}
+						y={h/2}
+						style={{
 						textAnchor:"middle",
 						alignmentBaseline:"central",
 						WebkitUserSelect:"none"
 					}}
-				>{aa}</text>
-			</g>
-		);
+					>{aa}</text>}
+				</g>
+			);
+
 	}
 
 }

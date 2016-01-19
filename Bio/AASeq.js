@@ -56,7 +56,7 @@ export class AASeq extends Seq
 	}
 
 	removeInvalidLetter(src){
-		return src.replace(/[^F|^L|^I|^M|^A|^Y|^H|^Q|^C|^W|^R|^S|^V|^P|^T|^N|^K|^D|^E|^G]/gi, "");
+		return src.replace(/[^F|^L|^I|^M|^A|^Y|^H|^Q|^C|^W|^R|^S|^V|^P|^T|^N|^K|^D|^E|^G|^\*]/gi, "");
 	}
 
 	to3Letters(connector="-"){

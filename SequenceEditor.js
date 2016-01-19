@@ -130,7 +130,7 @@ export class SequenceEditor extends React.Component
 		for(let i in this.aas){
 			let aa = this.aas[i];
 			let overlap = this.isOverlap(start,start+len,aa.start,aa.start+aa.len)
-			console.log("aas",this.aas,overlap);
+			//console.log("aas",this.aas,overlap);
 			if(overlap){
 				let len=overlap.end-overlap.start;
 				if(len%3==0)
@@ -142,12 +142,80 @@ export class SequenceEditor extends React.Component
 	}
 	splitAAs(colNum){
 		let aas = this.aas;
+		let re = new Array(Math.ceil(this.sequence.length()/colNum));
+		for(let i=0;i<re.length;i++){
+			re[i] = [];
+		}
+		console.log("aas",aas);
+		if(!aas) return re;
+
 		for(let i=0;i<aas.length;i++){
 			let aa = aas[i];
-			let row = Math.floor(aa.start/colNum);
+			let startRow = Math.floor(aa.start/colNum);
 			let startIdx = aa.start%colNum;
-			let endRow = Math.ceil(aa.end/colNum);
+			let endRow = Math.ceil((aa.start+aa.len)/colNum);
+//			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
+			let startStyle = "full";
+			let endStyle= "full";
+			let endIdx = colNum;
+			let startOffset = 0;
+			let leftStyles = ["full","right1","right2"];
+			let rightStyles = ["full","left1","left2"];
+			let aaOffset = 0;
+			let repeatAA = 0;
+			let rightStyleIdx;
+			let nextStartOffset;
+			for(let row = startRow;row<endRow;row++){
+
+				let leftStyleIdx = (startIdx+3-startOffset)%3;
+				console.log("startOffset",startOffset);
+				if(row==startRow){
+					startStyle="left3";
+				}
+				else{
+					startStyle = leftStyles[leftStyleIdx];
+					repeatAA = startOffset>0?-1:0;
+				}
+				if(row==endRow-1){
+					endStyle="right3";
+				}
+				else{
+					rightStyleIdx = (colNum+startOffset-startIdx)%3;
+					endStyle = rightStyles[rightStyleIdx];
+					nextStartOffset = (rightStyleIdx);
+				}
+
+				//let seq = calcAASeq(row,aaOffset,(endIdx-startIdx),aa);
+				aaOffset+=repeatAA;
+				let aaSubLen = Math.ceil((endIdx-startIdx)/3);
+				let seq = aa.seq.substr(aaOffset,aaSubLen).toString();
+				//console.log("aaSeq",seq);
+
+				let newAARow = {
+					start:startIdx,
+					end:endIdx,
+					startStyle:startStyle,
+					endStyle:endStyle,
+					row:row,
+					seq:seq,
+					startOffset:startOffset,
+					seqLen:seq.length,
+					aaOffset:aaOffset,
+					repeatAA,
+				};
+				console.log("newAARow",newAARow);
+				re[row].push(newAARow);
+				aaOffset+=aaSubLen;
+				startIdx=0;
+				startStyle="full";
+				endStyle="full";
+				//repeatAA = nextRepeatAA;
+				startOffset = nextStartOffset;
+
+			}
 		}
+		console.log("re",re);
+		return re;
 	}
 
 
@@ -208,7 +276,8 @@ export class SequenceEditor extends React.Component
     	for(let i=0,rowCount=0;i<sequence.length;i+=colNum,rowCount++){
 
 			let featureFrags = this.findFeaturesInRow(i,colNum);
-			let aaFrags = this.findAAInRow(i,colNum);
+			//let aaFrags = this.findAAInRow(i,colNum);
+			let aaFrags = this.aaRows[rowCount];
 			let rowCursorPos,rowSelectStartPos;
 			if(cursorPos>selectStartPos) {
 				rowCursorPos = colNum;
@@ -293,6 +362,7 @@ export class SequenceEditor extends React.Component
 
 						showBlockBar={true}
 						blocks = {rowBlocks}
+
 						aas={aaFrags}
 
 					>
@@ -309,6 +379,8 @@ export class SequenceEditor extends React.Component
 		console.log(this.colNum, width, this.unitWidth);
 		if (this.colNum < 20)
 			this.colNum = 20;
+		this.calcAAs(this.sequence.toString(),this.props.features);
+		this.aaRows = this.splitAAs(this.colNum);
 		this.splitRows(this.colNum);
 		//this.splitRows(this.sequence.length());
 

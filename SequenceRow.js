@@ -73,17 +73,26 @@ export class SequenceRow extends React.Component
 	generateAABars(y0,h0){
 		let {aas,unitWidth,idxStart} = this.props;
 		let re = [];
-		console.log(aas);
+		//console.log(aas);
 		for(let i in aas){
 			let aa = aas[i];
-			console.log(aa);
+			//console.log(aa);
+			let offsetX = 0;
+			if(aa.startStyle=="right1"){
+				offsetX = -unitWidth*2;
+			}
+			else if(aa.startStyle=="right2"){
+				offsetX = -unitWidth;
+			}
 				re.push(
 					<CDSBar
-						x={(aa.start-idxStart)*unitWidth}
+						x={(aa.start)*unitWidth+offsetX}
 						y={y0}
-						sequence="FLIMAYHQCWRSVSPTNKDEG"
+						sequence={aa.seq}
 						unitWidth={unitWidth*3}
 						height={h0}
+						leftStyle={aa.startStyle}
+						rightStyle={aa.endStyle}
 					></CDSBar>
 				);
 
@@ -243,7 +252,7 @@ export class SequenceRow extends React.Component
 				y+=9;
 				y+=5;
 			}
-			if(showAA){
+			if(showAA && this.props.aas.length>0){
 				re.aaY = y;
 				re.aaH = 18;
 				y+=20;

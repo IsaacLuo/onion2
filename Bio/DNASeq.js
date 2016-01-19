@@ -145,9 +145,9 @@ export class DNASeq extends Seq
 
 	toAASeq(){
 		let re = "";
-		for(let i in this.seq){
-			let aa = DNASeq.codonDict[this.seq[i]];
-			re+="aa";
+		for(let i=0;i<=this.seq.length-3;i+=3){
+			let aa = DNASeq.codonDict[this.seq.substr(i,3)];
+			re+=aa;
 		}
 		return new AASeq(re);
 	}
