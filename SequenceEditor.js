@@ -56,7 +56,7 @@ export class SequenceEditor extends React.Component
 		//jQuery("body").append(<div id="bp1" style={this.seqMainStyle}>A</div>);
 	    var width = document.getElementById('bp1').getBoundingClientRect().width;
 	    //console.log("bp1Size,",jQuery("#bp1").width());
-		console.log("unitWidth",width);
+		//console.log("unitWidth",width);
 	    this.unitWidth = this.mycss.seqFontUnitWidth;
 		this.state={
 			cursorPos:0,
@@ -146,7 +146,7 @@ export class SequenceEditor extends React.Component
 		for(let i=0;i<re.length;i++){
 			re[i] = [];
 		}
-		console.log("aas",aas);
+		//console.log("aas",aas);
 		if(!aas) return re;
 
 		for(let i=0;i<aas.length;i++){
@@ -168,7 +168,7 @@ export class SequenceEditor extends React.Component
 			for(let row = startRow;row<endRow;row++){
 
 				let leftStyleIdx = (startIdx+3-startOffset)%3;
-				console.log("startOffset",startOffset);
+				//console.log("startOffset",startOffset);
 				if(row==startRow){
 					startStyle="left3";
 				}
@@ -203,7 +203,7 @@ export class SequenceEditor extends React.Component
 					aaOffset:aaOffset,
 					repeatAA,
 				};
-				console.log("newAARow",newAARow);
+				//console.log("newAARow",newAARow);
 				re[row].push(newAARow);
 				aaOffset+=aaSubLen;
 				startIdx=0;
@@ -214,7 +214,7 @@ export class SequenceEditor extends React.Component
 
 			}
 		}
-		console.log("re",re);
+		//console.log("re",re);
 		return re;
 	}
 
@@ -238,7 +238,7 @@ export class SequenceEditor extends React.Component
 	splitRows(colNum){
     	let sequence = this.sequence.toString();
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
-		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,blocks} = this.props;
+		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,blocks,showAA} = this.props;
 
 		this.textRows =[];
 		let j=0;
@@ -318,7 +318,7 @@ export class SequenceEditor extends React.Component
 					rowShowSelection = true;
 				}
 				if(i+colNum<=selectRightPos && i>=selectLeftPos){
-					console.log(i);
+					//console.log(i);
 					rowShowSelection = true;
 				}
 			}
@@ -358,6 +358,7 @@ export class SequenceEditor extends React.Component
 						showRS={showRS}
 						showFeatures={showFeatures}
 						showRuler={showRuler}
+						showAA={showAA}
 						theme={this.props.theme}
 
 						showBlockBar={true}
@@ -376,7 +377,7 @@ export class SequenceEditor extends React.Component
 		let {theme} = this.props;
 		let {width} = this.props;
 		this.colNum = Math.floor(width / this.unitWidth) - 10;
-		console.log(this.colNum, width, this.unitWidth);
+		//console.log(this.colNum, width, this.unitWidth);
 		if (this.colNum < 20)
 			this.colNum = 20;
 		this.calcAAs(this.sequence.toString(),this.props.features);

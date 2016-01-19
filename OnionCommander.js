@@ -33,10 +33,10 @@ export class OnionCommander extends React.Component {
     }
     componentDidMount() {
         var self = this;
-        console.log("se mount");
+        //console.log("se mount");
         //combokeys = new Combokeys(document.documentElement);
         combokeys = new Combokeys(document);
-        console.log(combokeys);
+        //console.log(combokeys);
         //bindGlobalPlugin(combokeys);
 
         combokeys.bind(['r','ctrl+r'],(event)=>{

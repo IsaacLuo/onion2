@@ -5,6 +5,16 @@ import {RulerLocation} from './RulerLocation'
 import {CDSBar} from './CDSBar'
 var complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
+let isOverlap = function(a1,b1,a2,b2){
+	let a3 = Math.max(a1,a2);
+	let b3 = Math.min(b1,b2);
+	if(a3<b3){
+		return {start:a3,end:b3}
+	}
+	else {
+		return undefined;
+	}
+}
 
 //rows of sequence Editor
 export class SequenceRow extends React.Component
@@ -49,7 +59,7 @@ export class SequenceRow extends React.Component
     }
 
 	generateFeatures(y0){
-		let {features,unitWidth,idxStart} = this.props;
+		let {features,unitWidth,idxStart,featureHeight} = this.props;
 		let re = [];
 		for(let i in features){
 			let feature = features[i];
@@ -63,7 +73,8 @@ export class SequenceRow extends React.Component
 					text = {feature.text}
 					textColor = {feature.textColor}
 				    key={i}
-					y={y0}
+					y={y0+feature.row*(featureHeight+5)}
+					height={featureHeight}
 				>
 				</SequenceFeatureArrow>
 			);
@@ -93,6 +104,7 @@ export class SequenceRow extends React.Component
 						height={h0}
 						leftStyle={aa.startStyle}
 						rightStyle={aa.endStyle}
+						key={i}
 					></CDSBar>
 				);
 
@@ -175,10 +187,37 @@ export class SequenceRow extends React.Component
 			return 0;
 		}
 		if(features.length>0) {
-			return this.props.featureHeight;
+			this.sortFeatures();
+			//console.log("featureRows",this.featureRows,this.features)
+			return this.featureRows*(this.props.featureHeight+5);
 		}
 		return 0;
 	}
+
+	sortFeatures(){
+		//check overlay
+		let {
+			features,
+			showFeatures,
+			} = this.props;
+		if(showFeatures) {
+			this.features = features;
+			for (let i in this.features) {
+				this.features[i].row = 0;
+			}
+
+			this.featureRows = 1;
+			for (let i = 0; i < this.features.length; i++) {
+				for (let j = i + 1; j < this.features.length; j++) {
+					if (isOverlap(this.features[i].start,this.features[i].start+this.features[i].len, this.features[j].start, this.features[j].start+this.features[j].len)) {
+						this.features[j].row = this.features[i].row + 1;
+						this.featureRows=this.features[j].row+1;
+					}
+				}
+			}
+		}
+	}
+
 
 
     render(){
@@ -255,7 +294,7 @@ export class SequenceRow extends React.Component
 			if(showAA && this.props.aas.length>0){
 				re.aaY = y;
 				re.aaH = 18;
-				y+=20;
+				y+=23;
 			}
 			if(showFeatures) {
 				re.featureY = y;
