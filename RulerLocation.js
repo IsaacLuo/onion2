@@ -3,6 +3,7 @@
  */
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import {compareProps} from './reactHelper'
 
 
 // the ruler on the bottom of each SequenceRow
@@ -66,6 +67,10 @@ export class RulerLocation extends React.Component
 			</text>);
 		}
 		return re;
+	}
+
+	shouldComponentUpdate(nextProps, nextState){
+		return !compareProps(this.props,nextProps,Object.keys(this.props));
 	}
 
 	render(){

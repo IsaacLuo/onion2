@@ -69,6 +69,7 @@ export class SequenceEditor extends React.Component
 		this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
 		//console.log(this.enzymeSites)
 
+		this.aas = this.calcAAs(this.props.sequence,this.props.features);
 
 	}
 
@@ -118,7 +119,15 @@ export class SequenceEditor extends React.Component
 			let f = this.props.features[i];
 			let overlap = this.isOverlap(start,start+len,f.start,f.end)
 			if(overlap){
-				re.push({start:overlap.start,len:overlap.end-overlap.start,color:f.color,text:f.text,textColor:f.textColor,type:f.type});
+				re.push({
+					start:overlap.start,
+					len:overlap.end-overlap.start,
+					color:f.color,
+					text:f.text,
+					textColor:f.textColor,
+					type:f.type,
+					row:0
+				});
 			}
 		}
 		//console.log(re);
@@ -140,7 +149,13 @@ export class SequenceEditor extends React.Component
 		}
 		return re;
 	}
+
+	splitFeatures(colNum){
+
+	}
+
 	splitAAs(colNum){
+		console.log("splitAAS",this.aas);
 		let aas = this.aas;
 		let re = new Array(Math.ceil(this.sequence.length()/colNum));
 		for(let i=0;i<re.length;i++){
@@ -277,16 +292,17 @@ export class SequenceEditor extends React.Component
 
 			let featureFrags = this.findFeaturesInRow(i,colNum);
 			//let aaFrags = this.findAAInRow(i,colNum);
+
 			let aaFrags = this.aaRows[rowCount];
 			let rowCursorPos,rowSelectStartPos;
-			if(cursorPos>selectStartPos) {
-				rowCursorPos = colNum;
-				rowSelectStartPos = 0;
-			}
-			else{
+			//if(cursorPos>selectStartPos) {
 				rowCursorPos = 0;
-				rowSelectStartPos = colNum;
-			}
+			//	rowSelectStartPos = 0;
+			//}
+			//else{
+			//	rowCursorPos = 0;
+			//	rowSelectStartPos = colNum;
+			//}
 			let rowShowStartPos = false;
 			let rowShowCursor = false;
 			let rowShowSelection = false;
@@ -352,7 +368,6 @@ export class SequenceEditor extends React.Component
 						showStartPos={rowShowStartPos}
 						seqMainStyle={this.seqMainStyle}
 						seqCompStyle={this.seqCompStyle}
-
 						showEnzymes={showEnzymes}
 						showLadder={showLadder}
 						showRS={showRS}
@@ -360,12 +375,9 @@ export class SequenceEditor extends React.Component
 						showRuler={showRuler}
 						showAA={showAA}
 						theme={this.props.theme}
-
 						showBlockBar={true}
 						blocks = {rowBlocks}
-
 						aas={aaFrags}
-
 					>
 					</SequenceRow>);
 
@@ -373,18 +385,28 @@ export class SequenceEditor extends React.Component
     	}
     }
 
-	render(){
-		let {theme} = this.props;
+	componentWillMount(){
 		let {width} = this.props;
 		this.colNum = Math.floor(width / this.unitWidth) - 10;
-		//console.log(this.colNum, width, this.unitWidth);
+
 		if (this.colNum < 20)
 			this.colNum = 20;
 		this.calcAAs(this.sequence.toString(),this.props.features);
 		this.aaRows = this.splitAAs(this.colNum);
 		this.splitRows(this.colNum);
-		//this.splitRows(this.sequence.length());
+	}
+	componentWillUpdate(){
+		let {width} = this.props;
+		this.colNum = Math.floor(width / this.unitWidth) - 10;
 
+		if (this.colNum < 20)
+			this.colNum = 20;
+		this.calcAAs(this.sequence.toString(),this.props.features);
+		this.aaRows = this.splitAAs(this.colNum);
+		this.splitRows(this.colNum);
+	}
+
+	render(){
 
     	return (
     		<div>

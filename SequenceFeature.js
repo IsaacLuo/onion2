@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {compareProps} from './reactHelper'
 
 //the arrow on PlasmidViewer
 export class SequenceFeatureArrow extends React.Component
@@ -28,6 +28,10 @@ export class SequenceFeatureArrow extends React.Component
     onMouseLeave(){
         this.setState({hovering:false,showTitle:false});
     }
+
+	shouldComponentUpdate(nextProps, nextState){
+		return !compareProps(this.props,nextProps,Object.keys(this.props));
+	}
 
 	render(){
 		let {unitWidth,height,len,start,color,text,textColor} = this.props;

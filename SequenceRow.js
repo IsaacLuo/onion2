@@ -1,8 +1,10 @@
 import React, { PropTypes } from 'react';
+import {StrainText} from './StrainText'
 import {SequenceFeatureArrow} from './SequenceFeature'
 import {SequenceFeatureSVG} from './SequenceFeature'
 import {RulerLocation} from './RulerLocation'
 import {CDSBar} from './CDSBar'
+import {compareProps,comparePropsDebug} from './reactHelper'
 var complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
 let isOverlap = function(a1,b1,a2,b2){
@@ -50,14 +52,6 @@ export class SequenceRow extends React.Component
 
     }
 
-    complement(dna){
-    	let out = [];
-    	for(let n of dna){
-    		out.push(complementDict[n]);
-    	}
-    	return out.join("");
-    }
-
 	generateFeatures(y0){
 		let {features,unitWidth,idxStart,featureHeight} = this.props;
 		let re = [];
@@ -73,7 +67,7 @@ export class SequenceRow extends React.Component
 					text = {feature.text}
 					textColor = {feature.textColor}
 				    key={i}
-					y={y0+feature.row*(featureHeight+5)}
+					y={y0+this.featureRow[i]*(featureHeight+5)}
 					height={featureHeight}
 				>
 				</SequenceFeatureArrow>
@@ -84,7 +78,7 @@ export class SequenceRow extends React.Component
 	generateAABars(y0,h0){
 		let {aas,unitWidth,idxStart} = this.props;
 		let re = [];
-		//console.log(aas);
+
 		for(let i in aas){
 			let aa = aas[i];
 			//console.log(aa);
@@ -104,11 +98,12 @@ export class SequenceRow extends React.Component
 						height={h0}
 						leftStyle={aa.startStyle}
 						rightStyle={aa.endStyle}
-						key={i}
+						key={`AABar${i}`}
 					></CDSBar>
 				);
 
 		}
+
 		return re;
 	}
 
@@ -160,23 +155,12 @@ export class SequenceRow extends React.Component
 		//}
 	}
 
-	onSelect(e){
-		//console.log(this,e);
+	shouldComponentUpdate(np,nextState){
+		let update =  !compareProps(this.props,np);
+		if(update){console.warn(`update row ${this.props.rowNumber}`);}
+		return update
 	}
 
-	shouldComponentUpdate(np,nextState){
-		let a = JSON.stringify(this.props);
-		let b = JSON.stringify(np)
-		return a!=b;
-	}
-	generateRuler(x,y,w,h,unitWidth){
-		let my = y+h/2;
-		let re = `M ${x} ${my} L ${x+w} ${my}`;
-		for(let xx=x+unitWidth/2;xx<x+w;xx+=unitWidth) {
-			re += `M ${xx} ${y+4} L ${xx} ${y+h-4}`;
-		}
-		return re;
-	}
 
 	calcFeatureHeight(){
 		let {
@@ -186,10 +170,9 @@ export class SequenceRow extends React.Component
 		if(!showFeatures){
 			return 0;
 		}
-		if(features.length>0) {
+		if(features && features.length>0) {
 			this.sortFeatures();
-			//console.log("featureRows",this.featureRows,this.features)
-			return this.featureRows*(this.props.featureHeight+5);
+			return this.featureRowCount*(this.props.featureHeight+5);
 		}
 		return 0;
 	}
@@ -200,18 +183,18 @@ export class SequenceRow extends React.Component
 			features,
 			showFeatures,
 			} = this.props;
-		if(showFeatures) {
-			this.features = features;
-			for (let i in this.features) {
-				this.features[i].row = 0;
+		if(showFeatures && features) {
+			this.featureRow = Array(features.length)
+			for (let i in features) {
+				this.featureRow[i] = 0;
 			}
 
-			this.featureRows = 1;
-			for (let i = 0; i < this.features.length; i++) {
-				for (let j = i + 1; j < this.features.length; j++) {
-					if (isOverlap(this.features[i].start,this.features[i].start+this.features[i].len, this.features[j].start, this.features[j].start+this.features[j].len)) {
-						this.features[j].row = this.features[i].row + 1;
-						this.featureRows=this.features[j].row+1;
+			this.featureRowCount = 1;
+			for (let i = 0; i < features.length; i++) {
+				for (let j = i + 1; j < features.length; j++) {
+					if (isOverlap(features[i].start,features[i].start+features[i].len, features[j].start, features[j].start+features[j].len)) {
+						this.featureRow[j] = this.featureRow[i]+ 1;
+						this.featureRowCount=this.featureRow[j]+1;
 					}
 				}
 			}
@@ -320,7 +303,7 @@ export class SequenceRow extends React.Component
 
 		let divStyle = this.props.theme=="nowrap"?{display:"inline-block",whiteSpace:"nowrap"}:{marginLeft:15,marginBottom:5};
 
-
+		console.log("CDSrender",showAA,this.props.aas);
     	return(
     	<div
     		style={divStyle}
@@ -351,44 +334,28 @@ export class SequenceRow extends React.Component
 			</rect>
 			}
 
-			<text
-				style={
-				Object.assign(seqMainStyle,{
-			})}
-				x="0"
-				y={ep.seqY}
-				onSelect={this.onSelect.bind(this)}
-			>
-				{sequence}
-			</text>
-
-
-				{showRS && <text
-	    		style={
-	    			Object.assign(seqCompStyle,{
-	    		})}
-				x="0"
-				y={ep.compY}
-	    	>
-	    		{this.complement(sequence)}
-	    	</text>}
-			{showLadder && <path
-				d={this.generateRuler(0,ep.rulerY,sequenceRowWidth,ep.rulerH,unitWidth)}
-				strokeWidth="1"
-				stroke="#E6E7E8"
-			>
-			</path>
-			}
+			<StrainText
+				showRS={showRS}
+				showLadder={showLadder}
+				ep={ep}
+				sequenceRowWidth = {sequenceRowWidth}
+				seqMainStyle = {seqMainStyle}
+				seqCompStyle = {seqCompStyle}
+				sequence = {sequence}
+				unitWidth={unitWidth}
+			></StrainText>
 
 			{showAA &&
 				this.generateAABars(ep.aaY,ep.aaH)
 			}
 
-			{showFeatures && this.generateFeatures(ep.featureY)}
+			{showFeatures &&
+				this.generateFeatures(ep.featureY)
+			}
 
-				{showBlockBar &&
-					this.generateBlockBars(ep.blockBarY)
-				}
+			{showBlockBar &&
+				this.generateBlockBars(ep.blockBarY)
+			}
 
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>
