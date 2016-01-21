@@ -83,10 +83,10 @@ export class SequenceRow extends React.Component
 			let aa = aas[i];
 			//console.log(aa);
 			let offsetX = 0;
-			if(aa.startStyle=="right1"){
+			if(aa.leftStyle=="right1"){
 				offsetX = -unitWidth*2;
 			}
-			else if(aa.startStyle=="right2"){
+			else if(aa.leftStyle=="right2"){
 				offsetX = -unitWidth;
 			}
 				re.push(
@@ -96,8 +96,8 @@ export class SequenceRow extends React.Component
 						sequence={aa.seq}
 						unitWidth={unitWidth*3}
 						height={h0}
-						leftStyle={aa.startStyle}
-						rightStyle={aa.endStyle}
+						leftStyle={aa.leftStyle}
+						rightStyle={aa.rightStyle}
 						key={`AABar${i}`}
 					></CDSBar>
 				);
@@ -157,7 +157,6 @@ export class SequenceRow extends React.Component
 
 	shouldComponentUpdate(np,nextState){
 		let update =  !compareProps(this.props,np);
-		if(update){console.warn(`update row ${this.props.rowNumber}`);}
 		return update
 	}
 
@@ -274,7 +273,7 @@ export class SequenceRow extends React.Component
 				y+=9;
 				y+=5;
 			}
-			if(showAA && this.props.aas.length>0){
+			if(showAA && this.props.aas && this.props.aas.length>0){
 				re.aaY = y;
 				re.aaH = 18;
 				y+=23;
@@ -303,7 +302,7 @@ export class SequenceRow extends React.Component
 
 		let divStyle = this.props.theme=="nowrap"?{display:"inline-block",whiteSpace:"nowrap"}:{marginLeft:15,marginBottom:5};
 
-		console.log("CDSrender",showAA,this.props.aas);
+		//console.log("CDSrender",showAA,this.props.aas);
     	return(
     	<div
     		style={divStyle}

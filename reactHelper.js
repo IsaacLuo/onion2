@@ -7,6 +7,9 @@ export var compareProps = function(props1, props2, list){
         list = Object.keys(props1);
     }
     for(let item of list){
+        if(!props2){
+            return false;
+        }
         if(typeof(props1[item])=="object"){
             let subre = compareProps(props1[item],props2[item]);
             if(!subre) return subre;

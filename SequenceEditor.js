@@ -90,12 +90,7 @@ export class SequenceEditor extends React.Component
 	}
 
 	componentWillReceiveProps(nextProps){
-		if(nextProps.sequence != this.props.sequence){
-			//calculate all enzymeSites
-			this.sequence = new DNASeq(this.props.sequence);
-			this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
-		}
-		this.aas = this.calcAAs(nextProps.sequence,nextProps.features);
+
 	}
 
 	calcAAs(sequence,features){
@@ -154,8 +149,9 @@ export class SequenceEditor extends React.Component
 
 	}
 
+
 	splitAAs(colNum){
-		console.log("splitAAS",this.aas);
+		//console.log("splitAAS",this.aas);
 		let aas = this.aas;
 		let re = new Array(Math.ceil(this.sequence.length()/colNum));
 		for(let i=0;i<re.length;i++){
@@ -170,8 +166,8 @@ export class SequenceEditor extends React.Component
 			let startIdx = aa.start%colNum;
 			let endRow = Math.ceil((aa.start+aa.len)/colNum);
 //			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
-			let startStyle = "full";
-			let endStyle= "full";
+			let leftStyle = "full";
+			let rightStyle= "full";
 			let endIdx = colNum;
 			let startOffset = 0;
 			let leftStyles = ["full","right1","right2"];
@@ -185,18 +181,18 @@ export class SequenceEditor extends React.Component
 				let leftStyleIdx = (startIdx+3-startOffset)%3;
 				//console.log("startOffset",startOffset);
 				if(row==startRow){
-					startStyle="left3";
+					leftStyle="left3";
 				}
 				else{
-					startStyle = leftStyles[leftStyleIdx];
+					leftStyle = leftStyles[leftStyleIdx];
 					repeatAA = startOffset>0?-1:0;
 				}
 				if(row==endRow-1){
-					endStyle="right3";
+					rightStyle="right3";
 				}
 				else{
 					rightStyleIdx = (colNum+startOffset-startIdx)%3;
-					endStyle = rightStyles[rightStyleIdx];
+					rightStyle = rightStyles[rightStyleIdx];
 					nextStartOffset = (rightStyleIdx);
 				}
 
@@ -209,21 +205,23 @@ export class SequenceEditor extends React.Component
 				let newAARow = {
 					start:startIdx,
 					end:endIdx,
-					startStyle:startStyle,
-					endStyle:endStyle,
+					leftStyle:leftStyle,
+					rightStyle:rightStyle,
 					row:row,
 					seq:seq,
 					startOffset:startOffset,
 					seqLen:seq.length,
 					aaOffset:aaOffset,
-					repeatAA,
+					repeatAA:repeatAA
 				};
 				//console.log("newAARow",newAARow);
-				re[row].push(newAARow);
+				if(re[row]) {
+					re[row].push(newAARow);
+				}
 				aaOffset+=aaSubLen;
 				startIdx=0;
-				startStyle="full";
-				endStyle="full";
+				leftStyle="full";
+				rightStyle="full";
 				//repeatAA = nextRepeatAA;
 				startOffset = nextStartOffset;
 
@@ -251,7 +249,7 @@ export class SequenceEditor extends React.Component
 
 
 	splitRows(colNum){
-    	let sequence = this.sequence.toString();
+    	let sequence = this.props.sequence;
 		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
 		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,blocks,showAA} = this.props;
 
@@ -267,26 +265,34 @@ export class SequenceEditor extends React.Component
 			}
 		}
 
-		let splittedBlocks = [];
+		let splitBlocks = [];
 		for(let j=0;j<sequence.length;j+=colNum){
-			splittedBlocks.push([]);
+			splitBlocks.push([]);
 		}
+
 		if(blocks) {
 			for (let i = 0; i < blocks.length; i++) {
 				let start = blocks[i].start;
-				let len = blocks[i].len;
+				let len = blocks[i].length;
+				let blockEnd = start+len;
 				let blockRowIdx = Math.floor(start / colNum);
+
 				for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
 					let start = Math.max(blocks[i].start - j * colNum, 0);
-					splittedBlocks.push({
+					let end = Math.min(blockEnd - j*colNum,colNum);
+					if(splitBlocks[j]){
+						splitBlocks[j].push({
 						color: blocks[i].color,
 						name: blocks[i].name,
 						start: start,
-						len: Math.min(blocks[i].start + blocks[i].len - j * colNum, colNum) - start,
+						len: end-start,
 					})
+
+					}
 				}
 			}
 		}
+
 
     	for(let i=0,rowCount=0;i<sequence.length;i+=colNum,rowCount++){
 
@@ -341,10 +347,6 @@ export class SequenceEditor extends React.Component
 
 			let subSequence = sequence.substr(i,colNum);
 
-			let rowBlocks = [];
-			if(showBlockBar && blocks && blocks[0]){
-					rowBlocks = [{color:blocks[0].color,name:blocks[0].name,start:0,len:subSequence.length}]
-				}
 
 
 
@@ -352,8 +354,8 @@ export class SequenceEditor extends React.Component
 					<SequenceRow
 						sequence={subSequence}
 						idxStart={i}
-						key={`sequenceRow_${j}`}
-						rowNumber={j}
+						key={`sequenceRow_${rowCount}`}
+						rowNumber={rowCount}
 						features={featureFrags}
 						unitWidth={this.unitWidth}
 						onSetCursor={this.onSetCursor.bind(this)}
@@ -376,7 +378,8 @@ export class SequenceEditor extends React.Component
 						showAA={showAA}
 						theme={this.props.theme}
 						showBlockBar={true}
-						blocks = {rowBlocks}
+						blocks = {splitBlocks[rowCount]}
+						blocks2 = {splitBlocks[rowCount]}
 						aas={aaFrags}
 					>
 					</SequenceRow>);
@@ -386,28 +389,28 @@ export class SequenceEditor extends React.Component
     }
 
 	componentWillMount(){
-		let {width} = this.props;
-		this.colNum = Math.floor(width / this.unitWidth) - 10;
 
-		if (this.colNum < 20)
-			this.colNum = 20;
-		this.calcAAs(this.sequence.toString(),this.props.features);
-		this.aaRows = this.splitAAs(this.colNum);
-		this.splitRows(this.colNum);
 	}
 	componentWillUpdate(){
-		let {width} = this.props;
+
+	}
+
+
+	render(){
+		let {width,sequence,features} = this.props;
 		this.colNum = Math.floor(width / this.unitWidth) - 10;
+
+		this.sequence = new DNASeq(this.props.sequence);
+		this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+		this.aas = this.calcAAs(sequence,features);
+
+
 
 		if (this.colNum < 20)
 			this.colNum = 20;
 		this.calcAAs(this.sequence.toString(),this.props.features);
 		this.aaRows = this.splitAAs(this.colNum);
 		this.splitRows(this.colNum);
-	}
-
-	render(){
-
     	return (
     		<div>
 				{this.textRows}

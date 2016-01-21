@@ -67,7 +67,7 @@ export class CDSBar extends React.Component
 	}
 	shouldComponentUpdate(nextProps, nextState){
 		let update = !compareProps(this.props,nextProps);
-		console.log("CDSUP",update)
+		//console.log("CDSUP",update)
 		//if(update){			console.log("CDS update",this);		}
 		return update;
 	}
