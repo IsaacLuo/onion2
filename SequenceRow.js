@@ -5,7 +5,6 @@ import {SequenceFeatureSVG} from './SequenceFeature'
 import {RulerLocation} from './RulerLocation'
 import {CDSBar} from './CDSBar'
 import {compareProps,comparePropsDebug} from './reactHelper'
-var complementDict = {A:'T',T:'A',C:'G',G:'C',a:'t',t:'a',c:'g',g:'c'};
 
 let isOverlap = function(a1,b1,a2,b2){
 	let a3 = Math.max(a1,a2);

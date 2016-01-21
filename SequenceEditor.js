@@ -153,7 +153,7 @@ export class SequenceEditor extends React.Component
 	splitAAs(colNum){
 		//console.log("splitAAS",this.aas);
 		let aas = this.aas;
-		let re = new Array(Math.ceil(this.sequence.length()/colNum));
+		let re = new Array(Math.ceil(this.props.sequence.length/colNum));
 		for(let i=0;i<re.length;i++){
 			re[i] = [];
 		}
@@ -377,9 +377,8 @@ export class SequenceEditor extends React.Component
 						showRuler={showRuler}
 						showAA={showAA}
 						theme={this.props.theme}
-						showBlockBar={true}
+						showBlockBar={showBlockBar}
 						blocks = {splitBlocks[rowCount]}
-						blocks2 = {splitBlocks[rowCount]}
 						aas={aaFrags}
 					>
 					</SequenceRow>);

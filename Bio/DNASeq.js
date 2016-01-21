@@ -92,7 +92,7 @@ export class DNASeq extends Seq
 	complement(){
 		let out = [];
 		for(let n of this.seq){
-			out.push(DNA.complementDict[n]);
+			out.push(DNASeq.complementDict[n]);
 		}
 		return new DNASeq(out.join(""));
 	}

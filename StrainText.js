@@ -47,7 +47,7 @@ export class StrainText extends React.Component
                 x="0"
                 y={ep.compY}
             >
-                {rs.reverseComplement().toString()}
+                {rs.complement().toString()}
             </text>
             }
             {showLadder && <path
