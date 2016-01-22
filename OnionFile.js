@@ -4,13 +4,13 @@ export var onionFile = {
 		name:"pIB2-SEC13-mEGFP",
 		features : [
 			{start:1,end:211,strand:"+",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"},
-			//{start:186,end:673,strand:"+",color:"#C5C4C1",text:"GAP promoter",textColor:"black",type:"promoter"}
-			//,{start:690,end:1632,strand:"+",color:"#D28482",text:"SEC13",textColor:"yellow",type:"CDS"}
-			//,{start:1652,end:2372,strand:"+",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"}
-			//,{start:2758,end:3348,strand:"-",color:"#C5C4C1",text:"ori",textColor:"black",type:"rep_origin"}
-			//,{start:2481,end:2697,strand:".",color:"#EFAC7E",text:"AOX1 Terminator",textColor:"black",type:"terminator"}
-			//,{start:3517,end:4378,strand:"-",color:"#8EC78D",text:"AmpR",textColor:"black",type:"CDS"}
-			//,{start:4477,end:7012,strand:"+",color:"#EFAC7E",text:"PpHIS4",textColor:"black",type:"CDS"}
+			{start:186,end:673,strand:"+",color:"#C5C4C1",text:"GAP promoter",textColor:"black",type:"promoter"}
+			,{start:690,end:1632,strand:"+",color:"#D28482",text:"SEC13",textColor:"yellow",type:"CDS"}
+			,{start:1652,end:2372,strand:"+",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"}
+			,{start:2758,end:3348,strand:"-",color:"#C5C4C1",text:"ori",textColor:"black",type:"rep_origin"}
+			,{start:2481,end:2697,strand:".",color:"#EFAC7E",text:"AOX1 Terminator",textColor:"black",type:"terminator"}
+			,{start:3517,end:4378,strand:"-",color:"#8EC78D",text:"AmpR",textColor:"black",type:"CDS"}
+			,{start:4477,end:7012,strand:"+",color:"#EFAC7E",text:"PpHIS4",textColor:"black",type:"CDS"}
 
 
 			//,{start:7013,end:112,strand:".",color:"#FF8800",text:"PpHIS4",textColor:"black",isORF:false,type:"CDS"}

@@ -198,7 +198,10 @@ export class SequenceEditor extends React.Component
 
 				//let seq = calcAASeq(row,aaOffset,(endIdx-startIdx),aa);
 				aaOffset+=repeatAA;
-				let aaSubLen = Math.ceil((endIdx-startIdx)/3);
+				let bpLen = endIdx-startIdx;
+				let bpLenOld = -leftStyleIdx*repeatAA;
+				let bpLenNew = bpLen-bpLenOld;
+				let aaSubLen = Math.ceil(bpLenNew/3)+Math.ceil(bpLenOld/3);
 				let seq = aa.seq.substr(aaOffset,aaSubLen).toString();
 				//console.log("aaSeq",seq);
 
@@ -212,7 +215,9 @@ export class SequenceEditor extends React.Component
 					startOffset:startOffset,
 					seqLen:seq.length,
 					aaOffset:aaOffset,
-					repeatAA:repeatAA
+					repeatAA:repeatAA,
+					t_startIdx:startIdx,
+					t_endIdx:endIdx,
 				};
 				//console.log("newAARow",newAARow);
 				if(re[row]) {

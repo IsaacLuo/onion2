@@ -10,7 +10,8 @@ export class AminoAcidMarker extends React.Component
 	};
 	static defaultProps = {
 		h:18,
-		style:"full"
+		style:"full",
+		direction:"F"
 	};
 
 	static colorDict = {
@@ -52,74 +53,148 @@ export class AminoAcidMarker extends React.Component
 			re+="Z";
 			return re;
 		};
-		let genPathWithStyle = (style)=>{
-			if(style=="full"){
-				return genPath([
-					{x:-0.1*w,y:0},
-					{x:w*0.9,y:0},
-					{x:w*1.2,y:9},
-					{x:w*0.9,y:18},
-					{x:-0.1*w,y:18},
-					{x:w*0.2,y:9}
-				]);
+		let genPathWithStyle = (style,direction)=>{
+			if(direction == "R"){
+				if (style == "full") {
+					return genPath([
+						{x: 1.1 * w, y: 0},
+						{x: w * 0.1, y: 0},
+						{x: w * -0.2, y: 9},
+						{x: w * 0.1, y: 18},
+						{x: 1.1 * w, y: 18},
+						{x: w * 0.8, y: 9}
+					]);
+				}
+				else if (style == "left2") {
+					return genPath([
+						{x: 0.766 * w, y: 0},
+						{x: w * 0.1, y: 0},
+						{x: w * -0.2, y: 9},
+						{x: w * 0.1, y: 18},
+						{x: 0.766 * w, y: 18},
+						{x: w * 0.566, y: 9}
+					]);
+				}
+				else if (style == "left1") {
+					return genPath([
+						{x: 0.433 * w, y: 0},
+						{x: w * 0.1, y: 0},
+						{x: w * -0.2, y: 9},
+						{x: w * 0.1, y: 18},
+						{x: 0.433 * w, y: 18},
+						{x: w * 0.233, y: 9}
+					]);
+				}
+				else if (style == "right1") {
+					return genPath([
+						{x: 1.1 * w, y: 0},
+						{x: w * 0.766, y: 0},
+						{x: w * 0.566, y: 9},
+						{x: w * 0.766, y: 18},
+						{x: 1.1 * w, y: 18},
+						{x: w * 0.8, y: 9}
+					]);
+				}
+				else if (style == "right2") {
+					return genPath([
+						{x: 1.1 * w, y: 0},
+						{x: w * 0.433, y: 0},
+						{x: w * 0.233, y: 9},
+						{x: w * 0.433, y: 18},
+						{x: 1.1 * w, y: 18},
+						{x: w * 0.8, y: 9}
+					]);
+				}
+				else if (style == "left3") {
+					return genPath([
+						{x: 1.1 * w, y: 0},
+						{x: w * 0, y: 0},
+						{x: w * 0, y: 18},
+						{x: 1.1 * w, y: 18},
+						{x: w * 0.8, y: 9}
+
+					]);
+				}
+				else if (style == "right3") {
+					return genPath([
+						{x: 1 * w, y: 0},
+						{x: w * 0.1, y: 0},
+						{x: w * -0.2, y: 9},
+						{x: w * 0.1, y: 18},
+						{x: 1 * w, y: 18},
+
+					]);
+				}
 			}
-			else if(style=="left2"){
-				return genPath([
-					{x:-0.1*w,y:0},
-					{x:w*0.566,y:0},
-					{x:w*0.866,y:9},
-					{x:w*0.566,y:18},
-					{x:-0.1*w,y:18},
-					{x:w*0.2,y:9},
-				]);
-			}
-			else if(style=="left1"){
-				return genPath([
-					{x:-0.1*w,y:0},
-					{x:w*0.333,y:0},
-					{x:w*0.633,y:9},
-					{x:w*0.333,y:18},
-					{x:-0.1*w,y:18},
-					{x:w*0.2,y:9},
-				]);
-			}
-			else if(style=="right1"){
-				return genPath([
-					{x:w*0.766,y:9},
-					{x:w*0.466,y:0},
-					{x:w*0.9,y:0},
-					{x:w*1.2,y:9},
-					{x:w*0.9,y:18},
-					{x:w*0.466,y:18},
-				]);
-			}
-			else if(style=="right2"){
-				return genPath([
-					{x:w*0.433,y:9},
-					{x:w*0.133,y:0},
-					{x:w*0.9,y:0},
-					{x:w*1.2,y:9},
-					{x:w*0.9,y:18},
-					{x:w*0.133,y:18}
-				]);
-			}
-			else if(style=="left3"){
-				return genPath([
-					{x:0,y:0},
-					{x:w*0.9,y:0},
-					{x:w*1.2,y:9},
-					{x:w*0.9,y:18},
-					{x:0,y:18},
-				]);
-			}
-			else if(style=="right3"){
-				return genPath([
-					{x:-0.1*w,y:0},
-					{x:w*1.0,y:0},
-					{x:w*1.0,y:18},
-					{x:-0.1*w,y:18},
-					{x:w*0.2,y:9},
-				]);
+			else {
+				if (style == "full") {
+					return genPath([
+						{x: -0.1 * w, y: 0},
+						{x: w * 0.9, y: 0},
+						{x: w * 1.2, y: 9},
+						{x: w * 0.9, y: 18},
+						{x: -0.1 * w, y: 18},
+						{x: w * 0.2, y: 9}
+					]);
+				}
+				else if (style == "left2") {
+					return genPath([
+						{x: -0.1 * w, y: 0},
+						{x: w * 0.566, y: 0},
+						{x: w * 0.866, y: 9},
+						{x: w * 0.566, y: 18},
+						{x: -0.1 * w, y: 18},
+						{x: w * 0.2, y: 9},
+					]);
+				}
+				else if (style == "left1") {
+					return genPath([
+						{x: -0.1 * w, y: 0},
+						{x: w * 0.333, y: 0},
+						{x: w * 0.633, y: 9},
+						{x: w * 0.333, y: 18},
+						{x: -0.1 * w, y: 18},
+						{x: w * 0.2, y: 9},
+					]);
+				}
+				else if (style == "right1") {
+					return genPath([
+						{x: w * 0.766, y: 9},
+						{x: w * 0.466, y: 0},
+						{x: w * 0.9, y: 0},
+						{x: w * 1.2, y: 9},
+						{x: w * 0.9, y: 18},
+						{x: w * 0.466, y: 18},
+					]);
+				}
+				else if (style == "right2") {
+					return genPath([
+						{x: w * 0.433, y: 9},
+						{x: w * 0.133, y: 0},
+						{x: w * 0.9, y: 0},
+						{x: w * 1.2, y: 9},
+						{x: w * 0.9, y: 18},
+						{x: w * 0.133, y: 18}
+					]);
+				}
+				else if (style == "left3") {
+					return genPath([
+						{x: 0, y: 0},
+						{x: w * 0.9, y: 0},
+						{x: w * 1.2, y: 9},
+						{x: w * 0.9, y: 18},
+						{x: 0, y: 18},
+					]);
+				}
+				else if (style == "right3") {
+					return genPath([
+						{x: -0.1 * w, y: 0},
+						{x: w * 1.0, y: 0},
+						{x: w * 1.0, y: 18},
+						{x: -0.1 * w, y: 18},
+						{x: w * 0.2, y: 9},
+					]);
+				}
 			}
 		}
 
