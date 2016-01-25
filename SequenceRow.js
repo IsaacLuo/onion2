@@ -264,7 +264,7 @@ export class SequenceRow extends React.Component
 				for (let j = i + 1; j < features.length; j++) {
 					if (isOverlap(features[i].start,features[i].start+features[i].len, features[j].start, features[j].start+features[j].len)) {
 						this.featureRow[j] = this.featureRow[i]+ 1;
-						this.featureRowCount=this.featureRow[j]+1;
+						this.featureRowCount=Math.max(this.featureRowCount,this.featureRow[j]+1);
 					}
 				}
 			}

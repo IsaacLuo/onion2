@@ -234,6 +234,10 @@ export class SequenceEditor extends React.Component
 			re[i] = {rs:[],cs:[]};
 		}
 
+		if(!this.props.showEnzymes)
+			return re;
+
+
 		if(!this.enzymeSites || !this.enzymeSites.length) {
 			console.warn("no enzymes");
 			return re;
@@ -243,9 +247,17 @@ export class SequenceEditor extends React.Component
 			let es = this.enzymeSites[i];
 
 			let enzyme = es.enzyme;
+			console.log(enzyme);
 			let row = Math.floor(es.anchor/colNum);
+			let row2 = Math.floor((es.anchor+enzyme.rs.length)/colNum);
 			let col = es.anchor%colNum;
-			re[row].rs.push({rs:[col,col+enzyme.rs.length],name:enzyme.name,id:i});
+			if(row==row2) {
+				re[row].rs.push({rs: [col, col + enzyme.rs.length], name: enzyme.name, id: i});
+			}
+			else{
+				re[row].rs.push({rs: [col, colNum], name: enzyme.name, id: i});
+				re[row2].rs.push({rs: [0, col + enzyme.rs.length-colNum], name: enzyme.name, id: i});
+			}
 
 			for(let j=0;j<enzyme.csNumber;j++){
 				let csU;
@@ -260,7 +272,6 @@ export class SequenceEditor extends React.Component
 					csD = cs[1];
 				}
 
-
 				let rowU = Math.floor(csU/colNum);
 				let colU = csU%colNum;
 
@@ -268,15 +279,21 @@ export class SequenceEditor extends React.Component
 				let colD = csD%colNum;
 
 				if(rowU == rowD){ // upper site and lower site are in same row
-					re[rowU].cs.push({style:"N",pos:[colU,colD],id:i})		//normal │, ┌┘,└┐
+					if(re[rowU]) {
+						re[rowU].cs.push({style: "N", pos: [colU, colD], id: i})		//normal │, ┌┘,└┐
+					}
 				}
 				else if(rowU < rowD){
-					re[rowU].cs.push({style:"UR",pos:[colU,colNum],id:i})	//up right  └
-					re[rowD].cs.push({style:"DL",pos:[0,colD],id:i})	//down left ┐
+					if(re[rowU] && re[rowD]) {
+						re[rowU].cs.push({style: "UR", pos: [colU, colNum], id: i})	//up right  └
+						re[rowD].cs.push({style: "DL", pos: [0, colD], id: i})	//down left ┐
+					}
 				}
 				else{
-					re[rowU].cs.push({style:"UL",pos:[0,colU],id:i})	//up left  ┘
-					re[rowD].cs.push({style:"DR",pos:[colD,colNum],id:i})//down right ┌
+					if(re[rowU] && re[rowD]) {
+						re[rowU].cs.push({style: "UL", pos: [0, colU], id: i})	//up left  ┘
+						re[rowD].cs.push({style: "DR", pos: [colD, colNum], id: i})//down right ┌
+					}
 				}
 
 			}
@@ -456,17 +473,26 @@ export class SequenceEditor extends React.Component
 		this.colNum = Math.floor(width / this.unitWidth) - 10;
 
 		this.sequence = new DNASeq(this.props.sequence);
-		this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+
+		if(this.props.showEnzymes) {
+			this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+		}
 		//console.log(this.enzymeSites);
-		this.aas = this.calcAAs(sequence,features);
+		if(this.props.showAA) {
+			this.aas = this.calcAAs(sequence, features);
+		}
 
 
 
 		if (this.colNum < 20)
 			this.colNum = 20;
-		this.calcAAs(this.sequence.toString(),this.props.features);
-		this.aaRows = this.splitAAs(this.colNum);
-		this.enzymeRows = this.splitEnzymes(this.colNum);
+		if(this.props.showAA) {
+			this.calcAAs(this.sequence.toString(), this.props.features);
+			this.aaRows = this.splitAAs(this.colNum);
+		}
+		if(this.props.showEnzymes) {
+			this.enzymeRows = this.splitEnzymes(this.colNum);
+		}
 		this.splitRows(this.colNum);
     	return (
     		<div>
