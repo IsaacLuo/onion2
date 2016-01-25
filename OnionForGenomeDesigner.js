@@ -121,7 +121,6 @@ export class OnionForGenomeDesigner extends React.Component {
           width:width,
           height:divHeight-45,
           overflowY:"scroll",
-          border:"1px solid black",
           display:"inline-block",
         }}>
 
