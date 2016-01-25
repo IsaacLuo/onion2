@@ -136,22 +136,6 @@ export class SequenceEditor extends React.Component
 		//console.log(re);
 		return re;
 	}
-	findAAInRow(start,len){
-		let re = [];
-
-		for(let i in this.aas){
-			let aa = this.aas[i];
-			let overlap = this.isOverlap(start,start+len,aa.start,aa.start+aa.len)
-			//console.log("aas",this.aas,overlap);
-			if(overlap){
-				let len=overlap.end-overlap.start;
-				if(len%3==0)
-				len=Math.ceil(len/3);
-				re.push({start:overlap.start,len:overlap.end-overlap.start,sequence:aa.seq.substr(overlap.start,overlap.end-overlap.start)});
-			}
-		}
-		return re;
-	}
 
 	splitFeatures(colNum){
 
@@ -244,6 +228,62 @@ export class SequenceEditor extends React.Component
 		return re;
 	}
 
+	splitEnzymes(colNum){
+		let re = new Array(Math.ceil(this.props.sequence.length/colNum));
+		for(let i=0;i<re.length;i++){
+			re[i] = {rs:[],cs:[]};
+		}
+
+		if(!this.enzymeSites || !this.enzymeSites.length) {
+			console.warn("no enzymes");
+			return re;
+		}
+
+		for(let i=0;i<this.enzymeSites.length;i++){
+			let es = this.enzymeSites[i];
+
+			let enzyme = es.enzyme;
+			let row = Math.floor(es.anchor/colNum);
+			let col = es.anchor%colNum;
+			re[row].rs.push({rs:[col,col+enzyme.rs.length],name:enzyme.name,id:i});
+
+			for(let j=0;j<enzyme.csNumber;j++){
+				let csU;
+				let csD;
+				let cs = es.getCuttingSite(j);
+				if(es.strand=="-") {
+					csU = cs[1];
+					csD = cs[0];
+				}
+				else {
+					csU = cs[0];
+					csD = cs[1];
+				}
+
+
+				let rowU = Math.floor(csU/colNum);
+				let colU = csU%colNum;
+
+				let rowD = Math.floor(csD/colNum);
+				let colD = csD%colNum;
+
+				if(rowU == rowD){ // upper site and lower site are in same row
+					re[rowU].cs.push({style:"N",pos:[colU,colD],id:i})		//normal │, ┌┘,└┐
+				}
+				else if(rowU < rowD){
+					re[rowU].cs.push({style:"UR",pos:[colU,colNum],id:i})	//up right  └
+					re[rowD].cs.push({style:"DL",pos:[0,colD],id:i})	//down left ┐
+				}
+				else{
+					re[rowU].cs.push({style:"UL",pos:[0,colU],id:i})	//up left  ┘
+					re[rowD].cs.push({style:"DR",pos:[colD,colNum],id:i})//down right ┌
+				}
+
+			}
+
+		}
+		return re;
+	}
 
 	onSetCursor(cursorPos,rowNumber){
 		//console.log(cursorPos,rowNumber);
@@ -313,6 +353,8 @@ export class SequenceEditor extends React.Component
 			//let aaFrags = this.findAAInRow(i,colNum);
 
 			let aaFrags = this.aaRows[rowCount];
+			let enzymeFrags = this.enzymeRows[rowCount];
+
 			let rowCursorPos,rowSelectStartPos;
 			//if(cursorPos>selectStartPos) {
 				rowCursorPos = 0;
@@ -393,6 +435,7 @@ export class SequenceEditor extends React.Component
 						showBlockBar={showBlockBar}
 						blocks = {splitBlocks[rowCount]}
 						aas={aaFrags}
+						enzymes={enzymeFrags}
 					>
 					</SequenceRow>);
 
@@ -414,6 +457,7 @@ export class SequenceEditor extends React.Component
 
 		this.sequence = new DNASeq(this.props.sequence);
 		this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+		//console.log(this.enzymeSites);
 		this.aas = this.calcAAs(sequence,features);
 
 
@@ -422,6 +466,7 @@ export class SequenceEditor extends React.Component
 			this.colNum = 20;
 		this.calcAAs(this.sequence.toString(),this.props.features);
 		this.aaRows = this.splitAAs(this.colNum);
+		this.enzymeRows = this.splitEnzymes(this.colNum);
 		this.splitRows(this.colNum);
     	return (
     		<div>

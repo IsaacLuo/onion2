@@ -37,7 +37,8 @@ export class OnionForGenomeDesigner extends React.Component {
             sequence:props.sequence,
         };
 
-        this.enzymeList = loadEnzymeList("cailab");
+       // this.enzymeList = loadEnzymeList("cailab");
+        this.enzymeList = loadEnzymeList("New England Biolabs");
 
     }
 

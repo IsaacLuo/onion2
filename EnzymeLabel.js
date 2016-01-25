@@ -42,6 +42,7 @@ export class EnzymeLabel extends React.Component
 						x={textPos.x}
 						y={textPos.y}
 						textAnchor={anchor}
+
 					>
 					{text}
 					</text>

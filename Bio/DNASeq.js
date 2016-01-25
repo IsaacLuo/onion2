@@ -130,12 +130,12 @@ export class DNASeq extends Seq
 			let rsxf = new RegExp(e.rf,"gi");
 			let r = null;
 			while(r = rsxf.exec(this.seq)){
-				this.enzymeSites.push(new EnzymeSite(e,r.index,0));
+				this.enzymeSites.push(new EnzymeSite(e,r.index,'+'));
 			}
-			if(e.csNumber==2){
+			if(!e.symmetry){
 				let rsxr = new RegExp(e.rr,"gi");
 				while(r = rsxr.exec(this.seq)){
-					this.enzymeSites.push(new EnzymeSite(e,r.index,1));
+					this.enzymeSites.push(new EnzymeSite(e,r.index,'-'));
 				}
 			}
 		}

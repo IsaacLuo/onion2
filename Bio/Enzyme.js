@@ -52,9 +52,17 @@ export class EnzymeSite
 		return [this.anchor,this.anchor+this.enzyme.rs.length];
 	}
 	getCuttingSite(c=0){
-		let re = this.enzyme.getCuttingSite(c);
-		for(let i in re){
-			re[i]+=this.location;
+		let css = this.enzyme.getCuttingSite(c);
+		let re = new Array(css.length);
+		if(this.strand == "-") {
+			for (let i in css) {
+				re[i] = this.anchor+this.enzyme.rs.length - css[i];
+			}
+		}
+		else {
+			for (let i in css) {
+				re[i] = this.anchor + css[i];
+			}
 		}
 		return re;
 	}

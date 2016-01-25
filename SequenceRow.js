@@ -4,6 +4,8 @@ import {SequenceFeatureArrow} from './SequenceFeature'
 import {SequenceFeatureSVG} from './SequenceFeature'
 import {RulerLocation} from './RulerLocation'
 import {CDSBar} from './CDSBar'
+import {CuttingSite} from './CuttingSite'
+import {RestrictionSite} from './RestrictionSite'
 import {compareProps,comparePropsDebug} from './reactHelper'
 
 let isOverlap = function(a1,b1,a2,b2){
@@ -128,6 +130,74 @@ export class SequenceRow extends React.Component
 		return re;
 	}
 
+	generateEnzymeLabels(y,h,seqY,seqH){
+		let {enzymes,unitWidth} = this.props;
+		let {cs,rs} = enzymes;
+		let re = [];
+		for(let i=0;i<cs.length;i++){
+			re.push(
+				<CuttingSite
+					y={seqY}
+					h={seqH}
+					s={cs[i].style}
+					u={cs[i].pos[0]*unitWidth}
+					d={cs[i].pos[1]*unitWidth}
+					key={"cs"+i}
+					className={`enzymeSite${cs[i].id}`}
+				></CuttingSite>
+			)
+		}
+		for(let i=0;i<rs.length;i++){
+			re.push(
+				<RestrictionSite
+					x={rs[i].rs[0]*unitWidth}
+					y={seqY}
+					w={(rs[i].rs[1]-rs[i].rs[0])*unitWidth}
+					h={seqH}
+					key={"rs"+i}
+					className={`enzymeSite${rs[i].id}`}
+
+				></RestrictionSite>
+			)
+			re.push(
+				<text
+					x={rs[i].rs[0]*unitWidth}
+					y={y-this.enzymeRow[i]*15}
+					w={(rs[i].rs[1]-rs[i].rs[0])*unitWidth}
+					h={h}
+					key={"rst"+i}
+					className={`enzymeText_${rs[i].id}`}
+					style={{cursor:"default"}}
+					onMouseEnter ={
+						(a,b,c)=>{
+						//console.log("mouseenter",a,b,c,"ccc");
+						$(".enzymeSite"+rs[i].id).show();
+						}
+					}
+					onMouseLeave ={
+						(a,b,c)=>{
+						//console.log("mouseenter",a,b,c,"ccc");
+						$(".enzymeSite"+rs[i].id).hide();
+						}
+					}
+				>
+					{rs[i].name}
+				</text>
+			)
+			{//if(this.enzymeRow[i]>0){
+				let xx = rs[i].rs[0]*unitWidth+unitWidth/2;
+				re.push(
+					<path
+						d={`M ${xx} ${y-this.enzymeRow[i]*15} L ${xx} ${seqY} `}
+						stroke="rgba(0,0,0,0.1)"
+						stroke-width={0.5}
+					></path>
+				)
+			}
+		}
+		return re;
+	}
+
 	calcCursorPos(e){
 		let thisDOM = this.refs.SequenceRow;
 		let clickedPos = (e.pageX - thisDOM.getBoundingClientRect().left+document.documentElement.scrollLeft);
@@ -176,6 +246,7 @@ export class SequenceRow extends React.Component
 		return 0;
 	}
 
+
 	sortFeatures(){
 		//check overlay
 		let {
@@ -194,6 +265,50 @@ export class SequenceRow extends React.Component
 					if (isOverlap(features[i].start,features[i].start+features[i].len, features[j].start, features[j].start+features[j].len)) {
 						this.featureRow[j] = this.featureRow[i]+ 1;
 						this.featureRowCount=this.featureRow[j]+1;
+					}
+				}
+			}
+		}
+	}
+
+	calcEnzymeHeight(){
+		let {
+			enzymes,
+			showEnzymes,
+			} = this.props;
+		if(!showEnzymes){
+			return 0;
+		}
+		if(enzymes && enzymes.cs  && enzymes.cs.length>0) {
+			this.sortEnzymes();
+			return this.enzymeRowCount*(15);
+		}
+		return 0;
+	}
+
+	sortEnzymes(){
+		//check overlay
+		let {
+			enzymes,
+			showEnzymes,
+			unitWidth,
+			} = this.props;
+		if(showEnzymes && enzymes && enzymes.rs) {
+			let rs = enzymes.rs;
+			this.enzymeRow = Array(rs.length)
+			for (let i in rs) {
+				this.enzymeRow[i] = 0;
+			}
+
+			this.enzymeRowCount = 1;
+			for (let i = 0; i < rs.length; i++) {
+				for (let j = i + 1; j < rs.length; j++) {
+					let posi = rs[i].rs[0];
+					let posj = rs[j].rs[0];
+					//console.log("overlap",posi,posi+unitWidth*rs[i].name.length, posj,posj+unitWidth*rs[j].name.length)
+					if (isOverlap(posi,posi+rs[i].name.length+2, posj,posj+rs[j].name.length+2)) {
+						this.enzymeRow[j] = this.enzymeRow[i]+ 1;
+						this.enzymeRowCount=Math.max(this.enzymeRowCount,this.enzymeRow[j]+1);
 					}
 				}
 			}
@@ -250,11 +365,17 @@ export class SequenceRow extends React.Component
 			let re = {};
 			let y = 0;
 
-			re.selectionY = y;
+
 			if (showEnzymes) {
-				y += 5;
-				re.seqY = 5;
+				re.enzymeH = this.calcEnzymeHeight();
+				y+=re.enzymeH;
+				re.enzymeY = y;
 			}
+			y+=5;
+			re.selectionY = y;
+			y+=5;
+			re.seqY = y;
+			re.seqBlockY = y;
 			y+=unitHeight;
 			re.seqH = unitHeight;
 			if(showLadder) {
@@ -267,6 +388,7 @@ export class SequenceRow extends React.Component
 				y += unitHeight;
 				re.compH = unitHeight;
 			}
+			re.seqBlockH = y-re.seqBlockY+2;
 			y+=5;
 			if(showBlockBar){
 				re.blockBarY = y;
@@ -284,14 +406,14 @@ export class SequenceRow extends React.Component
 				y += re.featureH;
 				y += 10;
 			}
-			re.selectionH = y;
+			re.selectionYB = y;
+			re.selectionH = y-re.selectionY;
 			if(showRuler) {
 				re.ruler2Y = y;
 				re.ruler2H = 10;
-				y+=10;
-				y+=20;
+				y+=15;
+				y+=15;
 			}
-
 			re.totalH = y;
 			return re;
 		}();
@@ -325,7 +447,7 @@ export class SequenceRow extends React.Component
 			{showSelection &&
 			<rect
 				x={cursorLeft}
-				y={0}
+				y={ep.selectionY}
 				width={cursorRight-cursorLeft}
 				height={ep.selectionH}
 				fill={this.props.selectionColor}
@@ -355,11 +477,14 @@ export class SequenceRow extends React.Component
 			{showBlockBar &&
 				this.generateBlockBars(ep.blockBarY)
 			}
+			{showEnzymes &&
+				this.generateEnzymeLabels(ep.enzymeY,ep.enzymeH,ep.seqBlockY,ep.seqBlockH)
+			}
 
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>
 				<path
-					d={`M ${cursorX} 5 L ${cursorX-1} 0 L ${cursorX+1} 0 L ${cursorX} 5 L ${cursorX} ${ep.selectionH}`}
+					d={`M ${cursorX} ${ep.selectionY} L ${cursorX} ${ep.selectionYB}`}
 					stroke={this.props.cursorColor}
 					strokeWidth="2"
 					fill={this.props.cursorColor}
@@ -370,7 +495,7 @@ export class SequenceRow extends React.Component
 			{showLeftCursor  &&
 			<g>
 				<path
-					d={`M ${cursorLeft} 5 L ${cursorLeft-1} 0 L ${cursorLeft+1} 0 L ${cursorLeft} 5 L ${cursorLeft} ${ep.selectionH}`}
+					d={`M ${cursorLeft} ${ep.selectionY} L ${cursorLeft} ${ep.selectionYB}`}
 					stroke={this.props.cursorColor}
 					strokeWidth="2"
 					fill={this.props.cursorColor}
@@ -378,7 +503,7 @@ export class SequenceRow extends React.Component
 				</path>
 				<text
 					x={cursorLeft+unitWidth/2}
-					y={ep.selectionH}
+					y={ep.selectionYB}
 					fill={this.props.cursorColor}
 					style={{
 						WebkitUserSelect:"none",
@@ -394,7 +519,7 @@ export class SequenceRow extends React.Component
 			{showRightCursor &&
 			<g>
 				<path
-					d={`M ${cursorRight} 5 L ${cursorRight-1} 0 L ${cursorRight+1} 0 L ${cursorRight} 5 L ${cursorRight} ${ep.selectionH}`}
+					d={`M ${cursorRight} ${ep.selectionY} L ${cursorRight} ${ep.selectionYB}`}
 					stroke={this.props.cursorColor}
 					strokeWidth="2"
 					fill={this.props.cursorColor}
@@ -403,7 +528,7 @@ export class SequenceRow extends React.Component
 				{showRightCursorText &&
 				<text
 					x={cursorRight-unitWidth/2}
-					y={ep.selectionH}
+					y={ep.selectionYB}
 
 					fill={this.props.cursorColor}
 					style={{
@@ -429,16 +554,18 @@ export class SequenceRow extends React.Component
 					d = {ruler2d}
 					unitWidth={unitWidth}
 					texts = {(()=>{
-						let re = [];
-						for(let i=idxStart;i<idxStart+sequence.length;i+=ruler2d){
-							re.push(i);
-						}
-						return re;
+							let re = [];
+							for(let i=idxStart;i<idxStart+sequence.length;i+=ruler2d){
+								re.push(i);
+							}
+							return re;
 						}
 					())}
 				>
 				</RulerLocation>
 			}
+
+
 
 		</g>
 
