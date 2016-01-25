@@ -96,6 +96,9 @@ export class DNASeq extends Seq
 		}
 		return new DNASeq(out.join(""));
 	}
+	reverse(){
+		return new DNASeq(this.seq.split("").reverse().join(""));
+	}
 
 	getGCCount(){
 		return (this.seq.match(/[G|C]/gi)||[]).length;

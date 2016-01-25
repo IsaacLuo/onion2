@@ -98,6 +98,7 @@ export class SequenceRow extends React.Component
 						leftStyle={aa.leftStyle}
 						rightStyle={aa.rightStyle}
 						key={`AABar${i}`}
+						strand={aa.strand}
 					></CDSBar>
 				);
 

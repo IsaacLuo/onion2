@@ -82,4 +82,8 @@ export class AASeq extends Seq
 		return new AASeq(this.seq.substr(start,len))
 	}
 
+	reverse(){
+		return new AASeq(this.seq.split("").reverse().join(""));
+	}
+
 }

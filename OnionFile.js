@@ -3,7 +3,7 @@
 export var onionFile = {
 		name:"pIB2-SEC13-mEGFP",
 		features : [
-			{start:1,end:211,strand:"+",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"},
+			{start:1,end:211,strand:"-",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"},
 			{start:186,end:673,strand:"+",color:"#C5C4C1",text:"GAP promoter",textColor:"black",type:"promoter"}
 			,{start:690,end:1632,strand:"+",color:"#D28482",text:"SEC13",textColor:"yellow",type:"CDS"}
 			,{start:1652,end:2372,strand:"+",color:"#8EC78D",text:"mEGFP",textColor:"black",type:"CDS"}

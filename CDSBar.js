@@ -23,9 +23,10 @@ export class CDSBar extends React.Component
 		rightStyle:"right3",
 		x:0,
 		y:0,
+		strand:"+",
 	};
 	generateBar(){
-		let {sequence,unitWidth,height,leftStyle,rightStyle} = this.props;
+		let {sequence,unitWidth,height,leftStyle,rightStyle,strand} = this.props;
 		let re = [];
 		let i=0;
 		//draw leftHead
@@ -38,6 +39,7 @@ export class CDSBar extends React.Component
 				h={height}
 				key={i}
 				style={leftStyle}
+				direction={strand}
 			></AminoAcidMarker>)
 		}
 		//draw middle
@@ -49,6 +51,7 @@ export class CDSBar extends React.Component
 				w={unitWidth}
 				h={height}
 				key={i}
+				direction={strand}
 			></AminoAcidMarker>)
 		}
 		//draw tail
@@ -61,6 +64,7 @@ export class CDSBar extends React.Component
 				h={height}
 				key={i}
 				style={rightStyle}
+				direction={strand}
 			></AminoAcidMarker>)
 		}
 		return re;

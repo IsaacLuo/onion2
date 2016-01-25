@@ -11,7 +11,7 @@ export class AminoAcidMarker extends React.Component
 	static defaultProps = {
 		h:18,
 		style:"full",
-		direction:"F"
+		direction:"+"
 	};
 
 	static colorDict = {
@@ -43,7 +43,7 @@ export class AminoAcidMarker extends React.Component
 		super(props);
 	}
 	render(){
-		let {x,y,w,h,aa,style} = this.props;
+		let {x,y,w,h,aa,style,direction} = this.props;
 
 		let genPath = (pts) => {
 			let re = `M ${pts[0].x} ${pts[0].y}`;
@@ -54,7 +54,7 @@ export class AminoAcidMarker extends React.Component
 			return re;
 		};
 		let genPathWithStyle = (style,direction)=>{
-			if(direction == "R"){
+			if(direction == "-"){
 				if (style == "full") {
 					return genPath([
 						{x: 1.1 * w, y: 0},
@@ -221,7 +221,7 @@ export class AminoAcidMarker extends React.Component
 					transform={`translate(${x},${y})`}
 				>
 					<path
-						d={genPathWithStyle(style)}
+						d={genPathWithStyle(style,direction)}
 						fill={AminoAcidMarker.colorDict[aa]}
 					></path>
 					{(style!="left1" && style!="right1") && <text

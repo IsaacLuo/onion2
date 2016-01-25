@@ -19,19 +19,14 @@ export class MenuBar extends React.Component
         let cb = (v)=>{return v?<input type="checkbox" checked/>:<input type="checkbox"/>};
         let generalMenuItem = (key,cmd)=>{return <MenuItem key={key} eventKey={[{cmd}]} onSelect = {onSelect}>{cmd}</MenuItem>}
         return(
-        <Navbar>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <div></div>
-                </Navbar.Brand>
-            </Navbar.Header>
+        <Navbar style={{border:"none"}}>
             <Nav>
-                <NavDropdown title="File">
+                <NavDropdown title="FILE" noCaret>
                     {generalMenuItem(1,"Save As...")}
                     {generalMenuItem(2,"Save Selected Part As...")}
                     {generalMenuItem(3,"Reset")}
                 </NavDropdown>
-                <NavDropdown title="Edit">
+                <NavDropdown title="EDIT" noCaret>
                     {generalMenuItem(1,"Insert")}
                     {generalMenuItem(2,"Delete")}
                     {generalMenuItem(3,"Create Primers")}
@@ -42,7 +37,7 @@ export class MenuBar extends React.Component
                     {generalMenuItem(8,"To Lower Case")}
                     {generalMenuItem(9,"Translate")}
                 </NavDropdown>
-                <NavDropdown title="View" id="basic-nav-dropdown">
+                <NavDropdown title="VIEW" id="basic-nav-dropdown" noCaret>
                     <MenuItem key="1" eventKey={["showEnzymes",!showEnzymes]} onSelect = {onSelect}>{cb(showEnzymes)}Enzymes</MenuItem>
                     <MenuItem key="2" eventKey={["showLadder",!showLadder]} onSelect = {onSelect}>{cb(showLadder)}Ladder</MenuItem>
                     <MenuItem key="3" eventKey={["showRS",!showRS]} onSelect = {onSelect}>{cb(showRS)}Reverse Strand</MenuItem>

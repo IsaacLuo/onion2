@@ -99,9 +99,17 @@ export class SequenceEditor extends React.Component
 		for(let i in features){
 			if(features[i].type=="CDS"){
 				let f = features[i];
-				let l = f.end-f.start;
-				let aa = s.substr(f.start,l).toAASeq();
-				re.push({seq:aa,start:f.start,len:l});
+				let lOri = f.end - f.start;
+				let l = Math.floor(lOri/3)*3;
+				if(f.strand=="-"){
+					let realStart = f.start+lOri-l;
+					let aa = s.substr(realStart, l).reverseComplement().toAASeq();
+					re.push({seq: aa, start: f.start, len: l, strand: f.strand});
+				}
+				else {
+					let aa = s.substr(f.start, l).toAASeq();
+					re.push({seq: aa, start: f.start, len: l, strand: f.strand});
+				}
 			}
 		}
 		return re;
@@ -162,6 +170,7 @@ export class SequenceEditor extends React.Component
 
 		for(let i=0;i<aas.length;i++){
 			let aa = aas[i];
+			let aaSeq = aa.strand=="-"?aa.seq.reverse():aa.seq;
 			let startRow = Math.floor(aa.start/colNum);
 			let startIdx = aa.start%colNum;
 			let endRow = Math.ceil((aa.start+aa.len)/colNum);
@@ -202,7 +211,7 @@ export class SequenceEditor extends React.Component
 				let bpLenOld = -leftStyleIdx*repeatAA;
 				let bpLenNew = bpLen-bpLenOld;
 				let aaSubLen = Math.ceil(bpLenNew/3)+Math.ceil(bpLenOld/3);
-				let seq = aa.seq.substr(aaOffset,aaSubLen).toString();
+				let seq = aaSeq.substr(aaOffset,aaSubLen).toString();
 				//console.log("aaSeq",seq);
 
 				let newAARow = {
@@ -216,8 +225,7 @@ export class SequenceEditor extends React.Component
 					seqLen:seq.length,
 					aaOffset:aaOffset,
 					repeatAA:repeatAA,
-					t_startIdx:startIdx,
-					t_endIdx:endIdx,
+					strand:aa.strand,
 				};
 				//console.log("newAARow",newAARow);
 				if(re[row]) {
