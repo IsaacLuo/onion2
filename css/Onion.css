@@ -7,3 +7,18 @@
     user-select: none;           /* non-prefixed version, currently
                                   not supported by any browser */
 }
+
+.menuItemChecked
+{
+    color:#ff0000 !important;
+}
+
+.menuItemChecked2
+{
+    color:#4c505f !important;
+}
+
+.menuItemUnchecked
+{
+    color:#b3b3b3  !important;
+}

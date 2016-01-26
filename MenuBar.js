@@ -7,6 +7,7 @@ require('bootstrap');
 import {Navbar,Nav, NavDropdown, ButtonGroup, DropdownButton, MenuItem, Button, Input} from 'react-bootstrap';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/Onion.css'
 
  //SequenceEditor Menu
 export class MenuBar extends React.Component
@@ -16,7 +17,7 @@ export class MenuBar extends React.Component
     }
     render() {
         let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
-        let cb = (v)=>{return v?<input type="checkbox" checked/>:<input type="checkbox"/>};
+        let cb = (v)=>{return v?"menuItemChecked":"menuItemUnchecked"};
         let generalMenuItem = (key,cmd)=>{return <MenuItem key={key} eventKey={[{cmd}]} onSelect = {onSelect}>{cmd}</MenuItem>}
         return(
         <Navbar style={{border:"none"}}>
@@ -37,16 +38,16 @@ export class MenuBar extends React.Component
                     {generalMenuItem(8,"To Lower Case")}
                     {generalMenuItem(9,"Translate")}
                 </NavDropdown>
-                <NavDropdown title="VIEW" id="basic-nav-dropdown" noCaret>
-                    <MenuItem key="1" eventKey={["showEnzymes",!showEnzymes]} onSelect = {onSelect}>{cb(showEnzymes)}Enzymes</MenuItem>
-                    <MenuItem key="2" eventKey={["showLadder",!showLadder]} onSelect = {onSelect}>{cb(showLadder)}Ladder</MenuItem>
-                    <MenuItem key="3" eventKey={["showRS",!showRS]} onSelect = {onSelect}>{cb(showRS)}Reverse Strand</MenuItem>
-                    <MenuItem key="6" eventKey={["showBlockBar",!showBlockBar]} onSelect = {onSelect}>{cb(showBlockBar)}Blocks</MenuItem>
-                    <MenuItem key="7" eventKey={["showAA",!showAA]} onSelect = {onSelect}>{cb(showAA)}Amino Acids</MenuItem>
-                    <MenuItem key="4" eventKey={["showFeatures",!showFeatures]} onSelect = {onSelect}>{cb(showFeatures)}Features</MenuItem>
-                    <MenuItem key="5" eventKey={["showRuler",!showRuler]} onSelect = {onSelect}>{cb(showRuler)}Ruler</MenuItem>
-                </NavDropdown>
-
+            </Nav>
+            <Nav pullRight>
+                <li>
+                    <a
+                        className={"btn btn-link "+cb(showEnzymes)}
+                        onClick={onSelect.bind(this,"enzyme",!showEnzymes)}
+                    >
+                        Left
+                    </a>
+                </li>
             </Nav>
         </Navbar>
         )
