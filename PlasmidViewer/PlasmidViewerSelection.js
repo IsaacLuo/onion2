@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./LA";
+import {LA} from "./../LA";
 
 //the selection marker of PlasmidViewer
 export class PlasmidViewerSelection extends React.Component {

@@ -6,7 +6,7 @@ import { render as reactRender } from 'react-dom';
 
 import {SequenceEditor} from './SequenceEditor';
 import {onionFile} from './OnionFile';
-import {PlasmidViewer} from './PlasmidViewer';
+import {PlasmidViewer} from './PlasmidViewer/PlasmidViewer';
 import {InfoBar} from './InfoBar';
 import {Emzyme, loadEnzymeList} from './Bio/Enzyme';
 import {MenuBar} from './MenuBar';

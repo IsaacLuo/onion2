@@ -6,7 +6,9 @@ import {RulerLocation} from './RulerLocation'
 import {CDSBar} from './CDSBar'
 import {CuttingSite} from './CuttingSite'
 import {RestrictionSite} from './RestrictionSite'
-import {compareProps,comparePropsDebug} from './reactHelper'
+import {compareProps,comparePropsDebug} from './../reactHelper'
+
+import '../css/Onion.css'
 
 let isOverlap = function(a1,b1,a2,b2){
 	let a3 = Math.max(a1,a2);
@@ -166,7 +168,7 @@ export class SequenceRow extends React.Component
 					w={(rs[i].rs[1]-rs[i].rs[0])*unitWidth}
 					h={h}
 					key={"rst"+i}
-					className={`enzymeText_${rs[i].id}`}
+					className={`enzymeText_${rs[i].id} noselect`}
 					style={{cursor:"default"}}
 					onMouseEnter ={
 						(a,b,c)=>{

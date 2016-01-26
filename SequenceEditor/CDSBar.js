@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import {AminoAcidMarker} from './AminoAcidMarker'
-import {compareProps} from './reactHelper'
+import {compareProps} from './../reactHelper'
 
 export class CDSBar extends React.Component
 {

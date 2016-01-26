@@ -1,5 +1,5 @@
 import React from 'react';
-import {compareProps} from './reactHelper'
+import {compareProps} from './../reactHelper'
 
 //the arrow on PlasmidViewer
 export class SequenceFeatureArrow extends React.Component

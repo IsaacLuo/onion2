@@ -3,7 +3,7 @@
  */
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {compareProps} from './reactHelper'
+import {compareProps} from './../reactHelper'
 
 
 // the ruler on the bottom of each SequenceRow

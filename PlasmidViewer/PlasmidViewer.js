@@ -3,7 +3,7 @@ import {PlasmidBone,PlasmidBoneC,PlasmidBoneNAL} from './PlasmidBone';
 import FeatureGroup from './FeatureGroup';
 
 import EnzymeLabelContainer from './EnzymeLabelContainer'
-import {LA} from "./LA";
+import {LA} from "./../LA";
 import {PlasmidViewerCursorMeter,PlasmidViewerCursorGeneral} from './PlasmidViewerCursor'
 import {PlasmidViewerSelectionGeneral} from './PlasmidViewerSelection'
 import {PlasmidViewerVisibleArea} from './PlasmidViewerVisibleArea'

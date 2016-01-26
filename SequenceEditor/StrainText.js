@@ -2,8 +2,8 @@
  * Created by Isaac on 20/01/2016.
  */
 import React from 'react';
-import {compareProps} from './reactHelper'
-import {DNASeq} from './Bio/DNASeq'
+import {compareProps} from './../reactHelper'
+import {DNASeq} from './../Bio/DNASeq'
 
 export class StrainText extends React.Component
 {

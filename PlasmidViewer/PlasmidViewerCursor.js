@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./LA";
+import {LA} from "./../LA";
 
 
 // the cursor of plasmidViewer

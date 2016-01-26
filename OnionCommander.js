@@ -7,7 +7,7 @@ var combokeys;
 import {onionFile} from './OnionFile';
 
 //import PlasmidViewer from './PlasmidViewer';
-var PlasmidViewer = require('./PlasmidViewer');
+var PlasmidViewer = require('./PlasmidViewer/PlasmidViewer');
 
 
 //for unit testing

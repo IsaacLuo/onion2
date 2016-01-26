@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import {SequenceRow} from './SequenceRow'
+import {SequenceRow} from './SequenceEditor/SequenceRow'
 import jQuery from 'jquery';
 import {DNASeq} from './Bio/DNASeq'
 
@@ -247,7 +247,6 @@ export class SequenceEditor extends React.Component
 			let es = this.enzymeSites[i];
 
 			let enzyme = es.enzyme;
-			console.log(enzyme);
 			let row = Math.floor(es.anchor/colNum);
 			let row2 = Math.floor((es.anchor+enzyme.rs.length)/colNum);
 			let col = es.anchor%colNum;
