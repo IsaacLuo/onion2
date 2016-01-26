@@ -14,7 +14,7 @@ export class FeatureGroup extends React.Component {
 
 	static defaultProps = {
 		angleSpan : [0,360]
-	}
+	};
 
     calcFeaturePos(){
 		let {angleSpan} = this.props;

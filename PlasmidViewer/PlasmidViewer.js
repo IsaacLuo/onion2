@@ -22,7 +22,7 @@ export class PlasmidViewer extends React.Component {
 		cursorPos:0,
 		selectionStart:0,
 		selectionLength:0
-	}
+	};
 
 	constructor(props){
 		super(props);

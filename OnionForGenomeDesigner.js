@@ -117,7 +117,7 @@ export class OnionForGenomeDesigner extends React.Component {
                     showRuler={showRuler}
                     showBlockBar={showBlockBar}
                     showAA={showAA}
-                    onSelect = {this.selectLayer.bind(this)}
+                    onSelect = {this.menuCommand.bind(this)}
                 ></MenuBar>
                 <div style={{
           width:width,

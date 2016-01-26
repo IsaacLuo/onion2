@@ -363,10 +363,9 @@ export class SequenceRow extends React.Component
 		}
 
 		//calculate element Y poses
-		let elementPoses = ()=> {
+		let calcElementY = ()=> {
 			let re = {};
 			let y = 0;
-
 
 			if (showEnzymes) {
 				re.enzymeH = this.calcEnzymeHeight();
@@ -418,9 +417,10 @@ export class SequenceRow extends React.Component
 			}
 			re.totalH = y;
 			return re;
-		}();
+		};
 
-		let ep = elementPoses;
+		let ep = calcElementY();
+
 
 		height = ep.totalH;
 
@@ -562,7 +562,7 @@ export class SequenceRow extends React.Component
 							}
 							return re;
 						}
-					())}
+					)()}
 				>
 				</RulerLocation>
 			}
