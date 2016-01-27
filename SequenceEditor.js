@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {SequenceRow} from './SequenceEditor/SequenceRow'
 import jQuery from 'jquery';
 import {DNASeq} from './Bio/DNASeq'
+import {compareProps} from './reactHelper'
 
 
 //one of main components of onion, sequence editor
@@ -50,7 +51,6 @@ export class SequenceEditor extends React.Component
 			WebkitUserSelect:"none"
 		}
 
-	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</div>`);
 		jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
 
 		//jQuery("body").append(<div id="bp1" style={this.seqMainStyle}>A</div>);
@@ -85,13 +85,7 @@ export class SequenceEditor extends React.Component
 		}
 	}
 
-	componentWillMount(){
 
-	}
-
-	componentWillReceiveProps(nextProps){
-
-	}
 
 	calcAAs(sequence,features){
 		let s = new DNASeq(sequence);
@@ -139,6 +133,13 @@ export class SequenceEditor extends React.Component
 
 	splitFeatures(colNum){
 
+	}
+
+	initialRowPos(sequence,width){
+		let colNum = Math.floor(width / this.unitWidth) - 10;
+		let totalRows = Math.ceil(sequence.length/colNum);
+		this.rowHeight = Array(totalRows);
+		this.rowY = Array(totalRows);
 	}
 
 
@@ -307,12 +308,32 @@ export class SequenceEditor extends React.Component
 		if(this.props.onSetCursor){
 			this.props.onSetCursor(cursorPos);
 		}
+		if(this.props.onBlockChanged){
+			let row = Math.floor(cursorPos/this.colNum);
+			let x = cursorPos%this.colNum;
+			let blocks = this.splitBlocks[row]
+			for(let i in blocks) {
+				if(x>=blocks[i].start) {
+					this.props.onBlockChanged([blocks[i]]);
+				}
+			}
+		}
 	}
 	onSelecting(cursorPos,rowNumber){
 		//console.log(cursorPos,rowNumber);
 		this.setState({cursorPos:cursorPos,showCursor:true,showSelection:true});
 		if(this.props.onSelecting){
 			this.props.onSelecting(cursorPos,this.state.selectStartPos);
+		}
+	}
+
+	onRowCalculatedHeight(row,height){
+		this.rowHeight[row] = height;
+		if(row>0) {
+			this.rowY[row] = this.rowY[row - 1]+height;
+		}
+		else{
+			this.rowY[0] = 0;
 		}
 	}
 
@@ -334,7 +355,8 @@ export class SequenceEditor extends React.Component
 			}
 		}
 
-		let splitBlocks = [];
+		this.splitBlocks = [];
+		let splitBlocks = this.splitBlocks;
 		for(let j=0;j<sequence.length;j+=colNum){
 			splitBlocks.push([]);
 		}
@@ -361,6 +383,7 @@ export class SequenceEditor extends React.Component
 				}
 			}
 		}
+
 
 
     	for(let i=0,rowCount=0;i<sequence.length;i+=colNum,rowCount++){
@@ -452,6 +475,7 @@ export class SequenceEditor extends React.Component
 						blocks = {splitBlocks[rowCount]}
 						aas={aaFrags}
 						enzymes={enzymeFrags}
+						onCalculatedHeight={this.onRowCalculatedHeight.bind(this)}
 					>
 					</SequenceRow>);
 
@@ -460,6 +484,26 @@ export class SequenceEditor extends React.Component
     }
 
 	componentWillMount(){
+		this.initialRowPos(this.props.sequence,this.props.width);
+	}
+
+	componentDidMount(){
+
+	}
+
+	componentWillReceiveProps(nextProps){
+		if(nextProps.sequence!=this.props.sequence || nextProps.width!= this.props.width) {
+			this.initialRowPos(nextProps.sequence,nextProps.width);
+		}
+	}
+
+
+	shouldComponentUpdate(np,ns){
+		let update = !compareProps(this.props,np) || !compareProps(this.state,ns);
+		return update
+	}
+
+	componentDidUpdate(){
 
 	}
 	componentWillUpdate(){
@@ -468,7 +512,7 @@ export class SequenceEditor extends React.Component
 
 
 	render(){
-		let {width,sequence,features} = this.props;
+		let {width,height,sequence,features} = this.props;
 		this.colNum = Math.floor(width / this.unitWidth) - 10;
 
 		this.sequence = new DNASeq(this.props.sequence);
@@ -491,9 +535,32 @@ export class SequenceEditor extends React.Component
 		}
 		this.splitRows(this.colNum);
     	return (
-    		<div>
-				{this.textRows}
-    		</div>
+			<div style={{
+				  width:width,
+				  height:height,
+				  overflowY:"scroll",
+				  display:"inline-block",
+				}}
+			 	onScroll={(e)=>{
+			 		let scrollPos = e.target.scrollTop;
+//			 		console.log("scrolled to",scrollPos);
+			 		for(let i=0;i<this.rowY.length;i++){
+			 			if(scrollPos<=this.rowY[i]+this.rowHeight[i]){
+			 				let block = this.splitBlocks[i];
+//			 				console.log("scrolled to row",i,block);
+							this.props.onBlockChanged(block);
+			 				break;
+			 			}
+
+			 		}
+			 	}}
+			>
+    			<div
+
+				>
+					{this.textRows}
+    			</div>
+			</div>
     		)
     }
 }

@@ -416,6 +416,7 @@ export class SequenceRow extends React.Component
 				y+=15;
 			}
 			re.totalH = y;
+			this.props.onCalculatedHeight(this.props.rowNumber,re.totalH);
 			return re;
 		};
 

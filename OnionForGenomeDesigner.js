@@ -34,6 +34,7 @@ export class OnionForGenomeDesigner extends React.Component {
             showBlockBar: true,
             showAA: true,
             blocks: props.blocks,
+            menuTitle: "unknown",
             sequence: props.sequence,
         };
 
@@ -81,6 +82,8 @@ export class OnionForGenomeDesigner extends React.Component {
             //reset state sequence
             this.state.sequence = nextProps.sequence;
             this.state.blocks = nextProps.blocks;
+            if(nextProps.blocks[0])
+                this.state.menuTitle = nextProps.blocks[0].name;
         }
     }
 
@@ -90,7 +93,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
 
     render() {
-        let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,showAA} = this.state;
+        let {showEnzymes, showRS, showFeatures, showRuler,showBlockBar,showAA} = this.state;
         let sequence;
         let features;
         let blocks = this.state.blocks;
@@ -100,6 +103,10 @@ export class OnionForGenomeDesigner extends React.Component {
         if (this.state && this.state.features) {
             features = this.state.features ? this.state.features : onionFile.features;
             ;
+        }
+
+        if(!blocks){
+            blocks = onionFile.blocks;
         }
 
 
@@ -123,11 +130,7 @@ export class OnionForGenomeDesigner extends React.Component {
         let width = this.props.width;
         let height = 350;//this.props.height;
 
-        let menuTitle = "Block";
-        if (blocks && blocks.length > 0) {
-            menuTitle = blocks[0].name;
-            if (blocks.length > 1) menuTitle += ` (+${blocks.length - 1})`
-        }
+        let menuTitle = this.state.menuTitle;
 
         return (
             <div
@@ -143,32 +146,29 @@ export class OnionForGenomeDesigner extends React.Component {
                     showAA={showAA}
                     onSelect={this.menuCommand.bind(this)}
                 ></MenuBar>
-                <div style={{
-				  width:width,
-				  height:height-45,
-				  overflowY:"scroll",
-				  display:"inline-block",
-				}}>
 
-                    <SequenceEditor
-                        sequence={sequence}
-                        showComplement={true}
-                        features={features}
-                        onSetCursor={this.onSetCursor.bind(this)}
-                        onSelecting={this.onSelecting.bind(this)}
-                        enzymeList={this.enzymeList}
-                        width={width}
-                        showEnzymes={showEnzymes}
-                        showLadder={showRuler || !showRuler && showRS}
-                        showRS={showRS}
-                        showFeatures={showFeatures}
-                        showRuler={showRuler}
-                        showBlockBar={showBlockBar}
-                        showAA={showAA}
-                        blocks={blocks}
-                    ></SequenceEditor>
-                </div>
 
+                <SequenceEditor
+                    sequence={sequence}
+                    showComplement={true}
+                    features={features}
+                    onSetCursor={this.onSetCursor.bind(this)}
+                    onSelecting={this.onSelecting.bind(this)}
+                    enzymeList={this.enzymeList}
+                    width={width}
+                    height={height-45}
+                    showEnzymes={showEnzymes}
+                    showLadder={showRuler || !showRuler && showRS}
+                    showRS={showRS}
+                    showFeatures={showFeatures}
+                    showRuler={showRuler}
+                    showBlockBar={showBlockBar}
+                    showAA={showAA}
+                    blocks={blocks}
+                    onBlockChanged={(block,e)=>{
+                        this.setState({menuTitle:block[0].name});
+                    }}
+                ></SequenceEditor>
 
                 <InfoBar
                     width={width}
