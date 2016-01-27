@@ -12,17 +12,19 @@ import './css/Onion.css'
  //SequenceEditor Menu
 export class MenuBar extends React.Component
 {
+    static defaultProps = {
+        title:"Block"
+    };
     constructor(props){
         super(props)
     }
     render() {
-        let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
-        let cb = (v)=>{return v?"menuItemChecked":"menuItemUnchecked"};
+        let {title, showEnzymes, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
         let layerMenuItem = (text,cmd,value)=>{
-            console.log("value",cmd,value);
             return <li>
                 <a
-                    className={"btn btn-link "+ (value?"menuItemChecked":"menuItemUnchecked")}
+                    className={"btn btn-link"}
+                    color={value?"#4c505f":"#b3b3b3"}
                     onClick={onSelect.bind(this,cmd,!value)}
                 >
                     {text}
@@ -32,6 +34,11 @@ export class MenuBar extends React.Component
         let showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
         return(
         <Navbar style={{border:"none"}}>
+            <Navbar.Header>
+                <Navbar.Brand>
+                    <a href="#">{title}</a>
+                </Navbar.Brand>
+            </Navbar.Header>
             <Nav pullRight>
                 {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
                 {layerMenuItem("enzyme","showEnzymes",showEnzymes)}

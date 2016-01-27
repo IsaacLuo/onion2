@@ -120,11 +120,16 @@ export class OnionForGenomeDesigner extends React.Component {
 
 
         let width = this.props.width;
+
+        let menuTitle = blocks[0]?blocks[0].name:"Block";
+        if(blocks.length>1) menuTitle += ` (+${blocks.length-1})`
+
         return (
             <div
                 style={{width:"100%"}}
             >
                 <MenuBar
+                    title={menuTitle}
                     showEnzymes={showEnzymes}
                     showRS={showRS}
                     showFeatures={showFeatures}
