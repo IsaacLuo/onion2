@@ -28,36 +28,50 @@ export class MenuBar extends React.Component
                     {text}
                 </a>
             </li>
-        }
-        let generalMenuItem = (key,cmd)=>{return <MenuItem key={key} eventKey={[{cmd}]} onSelect = {onSelect}>{cmd}</MenuItem>}
+        };
+        let showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
         return(
         <Navbar style={{border:"none"}}>
-            <Nav>
-                <NavDropdown title="FILE" noCaret>
-                    {generalMenuItem(1,"Save As...")}
-                    {generalMenuItem(2,"Save Selected Part As...")}
-                    {generalMenuItem(3,"Reset")}
-                </NavDropdown>
-                <NavDropdown title="EDIT" noCaret>
-                    {generalMenuItem(1,"Insert")}
-                    {generalMenuItem(2,"Delete")}
-                    {generalMenuItem(3,"Create Primers")}
-                    {generalMenuItem(4,"Attach Primers")}
-                    {generalMenuItem(5,"Attach Sanger Sequencing")}
-                    {generalMenuItem(6,"Find")}
-                    {generalMenuItem(7,"To Upper Case")}
-                    {generalMenuItem(8,"To Lower Case")}
-                    {generalMenuItem(9,"Translate")}
-                </NavDropdown>
-            </Nav>
             <Nav pullRight>
+                {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
                 {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
                 {layerMenuItem("complement","showRS",showRS)}
-                {layerMenuItem("complement","showRS",showRS)}
-
+                {layerMenuItem("block","showBlockBar",showBlockBar)}
+                {layerMenuItem("amino acid","showAA",showAA)}
+                {layerMenuItem("feature","showFeatures",showFeatures)}
+                {layerMenuItem("ruler","showRuler",showRuler)}
             </Nav>
         </Navbar>
         )
     }
 }
 
+export class EyeIcon extends React.Component
+{
+    static defaultProps = {
+        width:17,
+        height:17,
+        stroke:"#4c505f",
+    };
+
+    constructor(props){
+        super(props)
+    }
+    render() {
+        let {width,height,stroke} = this.props;
+        return (
+            <svg width={width} height={height}>
+                <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                    <g id="Desktop" transform="translate(-153.000000, -124.000000)">
+                        <path id="Path-121" stroke={stroke} d=""></path>
+                        <path
+                            d="M161.5,128 C167,128 169,132.290784 169,132.290784 C169,132.290784 167,137.5 161.5,137.5 C156,137.5 154,132.290784 154,132.290784 C154,132.290784 156,128 161.5,128 Z"
+                            id="Path-122" stroke={stroke} ></path>
+                        <ellipse id="Oval-16" stroke={stroke} cx="161.5" cy="132.875891"
+                                 rx="2.8125" ry="2.92553475"></ellipse>
+                    </g>
+                </g>
+            </svg>
+        )
+    }
+}

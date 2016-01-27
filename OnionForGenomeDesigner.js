@@ -53,8 +53,23 @@ export class OnionForGenomeDesigner extends React.Component {
     menuCommand(command,value){
         console.log("menuCommand",command,value);
         let dict = {};
-        dict[command] = value;
-        this.setState(dict);
+        switch(command){
+            case "showAll":
+                dict.showRS = value;
+                dict.showEnzymes = value;
+                dict.showFeatures = value;
+                dict.showBlockBar = value;
+                dict.showRuler = value;
+                dict.showAA = value;
+                this.setState(dict);
+                break;
+
+            default:
+                dict[command] = value;
+                this.setState(dict);
+                break;
+        }
+
     }
 
     componentWillMount(){
@@ -111,7 +126,6 @@ export class OnionForGenomeDesigner extends React.Component {
             >
                 <MenuBar
                     showEnzymes={showEnzymes}
-                    showLadder={showLadder}
                     showRS={showRS}
                     showFeatures={showFeatures}
                     showRuler={showRuler}
@@ -135,7 +149,7 @@ export class OnionForGenomeDesigner extends React.Component {
                         enzymeList={this.enzymeList}
                         width={width}
                         showEnzymes={showEnzymes}
-                        showLadder={showLadder}
+                        showLadder={showRuler || !showRuler && showRS}
                         showRS={showRS}
                         showFeatures={showFeatures}
                         showRuler={showRuler}
