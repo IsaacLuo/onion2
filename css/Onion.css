@@ -8,12 +8,12 @@
                                   not supported by any browser */
 }
 
-.menuItemChecked
+.menuItemCheckedRed
 {
     color:#ff0000 !important;
 }
 
-.menuItemChecked2
+.menuItemChecked
 {
     color:#4c505f !important;
 }

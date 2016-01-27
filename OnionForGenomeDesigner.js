@@ -50,10 +50,10 @@ export class OnionForGenomeDesigner extends React.Component {
         this.setState({pvCursorPos: pos1, pvStartCursorPos: pos2});
     }
 
-    menuCommand(com){
-        console.log(this,a,k,v,b,c,d,e,"end")
+    menuCommand(command,value){
+        console.log("menuCommand",command,value);
         let dict = {};
-        dict[k[0]] = k[1];
+        dict[command] = value;
         this.setState(dict);
     }
 

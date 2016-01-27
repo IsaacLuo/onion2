@@ -18,6 +18,17 @@ export class MenuBar extends React.Component
     render() {
         let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
         let cb = (v)=>{return v?"menuItemChecked":"menuItemUnchecked"};
+        let layerMenuItem = (text,cmd,value)=>{
+            console.log("value",cmd,value);
+            return <li>
+                <a
+                    className={"btn btn-link "+ (value?"menuItemChecked":"menuItemUnchecked")}
+                    onClick={onSelect.bind(this,cmd,!value)}
+                >
+                    {text}
+                </a>
+            </li>
+        }
         let generalMenuItem = (key,cmd)=>{return <MenuItem key={key} eventKey={[{cmd}]} onSelect = {onSelect}>{cmd}</MenuItem>}
         return(
         <Navbar style={{border:"none"}}>
@@ -40,14 +51,10 @@ export class MenuBar extends React.Component
                 </NavDropdown>
             </Nav>
             <Nav pullRight>
-                <li>
-                    <a
-                        className={"btn btn-link "+cb(showEnzymes)}
-                        onClick={onSelect.bind(this,"enzyme",!showEnzymes)}
-                    >
-                        Left
-                    </a>
-                </li>
+                {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
+                {layerMenuItem("complement","showRS",showRS)}
+                {layerMenuItem("complement","showRS",showRS)}
+
             </Nav>
         </Navbar>
         )
