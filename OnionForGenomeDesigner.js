@@ -81,10 +81,10 @@ export class OnionForGenomeDesigner extends React.Component {
         if (nextProps.sequence != this.props.sequence) {
             //reset state sequence
             this.state.sequence = nextProps.sequence;
-            this.state.blocks = nextProps.blocks;
             if(nextProps.blocks[0])
                 this.state.menuTitle = nextProps.blocks[0].name;
         }
+        this.state.blocks = nextProps.blocks;
     }
 
     componentWillUpdate() {
