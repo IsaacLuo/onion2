@@ -32,24 +32,28 @@ export class MenuBar extends React.Component
             </li>
         };
         let showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
-        return(
-        <Navbar style={{border:"none"}}>
-            <Navbar.Header>
-                <Navbar.Brand>
-                    <a href="#">{title}</a>
-                </Navbar.Brand>
-            </Navbar.Header>
-            <Nav pullRight>
-                {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
-                {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
-                {layerMenuItem("complement","showRS",showRS)}
-                {layerMenuItem("block","showBlockBar",showBlockBar)}
-                {layerMenuItem("amino acid","showAA",showAA)}
-                {layerMenuItem("feature","showFeatures",showFeatures)}
-                {layerMenuItem("ruler","showRuler",showRuler)}
-            </Nav>
-        </Navbar>
-        )
+        return (
+            <nav className="navbar navbar-default">
+                <div className="container-fluid">
+                    <div className="navbar-header">
+                        <a className="navbar-brand" href="#">{title}</a>
+                    </div>
+                    <div className="navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul className="nav navbar-nav navbar-right">
+                            {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
+                            {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
+                            {layerMenuItem("complement","showRS",showRS)}
+                            {layerMenuItem("block","showBlockBar",showBlockBar)}
+                            {layerMenuItem("amino acid","showAA",showAA)}
+                            {layerMenuItem("feature","showFeatures",showFeatures)}
+                            {layerMenuItem("ruler","showRuler",showRuler)}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        );
+
+
     }
 }
 

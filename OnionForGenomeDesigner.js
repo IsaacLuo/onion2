@@ -121,8 +121,11 @@ export class OnionForGenomeDesigner extends React.Component {
 
         let width = this.props.width;
 
-        let menuTitle = blocks[0]?blocks[0].name:"Block";
-        if(blocks.length>1) menuTitle += ` (+${blocks.length-1})`
+        let menuTitle = "Block";
+        if(blocks && blocks.length>0) {
+            menuTitle = blocks[0].name;
+            if (blocks.length > 1) menuTitle += ` (+${blocks.length - 1})`
+        }
 
         return (
             <div
