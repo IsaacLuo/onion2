@@ -8,7 +8,7 @@ import {SequenceEditor} from './SequenceEditor';
 import {onionFile} from './OnionFile';
 import {PlasmidViewer} from './PlasmidViewer/PlasmidViewer';
 import {InfoBar} from './InfoBar';
-import {Emzyme, loadEnzymeList} from './Bio/Enzyme';
+import {Enzyme, loadEnzymeList} from './Bio/Enzyme';
 import {MenuBar} from './MenuBar';
 
 var $ = require('jquery');
@@ -26,34 +26,34 @@ export class OnionForGenomeDesigner extends React.Component {
         this.state = {
             pvCursorPos: 0,
             pvStartCursorPos: 0,
-            showEnzymes:true,
-            showLadder:true,
-            showRS:true,
-            showFeatures:true,
-            showRuler:true,
-            showBlockBar:true,
-            showAA:true,
-            blocks:props.blocks,
-            sequence:props.sequence,
+            showEnzymes: true,
+            showLadder: true,
+            showRS: true,
+            showFeatures: true,
+            showRuler: true,
+            showBlockBar: true,
+            showAA: true,
+            blocks: props.blocks,
+            sequence: props.sequence,
         };
 
-       // this.enzymeList = loadEnzymeList("cailab");
+        // this.enzymeList = loadEnzymeList("cailab");
         this.enzymeList = loadEnzymeList("New England Biolabs");
 
     }
 
     onSetCursor(pos) {
-        this.setState({pvCursorPos: pos,pvStartCursorPos:pos});
+        this.setState({pvCursorPos: pos, pvStartCursorPos: pos});
     }
 
     onSelecting(pos1, pos2) {
         this.setState({pvCursorPos: pos1, pvStartCursorPos: pos2});
     }
 
-    menuCommand(command,value){
-        console.log("menuCommand",command,value);
+    menuCommand(command, value) {
+        console.log("menuCommand", command, value);
         let dict = {};
-        switch(command){
+        switch (command) {
             case "showAll":
                 dict.showRS = value;
                 dict.showEnzymes = value;
@@ -72,24 +72,25 @@ export class OnionForGenomeDesigner extends React.Component {
 
     }
 
-    componentWillMount(){
+    componentWillMount() {
         console.warn("onion mount")
     }
-    componentWillReceiveProps(nextProps){
-        if(nextProps.sequence!=this.props.sequence){
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.sequence != this.props.sequence) {
             //reset state sequence
             this.state.sequence = nextProps.sequence;
             this.state.blocks = nextProps.blocks;
         }
     }
-    componentWillUpdate(){
+
+    componentWillUpdate() {
 
     }
 
 
     render() {
         let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,showAA} = this.state;
-        let divHeight = 400;
         let sequence;
         let features;
         let blocks = this.state.blocks;
@@ -97,7 +98,8 @@ export class OnionForGenomeDesigner extends React.Component {
             sequence = this.state.sequence ? this.state.sequence : onionFile.seq;
         }
         if (this.state && this.state.features) {
-            features = this.state.features?this.state.features:onionFile.features;;
+            features = this.state.features ? this.state.features : onionFile.features;
+            ;
         }
 
 
@@ -108,21 +110,21 @@ export class OnionForGenomeDesigner extends React.Component {
         }
 
         //if sequence has been changed, cursor should be reset
-        if(this.state && this.state.sequence && (this.state.pvCursorPos>this.state.sequence.length || this.state.pvStartCursorPos>this.state.sequence.length)){
+        if (this.state && this.state.sequence && (this.state.pvCursorPos > this.state.sequence.length || this.state.pvStartCursorPos > this.state.sequence.length)) {
             this.state.pvCursorPos = 0;
             this.state.pvStartCursorPos = 0;
         }
 
         let selectionStart = Math.min(this.state.pvCursorPos, this.state.pvStartCursorPos);
         let selectionLength = Math.abs(this.state.pvCursorPos - this.state.pvStartCursorPos);
-        let selectedSeq = sequence.substr(selectionStart,selectionLength);
-
+        let selectedSeq = sequence.substr(selectionStart, selectionLength);
 
 
         let width = this.props.width;
+        let height = 350;//this.props.height;
 
         let menuTitle = "Block";
-        if(blocks && blocks.length>0) {
+        if (blocks && blocks.length > 0) {
             menuTitle = blocks[0].name;
             if (blocks.length > 1) menuTitle += ` (+${blocks.length - 1})`
         }
@@ -139,14 +141,14 @@ export class OnionForGenomeDesigner extends React.Component {
                     showRuler={showRuler}
                     showBlockBar={showBlockBar}
                     showAA={showAA}
-                    onSelect = {this.menuCommand.bind(this)}
+                    onSelect={this.menuCommand.bind(this)}
                 ></MenuBar>
                 <div style={{
-          width:width,
-          height:divHeight-45,
-          overflowY:"scroll",
-          display:"inline-block",
-        }}>
+				  width:width,
+				  height:height-45,
+				  overflowY:"scroll",
+				  display:"inline-block",
+				}}>
 
                     <SequenceEditor
                         sequence={sequence}
@@ -164,44 +166,48 @@ export class OnionForGenomeDesigner extends React.Component {
                         showBlockBar={showBlockBar}
                         showAA={showAA}
                         blocks={blocks}
-                    />
+                    ></SequenceEditor>
                 </div>
 
-                {false &&<div style={{
-          width:400,
-          height:divHeight-30,
-          overflow:"hidden",
-          border:"1px solid black",
-          display:"inline-block",
-        }}>
-                    <PlasmidViewer
-                        mode={"normal"}
-                        plasmidR={128}
-                        width={400}
-                        height={400}
-                        theme={"NAL"}
-                        rotateAngle={0}
-                        cursorPos={this.state.pvCursorPos}
-                        selectedFeature={-1}
-                        selectionStart={selectionStart}
-                        selectionLength={selectionLength}
-                        features={features}
-                        seqLength={sequence.length}
-                        enzymes={onionFile.enzymes}
-                        name={onionFile.name}
-                        showViewAngle={false}
-                        onWheel={()=> {}}/>
 
-
-                </div>
-                }
                 <InfoBar
-                    width="1000"
+                    width={width}
                     startPos={selectionStart}
                     endPos={selectionStart+selectionLength}
                     seq={selectedSeq}
                 ></InfoBar>
             </div>
         );
+
+        /*
+         {false &&<div style={{
+         width:400,
+         height:divHeight-30,
+         overflow:"hidden",
+         border:"1px solid black",
+         display:"inline-block",
+         }}>
+         <PlasmidViewer
+         mode={"normal"}
+         plasmidR={128}
+         width={400}
+         height={400}
+         theme={"NAL"}
+         rotateAngle={0}
+         cursorPos={this.state.pvCursorPos}
+         selectedFeature={-1}
+         selectionStart={selectionStart}
+         selectionLength={selectionLength}
+         features={features}
+         seqLength={sequence.length}
+         enzymes={onionFile.enzymes}
+         name={onionFile.name}
+         showViewAngle={false}
+         onWheel={()=> {}}/>
+
+
+         </div>
+         }
+         */
     }
 }

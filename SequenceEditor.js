@@ -480,9 +480,6 @@ export class SequenceEditor extends React.Component
 		if(this.props.showAA) {
 			this.aas = this.calcAAs(sequence, features);
 		}
-
-
-
 		if (this.colNum < 20)
 			this.colNum = 20;
 		if(this.props.showAA) {

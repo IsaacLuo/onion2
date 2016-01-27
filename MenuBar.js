@@ -38,7 +38,7 @@ export class MenuBar extends React.Component
                     <div className="navbar-header">
                         <a className="navbar-brand" href="#">{title}</a>
                     </div>
-                    <div className="navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <div className="navbar-collapse" id="onion-menu-bar">
                         <ul className="nav navbar-nav navbar-right">
                             {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
                             {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
