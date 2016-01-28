@@ -535,12 +535,11 @@ export class SequenceEditor extends React.Component
 		}
 		this.splitRows(this.colNum);
     	return (
-			<div style={{
+			<div style={Object.assign(this.props.style,{
 				  width:width,
 				  height:height,
 				  overflowY:"scroll",
-				  display:"inline-block",
-				}}
+				})}
 			 	onScroll={(e)=>{
 			 		let scrollPos = e.target.scrollTop;
 //			 		console.log("scrolled to",scrollPos);

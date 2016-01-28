@@ -3,10 +3,7 @@
  */
 import React, { PropTypes } from 'react';
 global.jQuery = require('jquery');
-require('bootstrap');
-import {Navbar,Nav, NavDropdown, ButtonGroup, DropdownButton, MenuItem, Button, Input} from 'react-bootstrap';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/Onion.css'
 
  //SequenceEditor Menu
@@ -20,37 +17,79 @@ export class MenuBar extends React.Component
     }
     render() {
         let {title, showEnzymes, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
-        let layerMenuItem = (text,cmd,value)=>{
-            return <li>
+        let layerMenuItem = (text,cmd,value,padding="10px 10px")=>{
+			console.log(cmd,value,padding)
+            return(
+			<div
+				style={{
+						 display:"inline-block",
+						 padding:padding,
+					}}
+			>
                 <a
-                    className={"btn btn-link"}
-                    color={value?"#4c505f":"#b3b3b3"}
-                    onClick={onSelect.bind(this,cmd,!value)}
+                    style={{
+                    	color:value?"#4c505f":"#b3b3b3",
+                    	cursor:"pointer",
+                    }}
+					onClick={onSelect.bind(this,cmd,!value)}
                 >
                     {text}
                 </a>
-            </li>
+            </div>
+			)
         };
+
         let showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
         return (
-            <nav className="navbar navbar-default">
-                <div className="container-fluid">
-                    <div className="navbar-header">
-                        <a className="navbar-brand" href="#">{title}</a>
-                    </div>
-                    <div className="navbar-collapse" id="onion-menu-bar">
-                        <ul className="nav navbar-nav navbar-right">
-                            {layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll)}
-                            {layerMenuItem("enzyme","showEnzymes",showEnzymes)}
-                            {layerMenuItem("complement","showRS",showRS)}
-                            {layerMenuItem("block","showBlockBar",showBlockBar)}
-                            {layerMenuItem("amino acid","showAA",showAA)}
-                            {layerMenuItem("feature","showFeatures",showFeatures)}
-                            {layerMenuItem("ruler","showRuler",showRuler)}
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+			<div>
+				<div
+					style={{
+						height:43,
+						fontSize:16,
+					}}
+				>
+					<div
+						style={{
+							display:"inline-block",
+							width:"100%",
+							height:"100%",
+							borderStyle:"none none solid none",
+							borderWidth:"1",
+							textAlign:"right",
+							verticalAlign:"top",
+						}}
+					>
+						<div
+							style={{
+								display:"inline-block",
+								width:20,
+								height:"calc(100% + 1px)",
+								verticalAlign:"top",
+								borderStyle:"none none solid none",
+								borderWidth:1,
+								borderColor:"white",
+							}}
+						></div>
+							{layerMenuItem(<EyeIcon stroke={showAll?"#4c505f":"#b3b3b3"}></EyeIcon>,"showAll",showAll,"10px 0px 10px 10px")}
+							{layerMenuItem("Features","showFeatures",showFeatures)}
+							{layerMenuItem("Reverse Strand","showRS",showRS)}
+							{layerMenuItem("Enzymes","showEnzymes",showEnzymes)}
+							{layerMenuItem("Amino Acids","showAA",showAA)}
+							{layerMenuItem("Ruler","showRuler",showRuler)}
+					</div>
+				</div>
+				<div
+					style={{
+						paddingTop:8,
+						paddingLeft:8,
+						paddingBottom:8,
+						color:"#8EC78D",
+						fontSize:20,
+					}}
+				>
+					{title}
+				</div>
+			</div>
         );
 
 

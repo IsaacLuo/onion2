@@ -128,13 +128,21 @@ export class OnionForGenomeDesigner extends React.Component {
 
 
         let width = this.props.width;
-        let height = 350;//this.props.height;
+        let height = this.props.height;
 
         let menuTitle = this.state.menuTitle;
 
         return (
             <div
-                style={{width:"100%"}}
+                style={{
+                	width:"100%",
+                	position:"relative",
+                	height:height,
+                	marginTop:-10,
+                	display:"flex",
+                	flexDirection:"column"
+                }}
+
             >
                 <MenuBar
                     title={menuTitle}
@@ -156,7 +164,7 @@ export class OnionForGenomeDesigner extends React.Component {
                     onSelecting={this.onSelecting.bind(this)}
                     enzymeList={this.enzymeList}
                     width={width}
-                    height={height-45}
+                    height={height-30-86}
                     showEnzymes={showEnzymes}
                     showLadder={showRuler || !showRuler && showRS}
                     showRS={showRS}
@@ -168,13 +176,24 @@ export class OnionForGenomeDesigner extends React.Component {
                     onBlockChanged={(block,e)=>{
                         this.setState({menuTitle:block[0].name});
                     }}
+					style={{
+						flex:1,
+					}}
                 ></SequenceEditor>
 
                 <InfoBar
                     width={width}
+                    height={30}
                     startPos={selectionStart}
                     endPos={selectionStart+selectionLength}
                     seq={selectedSeq}
+					style={{
+						textAlign:"right",
+						width:width,
+						height:30,
+						background:"#eaebf1",
+						marginBottom:0,
+					}}
                 ></InfoBar>
             </div>
         );

@@ -33,6 +33,7 @@ export class InfoBar extends React.Component
 			showGC,
 			showTM,
 			width,
+			height,
 			startPos,
 			endPos,
 			seq,
@@ -41,7 +42,11 @@ export class InfoBar extends React.Component
 			display:"inline-block",
 			marginLeft:10,
 			marginRight:10,
+			marginTop:10,
+			marginBottom:10,
 			color:"A5A6A2",
+			verticalAlign:"middle",
+
 		};
 
 		let length = endPos-startPos;
@@ -55,10 +60,7 @@ export class InfoBar extends React.Component
 
 		return (
 			<div
-				style={{
-					textAlign:"right",
-					width:width,
-				}}
+				style={this.props.style}
 			>
 				{showPos &&
 					<div
