@@ -137,7 +137,7 @@ export class OnionForGenomeDesigner extends React.Component {
                 	width:"100%",
                 	position:"relative",
                 	height:height,
-                	marginTop:-10,
+                	marginTop:0,
                 	display:"flex",
                 	flexDirection:"column"
                 }}
