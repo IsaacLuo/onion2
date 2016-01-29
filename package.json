@@ -1,0 +1,9 @@
+{
+  "name": "Onion",
+  "version": "1.0.0",
+  "authors": [
+    { "name": "Isaac Luo"
+    }
+  ],
+  "description": "open source sequence editor"
+}
