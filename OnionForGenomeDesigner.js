@@ -14,7 +14,6 @@ import {MenuBar} from './MenuBar';
 var $ = require('jquery');
 window.$ = $;
 global.jQuery = $;
-require('bootstrap');
 import './css/GoogleFonts.css';
 
 

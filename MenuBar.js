@@ -18,7 +18,7 @@ export class MenuBar extends React.Component
     render() {
         let {title, showEnzymes, showRS, showFeatures, showRuler,showBlockBar,onSelect,showAA} = this.props;
         let layerMenuItem = (text,cmd,value,padding="10px 10px")=>{
-			console.log(cmd,value,padding)
+			//console.log(cmd,value,padding)
             return(
 			<div
 				style={{
@@ -111,7 +111,7 @@ export class EyeIcon extends React.Component
         let {width,height,stroke} = this.props;
         return (
             <svg width={width} height={height}>
-                <g id="Welcome" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="Welcome" stroke="none" strokeWidth="1" fill="none">
                     <g id="Desktop" transform="translate(-153.000000, -124.000000)">
                         <path id="Path-121" stroke={stroke} d=""></path>
                         <path

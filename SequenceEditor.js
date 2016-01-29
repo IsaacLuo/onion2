@@ -546,8 +546,8 @@ export class SequenceEditor extends React.Component
 			 		for(let i=0;i<this.rowY.length;i++){
 			 			if(scrollPos<=this.rowY[i]+this.rowHeight[i]){
 			 				let block = this.splitBlocks[i];
-//			 				console.log("scrolled to row",i,block);
-							this.props.onBlockChanged(block);
+							if(block.length>0)
+								this.props.onBlockChanged(block);
 			 				break;
 			 			}
 
