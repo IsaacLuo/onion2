@@ -133,7 +133,10 @@ export class SequenceRow extends React.Component
 	}
 
 	generateEnzymeLabels(y,h,seqY,seqH){
-		let {enzymes,unitWidth} = this.props;
+		let {enzymes,unitWidth,showEnzymes} = this.props;
+		if(!showEnzymes || !this.enzymeRow)
+			return ;
+
 		let {cs,rs} = enzymes;
 		let re = [];
 		for(let i=0;i<cs.length;i++){
