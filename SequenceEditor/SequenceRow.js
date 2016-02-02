@@ -92,6 +92,7 @@ export class SequenceRow extends React.Component
 			else if(aa.leftStyle=="right2"){
 				offsetX = -unitWidth;
 			}
+			let x = (aa.start)*unitWidth+offsetX;
 				re.push(
 					<CDSBar
 						x={(aa.start)*unitWidth+offsetX}
@@ -103,6 +104,19 @@ export class SequenceRow extends React.Component
 						rightStyle={aa.rightStyle}
 						key={`AABar${i}`}
 						strand={aa.strand}
+						onSelectAA={(obj,e)=>{
+							let xx = obj.props.x+x;
+							let cursorPos = Math.floor(xx/unitWidth);
+							let col0 = cursorPos + this.props.idxStart;
+							let row0 = this.props.rowNumber;
+							//this.props.onSetCursor(col0,row0);
+							let col1 = col0+3;
+							let row1 = row0;
+							if(col1>this.props.sequence.length){
+								row1++;
+							}
+							this.props.onSetCursorMoving(col1, row1,col0,row0);
+						}}
 					></CDSBar>
 				);
 
@@ -195,7 +209,7 @@ export class SequenceRow extends React.Component
 					<path
 						d={`M ${xx} ${y-this.enzymeRow[i]*15} L ${xx} ${seqY} `}
 						stroke="rgba(0,0,0,0.1)"
-						stroke-width={0.5}
+						strokeWidth={0.5}
 					></path>
 				)
 			}

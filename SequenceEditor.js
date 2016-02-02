@@ -303,7 +303,6 @@ export class SequenceEditor extends React.Component
 	}
 
 	onSetCursor(cursorPos,rowNumber){
-		//console.log(cursorPos,rowNumber);
 		this.setState({cursorPos:cursorPos,showCursor:true,selectStartPos:cursorPos,showSelection:false});
 		if(this.props.onSetCursor){
 			this.props.onSetCursor(cursorPos);
@@ -319,12 +318,23 @@ export class SequenceEditor extends React.Component
 			}
 		}
 	}
-	onSelecting(cursorPos,rowNumber){
-		//console.log(cursorPos,rowNumber);
-		this.setState({cursorPos:cursorPos,showCursor:true,showSelection:true});
-		if(this.props.onSelecting){
-			this.props.onSelecting(cursorPos,this.state.selectStartPos);
-		}
+	onSelecting(cursorPos,rowNumber,cursorPosStart,rowNumberStart){
+			if(cursorPosStart) {
+				this.setState({cursorPos: cursorPos, showCursor: true, showSelection: true, selectStartPos:cursorPosStart});
+			}
+			else {
+				this.setState({cursorPos: cursorPos, showCursor: true, showSelection: true});
+			}
+			if(this.props.onSelecting){
+				if(cursorPosStart) {
+					console.log("full start",cursorPosStart,cursorPos)
+					this.props.onSelecting(cursorPos, cursorPosStart);
+				}
+				else {
+					this.props.onSelecting(cursorPos, this.state.selectStartPos);
+				}
+			}
+
 	}
 
 	onRowCalculatedHeight(row,height){
@@ -494,6 +504,14 @@ export class SequenceEditor extends React.Component
 	componentWillReceiveProps(nextProps){
 		if(nextProps.sequence!=this.props.sequence || nextProps.width!= this.props.width) {
 			this.initialRowPos(nextProps.sequence,nextProps.width);
+		}
+		if(this.props.cursorPos!=nextProps.cursorPos || this.props.selectStartPos!=nextProps.selectStartPos){
+			this.setState({
+				selectStartPos:nextProps.selectStartPos,
+				cursorPos:nextProps.cursorPos,
+				showCursor:true,
+				showSelection:(nextProps.selectStartPos!=nextProps.cursorPos),
+			})
 		}
 	}
 

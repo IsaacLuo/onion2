@@ -219,6 +219,11 @@ export class AminoAcidMarker extends React.Component
 		return (
 				<g
 					transform={`translate(${x},${y})`}
+					onClick={(e)=>{
+						if(this.props.onSelect){
+							this.props.onSelect(this,e);
+						}
+					}}
 				>
 					<path
 						d={genPathWithStyle(style,direction)}

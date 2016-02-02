@@ -72,6 +72,10 @@ export class OnionForGenomeDesigner extends React.Component {
 
     }
 
+    onInfoBarChange(startPos,endPos){
+        this.setState({pvCursorPos: endPos, pvStartCursorPos: startPos});
+    }
+
     componentWillMount() {
         console.warn("onion mount")
     }
@@ -172,6 +176,8 @@ export class OnionForGenomeDesigner extends React.Component {
                     showBlockBar={showBlockBar}
                     showAA={showAA}
                     blocks={blocks}
+                    cursorPos={this.state.pvCursorPos}
+                    selectStartPos={this.state.pvStartCursorPos}
                     onBlockChanged={(block,e)=>{
                         this.setState({menuTitle:block[0].name});
                     }}
@@ -193,6 +199,8 @@ export class OnionForGenomeDesigner extends React.Component {
 						background:"#eaebf1",
 						marginBottom:0,
 					}}
+
+                    onChange = {this.onInfoBarChange.bind(this)}
                 ></InfoBar>
             </div>
         );

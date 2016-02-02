@@ -40,6 +40,8 @@ export class CDSBar extends React.Component
 				key={i}
 				style={leftStyle}
 				direction={strand}
+				idx={i}
+				onSelect={this.props.onSelectAA}
 			></AminoAcidMarker>)
 		}
 		//draw middle
@@ -52,6 +54,8 @@ export class CDSBar extends React.Component
 				h={height}
 				key={i}
 				direction={strand}
+				idx={i}
+				onSelect={this.props.onSelectAA}
 			></AminoAcidMarker>)
 		}
 		//draw tail
@@ -65,8 +69,11 @@ export class CDSBar extends React.Component
 				key={i}
 				style={rightStyle}
 				direction={strand}
+				idx={i}
+				onSelect={this.props.onSelectAA}
 			></AminoAcidMarker>)
 		}
+		this.aminoAcidMarkers = re;
 		return re;
 	}
 	shouldComponentUpdate(nextProps, nextState){
