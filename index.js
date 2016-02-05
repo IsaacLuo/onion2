@@ -1,7 +1,7 @@
 import React from 'react';
 import { render as reactRender } from 'react-dom';
 
-import {OnionForGenomeDesigner} from './extensions/onion2/OnionForGenomeDesigner';
+import {OnionForGenomeDesigner} from './OnionForGenomeDesigner';
 
 
 class OnionViewer extends React.Component {
@@ -131,8 +131,6 @@ const manifest = {
     name: 'Sequence Detail',
     render,
 };
-
-window.gd.registerExtension('sequenceDetail', manifest);
 
 //hack - hide Isaac's A at the bottom
 const style = document.createElement('style');
