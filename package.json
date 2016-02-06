@@ -1,9 +1,13 @@
 {
-  "name": "Onion",
-  "version": "1.0.0",
-  "authors": [
-    { "name": "Isaac Luo"
-    }
-  ],
-  "description": "open source sequence editor"
+  "name": "onion2",
+  "version": "2.0.0",
+  "description": "Onion Extensions",
+  "region": "sequenceDetail",
+  "readable": "onion2",
+  "scripts" : {
+    "build" : "npm install && webpack main.js index.js"
+  },
+  "devDependencies": {
+    "json-loader": "^0.5.4"
+  }
 }
