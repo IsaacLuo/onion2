@@ -77,16 +77,19 @@ class OnionViewer extends React.Component {
             }
         };
         this.subscriber = window.gd.store.subscribe(storeSubscriber);
-        this.updateDimensions();
     }
 
     updateDimensions(){
-        let width = this.props.container.offsetWidth;
+        //let width = this.props.container.offsetWidth;
+        let width = $(".onionContainer").width();
+        console.log("updateDimensions:",this.props.container,width);
         this.setState({width: width});
     }
 
     componentDidMount() {
+        console.log("componentDidMount:");
         window.addEventListener("resize", this.updateDimensions.bind(this));
+        this.updateDimensions();
     }
 
     componentWillUnmount() {
@@ -96,13 +99,13 @@ class OnionViewer extends React.Component {
 
     render() {
         let {sequence,features,width,height,blocks} = this.state;
-        console.log(this.state);
+        //can't read correct width and height, I don't know why.
         return (
             <OnionForGenomeDesigner
                 sequence={sequence}
                 features={features}
                 width={800}
-                height={600}
+                height={300}
                 blocks={blocks}
             ></OnionForGenomeDesigner>
         )
