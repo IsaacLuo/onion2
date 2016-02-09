@@ -24,7 +24,47 @@ class OnionViewer extends React.Component {
 
         });
         console.log("componentwillmount");
-        const storeSubscriber = (store) => {
+        var subscriber = window.gd.store.subscribe(function (state, lastAction) {
+            var last = [];
+            var current = state.ui.currentBlocks;
+            if (current &&
+                current.length &&
+                (current.length !== last.length ||
+                !current.every(function (item, index) {return item !== last[index]}))
+            ) {
+                console.log("current block",current);
+
+                let currentBlocks = current;
+                let readBlockCount = currentBlocks.length;
+                let onionBlocks = [];
+                let start=0;
+                let totalSequence = "";
+                let readSequenceFromBlock = (i,count)=>{
+                    let block =state.blocks[currentBlocks[i]];
+                    block.getSequence().then(sequence=>{
+                        if(sequence) {
+                            onionBlocks.push({
+                                color: block.metadata.color,
+                                start: start,
+                                length: sequence.length,
+                            });
+                            start += sequence.length;
+                            totalSequence += sequence;
+                            if (i == count - 1) {
+                                this.setState({blocks: onionBlocks, sequence: totalSequence});
+                            }
+                            else {
+                                readSequenceFromBlock(i + 1, count);
+                            }
+                        }
+                    });
+                };
+                readSequenceFromBlock(0,readBlockCount);
+
+                last = current;
+            }
+        });
+      /*  const storeSubscriber = (store) => {
             const { currentBlocks } = store.ui;
             //console.log("--block",store.ui);
             const block = (Array.isArray(currentBlocks) && currentBlocks.length) ? store.blocks[currentBlocks[0]] : null;
@@ -76,7 +116,9 @@ class OnionViewer extends React.Component {
                 console.log("no block");
             }
         };
-        this.subscriber = window.gd.store.subscribe(storeSubscriber);
+      //  this.subscriber = window.gd.store.subscribe(storeSubscriber);
+        */
+
     }
 
     updateDimensions(){
@@ -105,7 +147,7 @@ class OnionViewer extends React.Component {
                 sequence={sequence}
                 features={features}
                 width={800}
-                height={300}
+                height={400}
                 blocks={blocks}
             ></OnionForGenomeDesigner>
         )
