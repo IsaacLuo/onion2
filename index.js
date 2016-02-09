@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d26ba1801bc6bccfdcf3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a8a39cf8556bb741e076"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -26503,6 +26503,15 @@
 				}
 			}
 		}, {
+			key: 'onSetHightLight',
+			value: function onSetHightLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
+				if (highLightStart == highLightEnd) {
+					this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+				} else {
+					this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+				}
+			}
+		}, {
 			key: 'onRowCalculatedHeight',
 			value: function onRowCalculatedHeight(row, height) {
 				this.rowHeight[row] = height;
@@ -26521,6 +26530,9 @@
 				var showCursor = _state.showCursor;
 				var selectStartPos = _state.selectStartPos;
 				var showSelection = _state.showSelection;
+				var showHighLight = _state.showHighLight;
+				var highLightStart = _state.highLightStart;
+				var highLightEnd = _state.highLightEnd;
 				var _props = this.props;
 				var showEnzymes = _props.showEnzymes;
 				var showLadder = _props.showLadder;
@@ -26596,6 +26608,9 @@
 					var rowSelectRightPos = colNum;
 					var rowShowLeftCursor = false;
 					var rowShowRightCursor = false;
+					var rowHighLightLeftPos = 0;
+					var rowHighLightRightPos = colNum;
+					var rowShowHighLight = false;
 	
 					var showEnzyme = true;
 	
@@ -26623,6 +26638,19 @@
 							rowShowSelection = true;
 						}
 					}
+					if (showHighLight) {
+						var highLightLeftPos = Math.min(highLightStart, highLightEnd);
+						var highLightRightPos = Math.max(highLightStart, highLightEnd);
+	
+						if (highLightLeftPos >= i && highLightLeftPos <= i + colNum) {
+							rowHighLightLeftPos = highLightLeftPos - i;
+							rowShowHighLight = true;
+						}
+						if (highLightRightPos > i && highLightRightPos <= i + colNum) {
+							rowHighLightRightPos = highLightRightPos - i;
+							rowShowHighLight = true;
+						}
+					}
 	
 					var subSequence = sequence.substr(i, colNum);
 	
@@ -26635,6 +26663,7 @@
 						unitWidth: this.unitWidth,
 						onSetCursor: this.onSetCursor.bind(this),
 						onSetCursorMoving: this.onSelecting.bind(this),
+						onSetHighLight: this.onSetHightLight.bind(this),
 						cursorPos: rowCursorPos,
 						showCursor: rowShowCursor,
 						selectLeftPos: rowSelectLeftPos,
@@ -26651,6 +26680,9 @@
 						showFeatures: showFeatures,
 						showRuler: showRuler,
 						showAA: showAA,
+						showHighLight: rowShowHighLight,
+						highLightLeftPos: rowHighLightLeftPos,
+						highLightRightPos: rowHighLightRightPos,
 						theme: this.props.theme,
 						showBlockBar: showBlockBar,
 						blocks: splitBlocks[rowCount],
@@ -26931,6 +26963,19 @@
 							if (_this2.props.onSelect) {
 								_this2.props.onSelect(_this2, e);
 							}
+						},
+						onHover: function onHover(e) {
+							console.log('eeeee', e);
+						},
+						onMouseOver: function onMouseOver(e) {
+							if (_this2.hoveringTimer) {
+								clearTimeout(_this2.hoveringTimer);
+							}
+							if (_this2.props.onMouseOver) {
+								_this2.hoveringTimer = setTimeout(function () {
+									_this2.props.onMouseOver(_this2, e);
+								}, 500);
+							}
 						}
 					},
 					_react3.default.createElement("path", {
@@ -27088,7 +27133,8 @@
 						style: leftStyle,
 						direction: strand,
 						idx: i,
-						onSelect: this.props.onSelectAA
+						onSelect: this.props.onSelectAA,
+						onMouseOver: this.props.onMouseOverAA
 					}));
 				}
 				//draw middle
@@ -27102,7 +27148,8 @@
 						key: i,
 						direction: strand,
 						idx: i,
-						onSelect: this.props.onSelectAA
+						onSelect: this.props.onSelectAA,
+						onMouseOver: this.props.onMouseOverAA
 					}));
 				}
 				//draw tail
@@ -27117,7 +27164,8 @@
 						style: rightStyle,
 						direction: strand,
 						idx: i,
-						onSelect: this.props.onSelectAA
+						onSelect: this.props.onSelectAA,
+						onMouseOver: this.props.onMouseOverAA
 					}));
 				}
 				this.aminoAcidMarkers = re;
@@ -27143,7 +27191,8 @@
 				return _react3.default.createElement(
 					'g',
 					{
-						transform: 'translate(' + x + ',' + y + ')'
+						transform: 'translate(' + x + ',' + y + ')',
+						onMouseOut: this.props.onMouseOutAA
 					},
 					this.generateBar()
 				);
@@ -27925,6 +27974,22 @@
 								row1++;
 							}
 							_this2.props.onSetCursorMoving(col1, row1, col0, row0);
+						},
+						onMouseOverAA: function onMouseOverAA(obj, e) {
+							var xx = obj.props.x + x;
+							var cursorPos = Math.floor(xx / unitWidth);
+							var col0 = cursorPos + _this2.props.idxStart;
+							var row0 = _this2.props.rowNumber;
+							//this.props.onSetCursor(col0,row0);
+							var col1 = col0 + 3;
+							var row1 = row0;
+							if (col1 > _this2.props.sequence.length) {
+								row1++;
+							}
+							_this2.props.onSetHighLight(col1, row1, col0, row0);
+						},
+						onMouseOutAA: function onMouseOutAA(obj, e) {
+							_this2.props.onSetHighLight(0, 0, 0, 0);
 						}
 					}));
 				};
@@ -28181,6 +28246,9 @@
 				var showAA = _props9.showAA;
 				var ruler2d = _props9.ruler2d;
 				var enzymes = _props9.enzymes;
+				var showHighLight = _props9.showHighLight;
+				var highLightLeftPos = _props9.highLightLeftPos;
+				var highLightRightPos = _props9.highLightRightPos;
 				var _props10 = this.props;
 				var showEnzymes = _props10.showEnzymes;
 				var showLadder = _props10.showLadder;
@@ -28304,6 +28372,13 @@
 								width: cursorRight - cursorLeft,
 								height: ep.selectionH,
 								fill: this.props.selectionColor
+							}),
+							showHighLight && _react3.default.createElement('rect', {
+								x: highLightLeftPos * unitWidth,
+								y: ep.seqBlockY,
+								width: (highLightRightPos - highLightLeftPos) * unitWidth,
+								height: ep.seqBlockH,
+								fill: '#EDF2F8'
 							}),
 							_react3.default.createElement(_StrainText.StrainText, {
 								showRS: showRS,

@@ -224,6 +224,17 @@ export class AminoAcidMarker extends React.Component
 							this.props.onSelect(this,e);
 						}
 					}}
+					onHover = {(e)=>{console.log('eeeee',e)}}
+					onMouseOver = {(e)=>{
+						if(this.hoveringTimer){
+							clearTimeout(this.hoveringTimer);
+						}
+						if(this.props.onMouseOver){
+							this.hoveringTimer = setTimeout(()=>{
+									this.props.onMouseOver(this,e);
+								},500);
+						}
+					}}
 				>
 					<path
 						d={genPathWithStyle(style,direction)}

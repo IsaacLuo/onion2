@@ -42,6 +42,7 @@ export class CDSBar extends React.Component
 				direction={strand}
 				idx={i}
 				onSelect={this.props.onSelectAA}
+				onMouseOver={this.props.onMouseOverAA}
 			></AminoAcidMarker>)
 		}
 		//draw middle
@@ -56,6 +57,7 @@ export class CDSBar extends React.Component
 				direction={strand}
 				idx={i}
 				onSelect={this.props.onSelectAA}
+				onMouseOver={this.props.onMouseOverAA}
 			></AminoAcidMarker>)
 		}
 		//draw tail
@@ -71,6 +73,7 @@ export class CDSBar extends React.Component
 				direction={strand}
 				idx={i}
 				onSelect={this.props.onSelectAA}
+				onMouseOver={this.props.onMouseOverAA}
 			></AminoAcidMarker>)
 		}
 		this.aminoAcidMarkers = re;
@@ -87,6 +90,7 @@ export class CDSBar extends React.Component
 		return (
 			<g
 				transform={`translate(${x},${y})`}
+				onMouseOut={this.props.onMouseOutAA}
 			>
 				{this.generateBar()}
 			</g>

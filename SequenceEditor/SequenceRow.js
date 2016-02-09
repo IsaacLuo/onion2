@@ -117,6 +117,22 @@ export class SequenceRow extends React.Component
 							}
 							this.props.onSetCursorMoving(col1, row1,col0,row0);
 						}}
+						onMouseOverAA={(obj,e)=>{
+							let xx = obj.props.x+x;
+							let cursorPos = Math.floor(xx/unitWidth);
+							let col0 = cursorPos + this.props.idxStart;
+							let row0 = this.props.rowNumber;
+							//this.props.onSetCursor(col0,row0);
+							let col1 = col0+3;
+							let row1 = row0;
+							if(col1>this.props.sequence.length){
+								row1++;
+							}
+							this.props.onSetHighLight(col1, row1,col0,row0);
+						}}
+						onMouseOutAA={(obj,e)=>{
+							this.props.onSetHighLight(0, 0,0,0);
+						}}
 					></CDSBar>
 				);
 
@@ -355,6 +371,9 @@ export class SequenceRow extends React.Component
 			showAA,
 			ruler2d,
 			enzymes,
+			showHighLight,
+			highLightLeftPos,
+			highLightRightPos,
 			} = this.props;
 		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,onSelect} = this.props;
 
@@ -475,6 +494,16 @@ export class SequenceRow extends React.Component
 			</rect>
 			}
 
+				{showHighLight &&
+				<rect
+					x={highLightLeftPos*unitWidth}
+					y={ep.seqBlockY}
+					width={(highLightRightPos-highLightLeftPos)*unitWidth}
+					height={ep.seqBlockH}
+					fill="#EDF2F8"
+				></rect>
+				}
+
 			<StrainText
 				showRS={showRS}
 				showLadder={showLadder}
@@ -500,6 +529,7 @@ export class SequenceRow extends React.Component
 			{showEnzymes &&
 				this.generateEnzymeLabels(ep.enzymeY,ep.enzymeH,ep.seqBlockY,ep.seqBlockH)
 			}
+
 
 			{showCursor && cursorX<=sequenceRowWidth &&
 				<g>

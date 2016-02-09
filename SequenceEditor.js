@@ -336,6 +336,14 @@ export class SequenceEditor extends React.Component
 			}
 
 	}
+	onSetHightLight(highLightStart,rowNumber,highLightEnd,rowNumberStart){
+		if(highLightStart==highLightEnd){
+			this.setState({highLightStart, highLightEnd, showHighLight: false});
+		}
+		else {
+			this.setState({highLightStart, highLightEnd, showHighLight: true});
+		}
+	}
 
 	onRowCalculatedHeight(row,height){
 		this.rowHeight[row] = height;
@@ -350,7 +358,7 @@ export class SequenceEditor extends React.Component
 
 	splitRows(colNum){
     	let sequence = this.props.sequence;
-		let {cursorPos,showCursor,selectStartPos,showSelection} = this.state;
+		let {cursorPos,showCursor,selectStartPos,showSelection,showHighLight,highLightStart,highLightEnd} = this.state;
 		let {showEnzymes, showLadder, showRS, showFeatures, showRuler,showBlockBar,blocks,showAA} = this.props;
 
 		this.textRows =[];
@@ -421,6 +429,9 @@ export class SequenceEditor extends React.Component
 			let rowSelectRightPos = colNum;
 			let rowShowLeftCursor = false;
 			let rowShowRightCursor = false;
+			let rowHighLightLeftPos = 0;
+			let rowHighLightRightPos = colNum;
+			let rowShowHighLight = false;
 
 			let showEnzyme = true;
 
@@ -448,6 +459,19 @@ export class SequenceEditor extends React.Component
 					rowShowSelection = true;
 				}
 			}
+			if(showHighLight){
+				let highLightLeftPos = Math.min(highLightStart,highLightEnd);
+				let highLightRightPos = Math.max(highLightStart,highLightEnd);
+
+				if(highLightLeftPos>=i && highLightLeftPos<=i+colNum){
+					rowHighLightLeftPos = highLightLeftPos -i;
+					rowShowHighLight = true;
+				}
+				if(highLightRightPos>i && highLightRightPos<=i+colNum){
+					rowHighLightRightPos = highLightRightPos -i;
+					rowShowHighLight = true;
+				}
+			}
 
 			let subSequence = sequence.substr(i,colNum);
 
@@ -464,6 +488,7 @@ export class SequenceEditor extends React.Component
 						unitWidth={this.unitWidth}
 						onSetCursor={this.onSetCursor.bind(this)}
 						onSetCursorMoving={this.onSelecting.bind(this)}
+						onSetHighLight={this.onSetHightLight.bind(this)}
 						cursorPos={rowCursorPos}
 						showCursor={rowShowCursor}
 						selectLeftPos={rowSelectLeftPos}
@@ -480,6 +505,9 @@ export class SequenceEditor extends React.Component
 						showFeatures={showFeatures}
 						showRuler={showRuler}
 						showAA={showAA}
+						showHighLight={rowShowHighLight}
+						highLightLeftPos={rowHighLightLeftPos}
+						highLightRightPos={rowHighLightRightPos}
 						theme={this.props.theme}
 						showBlockBar={showBlockBar}
 						blocks = {splitBlocks[rowCount]}
