@@ -44,7 +44,7 @@ export class SequenceEditor extends React.Component
       alignmentBaseline:"before-edge",
       WebkitUserSelect:"none"
     }
-    this.seqCompStyle = this.seqCompStyle = Object.assign({fill:"#B7BBC2"},seqMainStyle);
+    this.seqCompStyle = this.seqCompStyle = Object.assign({fill:"#B7BBC2"},this.seqMainStyle);
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(this.props.sequence);    //Bio.js sequence object, used for calculation

@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "66f66ed4681e7130c656"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a8fb6afd4938eb650d0c"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -26203,7 +26203,7 @@
 	      alignmentBaseline: "before-edge",
 	      WebkitUserSelect: "none"
 	    };
-	    _this.seqCompStyle = _this.seqCompStyle = Object.assign({ fill: "#B7BBC2" }, seqMainStyle);
+	    _this.seqCompStyle = _this.seqCompStyle = Object.assign({ fill: "#B7BBC2" }, _this.seqMainStyle);
 	    _this.unitWidth = _this.myCSS.seqFontUnitWidth;
 	
 	    _this.sequence = new _DNASeq.DNASeq(_this.props.sequence); //Bio.js sequence object, used for calculation
