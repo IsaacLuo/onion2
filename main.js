@@ -4,174 +4,113 @@ import { render as reactRender } from 'react-dom';
 import {OnionForGenomeDesigner} from './OnionForGenomeDesigner';
 var manifest = require('json!./package.json');
 
+// OnionViewer reads data from blocks, and converts it to onion format.
 class OnionViewer extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            width: props.container.offsetWidth,
-            height: props.container.offsetHeight,
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: props.container.offsetWidth,
+      height: props.container.offsetHeight,
+    };
+  }
+
+  componentWillMount() {
+    this.setState({
+      block: null,
+      rendered: Date.now(),
+    });
+    console.log("componentwillmount");
+
+
+    var subscriber = window.gd.store.subscribe(function (state, lastAction) {
+      var last = [];
+      var current = state.ui.currentBlocks;
+      if (current &&
+        current.length &&
+        (current.length !== last.length || !current.every(function (item, index) {
+          return item !== last[index]
+        }))
+      ) {
+        let currentBlocks = current;
+        let readBlockCount = currentBlocks.length;
+        let onionBlocks = [];
+        let start = 0;
+        let totalSequence = "";
+
+        let readSequenceFromBlock = (i, count)=> {
+          let block = state.blocks[currentBlocks[i]];
+
+          block.getSequence().then(sequence=> {
+            if (sequence) {
+              onionBlocks.push({
+                color: block.metadata.color,
+                start: start,
+                length: sequence.length,
+              });
+              start += sequence.length;
+              totalSequence += sequence;
+              if (i == count - 1) {
+                this.setState({blocks: onionBlocks, sequence: totalSequence});
+              }
+              else {
+                readSequenceFromBlock(i + 1, count);
+              }
+            }
+          });
+
         };
-        //console.log(this.enzymeList);
-    }
 
-    componentWillMount() {
-        const self = this;
-        let lastBlock;
+        readSequenceFromBlock(0, readBlockCount);
 
-        this.setState({
-            block: null,
-            rendered: Date.now(),
+        last = current;
+      }
+    });
 
-        });
-        console.log("componentwillmount");
-        var subscriber = window.gd.store.subscribe(function (state, lastAction) {
-            var last = [];
-            var current = state.ui.currentBlocks;
-            if (current &&
-                current.length &&
-                (current.length !== last.length ||
-                !current.every(function (item, index) {return item !== last[index]}))
-            ) {
-                console.log("current block",current);
+    this.updateDimensions();
+  }
 
-                let currentBlocks = current;
-                let readBlockCount = currentBlocks.length;
-                let onionBlocks = [];
-                let start=0;
-                let totalSequence = "";
-                let readSequenceFromBlock = (i,count)=>{
-                    let block =state.blocks[currentBlocks[i]];
-                    block.getSequence().then(sequence=>{
-                        if(sequence) {
-                            onionBlocks.push({
-                                color: block.metadata.color,
-                                start: start,
-                                length: sequence.length,
-                            });
-                            start += sequence.length;
-                            totalSequence += sequence;
-                            if (i == count - 1) {
-                                this.setState({blocks: onionBlocks, sequence: totalSequence});
-                            }
-                            else {
-                                readSequenceFromBlock(i + 1, count);
-                            }
-                        }
-                    });
-                };
-                readSequenceFromBlock(0,readBlockCount);
+  componentDidMount() {
+    console.log("componentDidMount:");
+    window.addEventListener("resize", this.updateDimensions.bind(this));
 
-                last = current;
-            }
-        });
-      /*  const storeSubscriber = (store) => {
-            const { currentBlocks } = store.ui;
-            //console.log("--block",store.ui);
-            const block = (Array.isArray(currentBlocks) && currentBlocks.length) ? store.blocks[currentBlocks[0]] : null;
-            // all instances in the store are immutables, so you can just do a reference equality check to see if it has changed
-            // this would also be a good place to convert to the onion format
-            // it would be a great place to memoize
-            // (i.e. return same value if input === previous input, rather than storing it explicitly in the component,
-            // and then you can reuse the selector for all things you retrieve from the store)
-            //if (!!block && block !== lastBlock) {
-            //  //note that right now, blocks dont have a sequence... this will work but nothing will be returned
-            //  block.getSequence()
-            //    .then(sequence => {
-            //      self.setState({
-            //        blocks,
-            //        sequence,
-            //      });
-            //    });
-            //  lastBlock = block;
-            //}
+  }
 
-            if(Array.isArray(currentBlocks) && currentBlocks.length) {
-                let readBlockCount = currentBlocks.length;
-                let onionBlocks = [];
-                let start = 0;
-                let totalSequence = "";
-                let readSequenceFromBlock = (i,count)=>{
-                    let block = store.blocks[currentBlocks[i]];
-                    block.getSequence().then(sequence=>{
-                        if(sequence) {
-                            onionBlocks.push({
-                                color: block.metadata.color,
-                                start: start,
-                                length: sequence.length,
-                            });
-                            start += sequence.length;
-                            totalSequence += sequence;
-                            if (i == count - 1) {
-                                this.setState({blocks: onionBlocks, sequence: totalSequence});
-                            }
-                            else {
-                                readSequenceFromBlock(i + 1, count);
-                            }
-                        }
-                    });
-                };
-                readSequenceFromBlock(0,readBlockCount);
-            }
-            else{
-                console.log("no block");
-            }
-        };
-      //  this.subscriber = window.gd.store.subscribe(storeSubscriber);
-        */
+  componentWillUnmount() {
+    this.subscriber();
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
 
-    }
+  render() {
+    let {sequence,features,width,height,blocks} = this.state;
+    //can't read correct width and height, I don't know why.
+    return (
+      <OnionForGenomeDesigner
+        sequence={sequence}
+        features={features}
+        width={width}
+        height={400}
+        blocks={blocks}
+      ></OnionForGenomeDesigner>
+    )
+  }
 
-    updateDimensions(){
-        //let width = this.props.container.offsetWidth;
-        let width = $(".onionContainer").width();
-        console.log("updateDimensions:",this.props.container,width);
-        this.setState({width: width});
-    }
+  //read dimensions of onion container
+  updateDimensions() {
+    let width = $(".onionContainer").width();
+    let height = $(".onionContainer").height();
+    width = Math.max(100,width);
+    height = Math.max(100,height);
+    console.log("updateDimensions:", this.props.container, width,height);
+    this.setState({width: width});
+  }
 
-    componentDidMount() {
-        console.log("componentDidMount:");
-        window.addEventListener("resize", this.updateDimensions.bind(this));
-        this.updateDimensions();
-    }
-
-    componentWillUnmount() {
-        this.subscriber();
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
-    }
-
-    render() {
-        let {sequence,features,width,height,blocks} = this.state;
-        //can't read correct width and height, I don't know why.
-        return (
-            <OnionForGenomeDesigner
-                sequence={sequence}
-                features={features}
-                width={800}
-                height={400}
-                blocks={blocks}
-            ></OnionForGenomeDesigner>
-        )
-    }
 }
 
-/* register with store */
-//note that if you were using redux, you could wrap your component in a Provider, and pass in window.gd.store
-//we'll just register directly for this example
-
-/* rendering + registering extension */
-
-//const render = (container) => {
-//    container.className += " onionContainer";
-//    reactRender(<OnionViewer
-//        container={container}
-//    />, container);
-//};
-
-const render = (container)=>{
-    container.className += " onionContainer";
-    reactRender(<OnionViewer
-        container={container}
-    />, container);
+const render = (container)=> {
+  container.className += " onionContainer";
+  reactRender(<OnionViewer
+    container={container}
+  />, container);
 }
 
 window.gd.registerExtension(manifest, render);

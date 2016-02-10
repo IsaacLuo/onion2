@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a8a39cf8556bb741e076"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "66f66ed4681e7130c656"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -1294,13 +1294,13 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(19);
-	var ReactBrowserEventEmitter = __webpack_require__(38);
+	var ReactBrowserEventEmitter = __webpack_require__(37);
 	var ReactCurrentOwner = __webpack_require__(16);
 	var ReactDOMFeatureFlags = __webpack_require__(89);
 	var ReactElement = __webpack_require__(11);
 	var ReactEmptyComponentRegistry = __webpack_require__(96);
 	var ReactInstanceHandles = __webpack_require__(25);
-	var ReactInstanceMap = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(31);
 	var ReactMarkupChecksum = __webpack_require__(99);
 	var ReactPerf = __webpack_require__(12);
 	var ReactReconciler = __webpack_require__(20);
@@ -1312,7 +1312,7 @@
 	var containsNode = __webpack_require__(75);
 	var instantiateReactComponent = __webpack_require__(65);
 	var invariant = __webpack_require__(1);
-	var setInnerHTML = __webpack_require__(45);
+	var setInnerHTML = __webpack_require__(44);
 	var shouldUpdateReactComponent = __webpack_require__(68);
 	var validateDOMNesting = __webpack_require__(70);
 	var warning = __webpack_require__(3);
@@ -2151,7 +2151,7 @@
 	var ReactCurrentOwner = __webpack_require__(16);
 	
 	var assign = __webpack_require__(2);
-	var canDefineProperty = __webpack_require__(43);
+	var canDefineProperty = __webpack_require__(42);
 	
 	// The Symbol used to tag the ReactElement type. If there is no native Symbol
 	// nor polyfill, then a plain number is used for performance.
@@ -2505,7 +2505,7 @@
 	var PooledClass = __webpack_require__(18);
 	var ReactPerf = __webpack_require__(12);
 	var ReactReconciler = __webpack_require__(20);
-	var Transaction = __webpack_require__(42);
+	var Transaction = __webpack_require__(41);
 	
 	var assign = __webpack_require__(2);
 	var invariant = __webpack_require__(1);
@@ -2772,7 +2772,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(34);
+	var keyMirror = __webpack_require__(33);
 	
 	var PropagationPhases = keyMirror({ bubbled: null, captured: null });
 	
@@ -4118,7 +4118,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var getLength = __webpack_require__(172),
-	    isLength = __webpack_require__(37);
+	    isLength = __webpack_require__(36);
 	
 	/**
 	 * Checks if `value` is array-like.
@@ -4154,15 +4154,6 @@
 
 /***/ },
 /* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	module.exports = __webpack_require__(88);
-
-
-/***/ },
-/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4446,7 +4437,7 @@
 	module.exports = EventPluginHub;
 
 /***/ },
-/* 31 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4463,7 +4454,7 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPluginHub = __webpack_require__(30);
+	var EventPluginHub = __webpack_require__(29);
 	
 	var warning = __webpack_require__(3);
 	
@@ -4586,7 +4577,7 @@
 	module.exports = EventPropagators;
 
 /***/ },
-/* 32 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/**
@@ -4638,7 +4629,7 @@
 	module.exports = ReactInstanceMap;
 
 /***/ },
-/* 33 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4703,7 +4694,7 @@
 	module.exports = SyntheticUIEvent;
 
 /***/ },
-/* 34 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4756,7 +4747,7 @@
 	module.exports = keyMirror;
 
 /***/ },
-/* 35 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -14593,7 +14584,7 @@
 
 
 /***/ },
-/* 36 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isNative = __webpack_require__(177);
@@ -14615,7 +14606,7 @@
 
 
 /***/ },
-/* 37 */
+/* 36 */
 /***/ function(module, exports) {
 
 	/**
@@ -14641,7 +14632,7 @@
 
 
 /***/ },
-/* 38 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14659,7 +14650,7 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPluginHub = __webpack_require__(30);
+	var EventPluginHub = __webpack_require__(29);
 	var EventPluginRegistry = __webpack_require__(84);
 	var ReactEventEmitterMixin = __webpack_require__(213);
 	var ReactPerf = __webpack_require__(12);
@@ -14970,7 +14961,7 @@
 	module.exports = ReactBrowserEventEmitter;
 
 /***/ },
-/* 39 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -14999,7 +14990,7 @@
 	module.exports = ReactPropTypeLocationNames;
 
 /***/ },
-/* 40 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15015,7 +15006,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(34);
+	var keyMirror = __webpack_require__(33);
 	
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -15026,7 +15017,7 @@
 	module.exports = ReactPropTypeLocations;
 
 /***/ },
-/* 41 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15043,7 +15034,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(33);
+	var SyntheticUIEvent = __webpack_require__(32);
 	var ViewportMetrics = __webpack_require__(105);
 	
 	var getEventModifierState = __webpack_require__(62);
@@ -15104,7 +15095,7 @@
 	module.exports = SyntheticMouseEvent;
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15340,7 +15331,7 @@
 	module.exports = Transaction;
 
 /***/ },
-/* 43 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15369,7 +15360,7 @@
 	module.exports = canDefineProperty;
 
 /***/ },
-/* 44 */
+/* 43 */
 /***/ function(module, exports) {
 
 	/**
@@ -15412,7 +15403,7 @@
 	module.exports = escapeTextContentForBrowser;
 
 /***/ },
-/* 45 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -15507,7 +15498,7 @@
 	module.exports = setInnerHTML;
 
 /***/ },
-/* 46 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -15768,7 +15759,7 @@
 	};
 
 /***/ },
-/* 47 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(73)();
@@ -15782,7 +15773,7 @@
 
 
 /***/ },
-/* 48 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(73)();
@@ -15796,7 +15787,7 @@
 
 
 /***/ },
-/* 49 */
+/* 48 */
 /***/ function(module, exports) {
 
 	/** Used to detect unsigned integer values. */
@@ -15826,7 +15817,7 @@
 
 
 /***/ },
-/* 50 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var isArrayLike = __webpack_require__(27),
@@ -15866,11 +15857,11 @@
 
 
 /***/ },
-/* 51 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(36),
-	    isLength = __webpack_require__(37),
+	var getNative = __webpack_require__(35),
+	    isLength = __webpack_require__(36),
 	    isObjectLike = __webpack_require__(28);
 	
 	/** `Object#toString` result references. */
@@ -15909,6 +15900,15 @@
 	};
 	
 	module.exports = isArray;
+
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	module.exports = __webpack_require__(88);
 
 
 /***/ },
@@ -16258,7 +16258,7 @@
 	'use strict';
 	
 	var ReactPropTypes = __webpack_require__(103);
-	var ReactPropTypeLocations = __webpack_require__(40);
+	var ReactPropTypeLocations = __webpack_require__(39);
 	
 	var invariant = __webpack_require__(1);
 	var warning = __webpack_require__(3);
@@ -16598,7 +16598,7 @@
 	
 	var ReactCurrentOwner = __webpack_require__(16);
 	var ReactElement = __webpack_require__(11);
-	var ReactInstanceMap = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(31);
 	var ReactUpdates = __webpack_require__(13);
 	
 	var assign = __webpack_require__(2);
@@ -16879,7 +16879,7 @@
 	'use strict';
 	
 	var ReactCurrentOwner = __webpack_require__(16);
-	var ReactInstanceMap = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(31);
 	var ReactMount = __webpack_require__(10);
 	
 	var invariant = __webpack_require__(1);
@@ -17297,8 +17297,8 @@
 	'use strict';
 	
 	var ExecutionEnvironment = __webpack_require__(9);
-	var escapeTextContentForBrowser = __webpack_require__(44);
-	var setInnerHTML = __webpack_require__(45);
+	var escapeTextContentForBrowser = __webpack_require__(43);
+	var setInnerHTML = __webpack_require__(44);
 	
 	/**
 	 * Set the textContent property of a node, ensuring that whitespace is preserved
@@ -18631,7 +18631,7 @@
 /* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getNative = __webpack_require__(36),
+	var getNative = __webpack_require__(35),
 	    isArrayLike = __webpack_require__(27),
 	    isObject = __webpack_require__(24),
 	    shimKeys = __webpack_require__(175);
@@ -18844,7 +18844,7 @@
 	var ReactMultiChildUpdateTypes = __webpack_require__(100);
 	var ReactPerf = __webpack_require__(12);
 	
-	var setInnerHTML = __webpack_require__(45);
+	var setInnerHTML = __webpack_require__(44);
 	var setTextContent = __webpack_require__(67);
 	var invariant = __webpack_require__(1);
 	
@@ -19387,14 +19387,14 @@
 	
 	var ReactComponent = __webpack_require__(87);
 	var ReactElement = __webpack_require__(11);
-	var ReactPropTypeLocations = __webpack_require__(40);
-	var ReactPropTypeLocationNames = __webpack_require__(39);
+	var ReactPropTypeLocations = __webpack_require__(39);
+	var ReactPropTypeLocationNames = __webpack_require__(38);
 	var ReactNoopUpdateQueue = __webpack_require__(102);
 	
 	var assign = __webpack_require__(2);
 	var emptyObject = __webpack_require__(26);
 	var invariant = __webpack_require__(1);
-	var keyMirror = __webpack_require__(34);
+	var keyMirror = __webpack_require__(33);
 	var keyOf = __webpack_require__(17);
 	var warning = __webpack_require__(3);
 	
@@ -20163,7 +20163,7 @@
 	
 	var ReactNoopUpdateQueue = __webpack_require__(102);
 	
-	var canDefineProperty = __webpack_require__(43);
+	var canDefineProperty = __webpack_require__(42);
 	var emptyObject = __webpack_require__(26);
 	var invariant = __webpack_require__(1);
 	var warning = __webpack_require__(3);
@@ -20608,7 +20608,7 @@
 	var ReactMount = __webpack_require__(10);
 	
 	var assign = __webpack_require__(2);
-	var escapeTextContentForBrowser = __webpack_require__(44);
+	var escapeTextContentForBrowser = __webpack_require__(43);
 	var setTextContent = __webpack_require__(67);
 	var validateDOMNesting = __webpack_require__(70);
 	
@@ -20734,7 +20734,7 @@
 	'use strict';
 	
 	var ReactUpdates = __webpack_require__(13);
-	var Transaction = __webpack_require__(42);
+	var Transaction = __webpack_require__(41);
 	
 	var assign = __webpack_require__(2);
 	var emptyFunction = __webpack_require__(14);
@@ -20915,11 +20915,11 @@
 	'use strict';
 	
 	var ReactElement = __webpack_require__(11);
-	var ReactPropTypeLocations = __webpack_require__(40);
-	var ReactPropTypeLocationNames = __webpack_require__(39);
+	var ReactPropTypeLocations = __webpack_require__(39);
+	var ReactPropTypeLocationNames = __webpack_require__(38);
 	var ReactCurrentOwner = __webpack_require__(16);
 	
-	var canDefineProperty = __webpack_require__(43);
+	var canDefineProperty = __webpack_require__(42);
 	var getIteratorFn = __webpack_require__(64);
 	var invariant = __webpack_require__(1);
 	var warning = __webpack_require__(3);
@@ -21563,7 +21563,7 @@
 	
 	'use strict';
 	
-	var keyMirror = __webpack_require__(34);
+	var keyMirror = __webpack_require__(33);
 	
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -21823,7 +21823,7 @@
 	'use strict';
 	
 	var ReactElement = __webpack_require__(11);
-	var ReactPropTypeLocationNames = __webpack_require__(39);
+	var ReactPropTypeLocationNames = __webpack_require__(38);
 	
 	var emptyFunction = __webpack_require__(14);
 	var getIteratorFn = __webpack_require__(64);
@@ -22674,7 +22674,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(48);
+	var content = __webpack_require__(47);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(110)(content, {});
@@ -22683,8 +22683,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(48, function() {
-				var newContent = __webpack_require__(48);
+			module.hot.accept(47, function() {
+				var newContent = __webpack_require__(47);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -22883,11 +22883,11 @@
 	});
 	exports.InfoBar = undefined;
 	
-	var _reactDom = __webpack_require__(29);
+	var _reactDom = __webpack_require__(51);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
-	var _DNASeq = __webpack_require__(46);
+	var _DNASeq = __webpack_require__(45);
 	
 	var _NumericControl = __webpack_require__(117);
 	
@@ -23336,7 +23336,7 @@
 	   * Created by luoyi on 1/12/2016.
 	   */
 	
-	global.jQuery = __webpack_require__(35);
+	global.jQuery = __webpack_require__(34);
 	
 	//SequenceEditor Menu
 	
@@ -23576,11 +23576,9 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 	exports.OnionForGenomeDesigner = undefined;
-	
-	var _reactDom = __webpack_require__(29);
 	
 	var _SequenceEditor = __webpack_require__(130);
 	
@@ -23605,271 +23603,262 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var _components = {
-	    OnionForGenomeDesigner: {
-	        displayName: 'OnionForGenomeDesigner'
-	    }
+	  OnionForGenomeDesigner: {
+	    displayName: 'OnionForGenomeDesigner'
+	  }
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	    filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
-	    components: _components,
-	    locals: [module],
-	    imports: [_react3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
+	  components: _components,
+	  locals: [module],
+	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	    filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
-	    components: _components,
-	    locals: [],
-	    imports: [_react3.default, _redboxReact3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
+	  components: _components,
+	  locals: [],
+	  imports: [_react3.default, _redboxReact3.default]
 	});
 	
 	function _wrapComponent(id) {
-	    return function (Component) {
-	        return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
-	    };
+	  return function (Component) {
+	    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
+	  };
 	} /**
 	   * Created by Isaac on 21/01/2016.
 	   */
 	
-	var $ = __webpack_require__(35);
+	var $ = __webpack_require__(34);
 	window.$ = $;
 	global.jQuery = $;
 	
-	/* create simple component */
+	// OnionForGenomeDesigner assembles MenuBar, SequenceEditor and InfoBar together, designed for genome-designer
 	
 	var OnionForGenomeDesigner = exports.OnionForGenomeDesigner = _wrapComponent('OnionForGenomeDesigner')(function (_React$Component) {
-	    _inherits(OnionForGenomeDesigner, _React$Component);
+	  _inherits(OnionForGenomeDesigner, _React$Component);
 	
-	    function OnionForGenomeDesigner(props) {
-	        _classCallCheck(this, OnionForGenomeDesigner);
+	  function OnionForGenomeDesigner(props) {
+	    _classCallCheck(this, OnionForGenomeDesigner);
 	
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionForGenomeDesigner).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionForGenomeDesigner).call(this, props));
 	
-	        _this.state = {
-	            pvCursorPos: 0,
-	            pvStartCursorPos: 0,
-	            showEnzymes: true,
-	            showLadder: true,
-	            showRS: true,
-	            showFeatures: true,
-	            showRuler: true,
-	            showBlockBar: true,
-	            showAA: true,
-	            blocks: props.blocks,
-	            menuTitle: "unknown",
-	            sequence: props.sequence
-	        };
+	    _this.state = {
+	      cursorPos: 0, //current cursor position from 0 to sequence.length
+	      startCursorPos: 0, //mouse down cursor position in selecting
 	
-	        _this.enzymeList = (0, _Enzyme.loadEnzymeList)("cailab");
-	        //this.enzymeList = loadEnzymeList("New England Biolabs");
+	      //layers switch
+	      showEnzymes: true,
+	      showLadder: true,
+	      showRS: true,
+	      showFeatures: true,
+	      showRuler: true,
+	      showBlockBar: true,
+	      showAA: true,
 	
-	        return _this;
+	      blocks: props.blocks, //blocks data, an array of {name,color,start,length}
+	
+	      menuTitle: "unknown",
+	      sequence: props.sequence };
+	
+	    //DNA sequence, in ACGT
+	    _this.enzymeList = (0, _Enzyme.loadEnzymeList)("cailab");
+	    //this.enzymeList = loadEnzymeList("New England Biolabs");
+	
+	    return _this;
+	  }
+	
+	  _createClass(OnionForGenomeDesigner, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      console.warn("onion mount");
+	    }
+	  }, {
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.sequence != this.props.sequence) {
+	        //reset state sequence
+	        this.state.sequence = nextProps.sequence;
+	        if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+	      }
+	      this.state.blocks = nextProps.blocks;
+	    }
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
+	
+	      var _props = this.props;
+	      var width = _props.width;
+	      var height = _props.height;
+	      //set a minimum size;
+	
+	      width = Math.max(width, 100);
+	      height = Math.max(height, 100);
+	
+	      var _state = this.state;
+	      var showEnzymes = _state.showEnzymes;
+	      var showRS = _state.showRS;
+	      var showFeatures = _state.showFeatures;
+	      var showRuler = _state.showRuler;
+	      var showBlockBar = _state.showBlockBar;
+	      var showAA = _state.showAA;
+	
+	      var sequence = undefined;
+	      var features = undefined;
+	      var blocks = this.state.blocks;
+	
+	      //test load a demo file if sequence and features doesn't exist
+	      if (this.state && this.state.sequence) {
+	        sequence = this.state.sequence ? this.state.sequence : _OnionFile.onionFile.seq;
+	      }
+	      if (this.state && this.state.features) {
+	        features = this.state.features ? this.state.features : _OnionFile.onionFile.features;
+	        ;
+	      }
+	
+	      if (!blocks) {
+	        blocks = _OnionFile.onionFile.blocks;
+	      }
+	
+	      //blocks = this.convertBlocks(this.state.block);
+	      if (!sequence) {
+	        sequence = _OnionFile.onionFile.seq;
+	        features = _OnionFile.onionFile.features;
+	      }
+	
+	      //if sequence has been changed, cursor should be reset
+	      if (this.state && this.state.sequence && (this.state.cursorPos > this.state.sequence.length || this.state.startCursorPos > this.state.sequence.length)) {
+	        this.state.cursorPos = 0;
+	        this.state.startCursorPos = 0;
+	      }
+	
+	      var selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
+	      var selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
+	      var selectedSeq = sequence.substr(selectionStart, selectionLength);
+	
+	      var menuTitle = this.state.menuTitle;
+	
+	      return _react3.default.createElement(
+	        'div',
+	        {
+	          style: {
+	            width: "100%",
+	            position: "relative",
+	            height: height,
+	            marginTop: 0,
+	            display: "flex",
+	            flexDirection: "column"
+	          }
+	        },
+	        _react3.default.createElement(_MenuBar.MenuBar, {
+	          title: menuTitle,
+	          showEnzymes: showEnzymes,
+	          showRS: showRS,
+	          showFeatures: showFeatures,
+	          showRuler: showRuler,
+	          showBlockBar: showBlockBar,
+	          showAA: showAA,
+	          onSelect: this.menuCommand.bind(this)
+	        }),
+	        _react3.default.createElement(_SequenceEditor.SequenceEditor, {
+	          sequence: sequence,
+	          showComplement: true,
+	          features: features,
+	          onSetCursor: this.onSetCursor.bind(this),
+	          onSelecting: this.onSelecting.bind(this),
+	          enzymeList: this.enzymeList,
+	          width: width,
+	          height: height - 30 - 86,
+	          showEnzymes: showEnzymes,
+	          showLadder: showRuler || !showRuler && showRS,
+	          showRS: showRS,
+	          showFeatures: showFeatures,
+	          showRuler: showRuler,
+	          showBlockBar: showBlockBar,
+	          showAA: showAA,
+	          blocks: blocks,
+	          cursorPos: this.state.cursorPos,
+	          selectStartPos: this.state.startCursorPos,
+	          onBlockChanged: function onBlockChanged(block, e) {
+	            _this2.setState({ menuTitle: block[0].name });
+	          }
+	        }),
+	        _react3.default.createElement(_InfoBar.InfoBar, {
+	          width: width,
+	          height: 30,
+	          startPos: selectionStart,
+	          endPos: selectionStart + selectionLength,
+	          seq: selectedSeq,
+	          style: {
+	            textAlign: "right",
+	            width: width,
+	            height: 30,
+	            background: "#eaebf1",
+	            marginBottom: 0
+	          },
+	
+	          onChange: this.onInfoBarChange.bind(this)
+	        })
+	      );
 	    }
 	
-	    _createClass(OnionForGenomeDesigner, [{
-	        key: 'onSetCursor',
-	        value: function onSetCursor(pos) {
-	            this.setState({ pvCursorPos: pos, pvStartCursorPos: pos });
-	        }
-	    }, {
-	        key: 'onSelecting',
-	        value: function onSelecting(pos1, pos2) {
-	            this.setState({ pvCursorPos: pos1, pvStartCursorPos: pos2 });
-	        }
-	    }, {
-	        key: 'menuCommand',
-	        value: function menuCommand(command, value) {
-	            console.log("menuCommand", command, value);
-	            var dict = {};
-	            switch (command) {
-	                case "showAll":
-	                    dict.showRS = value;
-	                    dict.showEnzymes = value;
-	                    dict.showFeatures = value;
-	                    dict.showBlockBar = value;
-	                    dict.showRuler = value;
-	                    dict.showAA = value;
-	                    this.setState(dict);
-	                    break;
+	    //====================event response=====================
 	
-	                default:
-	                    dict[command] = value;
-	                    this.setState(dict);
-	                    break;
-	            }
-	        }
-	    }, {
-	        key: 'onInfoBarChange',
-	        value: function onInfoBarChange(startPos, endPos) {
-	            this.setState({ pvCursorPos: endPos, pvStartCursorPos: startPos });
-	        }
-	    }, {
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            console.warn("onion mount");
-	        }
-	    }, {
-	        key: 'componentWillReceiveProps',
-	        value: function componentWillReceiveProps(nextProps) {
-	            if (nextProps.sequence != this.props.sequence) {
-	                //reset state sequence
-	                this.state.sequence = nextProps.sequence;
-	                if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
-	            }
-	            this.state.blocks = nextProps.blocks;
-	        }
-	    }, {
-	        key: 'componentWillUpdate',
-	        value: function componentWillUpdate() {}
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
+	    //while user move cursor by clicking
 	
-	            var _state = this.state;
-	            var showEnzymes = _state.showEnzymes;
-	            var showRS = _state.showRS;
-	            var showFeatures = _state.showFeatures;
-	            var showRuler = _state.showRuler;
-	            var showBlockBar = _state.showBlockBar;
-	            var showAA = _state.showAA;
+	  }, {
+	    key: 'onSetCursor',
+	    value: function onSetCursor(pos) {
+	      this.setState({ cursorPos: pos, startCursorPos: pos });
+	    }
 	
-	            var sequence = undefined;
-	            var features = undefined;
-	            var blocks = this.state.blocks;
-	            if (this.state && this.state.sequence) {
-	                sequence = this.state.sequence ? this.state.sequence : _OnionFile.onionFile.seq;
-	            }
-	            if (this.state && this.state.features) {
-	                features = this.state.features ? this.state.features : _OnionFile.onionFile.features;
-	                ;
-	            }
+	    //while user drags on editor
 	
-	            if (!blocks) {
-	                blocks = _OnionFile.onionFile.blocks;
-	            }
+	  }, {
+	    key: 'onSelecting',
+	    value: function onSelecting(pos1, pos2) {
+	      this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	    }
 	
-	            //blocks = this.convertBlocks(this.state.block);
-	            if (!sequence) {
-	                sequence = _OnionFile.onionFile.seq;
-	                features = _OnionFile.onionFile.features;
-	            }
+	    //while user fires a menu command
 	
-	            //if sequence has been changed, cursor should be reset
-	            if (this.state && this.state.sequence && (this.state.pvCursorPos > this.state.sequence.length || this.state.pvStartCursorPos > this.state.sequence.length)) {
-	                this.state.pvCursorPos = 0;
-	                this.state.pvStartCursorPos = 0;
-	            }
+	  }, {
+	    key: 'menuCommand',
+	    value: function menuCommand(command, value) {
+	      console.log("menuCommand", command, value);
+	      var dict = {};
+	      switch (command) {
+	        case "showAll":
+	          dict.showRS = value;
+	          dict.showEnzymes = value;
+	          dict.showFeatures = value;
+	          dict.showRuler = value;
+	          dict.showAA = value;
+	          this.setState(dict);
+	          break;
 	
-	            var selectionStart = Math.min(this.state.pvCursorPos, this.state.pvStartCursorPos);
-	            var selectionLength = Math.abs(this.state.pvCursorPos - this.state.pvStartCursorPos);
-	            var selectedSeq = sequence.substr(selectionStart, selectionLength);
+	        default:
+	          dict[command] = value;
+	          this.setState(dict);
+	          break;
+	      }
+	    }
 	
-	            var width = this.props.width;
-	            var height = this.props.height;
+	    //while user changes the value of start and end numeric control on info bar
 	
-	            var menuTitle = this.state.menuTitle;
+	  }, {
+	    key: 'onInfoBarChange',
+	    value: function onInfoBarChange(startPos, endPos) {
+	      this.setState({ cursorPos: endPos, startCursorPos: startPos });
+	    }
+	  }]);
 	
-	            return _react3.default.createElement(
-	                'div',
-	                {
-	                    style: {
-	                        width: "100%",
-	                        position: "relative",
-	                        height: height,
-	                        marginTop: 0,
-	                        display: "flex",
-	                        flexDirection: "column"
-	                    }
-	
-	                },
-	                _react3.default.createElement(_MenuBar.MenuBar, {
-	                    title: menuTitle,
-	                    showEnzymes: showEnzymes,
-	                    showRS: showRS,
-	                    showFeatures: showFeatures,
-	                    showRuler: showRuler,
-	                    showBlockBar: showBlockBar,
-	                    showAA: showAA,
-	                    onSelect: this.menuCommand.bind(this)
-	                }),
-	                _react3.default.createElement(_SequenceEditor.SequenceEditor, {
-	                    sequence: sequence,
-	                    showComplement: true,
-	                    features: features,
-	                    onSetCursor: this.onSetCursor.bind(this),
-	                    onSelecting: this.onSelecting.bind(this),
-	                    enzymeList: this.enzymeList,
-	                    width: width,
-	                    height: height - 30 - 86,
-	                    showEnzymes: showEnzymes,
-	                    showLadder: showRuler || !showRuler && showRS,
-	                    showRS: showRS,
-	                    showFeatures: showFeatures,
-	                    showRuler: showRuler,
-	                    showBlockBar: showBlockBar,
-	                    showAA: showAA,
-	                    blocks: blocks,
-	                    cursorPos: this.state.pvCursorPos,
-	                    selectStartPos: this.state.pvStartCursorPos,
-	                    onBlockChanged: function onBlockChanged(block, e) {
-	                        _this2.setState({ menuTitle: block[0].name });
-	                    },
-	                    style: {
-	                        flex: 1
-	                    }
-	                }),
-	                _react3.default.createElement(_InfoBar.InfoBar, {
-	                    width: width,
-	                    height: 30,
-	                    startPos: selectionStart,
-	                    endPos: selectionStart + selectionLength,
-	                    seq: selectedSeq,
-	                    style: {
-	                        textAlign: "right",
-	                        width: width,
-	                        height: 30,
-	                        background: "#eaebf1",
-	                        marginBottom: 0
-	                    },
-	
-	                    onChange: this.onInfoBarChange.bind(this)
-	                })
-	            );
-	
-	            /*
-	             {false &&<div style={{
-	             width:400,
-	             height:divHeight-30,
-	             overflow:"hidden",
-	             border:"1px solid black",
-	             display:"inline-block",
-	             }}>
-	             <PlasmidViewer
-	             mode={"normal"}
-	             plasmidR={128}
-	             width={400}
-	             height={400}
-	             theme={"NAL"}
-	             rotateAngle={0}
-	             cursorPos={this.state.pvCursorPos}
-	             selectedFeature={-1}
-	             selectionStart={selectionStart}
-	             selectionLength={selectionLength}
-	             features={features}
-	             seqLength={sequence.length}
-	             enzymes={onionFile.enzymes}
-	             name={onionFile.name}
-	             showViewAngle={false}
-	             onWheel={()=> {}}/>
-	                 </div>
-	             }
-	             */
-	        }
-	    }]);
-	
-	    return OnionForGenomeDesigner;
+	  return OnionForGenomeDesigner;
 	}(_react3.default.Component));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module), (function() { return this; }())))
 
@@ -24694,7 +24683,7 @@
 	    };
 	}
 	
-	var $ = __webpack_require__(35);
+	var $ = __webpack_require__(34);
 	
 	// this is a feature builder
 	
@@ -26137,21 +26126,15 @@
 	var _class, _temp;
 	
 	Object.defineProperty(exports, "__esModule", {
-		value: true
+	  value: true
 	});
 	exports.SequenceEditor = undefined;
 	
-	var _reactDom = __webpack_require__(29);
-	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-	
 	var _SequenceRow = __webpack_require__(137);
 	
-	var _jquery = __webpack_require__(35);
+	__webpack_require__(34);
 	
-	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var _DNASeq = __webpack_require__(46);
+	var _DNASeq = __webpack_require__(45);
 	
 	var _reactHelper = __webpack_require__(23);
 	
@@ -26164,642 +26147,620 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var _components = {
-		SequenceEditor: {
-			displayName: 'SequenceEditor'
-		}
+	  SequenceEditor: {
+	    displayName: 'SequenceEditor'
+	  }
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-		filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
-		components: _components,
-		locals: [module],
-		imports: [_react3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
+	  components: _components,
+	  locals: [module],
+	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-		filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
-		components: _components,
-		locals: [],
-		imports: [_react3.default, _redboxReact3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
+	  components: _components,
+	  locals: [],
+	  imports: [_react3.default, _redboxReact3.default]
 	});
 	
 	function _wrapComponent(id) {
-		return function (Component) {
-			return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
-		};
+	  return function (Component) {
+	    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
+	  };
 	}
 	
 	//one of main components of onion, sequence editor
 	
 	var SequenceEditor = exports.SequenceEditor = _wrapComponent('SequenceEditor')((_temp = _class = function (_React$Component) {
-		_inherits(SequenceEditor, _React$Component);
+	  _inherits(SequenceEditor, _React$Component);
 	
-		function SequenceEditor(props) {
-			_classCallCheck(this, SequenceEditor);
+	  function SequenceEditor(props) {
+	    _classCallCheck(this, SequenceEditor);
 	
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
 	
-			_this.textRows = [];
-			_this.mycss = {
-				seqFontFamily: 'Cousine,Monospace',
-				seqFontSize: 16,
-				seqFontUnitWidth: 10 };
-			//9.609375,
-			_this.seqMainStyleStr = 'display:inline-block;font-family:' + _this.mycss.seqFontFamily + ';font-size:' + _this.mycss.seqFontSize + ';color:\'#2C3543\';letterSpacing:0;position:absolute;left:0px;top:-100px';
-			_this.seqMainStyle = {
-				//	display: "inline-block",
-				fontFamily: _this.mycss.seqFontFamily,
-				fontSize: _this.mycss.seqFontSize,
-				fill: '#2C3543',
-				letterSpacing: 10 - 9.609375,
-				alignmentBaseline: "before-edge",
-				WebkitUserSelect: "none"
-			};
-			_this.seqCompStyle = {
-				//	display: "inline-block",
-				fontFamily: _this.mycss.seqFontFamily,
-				fontSize: _this.mycss.seqFontSize,
-				fill: '#B7BBC2',
-				letterSpacing: 10 - 9.609375,
-				alignmentBaseline: "before-edge",
-				WebkitUserSelect: "none"
-			};
+	    _this.textRows = [];
 	
-			(0, _jquery2.default)("body").append('<div id="bp1" style="' + _this.seqMainStyleStr + '">A</div>');
+	    // style of sequence
+	    _this.myCSS = {
+	      seqFontFamily: 'Cousine,Monospace',
+	      seqFontSize: 16,
+	      seqFontUnitWidth: 10 };
+	    //9.609375,
+	    //Maybe I need to render a letter first, then calculate its size, it's necessary because the letter width is little difference on different browser.
+	    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};font-size:${this.myCSS.seqFontSize};color:'#2C3543';letterSpacing:0;position:absolute;left:0px;top:-100px`;
+	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
+	    //var width = document.getElementById('bp1').getBoundingClientRect().width;
+	    _this.seqMainStyle = {
+	      //	display: "inline-block",
+	      fontFamily: _this.myCSS.seqFontFamily,
+	      fontSize: _this.myCSS.seqFontSize,
+	      fill: '#2C3543',
+	      letterSpacing: 10 - 9.609375,
+	      alignmentBaseline: "before-edge",
+	      WebkitUserSelect: "none"
+	    };
+	    _this.seqCompStyle = _this.seqCompStyle = Object.assign({ fill: "#B7BBC2" }, seqMainStyle);
+	    _this.unitWidth = _this.myCSS.seqFontUnitWidth;
 	
-			//jQuery("body").append(<div id="bp1" style={this.seqMainStyle}>A</div>);
-			var width = document.getElementById('bp1').getBoundingClientRect().width;
-			//console.log("bp1Size,",jQuery("#bp1").width());
-			//console.log("unitWidth",width);
-			_this.unitWidth = _this.mycss.seqFontUnitWidth;
-			_this.state = {
-				cursorPos: 0,
-				selectStartPos: 0,
-				showCursor: false,
-				showSelection: false
-			};
+	    _this.sequence = new _DNASeq.DNASeq(_this.props.sequence); //Bio.js sequence object, used for calculation
+	    _this.enzymeSites = _this.sequence.calcEnzymeSites(_this.props.enzymeList);
 	
-			_this.sequence = new _DNASeq.DNASeq(_this.props.sequence);
-			_this.enzymeSites = _this.sequence.calcEnzymeSites(_this.props.enzymeList);
-			//console.log(this.enzymeSites)
+	    _this.aas = _this.calcAAs(_this.props.sequence, _this.props.features);
 	
-			_this.aas = _this.calcAAs(_this.props.sequence, _this.props.features);
+	    _this.state = {
+	      cursorPos: 0,
+	      selectStartPos: 0,
+	      showCursor: false,
+	      showSelection: false
+	    };
 	
-			return _this;
-		}
+	    //initial operations
+	    _this.initialRowPos(_this.props.sequence, _this.props.width);
+	    return _this;
+	  }
 	
-		_createClass(SequenceEditor, [{
-			key: 'isOverlap',
-			value: function isOverlap(a1, b1, a2, b2) {
-				var a3 = Math.max(a1, a2);
-				var b3 = Math.min(b1, b2);
-				//console.log(a1,a2,b1,b2);
-				if (a3 < b3) {
-					return { start: a3, end: b3 };
-				} else {
-					return undefined;
-				}
-			}
-		}, {
-			key: 'calcAAs',
-			value: function calcAAs(sequence, features) {
-				var s = new _DNASeq.DNASeq(sequence);
-				var re = [];
-				for (var i in features) {
-					if (features[i].type == "CDS") {
-						var f = features[i];
-						var lOri = f.end - f.start;
-						var l = Math.floor(lOri / 3) * 3;
-						if (f.strand == "-") {
-							var realStart = f.start + lOri - l;
-							var aa = s.substr(realStart, l).reverseComplement().toAASeq();
-							re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
-						} else {
-							var aa = s.substr(f.start, l).toAASeq();
-							re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
-						}
-					}
-				}
-				return re;
-			}
-		}, {
-			key: 'findFeaturesInRow',
-			value: function findFeaturesInRow(start, len) {
-				//console.log("sss",start,len,this.props.features);
-				var re = [];
-				for (var i in this.props.features) {
-					var f = this.props.features[i];
-					var overlap = this.isOverlap(start, start + len, f.start, f.end);
-					if (overlap) {
-						re.push({
-							start: overlap.start,
-							len: overlap.end - overlap.start,
-							color: f.color,
-							text: f.text,
-							textColor: f.textColor,
-							type: f.type,
-							row: 0
-						});
-					}
-				}
-				//console.log(re);
-				return re;
-			}
-		}, {
-			key: 'splitFeatures',
-			value: function splitFeatures(colNum) {}
-		}, {
-			key: 'initialRowPos',
-			value: function initialRowPos(sequence, width) {
-				var colNum = Math.floor(width / this.unitWidth) - 10;
-				var totalRows = Math.ceil(sequence.length / colNum);
-				this.rowHeight = Array(totalRows);
-				this.rowY = Array(totalRows);
-			}
-		}, {
-			key: 'splitAAs',
-			value: function splitAAs(colNum) {
-				//console.log("splitAAS",this.aas);
-				var aas = this.aas;
-				var re = new Array(Math.ceil(this.props.sequence.length / colNum));
-				for (var i = 0; i < re.length; i++) {
-					re[i] = [];
-				}
-				//console.log("aas",aas);
-				if (!aas) return re;
+	  _createClass(SequenceEditor, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (nextProps.sequence != this.props.sequence || nextProps.width != this.props.width) {
+	        this.initialRowPos(nextProps.sequence, nextProps.width);
+	      }
+	      if (this.props.cursorPos != nextProps.cursorPos || this.props.selectStartPos != nextProps.selectStartPos) {
+	        this.setState({
+	          selectStartPos: nextProps.selectStartPos,
+	          cursorPos: nextProps.cursorPos,
+	          showCursor: true,
+	          showSelection: nextProps.selectStartPos != nextProps.cursorPos
+	        });
+	      }
+	    }
+	  }, {
+	    key: 'shouldComponentUpdate',
+	    value: function shouldComponentUpdate(np, ns) {
+	      var update = !(0, _reactHelper.compareProps)(this.props, np) || !(0, _reactHelper.compareProps)(this.state, ns);
+	      return update;
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {}
+	  }, {
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate() {}
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this2 = this;
 	
-				for (var i = 0; i < aas.length; i++) {
-					var aa = aas[i];
-					var aaSeq = aa.strand == "-" ? aa.seq.reverse() : aa.seq;
-					var startRow = Math.floor(aa.start / colNum);
-					var startIdx = aa.start % colNum;
-					var endRow = Math.ceil((aa.start + aa.len) / colNum);
-					//			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
-					var leftStyle = "full";
-					var rightStyle = "full";
-					var endIdx = colNum;
-					var startOffset = 0;
-					var leftStyles = ["full", "right1", "right2"];
-					var rightStyles = ["full", "left1", "left2"];
-					var aaOffset = 0;
-					var repeatAA = 0;
-					var rightStyleIdx = undefined;
-					var nextStartOffset = undefined;
-					for (var row = startRow; row < endRow; row++) {
+	      var _props = this.props;
+	      var width = _props.width;
+	      var height = _props.height;
+	      var sequence = _props.sequence;
+	      var features = _props.features;
 	
-						var leftStyleIdx = (startIdx + 3 - startOffset) % 3;
-						//console.log("startOffset",startOffset);
-						if (row == startRow) {
-							leftStyle = "left3";
-						} else {
-							leftStyle = leftStyles[leftStyleIdx];
-							repeatAA = startOffset > 0 ? -1 : 0;
-						}
-						if (row == endRow - 1) {
-							rightStyle = "right3";
-						} else {
-							rightStyleIdx = (colNum + startOffset - startIdx) % 3;
-							rightStyle = rightStyles[rightStyleIdx];
-							nextStartOffset = rightStyleIdx;
-						}
+	      this.colNum = Math.floor(width / this.unitWidth) - 10;
 	
-						//let seq = calcAASeq(row,aaOffset,(endIdx-startIdx),aa);
-						aaOffset += repeatAA;
-						var bpLen = endIdx - startIdx;
-						var bpLenOld = -leftStyleIdx * repeatAA;
-						var bpLenNew = bpLen - bpLenOld;
-						var aaSubLen = Math.ceil(bpLenNew / 3) + Math.ceil(bpLenOld / 3);
-						var seq = aaSeq.substr(aaOffset, aaSubLen).toString();
-						//console.log("aaSeq",seq);
+	      this.sequence = new _DNASeq.DNASeq(this.props.sequence);
 	
-						var newAARow = {
-							start: startIdx,
-							end: endIdx,
-							leftStyle: leftStyle,
-							rightStyle: rightStyle,
-							row: row,
-							seq: seq,
-							startOffset: startOffset,
-							seqLen: seq.length,
-							aaOffset: aaOffset,
-							repeatAA: repeatAA,
-							strand: aa.strand
-						};
-						//console.log("newAARow",newAARow);
-						if (re[row]) {
-							re[row].push(newAARow);
-						}
-						aaOffset += aaSubLen;
-						startIdx = 0;
-						leftStyle = "full";
-						rightStyle = "full";
-						//repeatAA = nextRepeatAA;
-						startOffset = nextStartOffset;
-					}
-				}
-				//console.log("re",re);
-				return re;
-			}
-		}, {
-			key: 'splitEnzymes',
-			value: function splitEnzymes(colNum) {
-				var re = new Array(Math.ceil(this.props.sequence.length / colNum));
-				for (var i = 0; i < re.length; i++) {
-					re[i] = { rs: [], cs: [] };
-				}
+	      if (this.props.showEnzymes) {
+	        this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+	      }
+	      //console.log(this.enzymeSites);
+	      if (this.props.showAA) {
+	        this.aas = this.calcAAs(sequence, features);
+	      }
+	      if (this.colNum < 20) this.colNum = 20;
+	      if (this.props.showAA) {
+	        this.calcAAs(this.sequence.toString(), this.props.features);
+	        this.aaRows = this.splitAAs(this.colNum);
+	      }
+	      if (this.props.showEnzymes) {
+	        this.enzymeRows = this.splitEnzymes(this.colNum);
+	      }
+	      this.splitRows(this.colNum);
+	      return _react3.default.createElement(
+	        'div',
+	        { style: Object.assign(this.props.style, {
+	            width: width,
+	            height: height,
+	            overflowY: "scroll"
+	          }),
+	          onScroll: function onScroll(e) {
+	            var scrollPos = e.target.scrollTop;
+	            for (var i = 0; i < _this2.rowY.length; i++) {
+	              if (scrollPos <= _this2.rowY[i] + _this2.rowHeight[i]) {
+	                var block = _this2.splitBlocks[i];
+	                if (block.length > 0) _this2.props.onBlockChanged(block);
+	                break;
+	              }
+	            }
+	          }
+	        },
+	        this.textRows
+	      );
+	    }
+	  }, {
+	    key: 'isOverlap',
+	    value: function isOverlap(a1, b1, a2, b2) {
+	      var a3 = Math.max(a1, a2);
+	      var b3 = Math.min(b1, b2);
+	      //console.log(a1,a2,b1,b2);
+	      if (a3 < b3) {
+	        return { start: a3, end: b3 };
+	      } else {
+	        return undefined;
+	      }
+	    }
+	  }, {
+	    key: 'calcAAs',
+	    value: function calcAAs(sequence, features) {
+	      var s = new _DNASeq.DNASeq(sequence);
+	      var re = [];
+	      for (var i in features) {
+	        if (features[i].type == "CDS") {
+	          var f = features[i];
+	          var lOri = f.end - f.start;
+	          var l = Math.floor(lOri / 3) * 3;
+	          if (f.strand == "-") {
+	            var realStart = f.start + lOri - l;
+	            var aa = s.substr(realStart, l).reverseComplement().toAASeq();
+	            re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
+	          } else {
+	            var aa = s.substr(f.start, l).toAASeq();
+	            re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
+	          }
+	        }
+	      }
+	      return re;
+	    }
+	  }, {
+	    key: 'findFeaturesInRow',
+	    value: function findFeaturesInRow(start, len) {
+	      //console.log("sss",start,len,this.props.features);
+	      var re = [];
+	      for (var i in this.props.features) {
+	        var f = this.props.features[i];
+	        var overlap = this.isOverlap(start, start + len, f.start, f.end);
+	        if (overlap) {
+	          re.push({
+	            start: overlap.start,
+	            len: overlap.end - overlap.start,
+	            color: f.color,
+	            text: f.text,
+	            textColor: f.textColor,
+	            type: f.type,
+	            row: 0
+	          });
+	        }
+	      }
+	      //console.log(re);
+	      return re;
+	    }
+	  }, {
+	    key: 'splitFeatures',
+	    value: function splitFeatures(colNum) {}
+	  }, {
+	    key: 'initialRowPos',
+	    value: function initialRowPos(sequence, width) {
+	      var colNum = Math.floor(width / this.unitWidth) - 10;
+	      var totalRows = Math.ceil(sequence.length / colNum);
+	      this.rowHeight = Array(totalRows);
+	      this.rowY = Array(totalRows);
+	    }
+	  }, {
+	    key: 'splitAAs',
+	    value: function splitAAs(colNum) {
+	      //console.log("splitAAS",this.aas);
+	      var aas = this.aas;
+	      var re = new Array(Math.ceil(this.props.sequence.length / colNum));
+	      for (var i = 0; i < re.length; i++) {
+	        re[i] = [];
+	      }
+	      //console.log("aas",aas);
+	      if (!aas) return re;
 	
-				if (!this.props.showEnzymes) return re;
+	      for (var i = 0; i < aas.length; i++) {
+	        var aa = aas[i];
+	        var aaSeq = aa.strand == "-" ? aa.seq.reverse() : aa.seq;
+	        var startRow = Math.floor(aa.start / colNum);
+	        var startIdx = aa.start % colNum;
+	        var endRow = Math.ceil((aa.start + aa.len) / colNum);
+	        //			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
+	        var leftStyle = "full";
+	        var rightStyle = "full";
+	        var endIdx = colNum;
+	        var startOffset = 0;
+	        var leftStyles = ["full", "right1", "right2"];
+	        var rightStyles = ["full", "left1", "left2"];
+	        var aaOffset = 0;
+	        var repeatAA = 0;
+	        var rightStyleIdx = undefined;
+	        var nextStartOffset = undefined;
+	        for (var row = startRow; row < endRow; row++) {
 	
-				if (!this.enzymeSites || !this.enzymeSites.length) {
-					console.warn("no enzymes");
-					return re;
-				}
+	          var leftStyleIdx = (startIdx + 3 - startOffset) % 3;
+	          //console.log("startOffset",startOffset);
+	          if (row == startRow) {
+	            leftStyle = "left3";
+	          } else {
+	            leftStyle = leftStyles[leftStyleIdx];
+	            repeatAA = startOffset > 0 ? -1 : 0;
+	          }
+	          if (row == endRow - 1) {
+	            rightStyle = "right3";
+	          } else {
+	            rightStyleIdx = (colNum + startOffset - startIdx) % 3;
+	            rightStyle = rightStyles[rightStyleIdx];
+	            nextStartOffset = rightStyleIdx;
+	          }
 	
-				for (var i = 0; i < this.enzymeSites.length; i++) {
-					var es = this.enzymeSites[i];
+	          //let seq = calcAASeq(row,aaOffset,(endIdx-startIdx),aa);
+	          aaOffset += repeatAA;
+	          var bpLen = endIdx - startIdx;
+	          var bpLenOld = -leftStyleIdx * repeatAA;
+	          var bpLenNew = bpLen - bpLenOld;
+	          var aaSubLen = Math.ceil(bpLenNew / 3) + Math.ceil(bpLenOld / 3);
+	          var seq = aaSeq.substr(aaOffset, aaSubLen).toString();
+	          //console.log("aaSeq",seq);
 	
-					var enzyme = es.enzyme;
-					var row = Math.floor(es.anchor / colNum);
-					var row2 = Math.floor((es.anchor + enzyme.rs.length) / colNum);
-					var col = es.anchor % colNum;
-					if (row == row2) {
-						re[row].rs.push({ rs: [col, col + enzyme.rs.length], name: enzyme.name, id: i });
-					} else {
-						re[row].rs.push({ rs: [col, colNum], name: enzyme.name, id: i });
-						re[row2].rs.push({ rs: [0, col + enzyme.rs.length - colNum], name: enzyme.name, id: i });
-					}
+	          var newAARow = {
+	            start: startIdx,
+	            end: endIdx,
+	            leftStyle: leftStyle,
+	            rightStyle: rightStyle,
+	            row: row,
+	            seq: seq,
+	            startOffset: startOffset,
+	            seqLen: seq.length,
+	            aaOffset: aaOffset,
+	            repeatAA: repeatAA,
+	            strand: aa.strand
+	          };
+	          //console.log("newAARow",newAARow);
+	          if (re[row]) {
+	            re[row].push(newAARow);
+	          }
+	          aaOffset += aaSubLen;
+	          startIdx = 0;
+	          leftStyle = "full";
+	          rightStyle = "full";
+	          //repeatAA = nextRepeatAA;
+	          startOffset = nextStartOffset;
+	        }
+	      }
+	      //console.log("re",re);
+	      return re;
+	    }
+	  }, {
+	    key: 'splitEnzymes',
+	    value: function splitEnzymes(colNum) {
+	      var re = new Array(Math.ceil(this.props.sequence.length / colNum));
+	      for (var i = 0; i < re.length; i++) {
+	        re[i] = { rs: [], cs: [] };
+	      }
 	
-					for (var j = 0; j < enzyme.csNumber; j++) {
-						var csU = undefined;
-						var csD = undefined;
-						var cs = es.getCuttingSite(j);
-						if (es.strand == "-") {
-							csU = cs[1];
-							csD = cs[0];
-						} else {
-							csU = cs[0];
-							csD = cs[1];
-						}
+	      if (!this.props.showEnzymes) return re;
 	
-						var rowU = Math.floor(csU / colNum);
-						var colU = csU % colNum;
+	      if (!this.enzymeSites || !this.enzymeSites.length) {
+	        console.warn("no enzymes");
+	        return re;
+	      }
 	
-						var rowD = Math.floor(csD / colNum);
-						var colD = csD % colNum;
+	      for (var i = 0; i < this.enzymeSites.length; i++) {
+	        var es = this.enzymeSites[i];
 	
-						if (rowU == rowD) {
-							// upper site and lower site are in same row
-							if (re[rowU]) {
-								re[rowU].cs.push({ style: "N", pos: [colU, colD], id: i }); //normal │, ┌┘,└┐
-							}
-						} else if (rowU < rowD) {
-								if (re[rowU] && re[rowD]) {
-									re[rowU].cs.push({ style: "UR", pos: [colU, colNum], id: i }); //up right  └
-									re[rowD].cs.push({ style: "DL", pos: [0, colD], id: i }); //down left ┐
-								}
-							} else {
-									if (re[rowU] && re[rowD]) {
-										re[rowU].cs.push({ style: "UL", pos: [0, colU], id: i }); //up left  ┘
-										re[rowD].cs.push({ style: "DR", pos: [colD, colNum], id: i }); //down right ┌
-									}
-								}
-					}
-				}
-				return re;
-			}
-		}, {
-			key: 'onSetCursor',
-			value: function onSetCursor(cursorPos, rowNumber) {
-				this.setState({ cursorPos: cursorPos, showCursor: true, selectStartPos: cursorPos, showSelection: false });
-				if (this.props.onSetCursor) {
-					this.props.onSetCursor(cursorPos);
-				}
-				if (this.props.onBlockChanged) {
-					var row = Math.floor(cursorPos / this.colNum);
-					var x = cursorPos % this.colNum;
-					var blocks = this.splitBlocks[row];
-					for (var i in blocks) {
-						if (x >= blocks[i].start) {
-							this.props.onBlockChanged([blocks[i]]);
-						}
-					}
-				}
-			}
-		}, {
-			key: 'onSelecting',
-			value: function onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-				if (cursorPosStart) {
-					this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true, selectStartPos: cursorPosStart });
-				} else {
-					this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true });
-				}
-				if (this.props.onSelecting) {
-					if (cursorPosStart) {
-						console.log("full start", cursorPosStart, cursorPos);
-						this.props.onSelecting(cursorPos, cursorPosStart);
-					} else {
-						this.props.onSelecting(cursorPos, this.state.selectStartPos);
-					}
-				}
-			}
-		}, {
-			key: 'onSetHightLight',
-			value: function onSetHightLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-				if (highLightStart == highLightEnd) {
-					this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
-				} else {
-					this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
-				}
-			}
-		}, {
-			key: 'onRowCalculatedHeight',
-			value: function onRowCalculatedHeight(row, height) {
-				this.rowHeight[row] = height;
-				if (row > 0) {
-					this.rowY[row] = this.rowY[row - 1] + height;
-				} else {
-					this.rowY[0] = 0;
-				}
-			}
-		}, {
-			key: 'splitRows',
-			value: function splitRows(colNum) {
-				var sequence = this.props.sequence;
-				var _state = this.state;
-				var cursorPos = _state.cursorPos;
-				var showCursor = _state.showCursor;
-				var selectStartPos = _state.selectStartPos;
-				var showSelection = _state.showSelection;
-				var showHighLight = _state.showHighLight;
-				var highLightStart = _state.highLightStart;
-				var highLightEnd = _state.highLightEnd;
-				var _props = this.props;
-				var showEnzymes = _props.showEnzymes;
-				var showLadder = _props.showLadder;
-				var showRS = _props.showRS;
-				var showFeatures = _props.showFeatures;
-				var showRuler = _props.showRuler;
-				var showBlockBar = _props.showBlockBar;
-				var blocks = _props.blocks;
-				var showAA = _props.showAA;
+	        var enzyme = es.enzyme;
+	        var row = Math.floor(es.anchor / colNum);
+	        var row2 = Math.floor((es.anchor + enzyme.rs.length) / colNum);
+	        var col = es.anchor % colNum;
+	        if (row == row2) {
+	          re[row].rs.push({ rs: [col, col + enzyme.rs.length], name: enzyme.name, id: i });
+	        } else {
+	          re[row].rs.push({ rs: [col, colNum], name: enzyme.name, id: i });
+	          re[row2].rs.push({ rs: [0, col + enzyme.rs.length - colNum], name: enzyme.name, id: i });
+	        }
 	
-				this.textRows = [];
-				var j = 0;
-				if (showSelection) {
-					if (cursorPos == selectStartPos) {
-						showCursor = true;
-						showSelection = false;
-					} else {
-						showCursor = false;
-					}
-				}
+	        for (var j = 0; j < enzyme.csNumber; j++) {
+	          var csU = undefined;
+	          var csD = undefined;
+	          var cs = es.getCuttingSite(j);
+	          if (es.strand == "-") {
+	            csU = cs[1];
+	            csD = cs[0];
+	          } else {
+	            csU = cs[0];
+	            csD = cs[1];
+	          }
 	
-				this.splitBlocks = [];
-				var splitBlocks = this.splitBlocks;
-				for (var _j = 0; _j < sequence.length; _j += colNum) {
-					splitBlocks.push([]);
-				}
+	          var rowU = Math.floor(csU / colNum);
+	          var colU = csU % colNum;
 	
-				if (blocks) {
-					for (var i = 0; i < blocks.length; i++) {
-						var start = blocks[i].start;
-						var len = blocks[i].length;
-						var blockEnd = start + len;
-						var blockRowIdx = Math.floor(start / colNum);
+	          var rowD = Math.floor(csD / colNum);
+	          var colD = csD % colNum;
 	
-						for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
-							var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
-							var end = Math.min(blockEnd - _j2 * colNum, colNum);
-							if (splitBlocks[_j2]) {
-								splitBlocks[_j2].push({
-									color: blocks[i].color,
-									name: blocks[i].name,
-									start: _start,
-									len: end - _start
-								});
-							}
-						}
-					}
-				}
+	          if (rowU == rowD) {
+	            // upper site and lower site are in same row
+	            if (re[rowU]) {
+	              re[rowU].cs.push({ style: "N", pos: [colU, colD], id: i }); //normal │, ┌┘,└┐
+	            }
+	          } else if (rowU < rowD) {
+	              if (re[rowU] && re[rowD]) {
+	                re[rowU].cs.push({ style: "UR", pos: [colU, colNum], id: i }); //up right  └
+	                re[rowD].cs.push({ style: "DL", pos: [0, colD], id: i }); //down left ┐
+	              }
+	            } else {
+	                if (re[rowU] && re[rowD]) {
+	                  re[rowU].cs.push({ style: "UL", pos: [0, colU], id: i }); //up left  ┘
+	                  re[rowD].cs.push({ style: "DR", pos: [colD, colNum], id: i }); //down right ┌
+	                }
+	              }
+	        }
+	      }
+	      return re;
+	    }
+	  }, {
+	    key: 'onSetCursor',
+	    value: function onSetCursor(cursorPos, rowNumber) {
+	      this.setState({ cursorPos: cursorPos, showCursor: true, selectStartPos: cursorPos, showSelection: false });
+	      if (this.props.onSetCursor) {
+	        this.props.onSetCursor(cursorPos);
+	      }
+	      if (this.props.onBlockChanged) {
+	        var row = Math.floor(cursorPos / this.colNum);
+	        var x = cursorPos % this.colNum;
+	        var blocks = this.splitBlocks[row];
+	        for (var i in blocks) {
+	          if (x >= blocks[i].start) {
+	            this.props.onBlockChanged([blocks[i]]);
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'onSelecting',
+	    value: function onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
+	      if (cursorPosStart) {
+	        this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true, selectStartPos: cursorPosStart });
+	      } else {
+	        this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true });
+	      }
+	      if (this.props.onSelecting) {
+	        if (cursorPosStart) {
+	          console.log("full start", cursorPosStart, cursorPos);
+	          this.props.onSelecting(cursorPos, cursorPosStart);
+	        } else {
+	          this.props.onSelecting(cursorPos, this.state.selectStartPos);
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'onSetHightLight',
+	    value: function onSetHightLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
+	      if (highLightStart == highLightEnd) {
+	        this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+	      } else {
+	        this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+	      }
+	    }
+	  }, {
+	    key: 'onRowCalculatedHeight',
+	    value: function onRowCalculatedHeight(row, height) {
+	      this.rowHeight[row] = height;
+	      if (row > 0) {
+	        this.rowY[row] = this.rowY[row - 1] + height;
+	      } else {
+	        this.rowY[0] = 0;
+	      }
+	    }
+	  }, {
+	    key: 'splitRows',
+	    value: function splitRows(colNum) {
+	      var sequence = this.props.sequence;
+	      var _state = this.state;
+	      var cursorPos = _state.cursorPos;
+	      var showCursor = _state.showCursor;
+	      var selectStartPos = _state.selectStartPos;
+	      var showSelection = _state.showSelection;
+	      var showHighLight = _state.showHighLight;
+	      var highLightStart = _state.highLightStart;
+	      var highLightEnd = _state.highLightEnd;
+	      var _props2 = this.props;
+	      var showEnzymes = _props2.showEnzymes;
+	      var showLadder = _props2.showLadder;
+	      var showRS = _props2.showRS;
+	      var showFeatures = _props2.showFeatures;
+	      var showRuler = _props2.showRuler;
+	      var showBlockBar = _props2.showBlockBar;
+	      var blocks = _props2.blocks;
+	      var showAA = _props2.showAA;
 	
-				for (var i = 0, rowCount = 0; i < sequence.length; i += colNum, rowCount++) {
+	      this.textRows = [];
+	      var j = 0;
+	      if (showSelection) {
+	        if (cursorPos == selectStartPos) {
+	          showCursor = true;
+	          showSelection = false;
+	        } else {
+	          showCursor = false;
+	        }
+	      }
 	
-					var featureFrags = this.findFeaturesInRow(i, colNum);
-					//let aaFrags = this.findAAInRow(i,colNum);
+	      this.splitBlocks = [];
+	      var splitBlocks = this.splitBlocks;
+	      for (var _j = 0; _j < sequence.length; _j += colNum) {
+	        splitBlocks.push([]);
+	      }
 	
-					var aaFrags = this.aaRows[rowCount];
-					var enzymeFrags = this.enzymeRows[rowCount];
+	      if (blocks) {
+	        for (var i = 0; i < blocks.length; i++) {
+	          var start = blocks[i].start;
+	          var len = blocks[i].length;
+	          var blockEnd = start + len;
+	          var blockRowIdx = Math.floor(start / colNum);
 	
-					var rowCursorPos = undefined,
-					    rowSelectStartPos = undefined;
-					//if(cursorPos>selectStartPos) {
-					rowCursorPos = 0;
-					//	rowSelectStartPos = 0;
-					//}
-					//else{
-					//	rowCursorPos = 0;
-					//	rowSelectStartPos = colNum;
-					//}
-					var rowShowStartPos = false;
-					var rowShowCursor = false;
-					var rowShowSelection = false;
+	          for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
+	            var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
+	            var end = Math.min(blockEnd - _j2 * colNum, colNum);
+	            if (splitBlocks[_j2]) {
+	              splitBlocks[_j2].push({
+	                color: blocks[i].color,
+	                name: blocks[i].name,
+	                start: _start,
+	                len: end - _start
+	              });
+	            }
+	          }
+	        }
+	      }
 	
-					var rowSelectLeftPos = 0;
-					var rowSelectRightPos = colNum;
-					var rowShowLeftCursor = false;
-					var rowShowRightCursor = false;
-					var rowHighLightLeftPos = 0;
-					var rowHighLightRightPos = colNum;
-					var rowShowHighLight = false;
+	      for (var i = 0, rowCount = 0; i < sequence.length; i += colNum, rowCount++) {
 	
-					var showEnzyme = true;
+	        var featureFrags = this.findFeaturesInRow(i, colNum);
+	        //let aaFrags = this.findAAInRow(i,colNum);
 	
-					if (showCursor && cursorPos >= i && cursorPos <= i + colNum) {
-						rowCursorPos = cursorPos - i;
-						rowShowCursor = true;
-						rowShowSelection = false;
-					}
-					if (showSelection) {
-						var selectLeftPos = Math.min(selectStartPos, cursorPos);
-						var selectRightPos = Math.max(selectStartPos, cursorPos);
-						rowShowCursor = false;
-						if (selectLeftPos >= i && selectLeftPos <= i + colNum) {
-							rowSelectLeftPos = selectLeftPos - i;
-							rowShowLeftCursor = true;
-							rowShowSelection = true;
-						}
-						if (selectRightPos > i && selectRightPos <= i + colNum) {
-							rowSelectRightPos = selectRightPos - i;
-							rowShowRightCursor = true;
-							rowShowSelection = true;
-						}
-						if (i + colNum <= selectRightPos && i >= selectLeftPos) {
-							//console.log(i);
-							rowShowSelection = true;
-						}
-					}
-					if (showHighLight) {
-						var highLightLeftPos = Math.min(highLightStart, highLightEnd);
-						var highLightRightPos = Math.max(highLightStart, highLightEnd);
+	        var aaFrags = this.aaRows[rowCount];
+	        var enzymeFrags = this.enzymeRows[rowCount];
 	
-						if (highLightLeftPos >= i && highLightLeftPos <= i + colNum) {
-							rowHighLightLeftPos = highLightLeftPos - i;
-							rowShowHighLight = true;
-						}
-						if (highLightRightPos > i && highLightRightPos <= i + colNum) {
-							rowHighLightRightPos = highLightRightPos - i;
-							rowShowHighLight = true;
-						}
-					}
+	        var rowCursorPos = undefined,
+	            rowSelectStartPos = undefined;
+	        //if(cursorPos>selectStartPos) {
+	        rowCursorPos = 0;
+	        //	rowSelectStartPos = 0;
+	        //}
+	        //else{
+	        //	rowCursorPos = 0;
+	        //	rowSelectStartPos = colNum;
+	        //}
+	        var rowShowStartPos = false;
+	        var rowShowCursor = false;
+	        var rowShowSelection = false;
 	
-					var subSequence = sequence.substr(i, colNum);
+	        var rowSelectLeftPos = 0;
+	        var rowSelectRightPos = colNum;
+	        var rowShowLeftCursor = false;
+	        var rowShowRightCursor = false;
+	        var rowHighLightLeftPos = 0;
+	        var rowHighLightRightPos = colNum;
+	        var rowShowHighLight = false;
 	
-					this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
-						sequence: subSequence,
-						idxStart: i,
-						key: 'sequenceRow_' + rowCount,
-						rowNumber: rowCount,
-						features: featureFrags,
-						unitWidth: this.unitWidth,
-						onSetCursor: this.onSetCursor.bind(this),
-						onSetCursorMoving: this.onSelecting.bind(this),
-						onSetHighLight: this.onSetHightLight.bind(this),
-						cursorPos: rowCursorPos,
-						showCursor: rowShowCursor,
-						selectLeftPos: rowSelectLeftPos,
-						selectRightPos: rowSelectRightPos,
-						showLeftCursor: rowShowLeftCursor,
-						showRightCursor: rowShowRightCursor,
-						showSelection: rowShowSelection,
-						showStartPos: rowShowStartPos,
-						seqMainStyle: this.seqMainStyle,
-						seqCompStyle: this.seqCompStyle,
-						showEnzymes: showEnzymes,
-						showLadder: showLadder,
-						showRS: showRS,
-						showFeatures: showFeatures,
-						showRuler: showRuler,
-						showAA: showAA,
-						showHighLight: rowShowHighLight,
-						highLightLeftPos: rowHighLightLeftPos,
-						highLightRightPos: rowHighLightRightPos,
-						theme: this.props.theme,
-						showBlockBar: showBlockBar,
-						blocks: splitBlocks[rowCount],
-						aas: aaFrags,
-						enzymes: enzymeFrags,
-						onCalculatedHeight: this.onRowCalculatedHeight.bind(this)
-					}));
+	        var showEnzyme = true;
 	
-					j++;
-				}
-			}
-		}, {
-			key: 'componentWillMount',
-			value: function componentWillMount() {
-				this.initialRowPos(this.props.sequence, this.props.width);
-			}
-		}, {
-			key: 'componentDidMount',
-			value: function componentDidMount() {}
-		}, {
-			key: 'componentWillReceiveProps',
-			value: function componentWillReceiveProps(nextProps) {
-				if (nextProps.sequence != this.props.sequence || nextProps.width != this.props.width) {
-					this.initialRowPos(nextProps.sequence, nextProps.width);
-				}
-				if (this.props.cursorPos != nextProps.cursorPos || this.props.selectStartPos != nextProps.selectStartPos) {
-					this.setState({
-						selectStartPos: nextProps.selectStartPos,
-						cursorPos: nextProps.cursorPos,
-						showCursor: true,
-						showSelection: nextProps.selectStartPos != nextProps.cursorPos
-					});
-				}
-			}
-		}, {
-			key: 'shouldComponentUpdate',
-			value: function shouldComponentUpdate(np, ns) {
-				var update = !(0, _reactHelper.compareProps)(this.props, np) || !(0, _reactHelper.compareProps)(this.state, ns);
-				return update;
-			}
-		}, {
-			key: 'componentDidUpdate',
-			value: function componentDidUpdate() {}
-		}, {
-			key: 'componentWillUpdate',
-			value: function componentWillUpdate() {}
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this2 = this;
+	        if (showCursor && cursorPos >= i && cursorPos <= i + colNum) {
+	          rowCursorPos = cursorPos - i;
+	          rowShowCursor = true;
+	          rowShowSelection = false;
+	        }
+	        if (showSelection) {
+	          var selectLeftPos = Math.min(selectStartPos, cursorPos);
+	          var selectRightPos = Math.max(selectStartPos, cursorPos);
+	          rowShowCursor = false;
+	          if (selectLeftPos >= i && selectLeftPos <= i + colNum) {
+	            rowSelectLeftPos = selectLeftPos - i;
+	            rowShowLeftCursor = true;
+	            rowShowSelection = true;
+	          }
+	          if (selectRightPos > i && selectRightPos <= i + colNum) {
+	            rowSelectRightPos = selectRightPos - i;
+	            rowShowRightCursor = true;
+	            rowShowSelection = true;
+	          }
+	          if (i + colNum <= selectRightPos && i >= selectLeftPos) {
+	            //console.log(i);
+	            rowShowSelection = true;
+	          }
+	        }
+	        if (showHighLight) {
+	          var highLightLeftPos = Math.min(highLightStart, highLightEnd);
+	          var highLightRightPos = Math.max(highLightStart, highLightEnd);
 	
-				var _props2 = this.props;
-				var width = _props2.width;
-				var height = _props2.height;
-				var sequence = _props2.sequence;
-				var features = _props2.features;
+	          if (highLightLeftPos >= i && highLightLeftPos <= i + colNum) {
+	            rowHighLightLeftPos = highLightLeftPos - i;
+	            rowShowHighLight = true;
+	          }
+	          if (highLightRightPos > i && highLightRightPos <= i + colNum) {
+	            rowHighLightRightPos = highLightRightPos - i;
+	            rowShowHighLight = true;
+	          }
+	        }
 	
-				this.colNum = Math.floor(width / this.unitWidth) - 10;
+	        var subSequence = sequence.substr(i, colNum);
 	
-				this.sequence = new _DNASeq.DNASeq(this.props.sequence);
+	        this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
+	          sequence: subSequence,
+	          idxStart: i,
+	          key: 'sequenceRow_' + rowCount,
+	          rowNumber: rowCount,
+	          features: featureFrags,
+	          unitWidth: this.unitWidth,
+	          onSetCursor: this.onSetCursor.bind(this),
+	          onSetCursorMoving: this.onSelecting.bind(this),
+	          onSetHighLight: this.onSetHightLight.bind(this),
+	          cursorPos: rowCursorPos,
+	          showCursor: rowShowCursor,
+	          selectLeftPos: rowSelectLeftPos,
+	          selectRightPos: rowSelectRightPos,
+	          showLeftCursor: rowShowLeftCursor,
+	          showRightCursor: rowShowRightCursor,
+	          showSelection: rowShowSelection,
+	          showStartPos: rowShowStartPos,
+	          seqMainStyle: this.seqMainStyle,
+	          seqCompStyle: this.seqCompStyle,
+	          showEnzymes: showEnzymes,
+	          showLadder: showLadder,
+	          showRS: showRS,
+	          showFeatures: showFeatures,
+	          showRuler: showRuler,
+	          showAA: showAA,
+	          showHighLight: rowShowHighLight,
+	          highLightLeftPos: rowHighLightLeftPos,
+	          highLightRightPos: rowHighLightRightPos,
+	          theme: this.props.theme,
+	          showBlockBar: showBlockBar,
+	          blocks: splitBlocks[rowCount],
+	          aas: aaFrags,
+	          enzymes: enzymeFrags,
+	          onCalculatedHeight: this.onRowCalculatedHeight.bind(this)
+	        }));
 	
-				if (this.props.showEnzymes) {
-					this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
-				}
-				//console.log(this.enzymeSites);
-				if (this.props.showAA) {
-					this.aas = this.calcAAs(sequence, features);
-				}
-				if (this.colNum < 20) this.colNum = 20;
-				if (this.props.showAA) {
-					this.calcAAs(this.sequence.toString(), this.props.features);
-					this.aaRows = this.splitAAs(this.colNum);
-				}
-				if (this.props.showEnzymes) {
-					this.enzymeRows = this.splitEnzymes(this.colNum);
-				}
-				this.splitRows(this.colNum);
-				return _react3.default.createElement(
-					'div',
-					{ style: Object.assign(this.props.style, {
-							width: width,
-							height: height,
-							overflowY: "scroll"
-						}),
-						onScroll: function onScroll(e) {
-							var scrollPos = e.target.scrollTop;
-							//			 		console.log("scrolled to",scrollPos);
-							for (var i = 0; i < _this2.rowY.length; i++) {
-								if (scrollPos <= _this2.rowY[i] + _this2.rowHeight[i]) {
-									var block = _this2.splitBlocks[i];
-									if (block.length > 0) _this2.props.onBlockChanged(block);
-									break;
-								}
-							}
-						}
-					},
-					_react3.default.createElement(
-						'div',
-						null,
-						this.textRows
-					)
-				);
-			}
-		}]);
+	        j++;
+	      }
+	    }
+	  }]);
 	
-		return SequenceEditor;
+	  return SequenceEditor;
 	}(_react3.default.Component), _class.propTypes = {
-		sequence: _react3.default.PropTypes.string,
-		theme: _react3.default.PropTypes.string,
-		width: _react3.default.PropTypes.number,
-		height: _react3.default.PropTypes.number,
-		font: _react3.default.PropTypes.string,
-		fontSize: _react3.default.PropTypes.number
+	  sequence: _react3.default.PropTypes.string, //dna sequence, in ACGT
+	  theme: _react3.default.PropTypes.oneOf(['normal', 'nowrap']),
+	  width: _react3.default.PropTypes.number,
+	  height: _react3.default.PropTypes.number
 	}, _class.defaultProps = {
-		sequence: "NOTHING",
-		theme: "nowrap1",
-		showBlockBar: true
+	  sequence: "NO SEQUENCE", //debug sequence, it should be repalced by inputing
+	  theme: "normal",
+	  showBlockBar: true, //show block bars in genome-designer
+	  style: {}
 	}, _temp));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
@@ -27479,7 +27440,7 @@
 	});
 	exports.RulerLocation = undefined;
 	
-	var _reactDom = __webpack_require__(29);
+	var _reactDom = __webpack_require__(51);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -28532,7 +28493,7 @@
 	
 	var _reactHelper = __webpack_require__(23);
 	
-	var _DNASeq = __webpack_require__(46);
+	var _DNASeq = __webpack_require__(45);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -28668,7 +28629,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _reactDom = __webpack_require__(29);
+	var _reactDom = __webpack_require__(51);
 	
 	var _OnionForGenomeDesigner = __webpack_require__(120);
 	
@@ -28681,219 +28642,158 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var _components = {
-	    OnionViewer: {
-	        displayName: 'OnionViewer'
-	    }
+	  OnionViewer: {
+	    displayName: 'OnionViewer'
+	  }
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	    filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
-	    components: _components,
-	    locals: [module],
-	    imports: [_react3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
+	  components: _components,
+	  locals: [module],
+	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	    filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
-	    components: _components,
-	    locals: [],
-	    imports: [_react3.default, _redboxReact3.default]
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
+	  components: _components,
+	  locals: [],
+	  imports: [_react3.default, _redboxReact3.default]
 	});
 	
 	function _wrapComponent(id) {
-	    return function (Component) {
-	        return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
-	    };
+	  return function (Component) {
+	    return _reactTransformHmr2(_reactTransformCatchErrors2(Component, id), id);
+	  };
 	}
 	
 	var manifest = __webpack_require__(112);
 	
+	// OnionViewer reads data from blocks, and converts it to onion format.
+	
 	var OnionViewer = _wrapComponent('OnionViewer')(function (_React$Component) {
-	    _inherits(OnionViewer, _React$Component);
+	  _inherits(OnionViewer, _React$Component);
 	
-	    function OnionViewer(props) {
-	        _classCallCheck(this, OnionViewer);
+	  function OnionViewer(props) {
+	    _classCallCheck(this, OnionViewer);
 	
-	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
 	
-	        _this.state = {
-	            width: props.container.offsetWidth,
-	            height: props.container.offsetHeight
-	        };
-	        //console.log(this.enzymeList);
-	        return _this;
+	    _this.state = {
+	      width: props.container.offsetWidth,
+	      height: props.container.offsetHeight
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(OnionViewer, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      this.setState({
+	        block: null,
+	        rendered: Date.now()
+	      });
+	      console.log("componentwillmount");
+	
+	      var subscriber = window.gd.store.subscribe(function (state, lastAction) {
+	        var _this2 = this;
+	
+	        var last = [];
+	        var current = state.ui.currentBlocks;
+	        if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
+	          return item !== last[index];
+	        }))) {
+	          (function () {
+	            var currentBlocks = current;
+	            var readBlockCount = currentBlocks.length;
+	            var onionBlocks = [];
+	            var start = 0;
+	            var totalSequence = "";
+	
+	            var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
+	              var block = state.blocks[currentBlocks[i]];
+	
+	              block.getSequence().then(function (sequence) {
+	                if (sequence) {
+	                  onionBlocks.push({
+	                    color: block.metadata.color,
+	                    start: start,
+	                    length: sequence.length
+	                  });
+	                  start += sequence.length;
+	                  totalSequence += sequence;
+	                  if (i == count - 1) {
+	                    _this2.setState({ blocks: onionBlocks, sequence: totalSequence });
+	                  } else {
+	                    readSequenceFromBlock(i + 1, count);
+	                  }
+	                }
+	              });
+	            };
+	
+	            readSequenceFromBlock(0, readBlockCount);
+	
+	            last = current;
+	          })();
+	        }
+	      });
+	
+	      this.updateDimensions();
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      console.log("componentDidMount:");
+	      window.addEventListener("resize", this.updateDimensions.bind(this));
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.subscriber();
+	      window.removeEventListener("resize", this.updateDimensions.bind(this));
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _state = this.state;
+	      var sequence = _state.sequence;
+	      var features = _state.features;
+	      var width = _state.width;
+	      var height = _state.height;
+	      var blocks = _state.blocks;
+	      //can't read correct width and height, I don't know why.
+	
+	      return _react3.default.createElement(_OnionForGenomeDesigner.OnionForGenomeDesigner, {
+	        sequence: sequence,
+	        features: features,
+	        width: width,
+	        height: 400,
+	        blocks: blocks
+	      });
 	    }
 	
-	    _createClass(OnionViewer, [{
-	        key: 'componentWillMount',
-	        value: function componentWillMount() {
-	            var self = this;
-	            var lastBlock = undefined;
+	    //read dimensions of onion container
 	
-	            this.setState({
-	                block: null,
-	                rendered: Date.now()
+	  }, {
+	    key: 'updateDimensions',
+	    value: function updateDimensions() {
+	      var width = $(".onionContainer").width();
+	      var height = $(".onionContainer").height();
+	      width = Math.max(100, width);
+	      height = Math.max(100, height);
+	      console.log("updateDimensions:", this.props.container, width, height);
+	      this.setState({ width: width });
+	    }
+	  }]);
 	
-	            });
-	            console.log("componentwillmount");
-	            var subscriber = window.gd.store.subscribe(function (state, lastAction) {
-	                var _this2 = this;
-	
-	                var last = [];
-	                var current = state.ui.currentBlocks;
-	                if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
-	                    return item !== last[index];
-	                }))) {
-	                    (function () {
-	                        console.log("current block", current);
-	
-	                        var currentBlocks = current;
-	                        var readBlockCount = currentBlocks.length;
-	                        var onionBlocks = [];
-	                        var start = 0;
-	                        var totalSequence = "";
-	                        var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
-	                            var block = state.blocks[currentBlocks[i]];
-	                            block.getSequence().then(function (sequence) {
-	                                if (sequence) {
-	                                    onionBlocks.push({
-	                                        color: block.metadata.color,
-	                                        start: start,
-	                                        length: sequence.length
-	                                    });
-	                                    start += sequence.length;
-	                                    totalSequence += sequence;
-	                                    if (i == count - 1) {
-	                                        _this2.setState({ blocks: onionBlocks, sequence: totalSequence });
-	                                    } else {
-	                                        readSequenceFromBlock(i + 1, count);
-	                                    }
-	                                }
-	                            });
-	                        };
-	                        readSequenceFromBlock(0, readBlockCount);
-	
-	                        last = current;
-	                    })();
-	                }
-	            });
-	            /*  const storeSubscriber = (store) => {
-	                  const { currentBlocks } = store.ui;
-	                  //console.log("--block",store.ui);
-	                  const block = (Array.isArray(currentBlocks) && currentBlocks.length) ? store.blocks[currentBlocks[0]] : null;
-	                  // all instances in the store are immutables, so you can just do a reference equality check to see if it has changed
-	                  // this would also be a good place to convert to the onion format
-	                  // it would be a great place to memoize
-	                  // (i.e. return same value if input === previous input, rather than storing it explicitly in the component,
-	                  // and then you can reuse the selector for all things you retrieve from the store)
-	                  //if (!!block && block !== lastBlock) {
-	                  //  //note that right now, blocks dont have a sequence... this will work but nothing will be returned
-	                  //  block.getSequence()
-	                  //    .then(sequence => {
-	                  //      self.setState({
-	                  //        blocks,
-	                  //        sequence,
-	                  //      });
-	                  //    });
-	                  //  lastBlock = block;
-	                  //}
-	                    if(Array.isArray(currentBlocks) && currentBlocks.length) {
-	                      let readBlockCount = currentBlocks.length;
-	                      let onionBlocks = [];
-	                      let start = 0;
-	                      let totalSequence = "";
-	                      let readSequenceFromBlock = (i,count)=>{
-	                          let block = store.blocks[currentBlocks[i]];
-	                          block.getSequence().then(sequence=>{
-	                              if(sequence) {
-	                                  onionBlocks.push({
-	                                      color: block.metadata.color,
-	                                      start: start,
-	                                      length: sequence.length,
-	                                  });
-	                                  start += sequence.length;
-	                                  totalSequence += sequence;
-	                                  if (i == count - 1) {
-	                                      this.setState({blocks: onionBlocks, sequence: totalSequence});
-	                                  }
-	                                  else {
-	                                      readSequenceFromBlock(i + 1, count);
-	                                  }
-	                              }
-	                          });
-	                      };
-	                      readSequenceFromBlock(0,readBlockCount);
-	                  }
-	                  else{
-	                      console.log("no block");
-	                  }
-	              };
-	            //  this.subscriber = window.gd.store.subscribe(storeSubscriber);
-	              */
-	        }
-	    }, {
-	        key: 'updateDimensions',
-	        value: function updateDimensions() {
-	            //let width = this.props.container.offsetWidth;
-	            var width = $(".onionContainer").width();
-	            console.log("updateDimensions:", this.props.container, width);
-	            this.setState({ width: width });
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            console.log("componentDidMount:");
-	            window.addEventListener("resize", this.updateDimensions.bind(this));
-	            this.updateDimensions();
-	        }
-	    }, {
-	        key: 'componentWillUnmount',
-	        value: function componentWillUnmount() {
-	            this.subscriber();
-	            window.removeEventListener("resize", this.updateDimensions.bind(this));
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _state = this.state;
-	            var sequence = _state.sequence;
-	            var features = _state.features;
-	            var width = _state.width;
-	            var height = _state.height;
-	            var blocks = _state.blocks;
-	            //can't read correct width and height, I don't know why.
-	
-	            return _react3.default.createElement(_OnionForGenomeDesigner.OnionForGenomeDesigner, {
-	                sequence: sequence,
-	                features: features,
-	                width: 800,
-	                height: 400,
-	                blocks: blocks
-	            });
-	        }
-	    }]);
-	
-	    return OnionViewer;
+	  return OnionViewer;
 	}(_react3.default.Component));
 	
-	/* register with store */
-	//note that if you were using redux, you could wrap your component in a Provider, and pass in window.gd.store
-	//we'll just register directly for this example
-	
-	/* rendering + registering extension */
-	
-	//const render = (container) => {
-	//    container.className += " onionContainer";
-	//    reactRender(<OnionViewer
-	//        container={container}
-	//    />, container);
-	//};
-	
 	var render = function render(container) {
-	    container.className += " onionContainer";
-	    (0, _reactDom.render)(_react3.default.createElement(OnionViewer, {
-	        container: container
-	    }), container);
+	  container.className += " onionContainer";
+	  (0, _reactDom.render)(_react3.default.createElement(OnionViewer, {
+	    container: container
+	  }), container);
 	};
 	
 	window.gd.registerExtension(manifest, render);
@@ -39377,7 +39277,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(169),
-	    getNative = __webpack_require__(36);
+	    getNative = __webpack_require__(35);
 	
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -39592,8 +39492,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var arrayPush = __webpack_require__(159),
-	    isArguments = __webpack_require__(50),
-	    isArray = __webpack_require__(51),
+	    isArguments = __webpack_require__(49),
+	    isArray = __webpack_require__(50),
 	    isArrayLike = __webpack_require__(27),
 	    isObjectLike = __webpack_require__(28);
 	
@@ -39835,7 +39735,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(158),
-	    getNative = __webpack_require__(36);
+	    getNative = __webpack_require__(35);
 	
 	/** Native method references. */
 	var Set = getNative(global, 'Set');
@@ -39913,7 +39813,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var isArrayLike = __webpack_require__(27),
-	    isIndex = __webpack_require__(49),
+	    isIndex = __webpack_require__(48),
 	    isObject = __webpack_require__(24);
 	
 	/**
@@ -39946,10 +39846,10 @@
 /* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(50),
-	    isArray = __webpack_require__(51),
-	    isIndex = __webpack_require__(49),
-	    isLength = __webpack_require__(37),
+	var isArguments = __webpack_require__(49),
+	    isArray = __webpack_require__(50),
+	    isIndex = __webpack_require__(48),
+	    isLength = __webpack_require__(36),
 	    keysIn = __webpack_require__(179);
 	
 	/** Used for native method references. */
@@ -40140,10 +40040,10 @@
 /* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArguments = __webpack_require__(50),
-	    isArray = __webpack_require__(51),
-	    isIndex = __webpack_require__(49),
-	    isLength = __webpack_require__(37),
+	var isArguments = __webpack_require__(49),
+	    isArray = __webpack_require__(50),
+	    isIndex = __webpack_require__(48),
+	    isLength = __webpack_require__(36),
 	    isObject = __webpack_require__(24);
 	
 	/** Used for native method references. */
@@ -40944,7 +40844,7 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPropagators = __webpack_require__(31);
+	var EventPropagators = __webpack_require__(30);
 	var ExecutionEnvironment = __webpack_require__(9);
 	var FallbackCompositionState = __webpack_require__(197);
 	var SyntheticCompositionEvent = __webpack_require__(229);
@@ -41533,8 +41433,8 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPluginHub = __webpack_require__(30);
-	var EventPropagators = __webpack_require__(31);
+	var EventPluginHub = __webpack_require__(29);
+	var EventPropagators = __webpack_require__(30);
 	var ExecutionEnvironment = __webpack_require__(9);
 	var ReactUpdates = __webpack_require__(13);
 	var SyntheticEvent = __webpack_require__(21);
@@ -42070,8 +41970,8 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPropagators = __webpack_require__(31);
-	var SyntheticMouseEvent = __webpack_require__(41);
+	var EventPropagators = __webpack_require__(30);
+	var SyntheticMouseEvent = __webpack_require__(40);
 	
 	var ReactMount = __webpack_require__(10);
 	var keyOf = __webpack_require__(17);
@@ -42784,7 +42684,7 @@
 	
 	'use strict';
 	
-	var ReactInstanceMap = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(31);
 	
 	var findDOMNode = __webpack_require__(60);
 	var warning = __webpack_require__(3);
@@ -42955,10 +42855,10 @@
 	var ReactComponentEnvironment = __webpack_require__(56);
 	var ReactCurrentOwner = __webpack_require__(16);
 	var ReactElement = __webpack_require__(11);
-	var ReactInstanceMap = __webpack_require__(32);
+	var ReactInstanceMap = __webpack_require__(31);
 	var ReactPerf = __webpack_require__(12);
-	var ReactPropTypeLocations = __webpack_require__(40);
-	var ReactPropTypeLocationNames = __webpack_require__(39);
+	var ReactPropTypeLocations = __webpack_require__(39);
+	var ReactPropTypeLocationNames = __webpack_require__(38);
 	var ReactReconciler = __webpack_require__(20);
 	var ReactUpdateQueue = __webpack_require__(58);
 	
@@ -43714,7 +43614,7 @@
 	var DOMProperty = __webpack_require__(19);
 	var DOMPropertyOperations = __webpack_require__(53);
 	var EventConstants = __webpack_require__(15);
-	var ReactBrowserEventEmitter = __webpack_require__(38);
+	var ReactBrowserEventEmitter = __webpack_require__(37);
 	var ReactComponentBrowserEnvironment = __webpack_require__(55);
 	var ReactDOMButton = __webpack_require__(203);
 	var ReactDOMInput = __webpack_require__(206);
@@ -43727,12 +43627,12 @@
 	var ReactUpdateQueue = __webpack_require__(58);
 	
 	var assign = __webpack_require__(2);
-	var canDefineProperty = __webpack_require__(43);
-	var escapeTextContentForBrowser = __webpack_require__(44);
+	var canDefineProperty = __webpack_require__(42);
+	var escapeTextContentForBrowser = __webpack_require__(43);
 	var invariant = __webpack_require__(1);
 	var isEventSupported = __webpack_require__(66);
 	var keyOf = __webpack_require__(17);
-	var setInnerHTML = __webpack_require__(45);
+	var setInnerHTML = __webpack_require__(44);
 	var setTextContent = __webpack_require__(67);
 	var shallowEqual = __webpack_require__(79);
 	var validateDOMNesting = __webpack_require__(70);
@@ -45921,7 +45821,7 @@
 	
 	'use strict';
 	
-	var EventPluginHub = __webpack_require__(30);
+	var EventPluginHub = __webpack_require__(29);
 	
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -46181,11 +46081,11 @@
 	'use strict';
 	
 	var DOMProperty = __webpack_require__(19);
-	var EventPluginHub = __webpack_require__(30);
+	var EventPluginHub = __webpack_require__(29);
 	var ReactComponentEnvironment = __webpack_require__(56);
 	var ReactClass = __webpack_require__(86);
 	var ReactEmptyComponent = __webpack_require__(95);
-	var ReactBrowserEventEmitter = __webpack_require__(38);
+	var ReactBrowserEventEmitter = __webpack_require__(37);
 	var ReactNativeComponent = __webpack_require__(101);
 	var ReactPerf = __webpack_require__(12);
 	var ReactRootIndex = __webpack_require__(104);
@@ -46902,10 +46802,10 @@
 	
 	var CallbackQueue = __webpack_require__(52);
 	var PooledClass = __webpack_require__(18);
-	var ReactBrowserEventEmitter = __webpack_require__(38);
+	var ReactBrowserEventEmitter = __webpack_require__(37);
 	var ReactDOMFeatureFlags = __webpack_require__(89);
 	var ReactInputSelection = __webpack_require__(98);
-	var Transaction = __webpack_require__(42);
+	var Transaction = __webpack_require__(41);
 	
 	var assign = __webpack_require__(2);
 	
@@ -47257,7 +47157,7 @@
 	
 	var PooledClass = __webpack_require__(18);
 	var CallbackQueue = __webpack_require__(52);
-	var Transaction = __webpack_require__(42);
+	var Transaction = __webpack_require__(41);
 	
 	var assign = __webpack_require__(2);
 	var emptyFunction = __webpack_require__(14);
@@ -47479,7 +47379,7 @@
 	'use strict';
 	
 	var EventConstants = __webpack_require__(15);
-	var EventPropagators = __webpack_require__(31);
+	var EventPropagators = __webpack_require__(30);
 	var ExecutionEnvironment = __webpack_require__(9);
 	var ReactInputSelection = __webpack_require__(98);
 	var SyntheticEvent = __webpack_require__(21);
@@ -47720,16 +47620,16 @@
 	
 	var EventConstants = __webpack_require__(15);
 	var EventListener = __webpack_require__(74);
-	var EventPropagators = __webpack_require__(31);
+	var EventPropagators = __webpack_require__(30);
 	var ReactMount = __webpack_require__(10);
 	var SyntheticClipboardEvent = __webpack_require__(228);
 	var SyntheticEvent = __webpack_require__(21);
 	var SyntheticFocusEvent = __webpack_require__(231);
 	var SyntheticKeyboardEvent = __webpack_require__(233);
-	var SyntheticMouseEvent = __webpack_require__(41);
+	var SyntheticMouseEvent = __webpack_require__(40);
 	var SyntheticDragEvent = __webpack_require__(230);
 	var SyntheticTouchEvent = __webpack_require__(234);
-	var SyntheticUIEvent = __webpack_require__(33);
+	var SyntheticUIEvent = __webpack_require__(32);
 	var SyntheticWheelEvent = __webpack_require__(235);
 	
 	var emptyFunction = __webpack_require__(14);
@@ -48397,7 +48297,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(41);
+	var SyntheticMouseEvent = __webpack_require__(40);
 	
 	/**
 	 * @interface DragEvent
@@ -48439,7 +48339,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(33);
+	var SyntheticUIEvent = __webpack_require__(32);
 	
 	/**
 	 * @interface FocusEvent
@@ -48524,7 +48424,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(33);
+	var SyntheticUIEvent = __webpack_require__(32);
 	
 	var getEventCharCode = __webpack_require__(61);
 	var getEventKey = __webpack_require__(240);
@@ -48614,7 +48514,7 @@
 	
 	'use strict';
 	
-	var SyntheticUIEvent = __webpack_require__(33);
+	var SyntheticUIEvent = __webpack_require__(32);
 	
 	var getEventModifierState = __webpack_require__(62);
 	
@@ -48665,7 +48565,7 @@
 	
 	'use strict';
 	
-	var SyntheticMouseEvent = __webpack_require__(41);
+	var SyntheticMouseEvent = __webpack_require__(40);
 	
 	/**
 	 * @interface WheelEvent
@@ -49161,7 +49061,7 @@
 	
 	'use strict';
 	
-	var escapeTextContentForBrowser = __webpack_require__(44);
+	var escapeTextContentForBrowser = __webpack_require__(43);
 	
 	/**
 	 * Escapes attribute value to prevent scripting attacks.
@@ -49626,7 +49526,7 @@
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(47);
+	var content = __webpack_require__(46);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(110)(content, {});
@@ -49635,8 +49535,8 @@
 	if(true) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept(47, function() {
-				var newContent = __webpack_require__(47);
+			module.hot.accept(46, function() {
+				var newContent = __webpack_require__(46);
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
