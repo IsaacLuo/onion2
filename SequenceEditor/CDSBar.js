@@ -4,8 +4,8 @@ import {compareProps} from './../reactHelper';
 
 export class CDSBar extends React.Component {
   static propTypes = {
-    leftStyle: React.PropTypes.string.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
-    rightStyle: React.PropTypes.string.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
+    leftStyle: React.PropTypes.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
+    rightStyle: React.PropTypes.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
     //the unitWidth should be 3 times of unitWidth of DNA bps
     unitWidth: React.PropTypes.number.isRequired,
     //arrow height

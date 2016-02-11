@@ -3,13 +3,18 @@
  */
 import React from 'react';
 
-export default class AminoAcidMarker extends React.Component {
+export class AminoAcidMarker extends React.Component {
+
   static propTypes = {};
   static defaultProps = {
     h: 18,
     style: "full",
     direction: "+",
   };
+
+  constructor(props) {
+    super(props);
+  }
 
   static colorDict = {
     F: "#F3DACA",
@@ -35,9 +40,7 @@ export default class AminoAcidMarker extends React.Component {
     G: "#DBDBDB",
   };
 
-  constructor(props) {
-    super(props);
-  }
+
 
   render() {
     let { x, y, w, h, aa, style, direction } = this.props;
@@ -184,9 +187,9 @@ export default class AminoAcidMarker extends React.Component {
       }
     };
 
-    let textPos = (style, w)=> {
+    const textPos = (style, w)=> {
       switch (style) {
-        case "full":
+        case 'full':
           return w / 2;
         case "left1":
           return w / 6;
@@ -200,6 +203,8 @@ export default class AminoAcidMarker extends React.Component {
           return w / 2;
         case "right3":
           return w / 2;
+        default:
+          return 0;
       }
     };
 

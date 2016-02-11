@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {OnionForGenomeDesigner} from './OnionForGenomeDesigner';
-var manifest = require('json!./package.json');
+let manifest = require('json!./package.json');
 
 // OnionViewer reads data from blocks, and converts it to onion format.
 class OnionViewer extends React.Component {

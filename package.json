@@ -4,10 +4,13 @@
   "description": "Onion Extensions",
   "region": "sequenceDetail",
   "readable": "onion2",
-  "scripts" : {
-    "build" : "npm install && webpack main.js index.js"
+  "scripts": {
+    "build": "npm install && webpack main.js index.js"
   },
   "devDependencies": {
+    "json-loader": "^0.5.4"
+  },
+  "dependencies": {
     "json-loader": "^0.5.4"
   }
 }
