@@ -41,7 +41,7 @@ export class EnzymeLabelContainer extends React.Component
     );
   }
 
-  calcAllPosition(unitHeight=15) {
+  calcAllPosition(unitHeight = 15) {
     const offset = 50;
     let key = 5210000;
     this.enzymePoses = [];
@@ -83,7 +83,7 @@ export class EnzymeLabelContainer extends React.Component
     for (let i in this.enzymePoses) {
       let enzymePos = this.enzymePoses[i];
       if (enzymePos.items.length > 0) {
-        let names = "";
+        let names = '';
         for (let j in enzymePos.items) {
           names += ` ${enzymePos.items[j].name}`;
         }

@@ -20,12 +20,12 @@ export class EnzymeLabel extends React.Component {
 
   render() {
     let { rootPos, textPos, l, text, key } = this.props;
-    let anchor = "begin";
+    let anchor = 'begin';
     if (textPos.x < 0) {
       l = -l;
-      anchor = "end";
+      anchor = 'end';
     } else {
-      anchor = "begin";
+      anchor = 'begin';
     }
 
     return (

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
-import {LA} from "./../LA";
-import Feature from "./Feature";
+import { LA } from './../LA';
+import Feature from './Feature';
 var $ = require('jquery');
 
 // this is a feature builder
@@ -47,7 +47,7 @@ export class FeatureGroup extends React.Component {
           key={i}
           featureID = {parseInt(i)}
           strand = {feature.strand}
-          highLight = {parseInt(i) == this.state.selectedFeature}
+          highLight = {parseInt(i) === this.state.selectedFeature}
           globalRotateAngle = {this.props.globalRotateAngle}
           theme = {this.props.theme}
         >
@@ -65,8 +65,8 @@ export class FeatureGroup extends React.Component {
     let doms = this.buildFeatureArrows(featureArrows);
     return (
       <g
-      onClick={(e)=> {
-        let id = $(e.target).closest(".featureArrowG").data("featureid");
+      onClick={(e) => {
+        let id = $(e.target).closest('.featureArrowG').data('featureid');
         this.setState({ selectedFeature:id });
       }}
     >
@@ -75,5 +75,5 @@ export class FeatureGroup extends React.Component {
     );
   }
 
-};
+}
 module.exports = FeatureGroup;

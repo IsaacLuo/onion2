@@ -1,4 +1,4 @@
-var PositionAnnotationOnCircle = function ({ children, height=0, sAngle=0, eAngle=0, forward=true }) {
+var PositionAnnotationOnCircle = function ({ children, height = 0, sAngle = 0, eAngle = 0, forward = true }) {
   const sAngleDegs = sAngle * 360 / Math.PI / 2;
   const eAngleDegs = eAngle * 360 / Math.PI / 2;
   var transform;

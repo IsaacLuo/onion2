@@ -9,7 +9,7 @@ import './css/Onion.css';
 //SequenceEditor Menu
 export class MenuBar extends React.Component {
   static defaultProps = {
-    title: "Block",
+    title: 'Block',
   };
 
   constructor(props) {
@@ -18,19 +18,19 @@ export class MenuBar extends React.Component {
 
   render() {
     let { title, showEnzymes, showRS, showFeatures, showRuler, showBlockBar, onSelect, showAA } = this.props;
-    let layerMenuItem = (text, cmd, value, padding = "10px 10px")=> {
+    let layerMenuItem = (text, cmd, value, padding = '10px 10px') => {
       //console.log(cmd,value,padding)
       return (
         <div
           style={{
-            display:"inline-block",
+            display:'inline-block',
             padding:padding,
           }}
         >
           <a
             style={{
-              color:value ? "#4c505f" : "#b3b3b3",
-              cursor:"pointer",
+              color:value ? '#4c505f' : '#b3b3b3',
+              cursor:'pointer',
             }}
             onClick={onSelect.bind(this, cmd, !value)}
           >
@@ -51,32 +51,32 @@ export class MenuBar extends React.Component {
         >
           <div
             style={{
-              display:"inline-block",
-              width:"100%",
-              height:"100%",
-              borderStyle:"none none solid none",
-              borderWidth:"1",
-              textAlign:"right",
-              verticalAlign:"top",
+              display:'inline-block',
+              width:'100%',
+              height:'100%',
+              borderStyle:'none none solid none',
+              borderWidth:'1',
+              textAlign:'right',
+              verticalAlign:'top',
             }}
           >
             <div
               style={{
-                display:"inline-block",
+                display:'inline-block',
                 width:20,
-                height:"calc(100% + 1px)",
-                verticalAlign:"top",
-                borderStyle:"none none solid none",
+                height:'calc(100% + 1px)',
+                verticalAlign:'top',
+                borderStyle:'none none solid none',
                 borderWidth:1,
-                borderColor:"white",
+                borderColor:'white',
               }}
             ></div>
-            {layerMenuItem(<EyeIcon stroke={showAll ? "#4c505f" : "#b3b3b3"}></EyeIcon>, "showAll", showAll, "10px 0px 10px 10px")}
-            {layerMenuItem("Features", "showFeatures", showFeatures)}
-            {layerMenuItem("Reverse Strand", "showRS", showRS)}
-            {layerMenuItem("Enzymes", "showEnzymes", showEnzymes)}
-            {layerMenuItem("Amino Acids", "showAA", showAA)}
-            {layerMenuItem("Ruler", "showRuler", showRuler)}
+            {layerMenuItem(<EyeIcon stroke={showAll ? '#4c505f' : '#b3b3b3'}></EyeIcon>, 'showAll', showAll, '10px 0px 10px 10px')}
+            {layerMenuItem('Features', 'showFeatures', showFeatures)}
+            {layerMenuItem('Reverse Strand', 'showRS', showRS)}
+            {layerMenuItem('Enzymes', 'showEnzymes', showEnzymes)}
+            {layerMenuItem('Amino Acids', 'showAA', showAA)}
+            {layerMenuItem('Ruler', 'showRuler', showRuler)}
           </div>
         </div>
         <div
@@ -84,7 +84,7 @@ export class MenuBar extends React.Component {
             paddingTop:8,
             paddingLeft:8,
             paddingBottom:8,
-            color:"#8EC78D",
+            color:'#8EC78D',
             fontSize:20,
           }}
         >
@@ -100,7 +100,7 @@ export class EyeIcon extends React.Component {
   static defaultProps = {
     width: 17,
     height: 17,
-    stroke: "#4c505f",
+    stroke: '#4c505f',
   };
 
   constructor(props) {

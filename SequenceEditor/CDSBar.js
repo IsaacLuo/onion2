@@ -1,11 +1,11 @@
 import React from 'react';
-import {AminoAcidMarker} from './AminoAcidMarker';
-import {compareProps} from './../reactHelper';
+import { AminoAcidMarker } from './AminoAcidMarker';
+import { compareProps } from './../reactHelper';
 
 export class CDSBar extends React.Component {
   static propTypes = {
-    leftStyle: React.PropTypes.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
-    rightStyle: React.PropTypes.oneOf(["left1", "left2", "left3", "right1", "right2", "right3", "full"]),
+    leftStyle: React.PropTypes.oneOf(['left1', 'left2', 'left3', 'right1', 'right2', 'right3', 'full']),
+    rightStyle: React.PropTypes.oneOf(['left1', 'left2', 'left3', 'right1', 'right2', 'right3', 'full']),
     //the unitWidth should be 3 times of unitWidth of DNA bps
     unitWidth: React.PropTypes.number.isRequired,
     //arrow height
@@ -14,19 +14,34 @@ export class CDSBar extends React.Component {
     sequence: React.PropTypes.string.isRequired,
     x: React.PropTypes.number,
     y: React.PropTypes.number,
+    strand: React.PropTypes.string,
     //direction: React.PropTypes.string.isRequired,
+    onSelectAA: React.PropTypes.func,
+    onMouseOverAA: React.PropTypes.func,
+    onMouseOutAA: React.PropTypes.func,
   };
   static defaultProps = {
-    leftStyle: "left3",
-    rightStyle: "right3",
+    leftStyle: 'left3',
+    rightStyle: 'right3',
     x: 0,
     y: 0,
-    strand: "+",
+    strand: '+',
   };
 
+  constructor(props) {
+    super(props);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const update = !compareProps(this.props, nextProps);
+    //console.log("CDSUP",update)
+    //if(update){			console.log("CDS update",this);		}
+    return update;
+  }
+
   generateBar() {
-    let { sequence, unitWidth, height, leftStyle, rightStyle, strand } = this.props;
-    let re = [];
+    const { sequence, unitWidth, height, leftStyle, rightStyle, strand } = this.props;
+    const re = [];
     let i = 0;
     //draw leftHead
     if (sequence.length >= 1) {
@@ -80,15 +95,8 @@ export class CDSBar extends React.Component {
     return re;
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    let update = !compareProps(this.props, nextProps);
-    //console.log("CDSUP",update)
-    //if(update){			console.log("CDS update",this);		}
-    return update;
-  }
-
   render() {
-    let { x, y } = this.props;
+    const { x, y } = this.props;
     return (
       <g
         transform={`translate(${x},${y})`}

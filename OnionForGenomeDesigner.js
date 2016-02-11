@@ -2,12 +2,12 @@
  * Created by Isaac on 21/01/2016.
  */
 import React from 'react';
-import {SequenceEditor} from './SequenceEditor';
-import {onionFile} from './OnionFile';
-import {PlasmidViewer} from './PlasmidViewer/PlasmidViewer';
-import {InfoBar} from './InfoBar';
-import {Enzyme, loadEnzymeList} from './Bio/Enzyme';
-import {MenuBar} from './MenuBar';
+import { SequenceEditor } from './SequenceEditor';
+import { onionFile } from './OnionFile';
+import { PlasmidViewer } from './PlasmidViewer/PlasmidViewer';
+import { InfoBar } from './InfoBar';
+import { Enzyme, loadEnzymeList } from './Bio/Enzyme';
+import { MenuBar } from './MenuBar';
 
 var $ = require('jquery');
 window.$ = $;
@@ -33,19 +33,19 @@ export class OnionForGenomeDesigner extends React.Component {
 
       blocks: props.blocks,   //blocks data, an array of {name,color,start,length}
 
-      menuTitle: "unknown",
+      menuTitle: 'unknown',
       sequence: props.sequence, //DNA sequence, in ACGT
     };
 
-    this.enzymeList = loadEnzymeList("caiLab");
+    this.enzymeList = loadEnzymeList('caiLab');
   }
 
   componentWillMount() {
-    console.warn("onion mount");
+    console.warn('onion mount');
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sequence != this.props.sequence) {
+    if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
       if (nextProps.blocks[0])
@@ -77,7 +77,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
     if (this.state && this.state.features) {
       features = this.state.features ? this.state.features : onionFile.features;
-      ;
+
     }
 
     if (!blocks) {
@@ -106,12 +106,12 @@ export class OnionForGenomeDesigner extends React.Component {
     return (
       <div
         style={{
-          width:"100%",
-          position:"relative",
+          width:'100%',
+          position:'relative',
           height:height,
           marginTop:0,
-          display:"flex",
-          flexDirection:"column",
+          display:'flex',
+          flexDirection:'column',
         }}
       >
         <MenuBar
@@ -128,7 +128,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
         <SequenceEditor
           sequence={sequence}
-          showComplement={true}
+          showComplement
           features={features}
           onSetCursor={this.onSetCursor.bind(this)}
           onSelecting={this.onSelecting.bind(this)}
@@ -146,7 +146,7 @@ export class OnionForGenomeDesigner extends React.Component {
           cursorPos={this.state.cursorPos}
           selectStartPos={this.state.startCursorPos}
           onBlockChanged={
-            (block, e)=> { this.setState({ menuTitle:block[0].name }); }
+            (block, e) => { this.setState({ menuTitle:block[0].name }); }
           }
         />
 
@@ -157,10 +157,10 @@ export class OnionForGenomeDesigner extends React.Component {
           endPos={selectionStart + selectionLength}
           seq={selectedSeq}
           style={{
-            textAlign:"right",
+            textAlign:'right',
             width:width,
             height:30,
-            background:"#eaebf1",
+            background:'#eaebf1',
             marginBottom:0,
           }}
 
@@ -184,10 +184,10 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user fires a menu command
   menuCommand(command, value) {
-    console.log("menuCommand", command, value);
+    console.log('menuCommand', command, value);
     let dict = {};
     switch (command) {
-      case "showAll":
+      case 'showAll':
         dict.showRS = value;
         dict.showEnzymes = value;
         dict.showFeatures = value;

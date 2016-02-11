@@ -1,5 +1,5 @@
 import React from 'react';
-import {compareProps} from './../reactHelper';
+import { compareProps } from './../reactHelper';
 
 //the arrow on PlasmidViewer
 export class SequenceFeatureArrow extends React.Component {
@@ -9,6 +9,9 @@ export class SequenceFeatureArrow extends React.Component {
     len: React.PropTypes.number,
     unitWidth: React.PropTypes.number,
     height: React.PropTypes.number,
+    y: React.PropTypes.number,
+    color: React.PropTypes.string,
+    text: React.PropTypes.string,
   };
   static defaultProps = {
     height: 20,
@@ -21,6 +24,10 @@ export class SequenceFeatureArrow extends React.Component {
     this.state = { showTitle: false };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return !compareProps(this.props, nextProps, Object.keys(this.props));
+  }
+
   onMouseEnter() {
     this.setState({ hovering: true, showTitle: true });
   }
@@ -29,28 +36,25 @@ export class SequenceFeatureArrow extends React.Component {
     this.setState({ hovering: false, showTitle: false });
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return !compareProps(this.props, nextProps, Object.keys(this.props));
-  }
-
   render() {
-    let { unitWidth, height, len, start, color, text, textColor } = this.props;
-    let width = unitWidth * len;
-    let fontFamily = 'Cousine';
-    let fontSize = 12;
-    let titleOpacity, textAnchor;
+    const { unitWidth, height, len, start, color, text } = this.props;
+    const width = unitWidth * len;
+    const fontFamily = 'Cousine';
+    const fontSize = 12;
+    let titleOpacity;
+    let textAnchor;
     if (len > text.length) {
       titleOpacity = 1;
-      textAnchor = "middle";
+      textAnchor = 'middle';
       this.textOverflow = false;
     } else {
-      titleOpacity = (this.state.showTitle == true ? 1 : 0);
-      textAnchor = "start";
+      titleOpacity = (this.state.showTitle === true ? 1 : 0);
+      textAnchor = 'start';
       this.textOverflow = true;
     }
 
-    let stroke = this.state.hovering ? "red" : "black";
-    let finalTextColor = this.state.hovering ? "red" : textColor;
+    const stroke = this.state.hovering ? 'red' : 'black';
+    //const finalTextColor = this.state.hovering ? 'red' : textColor;
 
     return (
       <g
@@ -66,23 +70,22 @@ export class SequenceFeatureArrow extends React.Component {
           stroke={stroke}
           strokeWidth="0"
           fill={color}
-        ></rect>
+        />
         {<text
           style={{
-            fontFamily:fontFamily,
-            fontSize:fontSize,
-            fill:"black",
-            alignmentBaseline:"middle",
-            WebkitUserSelect:"none",
-            textAnchor:textAnchor,
-            opacity:titleOpacity,
+            fontFamily: fontFamily,
+            fontSize: fontSize,
+            fill: 'black',
+            alignmentBaseline: 'middle',
+            WebkitUserSelect: 'none',
+            textAnchor: textAnchor,
+            opacity: titleOpacity,
           }}
-x={unitWidth * start + width / 2}
-y={height / 2}
->
+          x={unitWidth * start + width / 2}
+          y={height / 2}
+        >
           {text}
         </text>}
-
       </g>
 );
   }

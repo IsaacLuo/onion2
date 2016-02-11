@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./../LA";
+import { LA } from './../LA';
 
 // the cursor of plasmidViewer
 export class PlasmidViewerCursor extends React.Component {
@@ -8,12 +8,12 @@ export class PlasmidViewerCursor extends React.Component {
     theme:React.PropTypes.string,
   };
   static defaultProps =
-  {
-    angle: 0,
+    {
+      angle: 0,
 
-    radius:250,
+      radius:250,
 
-  };
+    };
   constructor(props) {
     super(props);
     this.state = { angle:this.props.angle };
@@ -21,14 +21,14 @@ export class PlasmidViewerCursor extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     //console.log(nextProps,nextState);
-    if (nextProps.angle != this.props.angle) { //upading angle
+    if (nextProps.angle !== this.props.angle) { //upading angle
       let targetAngle = nextProps.angle;
       let nowAngle = this.state.angle;
       this.angleD = (targetAngle - nowAngle) / 20;
       this.timerCount = 0;
       //console.log("newTarget");
-      if (this.updateInterval == undefined) {
-        this.updateInterval = setInterval(()=> {
+      if (this.updateInterval === undefined) {
+        this.updateInterval = setInterval(() => {
           //console.log(`anlgeD=${this.angleD},${this.timerCount}`);
           this.timerCount++;
           let nowAngle = this.state.angle;
@@ -43,12 +43,12 @@ export class PlasmidViewerCursor extends React.Component {
       }
 
       return false;
-    }      else
+    } else
       return true;
   }
 
   componentDidUpdate() {
-    if (this.state.angle == this.props.angle) {
+    if (this.state.angle === this.props.angle) {
       clearInterval(this.updateInterval);
       //console.log("cleaned");
       this.updateInterval = undefined;
@@ -78,8 +78,8 @@ export class PlasmidViewerCursorGeneral extends PlasmidViewerCursor {
     //let d = `M 0 0 L ${ptA.x} ${ptA.y} L ${ptE.x} ${ptE.y} L ${ptB.x} ${ptB.y} `;
 
     const cursorH = 20;
-    let d = "";
-    let d2 = "";
+    let d = '';
+    let d2 = '';
     // if(angle2==0)
     d = `M 0 ${-r - cursorH} L 0 ${-r + cursorH} M -5 ${-r - cursorH} L 5 ${-r - cursorH} M -5 ${-r + cursorH} L 5 ${-r + cursorH}`;
     // else{

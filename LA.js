@@ -1,4 +1,4 @@
-import d3 from "d3";
+import d3 from 'd3';
 
 //LA is a "length" to "angle" converter, used for PlasmidViewer
 export class LA {
@@ -22,4 +22,4 @@ export class LA {
     return this.l2a(l);
   }
 }
-;
+

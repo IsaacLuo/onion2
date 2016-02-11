@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {OnionForGenomeDesigner} from './OnionForGenomeDesigner';
+import { OnionForGenomeDesigner } from './OnionForGenomeDesigner';
 let manifest = require('json!./package.json');
 
 // OnionViewer reads data from blocks, and converts it to onion format.
@@ -18,7 +18,7 @@ class OnionViewer extends React.Component {
       block: null,
       rendered: Date.now(),
     });
-    console.log("componentwillmount");
+    console.log('componentwillmount');
 
     var subscriber = window.gd.store.subscribe(function (state, lastAction) {
       var last = [];
@@ -33,12 +33,12 @@ class OnionViewer extends React.Component {
         let readBlockCount = currentBlocks.length;
         let onionBlocks = [];
         let start = 0;
-        let totalSequence = "";
+        let totalSequence = '';
 
-        let readSequenceFromBlock = (i, count)=> {
+        let readSequenceFromBlock = (i, count) => {
           let block = state.blocks[currentBlocks[i]];
 
-          block.getSequence().then(sequence=> {
+          block.getSequence().then(sequence => {
             if (sequence) {
               onionBlocks.push({
                 color: block.metadata.color,
@@ -47,7 +47,7 @@ class OnionViewer extends React.Component {
               });
               start += sequence.length;
               totalSequence += sequence;
-              if (i == count - 1) {
+              if (i === count - 1) {
                 this.setState({ blocks: onionBlocks, sequence: totalSequence });
               } else {
                 readSequenceFromBlock(i + 1, count);
@@ -67,14 +67,14 @@ class OnionViewer extends React.Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount:");
-    window.addEventListener("resize", this.updateDimensions.bind(this));
+    console.log('componentDidMount:');
+    window.addEventListener('resize', this.updateDimensions.bind(this));
 
   }
 
   componentWillUnmount() {
     this.subscriber();
-    window.removeEventListener("resize", this.updateDimensions.bind(this));
+    window.removeEventListener('resize', this.updateDimensions.bind(this));
   }
 
   render() {
@@ -93,18 +93,18 @@ class OnionViewer extends React.Component {
 
   //read dimensions of onion container
   updateDimensions() {
-    let width = $(".onionContainer").width();
-    let height = $(".onionContainer").height();
+    let width = $('.onionContainer').width();
+    let height = $('.onionContainer').height();
     width = Math.max(100, width);
     height = Math.max(100, height);
-    console.log("updateDimensions:", this.props.container, width, height);
+    console.log('updateDimensions:', this.props.container, width, height);
     this.setState({ width: width });
   }
 
 }
 
-const render = (container)=> {
-  container.className += " onionContainer";
+const render = (container) => {
+  container.className += ' onionContainer';
   ReactDOM.render(<OnionViewer
     container={container}
   />, container);

@@ -1,30 +1,63 @@
-import React, { PropTypes } from 'react';
-import {StrainText} from './StrainText';
-import {SequenceFeatureArrow} from './SequenceFeature';
-import {SequenceFeatureSVG} from './SequenceFeature';
-import {RulerLocation} from './RulerLocation';
-import {CDSBar} from './CDSBar';
-import {CuttingSite} from './CuttingSite';
-import {RestrictionSite} from './RestrictionSite';
-import {compareProps, comparePropsDebug} from './../reactHelper';
+import React from 'react';
+import { StrainText } from './StrainText';
+import { SequenceFeatureArrow } from './SequenceFeature';
+import { RulerLocation } from './RulerLocation';
+import { CDSBar } from './CDSBar';
+import { CuttingSite } from './CuttingSite';
+import { RestrictionSite } from './RestrictionSite';
+import { compareProps } from './../reactHelper';
+
+import $ from 'jquery';
 
 import '../css/Onion.css';
 
-let isOverlap = function (a1, b1, a2, b2) {
-  let a3 = Math.max(a1, a2);
-  let b3 = Math.min(b1, b2);
-  if (a3 < b3) {
-    return { start: a3, end: b3 };
-  } else {
-    return undefined;
-  }
-};
-
 //rows of sequence Editor
 export class SequenceRow extends React.Component {
-  static propTypes = {};
+  static propTypes = {
+    idxStart: React.PropTypes.number,
+    rowNumber: React.PropTypes.number,
+    onSetCursor: React.PropTypes.func,
+    onSetCursorMoving: React.PropTypes.func,
+    features: React.PropTypes.array,
+    unitWidth: React.PropTypes.number,
+    featureHeight: React.PropTypes.number,
+    aas: React.PropTypes.array,
+    sequence: React.PropTypes.string,
+    onSetHighLight: React.PropTypes.func,
+    blocks: React.PropTypes.number,
+    enzymes: React.PropTypes.array,
+
+    translateX: React.PropTypes.number,
+    showCursor: React.PropTypes.bool,
+    cursorPos: React.PropTypes.number,
+    showSelection: React.PropTypes.bool,
+    selectStartPos: React.PropTypes.number,
+    showBlockBar: React.PropTypes.bool,
+    seqMainStyle: React.PropTypes.object,
+    seqCompStyle: React.PropTypes.object,
+    selectLeftPos: React.PropTypes.number,
+    selectRightPos: React.PropTypes.number,
+    showLeftCursor: React.PropTypes.bool,
+    showRightCursor: React.PropTypes.bool,
+    showAA: React.PropTypes.bool,
+    ruler2d: React.PropTypes.number,
+    showHighLight: React.PropTypes.bool,
+    highLightLeftPos: React.PropTypes.number,
+    highLightRightPos: React.PropTypes.number,
+    showEnzymes: React.PropTypes.bool,
+    showLadder: React.PropTypes.bool,
+    showRS: React.PropTypes.bool,
+    showFeatures: React.PropTypes.bool,
+    showRuler: React.PropTypes.bool,
+    onCalculatedHeight: React.PropTypes.func,
+    selectionColor: React.PropTypes.func,
+    theme: React.PropTypes.string,
+
+    cursorColor: React.PropTypes.string,
+
+  };
   static defaultProps = {
-    sequence: "NOTHING",
+    sequence: 'NOTHING',
     features: [],
     enzymes: [],
     fontFamily: 'Cousine,Monospace',
@@ -36,8 +69,8 @@ export class SequenceRow extends React.Component {
     showRuler2: true,
     showBlockBar: true,
     showAA: true,
-    cursorColor: "#4E77BA",
-    selectionColor: "#EDF2F8",
+    cursorColor: '#4E77BA',
+    selectionColor: '#EDF2F8',
     featureHeight: 18,
     ruler2d: 10,
     translateX: 10,
@@ -48,14 +81,58 @@ export class SequenceRow extends React.Component {
     this.state = {
       sequenceRowWidth: 0,
     };
+  }
 
+  shouldComponentUpdate(np, nextState) {
+    const update = !compareProps(this.props, np);
+    return update;
+  }
+
+  onMouseDown(e) {
+    const cursorPos = this.calcCursorPos(e);
+    //console.log(cursorPos);
+    //this.setState(cursorPos)
+    this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+  }
+
+  onMouseMove(e) {
+    //if(this.mouseDownFlag){
+    if (e.buttons === 1) {
+      const cursorPos = this.calcCursorPos(e);
+      this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
+    }
+    //}
+  }
+
+  onCDSBarSelectAA(x, obj) {
+    const{ col1, row1, col0, row0 } = this.findRowCol(obj.props.x + x);
+    this.props.onSetCursorMoving(col1, row1, col0, row0);
+  }
+
+  onCDSBarMouseOverAA(x, obj) {
+    const{ col1, row1, col0, row0 } = this.findRowCol(obj.props.x + x);
+    this.props.onSetHighLight(col1, row1, col0, row0);
+  }
+
+  onCDSBarMouseOutAA() {
+    this.props.onSetHighLight(0, 0, 0, 0);
+  }
+
+  static isOverlap(a1, b1, a2, b2) {
+    const a3 = Math.max(a1, a2);
+    const b3 = Math.min(b1, b2);
+    if (a3 < b3) {
+      return { start: a3, end: b3 };
+    }
+
+    return undefined;
   }
 
   generateFeatures(y0) {
-    let { features, unitWidth, idxStart, featureHeight } = this.props;
-    let re = [];
-    for (let i in features) {
-      let feature = features[i];
+    const { features, unitWidth, idxStart, featureHeight } = this.props;
+    const re = [];
+    for (let i = 0; i < features.length; i++) {
+      const feature = features[i];
       re.push(
         <SequenceFeatureArrow
           start={feature.start - idxStart}
@@ -75,21 +152,35 @@ export class SequenceRow extends React.Component {
     return re;
   }
 
-  generateAABars(y0, h0) {
-    let { aas, unitWidth, idxStart } = this.props;
-    let re = [];
+  findRowCol(x) {
+    const cursorPos = Math.floor(x / this.props.unitWidth);
+    const col0 = cursorPos + this.props.idxStart;
+    const row0 = this.props.rowNumber;
+    //this.props.onSetCursor(col0,row0);
+    const col1 = col0 + 3;
+    let row1 = row0;
+    if (col1 > this.props.sequence.length) {
+      row1++;
+    }
 
-    for (let i in aas) {
-      let aa = aas[i];
+    return { row0, col0, row1, col1 };
+  }
+
+  generateAABars(y0, h0) {
+    const { aas, unitWidth } = this.props;
+    const re = [];
+
+    for (let i = 0; i < aas.length; i++) {
+      const aa = aas[i];
       //console.log(aa);
       let offsetX = 0;
-      if (aa.leftStyle == "right1") {
+      if (aa.leftStyle === 'right1') {
         offsetX = -unitWidth * 2;
-      } else if (aa.leftStyle == "right2") {
+      } else if (aa.leftStyle === 'right2') {
         offsetX = -unitWidth;
       }
 
-      let x = (aa.start) * unitWidth + offsetX;
+      const x = (aa.start) * unitWidth + offsetX;
       re.push(
         <CDSBar
           x={(aa.start) * unitWidth + offsetX}
@@ -101,54 +192,22 @@ export class SequenceRow extends React.Component {
           rightStyle={aa.rightStyle}
           key={`AABar${i}`}
           strand={aa.strand}
-          onSelectAA={(obj, e)=> {
-            let xx = obj.props.x + x;
-            let cursorPos = Math.floor(xx / unitWidth);
-            let col0 = cursorPos + this.props.idxStart;
-            let row0 = this.props.rowNumber;
-            //this.props.onSetCursor(col0,row0);
-            let col1 = col0 + 3;
-            let row1 = row0;
-            if (col1 > this.props.sequence.length) {
-              row1++;
-            }
-
-            this.props.onSetCursorMoving(col1, row1, col0, row0);
-          }}
-
-          onMouseOverAA={(obj, e)=> {
-            let xx = obj.props.x + x;
-            let cursorPos = Math.floor(xx / unitWidth);
-            let col0 = cursorPos + this.props.idxStart;
-            let row0 = this.props.rowNumber;
-            //this.props.onSetCursor(col0,row0);
-            let col1 = col0 + 3;
-            let row1 = row0;
-            if (col1 > this.props.sequence.length) {
-              row1++;
-            }
-
-            this.props.onSetHighLight(col1, row1, col0, row0);
-          }}
-
-          onMouseOutAA={(obj, e)=> {
-            this.props.onSetHighLight(0, 0, 0, 0);
-          }}
-
+          onSelectAA={this.onCDSBarSelectAA.bind(this, x)}
+          onMouseOverAA={this.onCDSBarMouseOverAA.bind(this, x)}
+          onMouseOutAA={this.onCDSBarMouseOutAA.bind(this)}
         />
       );
-
     }
 
     return re;
   }
 
   generateBlockBars(y0) {
-    let { blocks, unitWidth } = this.props;
-    let re = [];
+    const { blocks, unitWidth } = this.props;
+    const re = [];
 
-    for (let i in blocks) {
-      let b = blocks[i];
+    for (let i = 0; i < blocks.length; i++) {
+      const b = blocks[i];
       re.push(
         <rect
           x={b.start * unitWidth}
@@ -164,13 +223,20 @@ export class SequenceRow extends React.Component {
     return re;
   }
 
-  generateEnzymeLabels(y, h, seqY, seqH) {
-    let { enzymes, unitWidth, showEnzymes } = this.props;
-    if (!showEnzymes || !this.enzymeRow)
-      return;
+  showEnzyme(id) {
+    $('.enzymeSite' + id).show();
+  }
 
-    let { cs, rs } = enzymes;
-    let re = [];
+  hideEnzyme(id) {
+    $('.enzymeSite' + id).hide();
+  }
+
+  generateEnzymeLabels(y, h, seqY, seqH) {
+    const { enzymes, unitWidth, showEnzymes } = this.props;
+    if (!showEnzymes || !this.enzymeRow) return [];
+
+    const { cs, rs } = enzymes;
+    const re = [];
     for (let i = 0; i < cs.length; i++) {
       re.push(
         <CuttingSite
@@ -179,7 +245,7 @@ export class SequenceRow extends React.Component {
           s={cs[i].style}
           u={cs[i].pos[0] * unitWidth}
           d={cs[i].pos[1] * unitWidth}
-          key={"cs" + i}
+          key={'cs' + i}
           className={`enzymeSite${cs[i].id}`}
         />
       );
@@ -192,7 +258,7 @@ export class SequenceRow extends React.Component {
           y={seqY}
           w={(rs[i].rs[1] - rs[i].rs[0]) * unitWidth}
           h={seqH}
-          key={"rs" + i}
+          key={'rs' + i}
           className={`enzymeSite${rs[i].id}`}
 
         />
@@ -203,27 +269,17 @@ export class SequenceRow extends React.Component {
           y={y - this.enzymeRow[i] * 15}
           w={(rs[i].rs[1] - rs[i].rs[0]) * unitWidth}
           h={h}
-          key={"rst" + i}
+          key={'rst' + i}
           className={`enzymeText_${rs[i].id} noselect`}
-          style={{ cursor:"default" }}
-          onMouseEnter={
-						(a, b, c)=> {
-  //console.log("mouseenter",a,b,c,"ccc");
-  $(".enzymeSite" + rs[i].id).show();
-						}
-					}
-          onMouseLeave={
-						(a, b, c)=> {
-  //console.log("mouseenter",a,b,c,"ccc");
-  $(".enzymeSite" + rs[i].id).hide();
-						}
-					}
+          style={{ cursor: 'default' }}
+          onMouseEnter={this.showEnzyme.bind(this, rs[i].id)}
+          onMouseLeave={this.hideEnzyme.bind(this, rs[i].id)}
         >
           {rs[i].name}
         </text>
       );
       {//if(this.enzymeRow[i]>0){
-        let xx = rs[i].rs[0] * unitWidth + unitWidth / 2;
+        const xx = rs[i].rs[0] * unitWidth + unitWidth / 2;
         re.push(
           <path
             d={`M ${xx} ${y - this.enzymeRow[i] * 15} L ${xx} ${seqY} `}
@@ -238,11 +294,11 @@ export class SequenceRow extends React.Component {
   }
 
   calcCursorPos(e) {
-    let thisDOM = this.refs.SequenceRow;
+    const thisDOM = this.refs.SequenceRow;
     let clickedPos = (e.pageX - thisDOM.getBoundingClientRect().left + document.documentElement.scrollLeft);
     clickedPos -= this.props.translateX;
     let cursorPos = Math.round(clickedPos / this.props.unitWidth);
-    let seqLen = this.props.sequence.length;
+    const seqLen = this.props.sequence.length;
     if (cursorPos >= seqLen) {
       cursorPos = seqLen;
     }
@@ -250,32 +306,8 @@ export class SequenceRow extends React.Component {
     return cursorPos;
   }
 
-  onMouseDown(e) {
-    let cursorPos = this.calcCursorPos(e);
-    //console.log(cursorPos);
-    //this.setState(cursorPos)
-    this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
-  }
-
-  onMouseMove(e) {
-    //if(this.mouseDownFlag){
-    if (e.buttons == 1) {
-      let cursorPos = this.calcCursorPos(e);
-      this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
-    }
-    //}
-  }
-
-  shouldComponentUpdate(np, nextState) {
-    let update = !compareProps(this.props, np);
-    return update;
-  }
-
   calcFeatureHeight() {
-    let {
-      features,
-      showFeatures,
-      } = this.props;
+    const { features, showFeatures } = this.props;
     if (!showFeatures) {
       return 0;
     }
@@ -290,20 +322,17 @@ export class SequenceRow extends React.Component {
 
   sortFeatures() {
     //check overlay
-    let {
-      features,
-      showFeatures,
-      } = this.props;
+    const { features, showFeatures } = this.props;
     if (showFeatures && features) {
       this.featureRow = Array(features.length);
-      for (let i in features) {
+      for (let i = 0; i < features.length; i++) {
         this.featureRow[i] = 0;
       }
 
       this.featureRowCount = 1;
       for (let i = 0; i < features.length; i++) {
         for (let j = i + 1; j < features.length; j++) {
-          if (isOverlap(features[i].start, features[i].start + features[i].len, features[j].start, features[j].start + features[j].len)) {
+          if (this.isOverlap(features[i].start, features[i].start + features[i].len, features[j].start, features[j].start + features[j].len)) {
             this.featureRow[j] = this.featureRow[i] + 1;
             this.featureRowCount = Math.max(this.featureRowCount, this.featureRow[j] + 1);
           }
@@ -313,10 +342,7 @@ export class SequenceRow extends React.Component {
   }
 
   calcEnzymeHeight() {
-    let {
-      enzymes,
-      showEnzymes,
-      } = this.props;
+    const { enzymes, showEnzymes } = this.props;
     if (!showEnzymes) {
       return 0;
     }
@@ -331,25 +357,21 @@ export class SequenceRow extends React.Component {
 
   sortEnzymes() {
     //check overlay
-    let {
-      enzymes,
-      showEnzymes,
-      unitWidth,
-      } = this.props;
+    const { enzymes, showEnzymes } = this.props;
     if (showEnzymes && enzymes && enzymes.rs) {
-      let rs = enzymes.rs;
-      this.enzymeRow = Array(rs.length);
-      for (let i in rs) {
+      const rs = enzymes.rs;
+      this.enzymeRow = new Array(rs.length);
+      for (let i = 0; i < rs.length; i++) {
         this.enzymeRow[i] = 0;
       }
 
       this.enzymeRowCount = 1;
       for (let i = 0; i < rs.length; i++) {
         for (let j = i + 1; j < rs.length; j++) {
-          let posi = rs[i].rs[0];
-          let posj = rs[j].rs[0];
+          const posi = rs[i].rs[0];
+          const posj = rs[j].rs[0];
           //console.log("overlap",posi,posi+unitWidth*rs[i].name.length, posj,posj+unitWidth*rs[j].name.length)
-          if (isOverlap(posi, posi + rs[i].name.length + 2, posj, posj + rs[j].name.length + 2)) {
+          if (this.isOverlap(posi, posi + rs[i].name.length + 2, posj, posj + rs[j].name.length + 2)) {
             this.enzymeRow[j] = this.enzymeRow[i] + 1;
             this.enzymeRowCount = Math.max(this.enzymeRowCount, this.enzymeRow[j] + 1);
           }
@@ -359,45 +381,40 @@ export class SequenceRow extends React.Component {
   }
 
   render() {
-    let { sequence,
+    const {
+      sequence,
       unitWidth,
       showCursor,
       cursorPos,
       idxStart,
       showSelection,
-      selectStartPos,
       showBlockBar,
       seqMainStyle,
       seqCompStyle,
-      cursorColor,
       selectLeftPos,
       selectRightPos,
       showLeftCursor,
       showRightCursor,
       showAA,
       ruler2d,
-      enzymes,
       showHighLight,
       highLightLeftPos,
       highLightRightPos,
+      showEnzymes,
+      showLadder,
+      showRS,
+      showFeatures,
+      showRuler,
       } = this.props;
-    let { showEnzymes, showLadder, showRS, showFeatures, showRuler, onSelect } = this.props;
 
-    //console.log("enzyme count", enzymes.length);
+    const sequenceRowWidth = sequence.length * unitWidth;
 
-    let textRows = 1;
-    let cols = sequence.length;
-    let sequenceRowWidth = sequence.length * unitWidth;
-    textRows = 2;
+    const unitHeight = 13.5;
 
-    let unitHeight = 13.5;
-    let height = textRows * 16 + 15 + 15;
+    const cursorX = cursorPos * unitWidth;
 
-    let cursorX = cursorPos * unitWidth;
-    let cursor0 = selectStartPos * unitWidth;
-
-    let cursorLeft = selectLeftPos * unitWidth;
-    let cursorRight = selectRightPos * unitWidth;
+    const cursorLeft = selectLeftPos * unitWidth;
+    const cursorRight = selectRightPos * unitWidth;
 
     let showRightCursorText = true;
     if (selectRightPos - selectLeftPos < 4) {
@@ -405,8 +422,8 @@ export class SequenceRow extends React.Component {
     }
 
     //calculate element Y poses
-    let calcElementY = ()=> {
-      let re = {};
+    const calcElementY = () => {
+      const re = {};
       let y = 0;
 
       if (showEnzymes) {
@@ -469,11 +486,9 @@ export class SequenceRow extends React.Component {
       return re;
     };
 
-    let ep = calcElementY();
+    const ep = calcElementY();
 
-    height = ep.totalH;
-
-    let divStyle = this.props.theme == "nowrap" ? { display: "inline-block", whiteSpace: "nowrap" } : {
+    const divStyle = this.props.theme === 'nowrap' ? { display: 'inline-block', whiteSpace: 'nowrap' } : {
       marginLeft: 15,
       marginBottom: 5,
     };
@@ -490,7 +505,7 @@ export class SequenceRow extends React.Component {
           height={ep.totalH}
           style={{
       //display:"block",
-      }}
+          }}
           onMouseDown={this.onMouseDown.bind(this)}
           onMouseMove={this.onMouseMove.bind(this)}
         >
@@ -571,11 +586,11 @@ export class SequenceRow extends React.Component {
                 y={ep.selectionYB}
                 fill={this.props.cursorColor}
                 style={{
-  WebkitUserSelect:"none",
-  fontSize:13,
-  alignmentBaseline:"before-edge",
-  textAnchor:"middle",
-					}}
+                  WebkitUserSelect: 'none',
+                  fontSize: 13,
+                  alignmentBaseline: 'before-edge',
+                  textAnchor: 'middle',
+                }}
               >
                 {selectLeftPos + idxStart + 1}
               </text>
@@ -597,12 +612,12 @@ export class SequenceRow extends React.Component {
 
                 fill={this.props.cursorColor}
                 style={{
-  WebkitUserSelect:"none",
-  fontSize:13,
-  alignmentBaseline:"before-edge",
-  textAnchor:"middle",
+                  WebkitUserSelect: 'none',
+                  fontSize: 13,
+                  alignmentBaseline: 'before-edge',
+                  textAnchor: 'middle',
 
-					}}
+                }}
               >
                 {selectRightPos + idxStart}
               </text>
@@ -618,8 +633,8 @@ export class SequenceRow extends React.Component {
               height={ep.ruler2H}
               d={ruler2d}
               unitWidth={unitWidth}
-              texts={(()=> {
-                let re = [];
+              texts={(() => {
+                const re = [];
                 for (let i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
                   re.push(i);
                 }
@@ -627,8 +642,7 @@ export class SequenceRow extends React.Component {
                 return re;
               }
               )()}
-            >
-            </RulerLocation>
+            />
             }
 
 

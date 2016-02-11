@@ -3,21 +3,23 @@
  */
 export class Seq
 {
-	constructor(o = ""){
-		this.seq = this.removeInvalidLetter(o);
-	}
-	removeInvalidLetter(src){
-		return src;
-	}
+  constructor(o = '') {
+    this.seq = this.removeInvalidLetter(o);
+  }
 
-	toString(){
-		return this.seq;
-	}
+  removeInvalidLetter(src) {
+    return src;
+  }
 
-	length(){
-		return this.seq.length;
-	}
-	substr(start,len){
-		return new Seq(this.seq.substr(start,len));
-	}
+  toString() {
+    return this.seq;
+  }
+
+  length() {
+    return this.seq.length;
+  }
+
+  substr(start, len) {
+    return new Seq(this.seq.substr(start, len));
+  }
 }

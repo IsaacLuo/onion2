@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./../LA";
+import { LA } from './../LA';
 
 // the plasmid circle component
 export class PlasmidBone extends React.Component {
@@ -48,7 +48,7 @@ export class PlasmidBone extends React.Component {
 
             fontSize="12"
             textAnchor="start"
-            style={{ alignmentBaseline:"text-before-edge" }}
+            style={{ alignmentBaseline:'text-before-edge' }}
           >
             <textPath
               xlinkHref="#markTextPath"
@@ -68,7 +68,7 @@ export class PlasmidBone extends React.Component {
           r={rOutSide}
           fill="none"
           stroke="black"
-          onClick={(e, a, c)=> {
+          onClick={(e, a, c) => {
             console.log([e, a, c]);
           }}
         >
@@ -96,7 +96,7 @@ export class PlasmidBone extends React.Component {
   }
 }
 
-var PosOnPlasmid = function ({ children, angle=0 }) {
+var PosOnPlasmid = function ({ children, angle = 0 }) {
   var transform;
   transform = `rotate(${angle},0,0)`;
   return (
@@ -106,7 +106,7 @@ var PosOnPlasmid = function ({ children, angle=0 }) {
   );
 };
 
-var PositionAnnotationOnCircle = function ({ children, height=0, sAngle=0, eAngle=0, forward=true }) {
+var PositionAnnotationOnCircle = function ({ children, height = 0, sAngle = 0, eAngle = 0, forward = true }) {
   const sAngleDegs = sAngle * 360 / Math.PI / 2;
   const eAngleDegs = eAngle * 360 / Math.PI / 2;
   var transform;
@@ -139,7 +139,7 @@ export class PlasmidBoneC extends React.Component {
           fill="none"
           stroke="black"
           strokeWith={3}
-          onClick={(e, a, c)=> {
+          onClick={(e, a, c) => {
             console.log([e, a, c]);
           }}
         >
@@ -157,7 +157,7 @@ export class PlasmidBoneNAL extends React.Component {
   render() {
     var { radius, seqLength } = this.props;
     let la = new LA(360, 0, Math.PI * 2);
-    let d = "";
+    let d = '';
     let seqL = seqLength * 1.1;
 
     let radiusO = radius + 10;
@@ -178,7 +178,7 @@ export class PlasmidBoneNAL extends React.Component {
           fill="none"
           stroke="black"
           strokeWith={3}
-          onClick={(e, a, c)=> {
+          onClick={(e, a, c) => {
             console.log([e, a, c]);
           }}
         >

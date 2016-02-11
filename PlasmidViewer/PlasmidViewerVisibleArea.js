@@ -1,16 +1,16 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./../LA";
+import { LA } from './../LA';
 
 export class PlasmidViewerVisibleArea extends React.Component {
   static propTypes = {
   };
   static defaultProps =
-  {
-    angle: 0,
-    angleSelected:0,
-    radius:250,
+    {
+      angle: 0,
+      angleSelected:0,
+      radius:250,
 
-  };
+    };
   constructor(props) {
     super(props);
   }

@@ -1,34 +1,14 @@
 import React from 'react';
 
-class FeatureTextPath extends React.Component{
-  constructor(props) {
-    //super(Object.assign({startOffset:'50%'},props));
-    super(props);
-  }
-
-  render() {
-    return (
-      <textPath
-        startOffset="50%"
-        xlinkHref={`#feature_text_path_${this.props.featureID}`}
-      >
-        {this.props.text}
-      </textPath>
-    );
-  }
-
-}
-
 // Feature is an arrow to show the site of annotations on the PlasmidViewer
 export class Feature extends React.Component {
   constructor(props) {
     super(props);
-
   }
 
   componentDidMount() {
     let anchor = this.calcAnchor();
-    if (anchor == "middle")
+    if (anchor === 'middle')
       this.refs.featureTextPath.setAttribute('startOffset', '50%');
   }
 
@@ -41,14 +21,14 @@ export class Feature extends React.Component {
     return { x, y };
   }
 
-  calcArrowPath(style = "B") {
-    if (style == "B") {
+  calcArrowPath(style = 'B') {
+    if (style === 'B') {
       return this.calcArrowPathB();
     }
 
-    if (style == "NA") {
+    if (style === 'NA') {
       return this.calcArrowPathNoArrow();
-    }  else {
+    } else {
       return this.calcArrowPathSG();
     }
   }
@@ -61,7 +41,7 @@ export class Feature extends React.Component {
 
     let longThan50 = 0;
     if (arcLen > 180) longThan50 = 1;
-    let arrowD = "";
+    let arrowD = '';
     let neckLength = 1200 / rO;
     let arrowNeck1 = neckLength;
     if (arrowNeck1 > arcLen - 6) {
@@ -73,33 +53,33 @@ export class Feature extends React.Component {
       arrowNeck2 = arcLen * 0.6;
     }
 
-    if (strand == '-' || strand == "=") {
+    if (strand === '-' || strand === '=') {
       arrowD += `M 0 ${-rM}`;
       let an = this.angle2XY(rO, arrowNeck1 * Math.PI / 180);
       arrowD += `L ${an.x} ${an.y}`;
-    }  else {
+    } else {
       arrowD += `M 0 ${-rO}`;
     }
 
-    if (strand == "+" || strand == "=") {
+    if (strand === '+' || strand === '=') {
       let arcEnd = this.angle2XY(rO, arrowNeck2 * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
       let arrowEnd = this.angle2XY(rM, arcLen * Math.PI / 180);
       arrowD += `L ${arrowEnd.x} ${arrowEnd.y}`;
       let arcEndI = this.angle2XY(rI, arrowNeck2 * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
-    }  else {
+    } else {
       let arcEnd = this.angle2XY(rO, arcLen * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
       let arcEndI = this.angle2XY(rI, arcLen * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
     }
 
-    if (strand == '-' || strand == "=") {
+    if (strand === '-' || strand === '=') {
       let an = this.angle2XY(rI, arrowNeck1 * Math.PI / 180);
       arrowD += `A ${rI} ${rI} 0 ${longThan50} 0 ${an.x} ${an.y}`;
       arrowD += `L 0 ${-rM}`;
-    }  else {
+    } else {
       arrowD += `A ${rI} ${rI} 0 ${longThan50} 0 0 ${-rI}`;
       arrowD += `L 0 ${-rO}`;
     }
@@ -115,7 +95,7 @@ export class Feature extends React.Component {
 
     let longThan50 = 0;
     if (arcLen > 180) longThan50 = 1;
-    let arrowD = "";
+    let arrowD = '';
 
     arrowD += `M 0 ${-rO}`;
 
@@ -142,7 +122,7 @@ export class Feature extends React.Component {
 
     let longThan50 = 0;
     if (arcLen > 180) longThan50 = 1;
-    let arrowD = "";
+    let arrowD = '';
     let neckLength = 1200 / rO;
     let arrowNeck1 = neckLength;
     if (arrowNeck1 > arcLen - 6) {
@@ -154,17 +134,17 @@ export class Feature extends React.Component {
       arrowNeck2 = arcLen * 0.6;
     }
 
-    if (strand == '-' || strand == "=") {
+    if (strand === '-' || strand === '=') {
       arrowD += `M 0 ${-rM}`;
       let ae = this.angle2XY(rOO, arrowNeck1 * Math.PI / 180);
       let an = this.angle2XY(rO, arrowNeck1 * Math.PI / 180);
       arrowD += `L ${ae.x} ${ae.y}`;
       arrowD += `L ${an.x} ${an.y}`;
-    }  else {
+    } else {
       arrowD += `M 0 ${-rO}`;
     }
 
-    if (strand == "+" || strand == "=") {
+    if (strand === '+' || strand === '=') {
       let arcEnd = this.angle2XY(rO, arrowNeck2 * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
       let ae = this.angle2XY(rOO, arrowNeck2 * Math.PI / 180);
@@ -175,20 +155,20 @@ export class Feature extends React.Component {
       arrowD += `L ${ae2.x} ${ae2.y}`;
       let arcEndI = this.angle2XY(rI, arrowNeck2 * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
-    }  else {
+    } else {
       let arcEnd = this.angle2XY(rO, arcLen * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
       let arcEndI = this.angle2XY(rI, arcLen * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
     }
 
-    if (strand == '-' || strand == "=") {
+    if (strand === '-' || strand === '=') {
       let ae = this.angle2XY(rII, arrowNeck1 * Math.PI / 180);
       let an = this.angle2XY(rI, arrowNeck1 * Math.PI / 180);
       arrowD += `A ${rI} ${rI} 0 ${longThan50} 0 ${an.x} ${an.y}`;
       arrowD += `L ${ae.x} ${ae.y}`;
       arrowD += `L 0 ${-rM}`;
-    }  else {
+    } else {
       arrowD += `A ${rI} ${rI} 0 ${longThan50} 0 0 ${-rI}`;
       arrowD += `L 0 ${-rO}`;
     }
@@ -201,15 +181,15 @@ export class Feature extends React.Component {
     let textLen = text.length;
     let longThan50 = 0;
     if (arcLen > 180) longThan50 = 1;
-    let d = "";
+    let d = '';
     let arcLenPx = arcLen * Math.PI / 180 * radius;
 
     let beginSpace = 1;
     let endSpace = 1;
     let neckLength = 1200 / radius;
-    if (strand == "-" || strand == "=")
+    if (strand === '-' || strand === '=')
       beginSpace = neckLength;
-    if (strand == "+" || strand == "=")
+    if (strand === '+' || strand === '=')
       endSpace = neckLength;
 
     if (!inside) {
@@ -218,8 +198,7 @@ export class Feature extends React.Component {
       d += `M ${arcStart.x} ${arcStart.y}`;
       let arcEnd = this.angle2XY(r, (arcLen - endSpace) * Math.PI / 180);
       d += `A ${r} ${r} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
-    }  else
-    {
+    } else {
       let r = radius;
       let arcStart = this.angle2XY(r, (beginSpace) * Math.PI / 180);
       let arcEnd = this.angle2XY(r, (arcLen - endSpace) * Math.PI / 180);
@@ -235,9 +214,9 @@ export class Feature extends React.Component {
     let textLen = text.length;
     let arcLenPx = arcLen * Math.PI / 180 * radius;
     if (arcLenPx > textLen * 8) {
-      var anchor = "middle";
-    }  else {
-      var anchor = "start";
+      var anchor = 'middle';
+    } else {
+      var anchor = 'start';
     }
 
     return anchor;
@@ -252,12 +231,12 @@ export class Feature extends React.Component {
       inside = true;
     let textD = this.calcTextPath(inside);
     let anchor = this.calcAnchor();
-    if (this.refs.featureTextPath && anchor == "middle")
+    if (this.refs.featureTextPath && anchor === 'middle')
       this.refs.featureTextPath.setAttribute('startOffset', '50%');
     else if (this.refs.featureTextPath)
       this.refs.featureTextPath.setAttribute('startOffset', '0%');
 
-    let strokeColor = (this.props.highLight) ? "red" : "black";
+    let strokeColor = (this.props.highLight) ? 'red' : 'black';
     return (
       <g
         transform ={`rotate(${1 * arrowStartAngle})`}
@@ -282,7 +261,7 @@ export class Feature extends React.Component {
         <text
           fill={strokeColor}
           textAnchor = {anchor}
-          style={{ dominantBaseline:"central", cursor:"default", WebkitUserSelect:"none", }}
+          style={{ dominantBaseline:'central', cursor:'default', WebkitUserSelect:'none', }}
         >
           <textPath
             featureID = {this.props.featureID}
@@ -299,5 +278,5 @@ export class Feature extends React.Component {
     );
   }
 
-};
+}
 module.exports = Feature;

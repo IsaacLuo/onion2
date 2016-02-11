@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import {LA} from "./../LA";
+import { LA } from './../LA';
 
 //the selection marker of PlasmidViewer
 export class PlasmidViewerSelection extends React.Component {
@@ -8,11 +8,11 @@ export class PlasmidViewerSelection extends React.Component {
     theme:React.PropTypes.string,
   };
   static defaultProps =
-  {
-    angle: 0,
-    angleSelected:0,
-    radius:250,
-  };
+    {
+      angle: 0,
+      angleSelected:0,
+      radius:250,
+    };
   constructor(props) {
     super(props);
   }

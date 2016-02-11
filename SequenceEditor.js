@@ -1,8 +1,8 @@
 import React from 'react';
-import {SequenceRow} from './SequenceEditor/SequenceRow';
+import { SequenceRow } from './SequenceEditor/SequenceRow';
 import 'jquery';
-import {DNASeq} from './Bio/DNASeq';
-import {compareProps} from './reactHelper';
+import { DNASeq } from './Bio/DNASeq';
+import { compareProps } from './reactHelper';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
@@ -13,8 +13,8 @@ export class SequenceEditor extends React.Component {
     height: React.PropTypes.number,
   };
   static defaultProps = {
-    sequence: "NO SEQUENCE",                     //debug sequence, it should be repalced by inputing
-    theme: "normal",
+    sequence: 'NO SEQUENCE',                     //debug sequence, it should be repalced by inputing
+    theme: 'normal',
     showBlockBar: true,                          //show block bars in genome-designer
     style: {},
   };
@@ -27,7 +27,7 @@ export class SequenceEditor extends React.Component {
     this.myCSS = {
       seqFontFamily: 'Cousine,Monospace',
       seqFontSize: 16,
-      seqFontUnitWidth: 10,//9.609375,
+      seqFontUnitWidth: 10, //9.609375,
     };
     //Maybe I need to render a letter first, then calculate its size, it's necessary because the letter width is little difference on different browser.
     //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};font-size:${this.myCSS.seqFontSize};color:'#2C3543';letterSpacing:0;position:absolute;left:0px;top:-100px`;
@@ -39,10 +39,10 @@ export class SequenceEditor extends React.Component {
       fontSize: this.myCSS.seqFontSize,
       fill: '#2C3543',
       letterSpacing: (10 - 9.609375),
-      alignmentBaseline: "before-edge",
-      WebkitUserSelect: "none",
+      alignmentBaseline: 'before-edge',
+      WebkitUserSelect: 'none',
     };
-    this.seqCompStyle = this.seqCompStyle = Object.assign({ fill: "#B7BBC2" }, this.seqMainStyle);
+    this.seqCompStyle = this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, this.seqMainStyle);
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(this.props.sequence);    //Bio.js sequence object, used for calculation
@@ -62,16 +62,16 @@ export class SequenceEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sequence != this.props.sequence || nextProps.width != this.props.width) {
+    if (nextProps.sequence !== this.props.sequence || nextProps.width !== this.props.width) {
       this.initialRowPos(nextProps.sequence, nextProps.width);
     }
 
-    if (this.props.cursorPos != nextProps.cursorPos || this.props.selectStartPos != nextProps.selectStartPos) {
+    if (this.props.cursorPos !== nextProps.cursorPos || this.props.selectStartPos !== nextProps.selectStartPos) {
       this.setState({
         selectStartPos: nextProps.selectStartPos,
         cursorPos: nextProps.cursorPos,
         showCursor: true,
-        showSelection: (nextProps.selectStartPos != nextProps.cursorPos),
+        showSelection: (nextProps.selectStartPos !== nextProps.cursorPos),
       });
     }
 
@@ -120,15 +120,15 @@ export class SequenceEditor extends React.Component {
       <div style={Object.assign(this.props.style, {
         width:width,
         height:height,
-        overflowY:"scroll",
+        overflowY:'scroll',
       })}
-           onScroll={(e)=> {
+           onScroll={(e) => {
              let scrollPos = e.target.scrollTop;
              for (let i = 0; i < this.rowY.length; i++) {
                if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
                  let block = this.splitBlocks[i];
                  if (block.length > 0)
-                 this.props.onBlockChanged(block);
+                   this.props.onBlockChanged(block);
                  break;
                }
 
@@ -155,11 +155,11 @@ export class SequenceEditor extends React.Component {
     let s = new DNASeq(sequence);
     let re = [];
     for (let i in features) {
-      if (features[i].type == "CDS") {
+      if (features[i].type === 'CDS') {
         let f = features[i];
         let lOri = f.end - f.start;
         let l = Math.floor(lOri / 3) * 3;
-        if (f.strand == "-") {
+        if (f.strand === '-') {
           let realStart = f.start + lOri - l;
           let aa = s.substr(realStart, l).reverseComplement().toAASeq();
           re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
@@ -218,17 +218,17 @@ export class SequenceEditor extends React.Component {
 
     for (let i = 0; i < aas.length; i++) {
       let aa = aas[i];
-      let aaSeq = aa.strand == "-" ? aa.seq.reverse() : aa.seq;
+      let aaSeq = aa.strand === '-' ? aa.seq.reverse() : aa.seq;
       let startRow = Math.floor(aa.start / colNum);
       let startIdx = aa.start % colNum;
       let endRow = Math.ceil((aa.start + aa.len) / colNum);
       //			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
-      let leftStyle = "full";
-      let rightStyle = "full";
+      let leftStyle = 'full';
+      let rightStyle = 'full';
       let endIdx = colNum;
       let startOffset = 0;
-      let leftStyles = ["full", "right1", "right2"];
-      let rightStyles = ["full", "left1", "left2"];
+      let leftStyles = ['full', 'right1', 'right2'];
+      let rightStyles = ['full', 'left1', 'left2'];
       let aaOffset = 0;
       let repeatAA = 0;
       let rightStyleIdx;
@@ -237,15 +237,15 @@ export class SequenceEditor extends React.Component {
 
         let leftStyleIdx = (startIdx + 3 - startOffset) % 3;
         //console.log("startOffset",startOffset);
-        if (row == startRow) {
-          leftStyle = "left3";
+        if (row === startRow) {
+          leftStyle = 'left3';
         } else {
           leftStyle = leftStyles[leftStyleIdx];
           repeatAA = startOffset > 0 ? -1 : 0;
         }
 
-        if (row == endRow - 1) {
-          rightStyle = "right3";
+        if (row === endRow - 1) {
+          rightStyle = 'right3';
         } else {
           rightStyleIdx = (colNum + startOffset - startIdx) % 3;
           rightStyle = rightStyles[rightStyleIdx];
@@ -281,8 +281,8 @@ export class SequenceEditor extends React.Component {
 
         aaOffset += aaSubLen;
         startIdx = 0;
-        leftStyle = "full";
-        rightStyle = "full";
+        leftStyle = 'full';
+        rightStyle = 'full';
         //repeatAA = nextRepeatAA;
         startOffset = nextStartOffset;
 
@@ -302,7 +302,7 @@ export class SequenceEditor extends React.Component {
       return re;
 
     if (!this.enzymeSites || !this.enzymeSites.length) {
-      console.warn("no enzymes");
+      console.warn('no enzymes');
       return re;
     }
 
@@ -313,7 +313,7 @@ export class SequenceEditor extends React.Component {
       let row = Math.floor(es.anchor / colNum);
       let row2 = Math.floor((es.anchor + enzyme.rs.length) / colNum);
       let col = es.anchor % colNum;
-      if (row == row2) {
+      if (row === row2) {
         re[row].rs.push({ rs: [col, col + enzyme.rs.length], name: enzyme.name, id: i });
       } else {
         re[row].rs.push({ rs: [col, colNum], name: enzyme.name, id: i });
@@ -324,7 +324,7 @@ export class SequenceEditor extends React.Component {
         let csU;
         let csD;
         let cs = es.getCuttingSite(j);
-        if (es.strand == "-") {
+        if (es.strand === '-') {
           csU = cs[1];
           csD = cs[0];
         } else {
@@ -338,19 +338,19 @@ export class SequenceEditor extends React.Component {
         let rowD = Math.floor(csD / colNum);
         let colD = csD % colNum;
 
-        if (rowU == rowD) { // upper site and lower site are in same row
+        if (rowU === rowD) { // upper site and lower site are in same row
           if (re[rowU]) {
-            re[rowU].cs.push({ style: "N", pos: [colU, colD], id: i });		//normal │, ┌┘,└┐
+            re[rowU].cs.push({ style: 'N', pos: [colU, colD], id: i });		//normal │, ┌┘,└┐
           }
         } else if (rowU < rowD) {
           if (re[rowU] && re[rowD]) {
-            re[rowU].cs.push({ style: "UR", pos: [colU, colNum], id: i });	//up right  └
-            re[rowD].cs.push({ style: "DL", pos: [0, colD], id: i });	//down left ┐
+            re[rowU].cs.push({ style: 'UR', pos: [colU, colNum], id: i });	//up right  └
+            re[rowD].cs.push({ style: 'DL', pos: [0, colD], id: i });	//down left ┐
           }
         } else {
           if (re[rowU] && re[rowD]) {
-            re[rowU].cs.push({ style: "UL", pos: [0, colU], id: i });	//up left  ┘
-            re[rowD].cs.push({ style: "DR", pos: [colD, colNum], id: i });//down right ┌
+            re[rowU].cs.push({ style: 'UL', pos: [0, colU], id: i });	//up left  ┘
+            re[rowD].cs.push({ style: 'DR', pos: [colD, colNum], id: i });//down right ┌
           }
         }
 
@@ -388,7 +388,7 @@ export class SequenceEditor extends React.Component {
 
     if (this.props.onSelecting) {
       if (cursorPosStart) {
-        console.log("full start", cursorPosStart, cursorPos);
+        console.log('full start', cursorPosStart, cursorPos);
         this.props.onSelecting(cursorPos, cursorPosStart);
       } else {
         this.props.onSelecting(cursorPos, this.state.selectStartPos);
@@ -398,7 +398,7 @@ export class SequenceEditor extends React.Component {
   }
 
   onSetHightLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-    if (highLightStart == highLightEnd) {
+    if (highLightStart === highLightEnd) {
       this.setState({ highLightStart, highLightEnd, showHighLight: false });
     } else {
       this.setState({ highLightStart, highLightEnd, showHighLight: true });
@@ -422,7 +422,7 @@ export class SequenceEditor extends React.Component {
     this.textRows = [];
     let j = 0;
     if (showSelection) {
-      if (cursorPos == selectStartPos) {
+      if (cursorPos === selectStartPos) {
         showCursor = true;
         showSelection = false;
       } else {

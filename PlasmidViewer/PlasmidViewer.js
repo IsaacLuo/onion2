@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
-import {PlasmidBone, PlasmidBoneC, PlasmidBoneNAL} from './PlasmidBone';
+import { PlasmidBone, PlasmidBoneC, PlasmidBoneNAL } from './PlasmidBone';
 import FeatureGroup from './FeatureGroup';
 
 import EnzymeLabelContainer from './EnzymeLabelContainer';
-import {LA} from "./../LA";
-import {PlasmidViewerCursorMeter, PlasmidViewerCursorGeneral} from './PlasmidViewerCursor';
-import {PlasmidViewerSelectionGeneral} from './PlasmidViewerSelection';
-import {PlasmidViewerVisibleArea} from './PlasmidViewerVisibleArea';
+import { LA } from './../LA';
+import { PlasmidViewerCursorMeter, PlasmidViewerCursorGeneral } from './PlasmidViewerCursor';
+import { PlasmidViewerSelectionGeneral } from './PlasmidViewerSelection';
+import { PlasmidViewerVisibleArea } from './PlasmidViewerVisibleArea';
 
 //the PlasmidViewer component of onion
 export class PlasmidViewer extends React.Component {
@@ -16,7 +16,7 @@ export class PlasmidViewer extends React.Component {
     height: 500,
     seqLength: 1000,
     rotateAngle: 0,
-    theme: "SG",
+    theme: 'SG',
     cursorPos: 0,
     selectionStart: 0,
     selectionLength: 0,
@@ -25,13 +25,13 @@ export class PlasmidViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-  };
+  }
 
   calcEnzymeRoot(enzymes, r) {
     let { rotateAngle, seqLength } = this.props;
     let plasmidR = r;
     let la = new LA(seqLength, 0, 360);
-    let xy = (a)=> {
+    let xy = (a) => {
       return { x: plasmidR * Math.cos((90 - a) * Math.PI / 180), y: -plasmidR * Math.sin((90 - a) * Math.PI / 180) };
     };
 
@@ -52,7 +52,7 @@ export class PlasmidViewer extends React.Component {
 
     var enzymes = this.props.enzymes;
     let enzymeRootR = plasmidR;
-    if (theme == "C")
+    if (theme === 'C')
       enzymeRootR = plasmidR + 10;
 
     enzymes = this.calcEnzymeRoot(enzymes, enzymeRootR);
@@ -66,7 +66,7 @@ export class PlasmidViewer extends React.Component {
       viewBox = [-width / 2, -plasmidR - height / 2, width, height];
     }
 
-    let onWheel = (e)=> {
+    let onWheel = (e) => {
       this.props.onWheel(e);
       e.preventDefault();
     };
@@ -85,7 +85,7 @@ export class PlasmidViewer extends React.Component {
       </linearGradient >
     </defs>);
 
-    if (theme == "B") {
+    if (theme === 'B') {
       plasmid = (
         <div>
           <svg
@@ -117,7 +117,7 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={16}
-                style={{ dominantBaseline:"text-after-edge", textAnchor:"middle", WebkitUserSelect:"none", }}
+                style={{ dominantBaseline:'text-after-edge', textAnchor:'middle', WebkitUserSelect:'none', }}
               >
                 {name}
               </text>
@@ -125,13 +125,13 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={10}
-                style={{ dominantBaseline:"text-before-edge", textAnchor:"middle", WebkitUserSelect:"none", }}
+                style={{ dominantBaseline:'text-before-edge', textAnchor:'middle', WebkitUserSelect:'none', }}
               >
-                {seqLength + " bp"}
+                {seqLength + ' bp'}
               </text>
             </g>
             <g className="enzyme">
-              {mode == "normal" && <EnzymeLabelContainer
+              {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
@@ -141,7 +141,7 @@ export class PlasmidViewer extends React.Component {
           </svg>
         </div>
       );
-    } else if (theme == "C") {
+    } else if (theme === 'C') {
       plasmid = (
         <div>
           <svg
@@ -169,7 +169,7 @@ export class PlasmidViewer extends React.Component {
               </FeatureGroup>
             </g>
             <g className="enzyme">
-              {mode == "normal" && <EnzymeLabelContainer
+              {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
@@ -179,7 +179,7 @@ export class PlasmidViewer extends React.Component {
           </svg>
         </div>
       );
-    } else if (theme == "NA") {
+    } else if (theme === 'NA') {
       plasmid = (
         <div>
           <svg
@@ -207,7 +207,7 @@ export class PlasmidViewer extends React.Component {
               </FeatureGroup>
             </g>
             <g className="enzyme">
-              {mode == "normal" && <EnzymeLabelContainer
+              {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
@@ -217,8 +217,8 @@ export class PlasmidViewer extends React.Component {
           </svg>
         </div>
       );
-    } else if (theme == "NAL") {
-      if (rotateAngle != 198 && rotateAngle != 18) {
+    } else if (theme === 'NAL') {
+      if (rotateAngle !== 198 && rotateAngle !== 18) {
         rotateAngle = 198;
       }
 
@@ -273,7 +273,7 @@ export class PlasmidViewer extends React.Component {
 
             </g>
             <g className="enzyme">
-              {false && mode == "normal" && <EnzymeLabelContainer
+              {false && mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
@@ -287,7 +287,7 @@ export class PlasmidViewer extends React.Component {
                 y={plasmidR * 0.618}
                 fill="black"
                 style={{
-                  WebkitUserSelect:"none",
+                  WebkitUserSelect:'none',
                 }}
               >
                 {Math.round(cursorPos)}
@@ -343,7 +343,7 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={16}
-                style={{ dominantBaseline:"text-after-edge", textAnchor:"middle" }}
+                style={{ dominantBaseline:'text-after-edge', textAnchor:'middle' }}
               >
                 {name}
               </text>
@@ -351,13 +351,13 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={10}
-                style={{ dominantBaseline:"text-before-edge", textAnchor:"middle" }}
+                style={{ dominantBaseline:'text-before-edge', textAnchor:'middle' }}
               >
-                {seqLength + " bp"}
+                {seqLength + ' bp'}
               </text>
             </g>
             <g className="enzyme">
-              {mode == "normal" && <EnzymeLabelContainer
+              {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
