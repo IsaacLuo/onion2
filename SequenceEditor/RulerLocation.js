@@ -35,7 +35,7 @@ export class RulerLocation extends React.Component {
     return !compareProps(this.props, nextProps, Object.keys(this.props));
   }
 
-  static generatePath(x, y, w, h, d, u) {
+  generatePath(x, y, w, h, d, u) {
     let re = `M ${x} ${y} L ${x + w} ${y}`;
     for (let xx = x + d * u - u / 2; xx < (x + w); xx += d * u) {
       re += `M ${xx} ${y} L ${xx} ${(y + h)}`;

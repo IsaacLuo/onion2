@@ -24,9 +24,8 @@ export class SequenceRow extends React.Component {
     aas: React.PropTypes.array,
     sequence: React.PropTypes.string,
     onSetHighLight: React.PropTypes.func,
-    blocks: React.PropTypes.number,
-    enzymes: React.PropTypes.array,
-
+    blocks: React.PropTypes.array,
+    enzymes: React.PropTypes.object,
     translateX: React.PropTypes.number,
     showCursor: React.PropTypes.bool,
     cursorPos: React.PropTypes.number,
@@ -50,9 +49,8 @@ export class SequenceRow extends React.Component {
     showFeatures: React.PropTypes.bool,
     showRuler: React.PropTypes.bool,
     onCalculatedHeight: React.PropTypes.func,
-    selectionColor: React.PropTypes.func,
+    selectionColor: React.PropTypes.string,
     theme: React.PropTypes.string,
-
     cursorColor: React.PropTypes.string,
 
   };
@@ -118,7 +116,7 @@ export class SequenceRow extends React.Component {
     this.props.onSetHighLight(0, 0, 0, 0);
   }
 
-  static isOverlap(a1, b1, a2, b2) {
+  isOverlap(a1, b1, a2, b2) {
     const a3 = Math.max(a1, a2);
     const b3 = Math.min(b1, b2);
     if (a3 < b3) {

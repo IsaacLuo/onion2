@@ -48,7 +48,7 @@ export class CDSBar extends React.Component {
       re.push(<AminoAcidMarker
         aa={sequence[i]}
         x={i * unitWidth}
-        y="0"
+        y={0}
         w={unitWidth}
         h={height}
         key={i}
@@ -64,7 +64,7 @@ export class CDSBar extends React.Component {
       re.push(<AminoAcidMarker
         aa={sequence[i]}
         x={i * unitWidth}
-        y="0"
+        y={0}
         w={unitWidth}
         h={height}
         key={i}
@@ -79,7 +79,7 @@ export class CDSBar extends React.Component {
       re.push(<AminoAcidMarker
         aa={sequence[i]}
         x={i * unitWidth}
-        y="0"
+        y={0}
         w={unitWidth}
         h={height}
         key={i}
