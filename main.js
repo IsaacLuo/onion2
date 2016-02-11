@@ -1,6 +1,5 @@
 import React from 'react';
-import { render as reactRender } from 'react-dom';
-
+import ReactDOM from 'react-dom';
 import {OnionForGenomeDesigner} from './OnionForGenomeDesigner';
 var manifest = require('json!./package.json');
 
@@ -21,14 +20,13 @@ class OnionViewer extends React.Component {
     });
     console.log("componentwillmount");
 
-
     var subscriber = window.gd.store.subscribe(function (state, lastAction) {
       var last = [];
       var current = state.ui.currentBlocks;
       if (current &&
         current.length &&
         (current.length !== last.length || !current.every(function (item, index) {
-          return item !== last[index]
+          return item !== last[index];
         }))
       ) {
         let currentBlocks = current;
@@ -50,9 +48,8 @@ class OnionViewer extends React.Component {
               start += sequence.length;
               totalSequence += sequence;
               if (i == count - 1) {
-                this.setState({blocks: onionBlocks, sequence: totalSequence});
-              }
-              else {
+                this.setState({ blocks: onionBlocks, sequence: totalSequence });
+              } else {
                 readSequenceFromBlock(i + 1, count);
               }
             }
@@ -81,7 +78,7 @@ class OnionViewer extends React.Component {
   }
 
   render() {
-    let {sequence,features,width,height,blocks} = this.state;
+    let { sequence, features, width, height, blocks } = this.state;
     //can't read correct width and height, I don't know why.
     return (
       <OnionForGenomeDesigner
@@ -91,27 +88,27 @@ class OnionViewer extends React.Component {
         height={400}
         blocks={blocks}
       ></OnionForGenomeDesigner>
-    )
+    );
   }
 
   //read dimensions of onion container
   updateDimensions() {
     let width = $(".onionContainer").width();
     let height = $(".onionContainer").height();
-    width = Math.max(100,width);
-    height = Math.max(100,height);
-    console.log("updateDimensions:", this.props.container, width,height);
-    this.setState({width: width});
+    width = Math.max(100, width);
+    height = Math.max(100, height);
+    console.log("updateDimensions:", this.props.container, width, height);
+    this.setState({ width: width });
   }
 
 }
 
 const render = (container)=> {
   container.className += " onionContainer";
-  reactRender(<OnionViewer
+  ReactDOM.render(<OnionViewer
     container={container}
   />, container);
-}
+};
 
 window.gd.registerExtension(manifest, render);
 

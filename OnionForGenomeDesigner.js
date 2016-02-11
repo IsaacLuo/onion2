@@ -31,31 +31,27 @@ export class OnionForGenomeDesigner extends React.Component {
       showBlockBar: true,
       showAA: true,
 
-
       blocks: props.blocks,   //blocks data, an array of {name,color,start,length}
 
       menuTitle: "unknown",
       sequence: props.sequence, //DNA sequence, in ACGT
     };
 
-    this.enzymeList = loadEnzymeList("cailab");
-    //this.enzymeList = loadEnzymeList("New England Biolabs");
-
+    this.enzymeList = loadEnzymeList("caiLab");
   }
 
-
-
   componentWillMount() {
-    console.warn("onion mount")
+    console.warn("onion mount");
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.sequence != this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
-      if(nextProps.blocks[0])
+      if (nextProps.blocks[0])
         this.state.menuTitle = nextProps.blocks[0].name;
     }
+
     this.state.blocks = nextProps.blocks;
   }
 
@@ -63,14 +59,13 @@ export class OnionForGenomeDesigner extends React.Component {
 
   }
 
-
   render() {
-    let {width,height} = this.props;
+    let { width, height } = this.props;
     //set a minimum size;
-    width = Math.max(width,100);
-    height = Math.max(height,100);
+    width = Math.max(width, 100);
+    height = Math.max(height, 100);
 
-    let {showEnzymes, showRS, showFeatures, showRuler,showBlockBar,showAA} = this.state;
+    let { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
     let sequence;
     let features;
     let blocks = this.state.blocks;
@@ -79,15 +74,15 @@ export class OnionForGenomeDesigner extends React.Component {
     if (this.state && this.state.sequence) {
       sequence = this.state.sequence ? this.state.sequence : onionFile.seq;
     }
+
     if (this.state && this.state.features) {
       features = this.state.features ? this.state.features : onionFile.features;
       ;
     }
 
-    if(!blocks){
+    if (!blocks) {
       blocks = onionFile.blocks;
     }
-
 
     //blocks = this.convertBlocks(this.state.block);
     if (!sequence) {
@@ -106,19 +101,18 @@ export class OnionForGenomeDesigner extends React.Component {
     let selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
     let selectedSeq = sequence.substr(selectionStart, selectionLength);
 
-
     let menuTitle = this.state.menuTitle;
 
     return (
       <div
         style={{
-                	width:"100%",
-                	position:"relative",
-                	height:height,
-                	marginTop:0,
-                	display:"flex",
-                	flexDirection:"column"
-                }}
+          width:"100%",
+          position:"relative",
+          height:height,
+          marginTop:0,
+          display:"flex",
+          flexDirection:"column",
+        }}
       >
         <MenuBar
           title={menuTitle}
@@ -129,7 +123,7 @@ export class OnionForGenomeDesigner extends React.Component {
           showBlockBar={showBlockBar}
           showAA={showAA}
           onSelect={this.menuCommand.bind(this)}
-        ></MenuBar>
+        />
 
 
         <SequenceEditor
@@ -140,7 +134,7 @@ export class OnionForGenomeDesigner extends React.Component {
           onSelecting={this.onSelecting.bind(this)}
           enzymeList={this.enzymeList}
           width={width}
-          height={height-30-86}
+          height={height - 30 - 86}
           showEnzymes={showEnzymes}
           showLadder={showRuler || !showRuler && showRS}
           showRS={showRS}
@@ -151,40 +145,41 @@ export class OnionForGenomeDesigner extends React.Component {
           blocks={blocks}
           cursorPos={this.state.cursorPos}
           selectStartPos={this.state.startCursorPos}
-          onBlockChanged={(block,e)=>{ this.setState({menuTitle:block[0].name}); }}
-        ></SequenceEditor>
+          onBlockChanged={
+            (block, e)=> { this.setState({ menuTitle:block[0].name }); }
+          }
+        />
 
         <InfoBar
           width={width}
           height={30}
           startPos={selectionStart}
-          endPos={selectionStart+selectionLength}
+          endPos={selectionStart + selectionLength}
           seq={selectedSeq}
           style={{
-						textAlign:"right",
-						width:width,
-						height:30,
-						background:"#eaebf1",
-						marginBottom:0,
-					}}
+            textAlign:"right",
+            width:width,
+            height:30,
+            background:"#eaebf1",
+            marginBottom:0,
+          }}
 
-          onChange = {this.onInfoBarChange.bind(this)}
-        ></InfoBar>
+          onChange={this.onInfoBarChange.bind(this)}
+        />
       </div>
     );
   }
-
 
   //====================event response=====================
 
   //while user move cursor by clicking
   onSetCursor(pos) {
-    this.setState({cursorPos: pos, startCursorPos: pos});
+    this.setState({ cursorPos: pos, startCursorPos: pos });
   }
 
   //while user drags on editor
   onSelecting(pos1, pos2) {
-    this.setState({cursorPos: pos1, startCursorPos: pos2});
+    this.setState({ cursorPos: pos1, startCursorPos: pos2 });
   }
 
   //while user fires a menu command
@@ -210,8 +205,8 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   //while user changes the value of start and end numeric control on info bar
-  onInfoBarChange(startPos,endPos){
-    this.setState({cursorPos: endPos, startCursorPos: startPos});
+  onInfoBarChange(startPos, endPos) {
+    this.setState({ cursorPos: endPos, startCursorPos: startPos });
   }
 
 }
