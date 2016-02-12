@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "9271064802ba99de6007"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e34a540e2af021350cc1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23802,7 +23802,7 @@
 	    _this.onSetCursor = _this.onSetCursor.bind(_this);
 	    _this.onSelecting = _this.onSelecting.bind(_this);
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
-	    _this.onBlockChanged = _this.onBlockChanged(_this);
+	    _this.onBlockChanged = _this.onBlockChanged.bind(_this);
 	    return _this;
 	  }
 	
@@ -23817,9 +23817,6 @@
 	
 	      this.state.blocks = nextProps.blocks;
 	    }
-	  }, {
-	    key: 'componentWillUpdate',
-	    value: function componentWillUpdate() {}
 	
 	    //====================event response=====================
 	
@@ -23888,13 +23885,9 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var width = _props.width;
-	      var height = _props.height;
 	      //set a minimum size;
-	
-	      width = Math.max(width, 100);
-	      height = Math.max(height, 100);
+	      var width = Math.max(this.props.width, 100);
+	      var height = Math.max(this.props.height, 100);
 	
 	      var _state = this.state;
 	      var showEnzymes = _state.showEnzymes;
@@ -24052,6 +24045,8 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -24137,6 +24132,10 @@
 	    _this.initialRowPos(_this.props.sequence, _this.props.width);
 	
 	    _this.onScroll = _this.onScroll.bind(_this);
+	    _this.onSetCursor = _this.onSetCursor.bind(_this);
+	    _this.onSelecting = _this.onSelecting.bind(_this);
+	    _this.onSetHighLight = _this.onSetHighLight.bind(_this);
+	    _this.onRowCalculatedHeight = _this.onRowCalculatedHeight.bind(_this);
 	    return _this;
 	  }
 	
@@ -24469,25 +24468,25 @@
 	  }, {
 	    key: 'splitRows',
 	    value: function splitRows(colNum) {
-	      var _props = this.props;
-	      var showSelection = _props.showSelection;
-	      var showCursor = _props.showCursor;
-	      var sequence = this.props.sequence;
 	      var _state = this.state;
-	      var cursorPos = _state.cursorPos;
-	      var selectStartPos = _state.selectStartPos;
-	      var showHighLight = _state.showHighLight;
-	      var highLightStart = _state.highLightStart;
-	      var highLightEnd = _state.highLightEnd;
-	      var _props2 = this.props;
-	      var showEnzymes = _props2.showEnzymes;
-	      var showLadder = _props2.showLadder;
-	      var showRS = _props2.showRS;
-	      var showFeatures = _props2.showFeatures;
-	      var showRuler = _props2.showRuler;
-	      var showBlockBar = _props2.showBlockBar;
-	      var blocks = _props2.blocks;
-	      var showAA = _props2.showAA;
+	      var showSelection = _state.showSelection;
+	      var showCursor = _state.showCursor;
+	      var sequence = this.props.sequence;
+	      var _state2 = this.state;
+	      var cursorPos = _state2.cursorPos;
+	      var selectStartPos = _state2.selectStartPos;
+	      var showHighLight = _state2.showHighLight;
+	      var highLightStart = _state2.highLightStart;
+	      var highLightEnd = _state2.highLightEnd;
+	      var _props = this.props;
+	      var showEnzymes = _props.showEnzymes;
+	      var showLadder = _props.showLadder;
+	      var showRS = _props.showRS;
+	      var showFeatures = _props.showFeatures;
+	      var showRuler = _props.showRuler;
+	      var showBlockBar = _props.showBlockBar;
+	      var blocks = _props.blocks;
+	      var showAA = _props.showAA;
 	
 	      this.textRows = [];
 	      var j = 0;
@@ -24599,7 +24598,7 @@
 	        this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
 	          sequence: subSequence,
 	          idxStart: i,
-	          key: 'sequenceRow_' + rowCount,
+	          key: 'row' + rowCount,
 	          rowNumber: rowCount,
 	          features: featureFrags,
 	          unitWidth: this.unitWidth,
@@ -24639,11 +24638,13 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props3 = this.props;
-	      var width = _props3.width;
-	      var height = _props3.height;
-	      var sequence = _props3.sequence;
-	      var features = _props3.features;
+	      var _Object;
+	
+	      var _props2 = this.props;
+	      var width = _props2.width;
+	      var height = _props2.height;
+	      var sequence = _props2.sequence;
+	      var features = _props2.features;
 	
 	      this.colNum = Math.floor(width / this.unitWidth) - 10;
 	
@@ -24671,11 +24672,11 @@
 	      return _react3.default.createElement(
 	        'div',
 	        {
-	          style: Object.assign(this.props.style, {
+	          style: (_Object = Object).assign.apply(_Object, _toConsumableArray(this.props.style).concat([{
 	            width: width,
 	            height: height,
 	            overflowY: 'scroll'
-	          }),
+	          }])),
 	          onScroll: this.onScroll
 	        },
 	        this.textRows
@@ -24701,7 +24702,7 @@
 	  showRuler: _react3.default.PropTypes.bool,
 	  showBlockBar: _react3.default.PropTypes.bool,
 	  showCursor: _react3.default.PropTypes.bool,
-	  blocks: _react3.default.PropTypes.bool,
+	  blocks: _react3.default.PropTypes.array,
 	  style: _react3.default.PropTypes.object,
 	  onBlockChanged: _react3.default.PropTypes.func,
 	  onSetCursor: _react3.default.PropTypes.func,
@@ -25538,7 +25539,8 @@
 	              fontFamily: 'Helvetica',
 	              fontSize: '13',
 	              WebkitUserSelect: 'none'
-	            }
+	            },
+	            key: 'ruler' + i
 	          },
 	          texts[i]
 	        ));
@@ -25962,7 +25964,7 @@
 	          color: feature.color,
 	          text: feature.text,
 	          textColor: feature.textColor,
-	          key: i,
+	          key: 'features' + i,
 	          y: y0 + this.featureRow[i] * (featureHeight + 5),
 	          height: featureHeight
 	        }));
@@ -26040,7 +26042,7 @@
 	          width: b.len * unitWidth,
 	          height: 9,
 	          fill: b.color,
-	          key: i
+	          key: 'blocks' + i
 	        }));
 	      }
 	
@@ -26116,7 +26118,8 @@
 	          re.push(_react3.default.createElement('path', {
 	            d: 'M ' + xx + ' ' + (y - this.enzymeRow[i] * 15) + ' L ' + xx + ' ' + seqY + ' ',
 	            stroke: 'rgba(0,0,0,0.1)',
-	            strokeWidth: 0.5
+	            strokeWidth: 0.5,
+	            key: 'rsb' + i
 	          }));
 	        }
 	      }
@@ -26374,14 +26377,16 @@
 	              y: ep.selectionY,
 	              width: cursorRight - cursorLeft,
 	              height: ep.selectionH,
-	              fill: this.props.selectionColor
+	              fill: this.props.selectionColor,
+	              key: 'rectSelection'
 	            }),
 	            showHighLight && _react3.default.createElement('rect', {
 	              x: highLightLeftPos * unitWidth,
 	              y: ep.seqBlockY,
 	              width: (highLightRightPos - highLightLeftPos) * unitWidth,
 	              height: ep.seqBlockH,
-	              fill: '#EDF2F8'
+	              fill: '#EDF2F8',
+	              key: 'rectHighLight'
 	            }),
 	            _react3.default.createElement(_StrainText.StrainText, {
 	              showRS: showRS,
@@ -26786,55 +26791,60 @@
 	      block: null,
 	      rendered: Date.now()
 	    };
-	
-	    console.log('componentwillmount');
-	
-	    window.gd.store.subscribe(function (state, lastAction) {
-	      var last = [];
-	      var current = state.ui.currentBlocks;
-	      if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
-	        return item !== last[index];
-	      }))) {
-	        (function () {
-	          var currentBlocks = current;
-	          var readBlockCount = currentBlocks.length;
-	          var onionBlocks = [];
-	          var start = 0;
-	          var totalSequence = '';
-	
-	          var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
-	            var block = state.blocks[currentBlocks[i]];
-	
-	            block.getSequence().then(function (sequence) {
-	              if (sequence) {
-	                onionBlocks.push({
-	                  color: block.metadata.color,
-	                  start: start,
-	                  length: sequence.length
-	                });
-	                start += sequence.length;
-	                totalSequence += sequence;
-	                if (i === count - 1) {
-	                  _this.setState({ blocks: onionBlocks, sequence: totalSequence });
-	                } else {
-	                  readSequenceFromBlock(i + 1, count);
-	                }
-	              }
-	            });
-	          };
-	
-	          readSequenceFromBlock(0, readBlockCount);
-	
-	          last = current;
-	        })();
-	      }
-	    });
-	
-	    _this.updateDimensions();
 	    return _this;
 	  }
 	
 	  _createClass(OnionViewer, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var _this2 = this;
+	
+	      console.log('componentwillmount');
+	
+	      window.gd.store.subscribe(function (state, lastAction) {
+	        var last = [];
+	        var current = state.ui.currentBlocks;
+	        if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
+	          return item !== last[index];
+	        }))) {
+	          (function () {
+	            var currentBlocks = current;
+	            var readBlockCount = currentBlocks.length;
+	            var onionBlocks = [];
+	            var start = 0;
+	            var totalSequence = '';
+	
+	            var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
+	              var block = state.blocks[currentBlocks[i]];
+	
+	              block.getSequence().then(function (sequence) {
+	                if (sequence) {
+	                  onionBlocks.push({
+	                    color: block.metadata.color,
+	                    start: start,
+	                    length: sequence.length
+	                  });
+	                  start += sequence.length;
+	                  totalSequence += sequence;
+	                  if (i === count - 1) {
+	                    _this2.setState({ blocks: onionBlocks, sequence: totalSequence });
+	                  } else {
+	                    readSequenceFromBlock(i + 1, count);
+	                  }
+	                }
+	              });
+	            };
+	
+	            readSequenceFromBlock(0, readBlockCount);
+	
+	            last = current;
+	          })();
+	        }
+	      });
+	
+	      //this.updateDimensions();
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      console.log('componentDidMount:');
@@ -26853,10 +26863,10 @@
 	    value: function updateDimensions() {
 	      var container = this.props.container;
 	
-	      var width = $('.onionContainer').width();
-	      var height = $('.onionContainer').height();
-	      width = Math.max(100, width);
-	      height = Math.max(100, height);
+	      var _width = $('.onionContainer').width();
+	      var _height = $('.onionContainer').height();
+	      var width = Math.max(100, _width);
+	      var height = Math.max(100, _height);
 	      console.log('updateDimensions:', container, width, height);
 	      this.setState({ width: width, height: height });
 	    }

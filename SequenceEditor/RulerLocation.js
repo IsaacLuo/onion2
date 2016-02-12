@@ -66,6 +66,7 @@ export class RulerLocation extends React.Component {
           fontSize: '13',
           WebkitUserSelect: 'none',
         }}
+        key={`ruler${i}`}
       >
         {texts[i]}
       </text>);

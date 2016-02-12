@@ -20,7 +20,9 @@ class OnionViewer extends React.Component {
       block: null,
       rendered: Date.now(),
     };
+  }
 
+  componentWillMount() {
     console.log('componentwillmount');
 
     window.gd.store.subscribe(
@@ -65,7 +67,7 @@ class OnionViewer extends React.Component {
         }
       });
 
-    this.updateDimensions();
+    //this.updateDimensions();
   }
 
   componentDidMount() {
@@ -80,11 +82,10 @@ class OnionViewer extends React.Component {
   //read dimensions of onion container
   updateDimensions() {
     const { container } = this.props;
-
-    let width = $('.onionContainer').width();
-    let height = $('.onionContainer').height();
-    width = Math.max(100, width);
-    height = Math.max(100, height);
+    const _width = $('.onionContainer').width();
+    const _height = $('.onionContainer').height();
+    const width = Math.max(100, _width);
+    const height = Math.max(100, _height);
     console.log('updateDimensions:', container, width, height);
     this.setState({ width, height });
   }

@@ -23,7 +23,7 @@ export class SequenceEditor extends React.Component {
     showRuler: React.PropTypes.bool,
     showBlockBar: React.PropTypes.bool,
     showCursor: React.PropTypes.bool,
-    blocks: React.PropTypes.bool,
+    blocks: React.PropTypes.array,
     style: React.PropTypes.object,
     onBlockChanged: React.PropTypes.func,
     onSetCursor: React.PropTypes.func,
@@ -84,6 +84,10 @@ export class SequenceEditor extends React.Component {
     this.initialRowPos(this.props.sequence, this.props.width);
 
     this.onScroll = this.onScroll.bind(this);
+    this.onSetCursor = this.onSetCursor.bind(this);
+    this.onSelecting = this.onSelecting.bind(this);
+    this.onSetHighLight = this.onSetHighLight.bind(this);
+    this.onRowCalculatedHeight = this.onRowCalculatedHeight.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -401,7 +405,7 @@ export class SequenceEditor extends React.Component {
   }
 
   splitRows(colNum) {
-    let { showSelection, showCursor } = this.props;
+    let { showSelection, showCursor } = this.state;
     const { sequence } = this.props;
     const {
       cursorPos,
@@ -533,7 +537,7 @@ export class SequenceEditor extends React.Component {
         <SequenceRow
           sequence={subSequence}
           idxStart={i}
-          key={`sequenceRow_${rowCount}`}
+          key={`row${rowCount}`}
           rowNumber={rowCount}
           features={featureFrags}
           unitWidth={this.unitWidth}
@@ -598,7 +602,7 @@ export class SequenceEditor extends React.Component {
     this.splitRows(this.colNum);
     return (
       <div
-        style={Object.assign(this.props.style, {
+        style={Object.assign(...this.props.style, {
           width,
           height,
           overflowY: 'scroll',

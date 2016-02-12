@@ -149,7 +149,7 @@ export class SequenceRow extends React.Component {
           color={feature.color}
           text={feature.text}
           textColor={feature.textColor}
-          key={i}
+          key={`features${i}`}
           y={y0 + this.featureRow[i] * (featureHeight + 5)}
           height={featureHeight}
         />
@@ -222,7 +222,7 @@ export class SequenceRow extends React.Component {
           width={b.len * unitWidth}
           height={9}
           fill={b.color}
-          key={i}
+          key={`blocks${i}`}
         />
       );
     }
@@ -295,6 +295,7 @@ export class SequenceRow extends React.Component {
             d={`M ${xx} ${y - this.enzymeRow[i] * 15} L ${xx} ${seqY} `}
             stroke="rgba(0,0,0,0.1)"
             strokeWidth={0.5}
+            key={`rsb${i}`}
           />
         );
       }
@@ -536,8 +537,8 @@ export class SequenceRow extends React.Component {
               width={cursorRight - cursorLeft}
               height={ep.selectionH}
               fill={this.props.selectionColor}
-            >
-            </rect>
+              key="rectSelection"
+            />
             }
 
             {showHighLight &&
@@ -547,6 +548,7 @@ export class SequenceRow extends React.Component {
               width={(highLightRightPos - highLightLeftPos) * unitWidth}
               height={ep.seqBlockH}
               fill="#EDF2F8"
+              key="rectHighLight"
             />
             }
 

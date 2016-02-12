@@ -48,7 +48,7 @@ export class OnionForGenomeDesigner extends React.Component {
     this.onSetCursor = this.onSetCursor.bind(this);
     this.onSelecting = this.onSelecting.bind(this);
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
-    this.onBlockChanged = this.onBlockChanged(this);
+    this.onBlockChanged = this.onBlockChanged.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,10 +59,6 @@ export class OnionForGenomeDesigner extends React.Component {
     }
 
     this.state.blocks = nextProps.blocks;
-  }
-
-  componentWillUpdate() {
-
   }
 
   //====================event response=====================
@@ -118,10 +114,9 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   render() {
-    let { width, height } = this.props;
     //set a minimum size;
-    width = Math.max(width, 100);
-    height = Math.max(height, 100);
+    const width = Math.max(this.props.width, 100);
+    const height = Math.max(this.props.height, 100);
 
     const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
     let sequence;
