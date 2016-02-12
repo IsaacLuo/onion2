@@ -132,8 +132,7 @@ export class DNASeq extends Seq
     this.enzymeSites = [];
     for (const e of enzymeList) {
       const rsxf = new RegExp(e.rf, 'gi');
-      let r = null;
-      while (true) {
+      for (let r = rsxf.exec(this.seq); r; r = rsxf.exec(this.seq)) {
         r = rsxf.exec(this.seq);
         if (!r) break;
         this.enzymeSites.push(new EnzymeSite(e, r.index, '+'));
@@ -141,8 +140,7 @@ export class DNASeq extends Seq
 
       if (!e.symmetry) {
         const rsxr = new RegExp(e.rr, 'gi');
-        while (true) {
-          r = rsxr.exec(this.seq);
+        for (let r = rsxr.exec(this.seq); r; r = rsxr.exec(this.seq)) {
           if (!r) break;
           this.enzymeSites.push(new EnzymeSite(e, r.index, '-'));
         }

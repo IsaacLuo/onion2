@@ -1,5 +1,7 @@
-import React, { PropTypes } from 'react';
-import { PlasmidBone, PlasmidBoneC, PlasmidBoneNAL } from './PlasmidBone';
+import React from 'react';
+import { PlasmidBone } from './PlasmidBone';
+import { PlasmidBoneC } from './PlasmidBoneC';
+import { PlasmidBoneNAL } from './PlasmidBoneNAL';
 import FeatureGroup from './FeatureGroup';
 
 import EnzymeLabelContainer from './EnzymeLabelContainer';
@@ -10,6 +12,24 @@ import { PlasmidViewerVisibleArea } from './PlasmidViewerVisibleArea';
 
 //the PlasmidViewer component of onion
 export class PlasmidViewer extends React.Component {
+  static propTypes = {
+    rotateAngle: React.PropTypes.number,
+    seqLength: React.PropTypes.number,
+    width: React.PropTypes.number,
+    height: React.PropTypes.number,
+    mode: React.PropTypes.string,
+    name: React.PropTypes.string,
+    features: React.PropTypes.array,
+    plasmidR: React.PropTypes.number,
+    theme: React.PropTypes.string,
+    enzymes: React.PropTypes.array,
+    selectedFeature: React.PropTypes.array,
+    cursorPos: React.PropTypes.number,
+    selectionStart: React.PropTypes.number,
+    selectionLength: React.PropTypes.number,
+    showViewAngle: React.PropTypes.bool,
+    onWheel: React.PropTypes.func,
+  };
 
   static defaultProps = {
     width: 500,
@@ -25,40 +45,57 @@ export class PlasmidViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.onWheel = this.onWheel.bind(this);
   }
 
-  calcEnzymeRoot(enzymes, r) {
-    let { rotateAngle, seqLength } = this.props;
-    let plasmidR = r;
-    let la = new LA(seqLength, 0, 360);
-    let xy = (a) => {
-      return { x: plasmidR * Math.cos((90 - a) * Math.PI / 180), y: -plasmidR * Math.sin((90 - a) * Math.PI / 180) };
+  onWheel(e) {
+    this.props.onWheel(e);
+    e.preventDefault();
+  }
+
+  calcEnzymeRoot(_enzymes, r) {
+    const { rotateAngle, seqLength } = this.props;
+    const plasmidR = r;
+    const la = new LA(seqLength, 0, 360);
+    const xy = (a) => {
+      const re = {
+        x: (plasmidR * Math.cos((90 - a) * Math.PI / 180)),
+        y: (-plasmidR * Math.sin((90 - a) * Math.PI / 180)),
+      };
+      return re;
     };
 
-    for (let i in enzymes) {
+    const enzymes = _enzymes;
+    for (let i = 0; i < enzymes.length; i++) {
       enzymes[i].rootPos = xy(la.a(enzymes[i].pos[0]) + rotateAngle);
     }
 
     return enzymes;
   }
 
-  componentWillReceiveProps(nextProps) {
-
-  }
-
   render() {
-    var { width, height, mode } = this.props;
-    var { name, features, seqLength, rotateAngle, plasmidR, theme, selectedFeature, cursorPos, selectionStart, selectionLength, showViewAngle } = this.props;
+    const { width, height, mode } = this.props;
+    const {
+      name,
+      features,
+      seqLength,
+      plasmidR,
+      theme,
+      selectedFeature,
+      cursorPos,
+      selectionStart,
+      selectionLength,
+      showViewAngle,
+      } = this.props;
+    let { rotateAngle } = this.props;
 
-    var enzymes = this.props.enzymes;
+    let enzymes = this.props.enzymes;
     let enzymeRootR = plasmidR;
-    if (theme === 'C')
-      enzymeRootR = plasmidR + 10;
+    if (theme === 'C') enzymeRootR = plasmidR + 10;
 
     enzymes = this.calcEnzymeRoot(enzymes, enzymeRootR);
 
-    var altKey = false;
-    var viewBox = [];
+    let viewBox = [];
 
     if (plasmidR * 2 < width && plasmidR * 2 < height) {
       viewBox = [-width / 2, -height / 2, width, height];
@@ -66,22 +103,16 @@ export class PlasmidViewer extends React.Component {
       viewBox = [-width / 2, -plasmidR - height / 2, width, height];
     }
 
-    let onWheel = (e) => {
-      this.props.onWheel(e);
-      e.preventDefault();
-    };
+    let plasmid = (<div></div>);
 
-    var plasmid = (<div></div>);
-
-    let defs = (<defs>
+    const defs = (<defs>
       <radialGradient id="grad1" cx="50%" cy="50%" r="90%" fx="50%" fy="50%">
-        <stop offset="0%" stopColor='#00ffff' stopOpacity="0.5"/>
-        <stop offset="100%" stopColor='#ffffff' stopOpacity="0"/>
-
+        <stop offset="0%" stopColor="#00ffff" stopOpacity="0.5"/>
+        <stop offset="100%" stopColor="#ffffff" stopOpacity="0"/>
       </radialGradient >
       <linearGradient id="grad2" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor='#ffffff' stopOpacity="0"/>
-        <stop offset="100%" stopColor='#00ffff' stopOpacity="0.5"/>
+        <stop offset="0%" stopColor="#ffffff" stopOpacity="0"/>
+        <stop offset="100%" stopColor="#00ffff" stopOpacity="0.5"/>
       </linearGradient >
     </defs>);
 
@@ -92,16 +123,16 @@ export class PlasmidViewer extends React.Component {
             width={width}
             height={height}
             viewBox={viewBox}
-            onWheel={onWheel}
+            onWheel={this.onWheel}
           >
-            <g className="plasmid"
-               transform={`rotate (${rotateAngle})`}
+            <g
+              className="plasmid"
+              transform={`rotate (${rotateAngle})`}
             >
               <PlasmidBone
                 radius={plasmidR}
                 seqLength={seqLength}
-              >
-              </PlasmidBone>
+              />
               <FeatureGroup
                 radius={plasmidR - 40}
                 features={features}
@@ -109,15 +140,18 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={"B"}
-              >
-              </FeatureGroup>
+              />
             </g>
             <g className="title">
               <text
                 x={0}
                 y={0}
                 fontSize={16}
-                style={{ dominantBaseline:'text-after-edge', textAnchor:'middle', WebkitUserSelect:'none', }}
+                style={{
+                  dominantBaseline: 'text-after-edge',
+                  textAnchor: 'middle',
+                  WebkitUserSelect: 'none',
+                }}
               >
                 {name}
               </text>
@@ -125,9 +159,13 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={10}
-                style={{ dominantBaseline:'text-before-edge', textAnchor:'middle', WebkitUserSelect:'none', }}
+                style={{
+                  dominantBaseline: 'text-before-edge',
+                  textAnchor: 'middle',
+                  WebkitUserSelect: 'none',
+                }}
               >
-                {seqLength + ' bp'}
+                {`${seqLength} bp`}
               </text>
             </g>
             <g className="enzyme">
@@ -135,8 +173,7 @@ export class PlasmidViewer extends React.Component {
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
-              >
-              </EnzymeLabelContainer>}
+              />}
             </g>
           </svg>
         </div>
@@ -148,16 +185,16 @@ export class PlasmidViewer extends React.Component {
             width={width}
             height={height}
             viewBox={viewBox}
-            onWheel={onWheel}
+            onWheel={this.onWheel}
           >
-            <g className="plasmid"
-               transform={`rotate (${rotateAngle})`}
+            <g
+              className="plasmid"
+              transform={`rotate (${rotateAngle})`}
             >
               <PlasmidBoneC
                 radius={plasmidR}
                 seqLength={seqLength}
-              >
-              </PlasmidBoneC>
+              />
               <FeatureGroup
                 radius={plasmidR}
                 features={features}
@@ -165,16 +202,14 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={"B"}
-              >
-              </FeatureGroup>
+              />
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
-              >
-              </EnzymeLabelContainer>}
+              />}
             </g>
           </svg>
         </div>
@@ -186,16 +221,16 @@ export class PlasmidViewer extends React.Component {
             width={width}
             height={height}
             viewBox={viewBox}
-            onWheel={onWheel}
+            onWheel={this.onWheel}
           >
-            <g className="plasmid"
-               transform={`rotate (${rotateAngle})`}
+            <g
+              className="plasmid"
+              transform={`rotate (${rotateAngle})`}
             >
               <PlasmidBoneC
                 radius={plasmidR}
                 seqLength={seqLength}
-              >
-              </PlasmidBoneC>
+              />
               <FeatureGroup
                 radius={plasmidR}
                 features={features}
@@ -203,16 +238,14 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={"NA"}
-              >
-              </FeatureGroup>
+              />
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
-              >
-              </EnzymeLabelContainer>}
+              />}
             </g>
           </svg>
         </div>
@@ -228,17 +261,17 @@ export class PlasmidViewer extends React.Component {
             width={width}
             height={height}
             viewBox={viewBox}
-            onWheel={onWheel}
+            onWheel={this.onWheel}
           >
             {defs}
-            <g className="plasmid"
-               transform={`rotate (${rotateAngle})`}
+            <g
+              className="plasmid"
+              transform={`rotate (${rotateAngle})`}
             >
               <PlasmidBoneNAL
                 radius={plasmidR}
                 seqLength={seqLength}
-              >
-              </PlasmidBoneNAL>
+              />
               {<FeatureGroup
                 radius={plasmidR}
                 features={features}
@@ -247,8 +280,7 @@ export class PlasmidViewer extends React.Component {
                 globalRotateAngle={rotateAngle}
                 theme={"NA"}
                 angleSpan={[0, 360 - 36]}
-              >
-              </FeatureGroup>}
+              />}
 
               {showViewAngle && <PlasmidViewerVisibleArea
                 angle={0}
@@ -277,8 +309,7 @@ export class PlasmidViewer extends React.Component {
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
-              >
-              </EnzymeLabelContainer>}
+              />}
             </g>
             <g>
               <text
@@ -287,7 +318,7 @@ export class PlasmidViewer extends React.Component {
                 y={plasmidR * 0.618}
                 fill="black"
                 style={{
-                  WebkitUserSelect:'none',
+                  WebkitUserSelect: 'none',
                 }}
               >
                 {Math.round(cursorPos)}
@@ -304,16 +335,16 @@ export class PlasmidViewer extends React.Component {
             width={width}
             height={height}
             viewBox={viewBox}
-            onWheel={onWheel}
+            onWheel={this.onWheel}
           >
-            <g className="plasmid"
-               transform={`rotate (${rotateAngle})`}
+            <g
+              className="plasmid"
+              transform={`rotate (${rotateAngle})`}
             >
               <PlasmidBone
                 radius={plasmidR}
                 seqLength={seqLength}
-              >
-              </PlasmidBone>
+              />
               <FeatureGroup
                 radius={plasmidR - 40}
                 features={features}
@@ -321,8 +352,7 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={theme}
-              >
-              </FeatureGroup>
+              />
               <g className="cursor">
                 <PlasmidViewerCursorGeneral
                   angle={cursorPos * 360 / seqLength}
@@ -343,7 +373,7 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={16}
-                style={{ dominantBaseline:'text-after-edge', textAnchor:'middle' }}
+                style={{ dominantBaseline: 'text-after-edge', textAnchor: 'middle' }}
               >
                 {name}
               </text>
@@ -351,9 +381,9 @@ export class PlasmidViewer extends React.Component {
                 x={0}
                 y={0}
                 fontSize={10}
-                style={{ dominantBaseline:'text-before-edge', textAnchor:'middle' }}
+                style={{ dominantBaseline: 'text-before-edge', textAnchor: 'middle' }}
               >
-                {seqLength + ' bp'}
+                {`${seqLength} bp`}
               </text>
             </g>
             <g className="enzyme">
@@ -361,8 +391,7 @@ export class PlasmidViewer extends React.Component {
                 enzymeR={plasmidR + 50}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
-              >
-              </EnzymeLabelContainer>}
+              />}
             </g>
 
           </svg>
@@ -371,7 +400,5 @@ export class PlasmidViewer extends React.Component {
     }
 
     return plasmid;
-
   }
 }
-

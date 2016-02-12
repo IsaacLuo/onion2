@@ -8,6 +8,7 @@
     "build": "npm install && webpack main.js index.js"
   },
   "devDependencies": {
+    "babel-eslint": "^4.1.8",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^5.0.0",
     "eslint-plugin-react": "^3.16.1",

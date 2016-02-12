@@ -22,17 +22,19 @@ export class SequenceFeatureArrow extends React.Component {
   constructor(props) {
     super(props);
     this.state = { showTitle: false };
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onMouseOut = this.onMouseOut.bind(this);
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return !compareProps(this.props, nextProps, Object.keys(this.props));
   }
 
-  onMouseEnter() {
+  onMouseOver() {
     this.setState({ hovering: true, showTitle: true });
   }
 
-  onMouseLeave() {
+  onMouseOut() {
     this.setState({ hovering: false, showTitle: false });
   }
 
@@ -58,8 +60,8 @@ export class SequenceFeatureArrow extends React.Component {
 
     return (
       <g
-        onMouseEnter={this.onMouseEnter.bind(this)}
-        onMouseLeave={this.onMouseLeave.bind(this)}
+        onMouseOver={this.onMouseOver}
+        onMouseOut={this.onMouseOut}
         transform={`translate(0,${this.props.y})`}
       >
         <rect
@@ -73,12 +75,12 @@ export class SequenceFeatureArrow extends React.Component {
         />
         {<text
           style={{
-            fontFamily: fontFamily,
-            fontSize: fontSize,
+            fontFamily,
+            fontSize,
             fill: 'black',
             alignmentBaseline: 'middle',
             WebkitUserSelect: 'none',
-            textAnchor: textAnchor,
+            textAnchor,
             opacity: titleOpacity,
           }}
           x={unitWidth * start + width / 2}

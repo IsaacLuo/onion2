@@ -4,9 +4,15 @@ import EnzymeLabel from './EnzymeLabel';
 //Enzyme label container is used to find the available location to put the enzyme lables
 export class EnzymeLabelContainer extends React.Component
 {
+  static propTypes = {
+    plasmidR: React.PropTypes.number,
+    enzymeR: React.PropTypes.number,
+    enzymes: React.PropTypes.array,
+  };
+
   constructor(props) {
     super(props);
-    this.resetR(this.props.plasmidR, this.props.enzymeR);
+    this.resetR(props.plasmidR, props.enzymeR);
     this.textPath = [];
     this.enzymePoses = [];
   }
@@ -32,7 +38,7 @@ export class EnzymeLabelContainer extends React.Component
   genTextPath(rx, ry, x, y, l, key, text) {
     return (
       <EnzymeLabel
-        rootPos = {{ x:rx, y:ry }}
+        rootPos = {{ x: rx, y: ry }}
         textPos = {{ x, y }}
         text = {text}
         key = {key}
@@ -42,26 +48,24 @@ export class EnzymeLabelContainer extends React.Component
   }
 
   calcAllPosition(unitHeight = 15) {
-    const offset = 50;
-    let key = 5210000;
     this.enzymePoses = [];
     for (let y = 0; y < this.er; y += unitHeight) {
-      let x = Math.sqrt(this.er * this.er - y * y);
-      this.enzymePoses.push({ x:x, y:y, items:[] });
-      this.enzymePoses.push({ x:x, y:-y, items:[] });
-      this.enzymePoses.push({ x:-x, y:y, items:[] });
-      this.enzymePoses.push({ x:-x, y:-y, items:[] });
+      const x = Math.sqrt(this.er * this.er - y * y);
+      this.enzymePoses.push({ x, y, items: [] });
+      this.enzymePoses.push({ x, y: -y, items: [] });
+      this.enzymePoses.push({ x: -x, y, items: [] });
+      this.enzymePoses.push({ x: -x, y: -y, items: [] });
     }
   }
 
   findNearestPos(rootPos) {
     let maxD2 = 9999999;
     let nearestEnzymePos = this.enzymePoses[0];
-    for (let i in this.enzymePoses) {
-      let e = this.enzymePoses[i];
-      let dx = e.x - rootPos.x;
-      let dy = e.y - rootPos.y;
-      let d2 = dx * dx + dy * dy;
+    for (let i = 0; i < this.enzymePoses.length; i++) {
+      const e = this.enzymePoses[i];
+      const dx = e.x - rootPos.x;
+      const dy = e.y - rootPos.y;
+      const d2 = dx * dx + dy * dy;
       if (d2 < maxD2) {
         maxD2 = d2;
         nearestEnzymePos = e;
@@ -72,23 +76,30 @@ export class EnzymeLabelContainer extends React.Component
   }
 
   fillEnzymes(enzymes) {
-    for (let i in enzymes) {
-      let enzyme = enzymes[i];
-      let rootPos = enzyme.rootPos;
+    for (let i = 0; i < enzymes.length; i++) {
+      const enzyme = enzymes[i];
+      const rootPos = enzyme.rootPos;
       //find nearestPos
-      let ePos = this.findNearestPos(rootPos);
-      ePos.items.push({ name:enzyme.name, rootPos:enzyme.rootPos });
+      const ePos = this.findNearestPos(rootPos);
+      ePos.items.push({ name: enzyme.name, rootPos: enzyme.rootPos });
     }
 
-    for (let i in this.enzymePoses) {
-      let enzymePos = this.enzymePoses[i];
+    for (let i = 0; i < this.enzymePoses; i++) {
+      const enzymePos = this.enzymePoses[i];
       if (enzymePos.items.length > 0) {
         let names = '';
-        for (let j in enzymePos.items) {
+        for (let j = 0; j < enzymePos.items.length; j++) {
           names += ` ${enzymePos.items[j].name}`;
         }
         //console.log(enzymePos.items[0].rootPos)
-        this.textPath.push(this.genTextPath(enzymePos.items[0].rootPos.x, enzymePos.items[0].rootPos.y, enzymePos.x, enzymePos.y, 100, Math.random() + i, names));
+        this.textPath.push(this.genTextPath(
+          enzymePos.items[0].rootPos.x,
+          enzymePos.items[0].rootPos.y,
+          enzymePos.x,
+          enzymePos.y,
+          100,
+          Math.random() + i,
+          names));
       }
     }
   }

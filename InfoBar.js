@@ -1,14 +1,26 @@
 /**
  * Created by luoyi on 07/01/2016.
  */
-import React, { PropTypes } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
+//import ReactDOM from 'react-dom';
 import { DNASeq } from './Bio/DNASeq';
 import { NumericControl } from './InfoBar/NumericControl';
 
 //The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component {
-  static propTypes = {};
+  static propTypes = {
+    showPos: React.PropTypes.bool,
+    showLength: React.PropTypes.bool,
+    showGC: React.PropTypes.bool,
+    showTM: React.PropTypes.bool,
+    width: React.PropTypes.number,
+    height: React.PropTypes.number,
+    startPos: React.PropTypes.number,
+    endPos: React.PropTypes.number,
+    seq: React.PropTypes.string,
+    onChange: React.PropTypes.func,
+    style: React.PropTypes.object,
+  };
   static defaultProps = {
     showPos: true,
     showLength: true,
@@ -20,21 +32,47 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onChangeStart = this.onChangeStart.bind(this);
+    this.onChangeEnd = this.onChangeEnd.bind(this);
+  }
+
+  onChangeStart(o, v, e) {
+    if (this.props.onChange) {
+      const { startPos, endPos } = this.props;
+      const vv = v - 1;
+      if (startPos === endPos) {		//cursorMode
+        this.props.onChange(vv, vv);
+      } else {
+        this.props.onChange(vv, Math.max(endPos, vv));
+      }
+    }
+
+    return false;
+  }
+
+  onChangeEnd(o, v, e) {
+    if (this.props.onChange) {
+      const { startPos, endPos } = this.props;
+      const vv = v;
+      if (startPos === endPos && vv < startPos) {		//cursorMode
+        this.props.onChange(vv, vv);
+      } else {
+        this.props.onChange(Math.min(startPos, vv), vv);
+      }
+    }
   }
 
   render() {
-    let { showPos,
+    const {
+      showPos,
       showLength,
       showGC,
       showTM,
-      width,
-      height,
       startPos,
       endPos,
       seq,
-      onChange,
       } = this.props;
-    let itemStyle = {
+    const itemStyle = {
       display: 'inline-block',
       marginLeft: 10,
       marginRight: 10,
@@ -43,16 +81,12 @@ export class InfoBar extends React.Component {
       color: 'A5A6A2',
       verticalAlign: 'middle',
       width: 90,
-
     };
 
-    let length = endPos - startPos;
-    let dna = new DNASeq(seq);
-    let gc = dna.getGCPercentage();
-    let tm = 0;
-    if (length => 10 && length <= 50) {
-      tm = dna.getTM();
-    }
+    const length = endPos - startPos;
+    const dna = new DNASeq(seq);
+    const gc = dna.getGCPercentage();
+    const tm = (length >= 10 && length <= 50) ? dna.getTM() : 0;
 
     return (
       <div
@@ -65,20 +99,9 @@ export class InfoBar extends React.Component {
           <span className="noselect"> start:</span>
           <NumericControl
             value={startPos + 1}
-            style={{ marginLeft:10 }}
-            onChange={(o, v, e) => {
-              if (this.props.onChange) {
-                let vv = parseInt(v) - 1;
-                if (startPos === endPos) {		//cursorMode
-                  this.props.onChange(vv, vv);
-                } else {
-                  this.props.onChange(vv, Math.max(endPos, vv));
-                }
-              }
-
-              return false;
-            }}
-          ></NumericControl>
+            style={{ marginLeft: 10 }}
+            onChange={this.onChangeStart}
+          />
         </div>
         }
         {showPos &&
@@ -87,44 +110,31 @@ export class InfoBar extends React.Component {
         >
           <span className="noselect"> end:</span>
           <NumericControl
-            ref={(obj) => {
-              this.numericEnd = obj;
-            }}
-
             value={endPos}
-            style={{ marginLeft:10, color:startPos < endPos ? 'black' : 'rgba(127,127,127,0)' }}
-            onChange={(o, v, e) => {
-              if (this.props.onChange) {
-                let vv = parseInt(v);
-                if (startPos === endPos && vv < startPos) {		//cursorMode
-                  this.props.onChange(vv, vv);
-                } else {
-                  this.props.onChange(Math.min(startPos, vv), vv);
-                }
-              }
-            }}
-          ></NumericControl>
+            style={{ marginLeft: 0, color: startPos < endPos ? 'black' : 'rgba(127,127,127,0)' }}
+            onChange={this.onChangeEnd}
+          />
         </div>
         }
         {showLength &&
         <div
           style={itemStyle}
         >
-          length:                         {length}bp
+          length: {length}bp
         </div>
         }
         {showGC &&
         <div
           style={itemStyle}
         >
-          GC:                         {(gc * 100).toFixed(1)}%
+          GC: {(gc * 100).toFixed(1)}%
         </div>
         }
         {showTM &&
         <div
           style={itemStyle}
         >
-          TM:                         {length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-'}
+          TM: {length >= 10 && length <= 50 ? `${tm.toFixed(1)}°C` : '-'}
         </div>
         }
 

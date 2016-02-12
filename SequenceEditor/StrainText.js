@@ -6,10 +6,25 @@ import { compareProps } from './../reactHelper';
 import { DNASeq } from './../Bio/DNASeq';
 
 export class StrainText extends React.Component {
-  static propTypes = {};
+  static propTypes = {
+    showRS: React.PropTypes.bool,
+    showLadder: React.PropTypes.bool,
+    ep: React.PropTypes.object,
+    sequenceRowWidth: React.PropTypes.number,
+    seqMainStyle: React.PropTypes.object,
+    seqCompStyle: React.PropTypes.object,
+    sequence: React.PropTypes.string,
+    unitWidth: React.PropTypes.number,
+  };
+
+  shouldComponentUpdate(nextProps) {
+    const update = !compareProps(this.props, nextProps, Object.keys(this.props));
+
+    return update;
+  }
 
   generateRuler(x, y, w, h, unitWidth) {
-    let my = y + h / 2;
+    const my = y + h / 2;
     let re = `M ${x} ${my} L ${x + w} ${my}`;
     for (let xx = x + unitWidth / 2; xx < x + w; xx += unitWidth) {
       re += `M ${xx} ${y + 4} L ${xx} ${y + h - 4}`;
@@ -18,15 +33,18 @@ export class StrainText extends React.Component {
     return re;
   }
 
-  shouldComponentUpdate(nextProps) {
-    let update = !compareProps(this.props, nextProps, Object.keys(this.props));
-
-    return update;
-  }
-
   render() {
-    let { showRS, showLadder, ep, sequenceRowWidth, seqMainStyle, seqCompStyle, sequence, unitWidth } = this.props;
-    let rs = new DNASeq(sequence);
+    const {
+      showRS,
+      showLadder,
+      ep,
+      sequenceRowWidth,
+      seqMainStyle,
+      seqCompStyle,
+      sequence,
+      unitWidth,
+      } = this.props;
+    const rs = new DNASeq(sequence);
     return (
       <g>
         <text

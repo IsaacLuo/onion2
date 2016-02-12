@@ -22,4 +22,3 @@ export class LA {
     return this.l2a(l);
   }
 }
-

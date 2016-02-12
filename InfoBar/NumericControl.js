@@ -30,6 +30,9 @@ export class NumericControl extends React.Component
     this.state = {
       value: props.value,
     };
+    this.onPlus = this.onPlus.bind(this);
+    this.onMinus = this.onMinus.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentWillReceiveProps(np) {
@@ -39,7 +42,7 @@ export class NumericControl extends React.Component
   }
 
   onChange(e) {
-    const newValue = e.target.value;
+    const newValue = parseInt(e.target.value, 10);
     let update = true;
     if (this.props.onChange) {
       update = this.props.onChange(this, newValue, e);
@@ -50,7 +53,7 @@ export class NumericControl extends React.Component
     }
   }
 
-  onPlus(n, e) {
+  onPlus(n = 1, e) {
     const newValue = this.state.value + n;
     let update = true;
     if (this.props.onChange) {
@@ -60,6 +63,10 @@ export class NumericControl extends React.Component
     if (update) {
       this.setState({ value: newValue });
     }
+  }
+
+  onMinus(n = -1, e) {
+    this.onPlus(n, e);
   }
 
   render() {
@@ -84,17 +91,17 @@ export class NumericControl extends React.Component
           style = {Object.assign({
             display: 'inline-block',
           }, valueBoxStyle)} value = {value} size="5"
-          onChange={this.onChange.bind(this)}
+          onChange={this.onChange}
         />
         <div
           style = {upDownStyle}
         >
           <svg width="18" height="20">
-            <g onClick={this.onPlus.bind(this, 1)} >
+            <g onClick={this.onPlus} >
               <path d="M 5 7 L 9 3 L 13 7" fill="none" stroke="#757884"/>
               <rect width="18" height="10" strokeWidth="0" fill="rgba(127,127,127,0.001)"/>
             </g>
-            <g onClick={this.onPlus.bind(this, -1)} >
+            <g onClick={this.onMinus} >
               <path d="M 5 13 L 9 17 L 13 13" fill="none" stroke="#757884"/>
               <rect y="10" width="18" height="10" strokeWidth="0" fill="rgba(127,127,127,0.001)"/>
             </g>
