@@ -2,22 +2,27 @@ import React from 'react';
 
 // Feature is an arrow to show the site of annotations on the PlasmidViewer
 export class Feature extends React.Component {
+  static propTypes = {
+    arrowStartAngle: React.PropTypes.number,
+    arcLen: React.PropTypes.number,
+    color: React.PropTypes.string,
+    radius: React.PropTypes.number,
+    strand: React.PropTypes.string,
+  }
+
   constructor(props) {
     super(props);
   }
 
   componentDidMount() {
-    let anchor = this.calcAnchor();
-    if (anchor === 'middle')
-      this.refs.featureTextPath.setAttribute('startOffset', '50%');
+    const anchor = this.calcAnchor();
+    if (anchor === 'middle') this.refs.featureTextPath.setAttribute('startOffset', '50%');
   }
 
   angle2XY(r, a) {
-    let re = {};
-
-    let d = Math.PI / 2;
-    let y = r * Math.sin(a - d);
-    let x = r * Math.cos(a - d);
+    const d = Math.PI / 2;
+    const y = r * Math.sin(a - d);
+    const x = r * Math.cos(a - d);
     return { x, y };
   }
 
@@ -28,21 +33,21 @@ export class Feature extends React.Component {
 
     if (style === 'NA') {
       return this.calcArrowPathNoArrow();
-    } else {
-      return this.calcArrowPathSG();
     }
+
+    return this.calcArrowPathSG();
   }
 
   calcArrowPathB() {
-    let { arrowStartAngle, arcLen, color, radius, strand } = this.props;
-    let rO = radius + 10;
-    let rI = radius - 10;
-    let rM = (rO + rI) / 2;
+    const { arrowStartAngle, arcLen, color, radius, strand } = this.props;
+    const rO = radius + 10;
+    const rI = radius - 10;
+    const rM = (rO + rI) / 2;
 
     let longThan50 = 0;
     if (arcLen > 180) longThan50 = 1;
     let arrowD = '';
-    let neckLength = 1200 / rO;
+    const neckLength = 1200 / rO;
     let arrowNeck1 = neckLength;
     if (arrowNeck1 > arcLen - 6) {
       arrowNeck1 = arcLen * 0.4;
@@ -55,28 +60,28 @@ export class Feature extends React.Component {
 
     if (strand === '-' || strand === '=') {
       arrowD += `M 0 ${-rM}`;
-      let an = this.angle2XY(rO, arrowNeck1 * Math.PI / 180);
+      const an = this.angle2XY(rO, arrowNeck1 * Math.PI / 180);
       arrowD += `L ${an.x} ${an.y}`;
     } else {
       arrowD += `M 0 ${-rO}`;
     }
 
     if (strand === '+' || strand === '=') {
-      let arcEnd = this.angle2XY(rO, arrowNeck2 * Math.PI / 180);
+      const arcEnd = this.angle2XY(rO, arrowNeck2 * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
-      let arrowEnd = this.angle2XY(rM, arcLen * Math.PI / 180);
+      const arrowEnd = this.angle2XY(rM, arcLen * Math.PI / 180);
       arrowD += `L ${arrowEnd.x} ${arrowEnd.y}`;
-      let arcEndI = this.angle2XY(rI, arrowNeck2 * Math.PI / 180);
+      const arcEndI = this.angle2XY(rI, arrowNeck2 * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
     } else {
-      let arcEnd = this.angle2XY(rO, arcLen * Math.PI / 180);
+      const arcEnd = this.angle2XY(rO, arcLen * Math.PI / 180);
       arrowD += `A ${rO} ${rO} 0 ${longThan50} 1 ${arcEnd.x} ${arcEnd.y}`;
-      let arcEndI = this.angle2XY(rI, arcLen * Math.PI / 180);
+      const arcEndI = this.angle2XY(rI, arcLen * Math.PI / 180);
       arrowD += `L ${arcEndI.x} ${arcEndI.y}`;
     }
 
     if (strand === '-' || strand === '=') {
-      let an = this.angle2XY(rI, arrowNeck1 * Math.PI / 180);
+      const an = this.angle2XY(rI, arrowNeck1 * Math.PI / 180);
       arrowD += `A ${rI} ${rI} 0 ${longThan50} 0 ${an.x} ${an.y}`;
       arrowD += `L 0 ${-rM}`;
     } else {

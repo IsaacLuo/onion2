@@ -1,7 +1,15 @@
 import React from 'react';
 
-//Emzyme label is a text showing enzyme restriction site and cutting site on a strand, a part of PlasmidViewer
+//Emzyme label is a text showing enzyme restriction site and cutting site on a strand,
+// a part of PlasmidViewer
 export class EnzymeLabel extends React.Component {
+  static propTypes = {
+    rootPos: React.PropTypes.number,
+    textPos: React.PropTypes.number,
+    l: React.PropTypes.number,
+    text: React.PropTypes.string,
+  };
+
   constructor(props) {
     super(props);
   }
@@ -10,7 +18,7 @@ export class EnzymeLabel extends React.Component {
     const offset = 50;
     let key = 5210000;
     for (let y = 0; y < this.er; y += unitHeight) {
-      let x = Math.sqrt(this.er * this.er - y * y);
+      const x = Math.sqrt(this.er * this.er - y * y);
       this.textPath.push(this.genTextPath(x, y, offset, key++));
       this.textPath.push(this.genTextPath(x, -y, offset, key++));
       this.textPath.push(this.genTextPath(-x, y, -offset, key++));
@@ -19,7 +27,8 @@ export class EnzymeLabel extends React.Component {
   }
 
   render() {
-    let { rootPos, textPos, l, text, key } = this.props;
+    const { rootPos, textPos, text } = this.props;
+    let { l } = this.props;
     let anchor = 'begin';
     if (textPos.x < 0) {
       l = -l;
@@ -31,7 +40,8 @@ export class EnzymeLabel extends React.Component {
     return (
       <g>
         <path
-          d={`M ${rootPos.x} ${rootPos.y} L ${textPos.x} ${textPos.y} L ${textPos.x + l}  ${textPos.y}`}
+          d={`M ${rootPos.x} ${rootPos.y} L ${textPos.x} ${textPos.y} \
+          L ${textPos.x + l}  ${textPos.y}`}
           strokeWidth={1}
           stroke={"black"}
           fill="none"
