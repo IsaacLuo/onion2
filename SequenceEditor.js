@@ -397,7 +397,7 @@ export class SequenceEditor extends React.Component {
 
   }
 
-  onSetHightLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
+  onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
     if (highLightStart === highLightEnd) {
       this.setState({ highLightStart, highLightEnd, showHighLight: false });
     } else {
@@ -545,7 +545,7 @@ export class SequenceEditor extends React.Component {
           unitWidth={this.unitWidth}
           onSetCursor={this.onSetCursor.bind(this)}
           onSetCursorMoving={this.onSelecting.bind(this)}
-          onSetHighLight={this.onSetHightLight.bind(this)}
+          onSetHighLight={this.onSetHighLight.bind(this)}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}
           selectLeftPos={rowSelectLeftPos}

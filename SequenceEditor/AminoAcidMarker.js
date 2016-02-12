@@ -24,6 +24,8 @@ export class AminoAcidMarker extends React.Component {
 
   constructor(props) {
     super(props);
+    this.onMouseOver = this.onMouseOver.bind(this);
+    this.onClick = this.onClick.bind(this);
   }
 
   static colorDict = {
@@ -50,153 +52,151 @@ export class AminoAcidMarker extends React.Component {
     G: '#DBDBDB',
   };
 
-  render() {
-    const { x, y, w, h, aa, style, direction } = this.props;
+  genPath(pts) {
+    let re = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 1; i < pts.length; i++) {
+      re += `L ${pts[i].x} ${pts[i].y}`;
+    }
 
-    const genPath = (pts) => {
-      let re = `M ${pts[0].x} ${pts[0].y}`;
-      for (let i = 1; i < pts.length; i++) {
-        re += `L ${pts[i].x} ${pts[i].y}`;
+    re += 'Z';
+    return re;
+  };
+
+  genPathWithStyle(w,style, direction) {
+    if (direction === '-') {
+      if (style === 'full') {
+        return this.genPath([
+          { x: 1.1 * w, y: 0 },
+          { x: w * 0.1, y: 0 },
+          { x: w * -0.2, y: 9 },
+          { x: w * 0.1, y: 18 },
+          { x: 1.1 * w, y: 18 },
+          { x: w * 0.8, y: 9 },
+        ]);
+      } else if (style === 'left2') {
+        return this.genPath([
+          { x: 0.766 * w, y: 0 },
+          { x: w * 0.1, y: 0 },
+          { x: w * -0.2, y: 9 },
+          { x: w * 0.1, y: 18 },
+          { x: 0.766 * w, y: 18 },
+          { x: w * 0.566, y: 9 },
+        ]);
+      } else if (style === 'left1') {
+        return this.genPath([
+          { x: 0.433 * w, y: 0 },
+          { x: w * 0.1, y: 0 },
+          { x: w * -0.2, y: 9 },
+          { x: w * 0.1, y: 18 },
+          { x: 0.433 * w, y: 18 },
+          { x: w * 0.233, y: 9 },
+        ]);
+      } else if (style === 'right1') {
+        return this.genPath([
+          { x: 1.1 * w, y: 0 },
+          { x: w * 0.766, y: 0 },
+          { x: w * 0.566, y: 9 },
+          { x: w * 0.766, y: 18 },
+          { x: 1.1 * w, y: 18 },
+          { x: w * 0.8, y: 9 },
+        ]);
+      } else if (style === 'right2') {
+        return this.genPath([
+          { x: 1.1 * w, y: 0 },
+          { x: w * 0.433, y: 0 },
+          { x: w * 0.233, y: 9 },
+          { x: w * 0.433, y: 18 },
+          { x: 1.1 * w, y: 18 },
+          { x: w * 0.8, y: 9 },
+        ]);
+      } else if (style === 'left3') {
+        return this.genPath([
+          { x: 1.1 * w, y: 0 },
+          { x: w * 0, y: 0 },
+          { x: w * 0, y: 18 },
+          { x: 1.1 * w, y: 18 },
+          { x: w * 0.8, y: 9 },
+
+        ]);
+      } else if (style === 'right3') {
+        return this.genPath([
+          { x: 1 * w, y: 0 },
+          { x: w * 0.1, y: 0 },
+          { x: w * -0.2, y: 9 },
+          { x: w * 0.1, y: 18 },
+          { x: 1 * w, y: 18 },
+
+        ]);
       }
-
-      re += 'Z';
-      return re;
-    };
-
-    const genPathWithStyle = (style, direction) => {
-      if (direction === '-') {
-        if (style === 'full') {
-          return genPath([
-            { x: 1.1 * w, y: 0 },
-            { x: w * 0.1, y: 0 },
-            { x: w * -0.2, y: 9 },
-            { x: w * 0.1, y: 18 },
-            { x: 1.1 * w, y: 18 },
-            { x: w * 0.8, y: 9 },
-          ]);
-        } else if (style === 'left2') {
-          return genPath([
-            { x: 0.766 * w, y: 0 },
-            { x: w * 0.1, y: 0 },
-            { x: w * -0.2, y: 9 },
-            { x: w * 0.1, y: 18 },
-            { x: 0.766 * w, y: 18 },
-            { x: w * 0.566, y: 9 },
-          ]);
-        } else if (style === 'left1') {
-          return genPath([
-            { x: 0.433 * w, y: 0 },
-            { x: w * 0.1, y: 0 },
-            { x: w * -0.2, y: 9 },
-            { x: w * 0.1, y: 18 },
-            { x: 0.433 * w, y: 18 },
-            { x: w * 0.233, y: 9 },
-          ]);
-        } else if (style === 'right1') {
-          return genPath([
-            { x: 1.1 * w, y: 0 },
-            { x: w * 0.766, y: 0 },
-            { x: w * 0.566, y: 9 },
-            { x: w * 0.766, y: 18 },
-            { x: 1.1 * w, y: 18 },
-            { x: w * 0.8, y: 9 },
-          ]);
-        } else if (style === 'right2') {
-          return genPath([
-            { x: 1.1 * w, y: 0 },
-            { x: w * 0.433, y: 0 },
-            { x: w * 0.233, y: 9 },
-            { x: w * 0.433, y: 18 },
-            { x: 1.1 * w, y: 18 },
-            { x: w * 0.8, y: 9 },
-          ]);
-        } else if (style === 'left3') {
-          return genPath([
-            { x: 1.1 * w, y: 0 },
-            { x: w * 0, y: 0 },
-            { x: w * 0, y: 18 },
-            { x: 1.1 * w, y: 18 },
-            { x: w * 0.8, y: 9 },
-
-          ]);
-        } else if (style === 'right3') {
-          return genPath([
-            { x: 1 * w, y: 0 },
-            { x: w * 0.1, y: 0 },
-            { x: w * -0.2, y: 9 },
-            { x: w * 0.1, y: 18 },
-            { x: 1 * w, y: 18 },
-
-          ]);
-        }
-      } else {
-        if (style === 'full') {
-          return genPath([
-            { x: -0.1 * w, y: 0 },
-            { x: w * 0.9, y: 0 },
-            { x: w * 1.2, y: 9 },
-            { x: w * 0.9, y: 18 },
-            { x: -0.1 * w, y: 18 },
-            { x: w * 0.2, y: 9 },
-          ]);
-        } else if (style === 'left2') {
-          return genPath([
-            { x: -0.1 * w, y: 0 },
-            { x: w * 0.566, y: 0 },
-            { x: w * 0.866, y: 9 },
-            { x: w * 0.566, y: 18 },
-            { x: -0.1 * w, y: 18 },
-            { x: w * 0.2, y: 9 },
-          ]);
-        } else if (style === 'left1') {
-          return genPath([
-            { x: -0.1 * w, y: 0 },
-            { x: w * 0.333, y: 0 },
-            { x: w * 0.633, y: 9 },
-            { x: w * 0.333, y: 18 },
-            { x: -0.1 * w, y: 18 },
-            { x: w * 0.2, y: 9 },
-          ]);
-        } else if (style === 'right1') {
-          return genPath([
-            { x: w * 0.766, y: 9 },
-            { x: w * 0.466, y: 0 },
-            { x: w * 0.9, y: 0 },
-            { x: w * 1.2, y: 9 },
-            { x: w * 0.9, y: 18 },
-            { x: w * 0.466, y: 18 },
-          ]);
-        } else if (style === 'right2') {
-          return genPath([
-            { x: w * 0.433, y: 9 },
-            { x: w * 0.133, y: 0 },
-            { x: w * 0.9, y: 0 },
-            { x: w * 1.2, y: 9 },
-            { x: w * 0.9, y: 18 },
-            { x: w * 0.133, y: 18 },
-          ]);
-        } else if (style === 'left3') {
-          return genPath([
-            { x: 0, y: 0 },
-            { x: w * 0.9, y: 0 },
-            { x: w * 1.2, y: 9 },
-            { x: w * 0.9, y: 18 },
-            { x: 0, y: 18 },
-          ]);
-        } else if (style === 'right3') {
-          return genPath([
-            { x: -0.1 * w, y: 0 },
-            { x: w * 1.0, y: 0 },
-            { x: w * 1.0, y: 18 },
-            { x: -0.1 * w, y: 18 },
-            { x: w * 0.2, y: 9 },
-          ]);
-        }
+    } else {
+      if (style === 'full') {
+        return this.genPath([
+          { x: -0.1 * w, y: 0 },
+          { x: w * 0.9, y: 0 },
+          { x: w * 1.2, y: 9 },
+          { x: w * 0.9, y: 18 },
+          { x: -0.1 * w, y: 18 },
+          { x: w * 0.2, y: 9 },
+        ]);
+      } else if (style === 'left2') {
+        return this.genPath([
+          { x: -0.1 * w, y: 0 },
+          { x: w * 0.566, y: 0 },
+          { x: w * 0.866, y: 9 },
+          { x: w * 0.566, y: 18 },
+          { x: -0.1 * w, y: 18 },
+          { x: w * 0.2, y: 9 },
+        ]);
+      } else if (style === 'left1') {
+        return this.genPath([
+          { x: -0.1 * w, y: 0 },
+          { x: w * 0.333, y: 0 },
+          { x: w * 0.633, y: 9 },
+          { x: w * 0.333, y: 18 },
+          { x: -0.1 * w, y: 18 },
+          { x: w * 0.2, y: 9 },
+        ]);
+      } else if (style === 'right1') {
+        return this.genPath([
+          { x: w * 0.766, y: 9 },
+          { x: w * 0.466, y: 0 },
+          { x: w * 0.9, y: 0 },
+          { x: w * 1.2, y: 9 },
+          { x: w * 0.9, y: 18 },
+          { x: w * 0.466, y: 18 },
+        ]);
+      } else if (style === 'right2') {
+        return this.genPath([
+          { x: w * 0.433, y: 9 },
+          { x: w * 0.133, y: 0 },
+          { x: w * 0.9, y: 0 },
+          { x: w * 1.2, y: 9 },
+          { x: w * 0.9, y: 18 },
+          { x: w * 0.133, y: 18 },
+        ]);
+      } else if (style === 'left3') {
+        return this.genPath([
+          { x: 0, y: 0 },
+          { x: w * 0.9, y: 0 },
+          { x: w * 1.2, y: 9 },
+          { x: w * 0.9, y: 18 },
+          { x: 0, y: 18 },
+        ]);
+      } else if (style === 'right3') {
+        return this.genPath([
+          { x: -0.1 * w, y: 0 },
+          { x: w * 1.0, y: 0 },
+          { x: w * 1.0, y: 18 },
+          { x: -0.1 * w, y: 18 },
+          { x: w * 0.2, y: 9 },
+        ]);
       }
-    };
+    }
+  };
 
-    const textPos = (style, w) => {
-      switch (style) {
+
+  textPos(style, w) {
+    switch (style) {
       case 'full':
         return w / 2;
       case 'left1':
@@ -213,36 +213,36 @@ export class AminoAcidMarker extends React.Component {
         return w / 2;
       default:
         return 0;
-      }
-    };
+    }
+  };
+
+  onClick(e) {
+    if (this.props.onSelect) {
+      this.props.onSelect(this, e);
+    }
+  }
+
+  onMouseOver(e) {
+    if (this.props.onMouseOver) {
+      this.props.onMouseOver(this, e);
+    }
+  }
+
+  render() {
+    const { x, y, w, h, aa, style, direction } = this.props;
 
     return (
       <g
         transform={`translate(${x},${y})`}
-        onClick={(e) => {
-          if (this.props.onSelect) {
-            this.props.onSelect(this, e);
-          }
-        }}
-
-        onHover={(e) => {console.log('hovering', e);}}
-
-        onMouseOver={(e) => {
-          if (this.hoveringTimer) {
-            clearTimeout(this.hoveringTimer);
-          }
-
-          if (this.props.onMouseOver) {
-            this.props.onMouseOver(this, e);
-          }
-        }}
+        onClick={this.onClick}
+        onMouseOver={this.onMouseOver}
       >
         <path
-          d={genPathWithStyle(style, direction)}
+          d={this.genPathWithStyle(w,style, direction)}
           fill={AminoAcidMarker.colorDict[aa]}
         />
         {(style !== 'left1' && style !== 'right1') && <text
-          x={textPos(style, w)}
+          x={this.textPos(style, w)}
           y={h / 2}
           style={{
             textAnchor: 'middle',

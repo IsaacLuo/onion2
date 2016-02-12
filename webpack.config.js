@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var webpackBase = require('./webpack.config.base');
 
 module.exports = Object.assign({}, webpackBase, {
-	    devtool: 'inline-source-map',
+	    devtool: 'source-map',
 	    entry  : [
 		    'webpack-hot-middleware/client',
 		    './main.js'

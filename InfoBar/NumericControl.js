@@ -39,7 +39,7 @@ export class NumericControl extends React.Component
   }
 
   onChange(e) {
-    const newValue = e.target.value;
+    const newValue = parseInt(e.target.value, 10);
     let update = true;
     if (this.props.onChange) {
       update = this.props.onChange(this, newValue, e);
