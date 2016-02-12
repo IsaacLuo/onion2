@@ -2,18 +2,14 @@
  * Created by Isaac on 20/01/2016.
  */
 
-export var compareProps = function (props1, props2, list) {
-  if (list === undefined) {
-    list = Object.keys(props1);
-  }
-
-  for (let item of list) {
+export function compareProps(props1, props2, list = Object.keys(props1)) {
+  for (const item of list) {
     if (!props2) {
       return false;
     }
 
     if (typeof (props1[item]) === 'object') {
-      let subre = compareProps(props1[item], props2[item]);
+      const subre = compareProps(props1[item], props2[item]);
       if (!subre) return subre;
     } else if (typeof (props1[item]) !== 'function') {
       if (props1[item] !== props2[item]) {
@@ -24,18 +20,14 @@ export var compareProps = function (props1, props2, list) {
   }
 
   return true;
-};
+}
 
-export var comparePropsDebug = function (props1, props2, list) {
-  if (list === undefined) {
-    list = Object.keys(props1);
-  }
-
+export function comparePropsDebug(props1, props2, list = Object.keys(props1)) {
   console.log('comparing', props1, props2);
-  for (let item of list) {
+  for (const item of list) {
     console.log('item=', item, typeof (item));
     if (typeof (props1[item]) === 'object') {
-      let subre = comparePropsDebug(props1[item], props2[item]);
+      const subre = comparePropsDebug(props1[item], props2[item]);
       if (!subre) {
         // console.log("differentobj", item,props1[item],props2[item])
         return subre;
@@ -50,4 +42,4 @@ export var comparePropsDebug = function (props1, props2, list) {
   }
 
   return true;
-};
+}

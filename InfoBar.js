@@ -9,8 +9,8 @@ import { NumericControl } from './InfoBar/NumericControl';
 //The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component {
   static propTypes = {
-    showPos: React.PropTypes.number,
-    showLength: React.PropTypes.number,
+    showPos: React.PropTypes.bool,
+    showLength: React.PropTypes.bool,
     showGC: React.PropTypes.bool,
     showTM: React.PropTypes.bool,
     width: React.PropTypes.number,
@@ -32,7 +32,8 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onChagne = this.onChagne.bind(this);
+    this.onChangeStart = this.onChangeStart.bind(this);
+    this.onChangeEnd = this.onChangeEnd.bind(this);
   }
 
   onChangeStart(o, v, e) {
@@ -85,10 +86,7 @@ export class InfoBar extends React.Component {
     const length = endPos - startPos;
     const dna = new DNASeq(seq);
     const gc = dna.getGCPercentage();
-    let tm = 0;
-    if (length => 10 && length <= 50) {
-      tm = dna.getTM();
-    }
+    const tm = (length >= 10 && length <= 50) ? dna.getTM() : 0;
 
     return (
       <div

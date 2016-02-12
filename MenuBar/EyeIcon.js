@@ -2,7 +2,7 @@
  * Created by luoyi on 12/02/2016.
  */
 import React from 'react';
-import './css/Onion.css';
+import '../css/Onion.css';
 
 export class EyeIcon extends React.Component {
   static propTypes = {

@@ -17,56 +17,53 @@ class OnionViewer extends React.Component {
     this.state = {
       width: container.offsetWidth,
       height: container.offsetHeight,
-    };
-  }
-
-  componentWillMount() {
-    this.setState({
       block: null,
       rendered: Date.now(),
-    });
+    };
+
     console.log('componentwillmount');
 
-    window.gd.store.subscribe(function (state, lastAction) {
-      let last = [];
-      const current = state.ui.currentBlocks;
-      if (current &&
-        current.length &&
-        (current.length !== last.length
-        || !current.every((item, index) => item !== last[index])
-        )) {
-        const currentBlocks = current;
-        const readBlockCount = currentBlocks.length;
-        const onionBlocks = [];
-        let start = 0;
-        let totalSequence = '';
+    window.gd.store.subscribe(
+      (state, lastAction) => {
+        let last = [];
+        const current = state.ui.currentBlocks;
+        if (current &&
+          current.length &&
+          (current.length !== last.length
+            || !current.every((item, index) => item !== last[index])
+          )) {
+          const currentBlocks = current;
+          const readBlockCount = currentBlocks.length;
+          const onionBlocks = [];
+          let start = 0;
+          let totalSequence = '';
 
-        const readSequenceFromBlock = (i, count) => {
-          const block = state.blocks[currentBlocks[i]];
+          const readSequenceFromBlock = (i, count) => {
+            const block = state.blocks[currentBlocks[i]];
 
-          block.getSequence().then(sequence => {
-            if (sequence) {
-              onionBlocks.push({
-                color: block.metadata.color,
-                start,
-                length: sequence.length,
-              });
-              start += sequence.length;
-              totalSequence += sequence;
-              if (i === count - 1) {
-                this.setState({ blocks: onionBlocks, sequence: totalSequence });
-              } else {
-                readSequenceFromBlock(i + 1, count);
+            block.getSequence().then(sequence => {
+              if (sequence) {
+                onionBlocks.push({
+                  color: block.metadata.color,
+                  start,
+                  length: sequence.length,
+                });
+                start += sequence.length;
+                totalSequence += sequence;
+                if (i === count - 1) {
+                  this.setState({ blocks: onionBlocks, sequence: totalSequence });
+                } else {
+                  readSequenceFromBlock(i + 1, count);
+                }
               }
-            }
-          });
-        };
+            });
+          };
 
-        readSequenceFromBlock(0, readBlockCount);
+          readSequenceFromBlock(0, readBlockCount);
 
-        last = current;
-      }
-    });
+          last = current;
+        }
+      });
 
     this.updateDimensions();
   }

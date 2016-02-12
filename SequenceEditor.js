@@ -11,7 +11,26 @@ export class SequenceEditor extends React.Component {
     theme: React.PropTypes.oneOf(['normal', 'nowrap']),
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    enzymeList: React.PropTypes.object,
+    enzymeList: React.PropTypes.array,
+    features: React.PropTypes.array,
+    cursorPos: React.PropTypes.number,
+    selectStartPos: React.PropTypes.number,
+    showEnzymes: React.PropTypes.bool,
+    showAA: React.PropTypes.bool,
+    showLadder: React.PropTypes.bool,
+    showRS: React.PropTypes.bool,
+    showFeatures: React.PropTypes.bool,
+    showRuler: React.PropTypes.bool,
+    showBlockBar: React.PropTypes.bool,
+    showCursor: React.PropTypes.bool,
+    blocks: React.PropTypes.bool,
+    style: React.PropTypes.object,
+    onBlockChanged: React.PropTypes.func,
+    onSetCursor: React.PropTypes.func,
+    onSelecting: React.PropTypes.func,
+    onRowCalculatedHeight: React.PropTypes.func,
+    showSelection: React.PropTypes.bool,
+
   };
   static defaultProps = {
     sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
@@ -63,6 +82,8 @@ export class SequenceEditor extends React.Component {
 
     //initial operations
     this.initialRowPos(this.props.sequence, this.props.width);
+
+    this.onScroll = this.onScroll.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -70,7 +91,8 @@ export class SequenceEditor extends React.Component {
       this.initialRowPos(nextProps.sequence, nextProps.width);
     }
 
-    if (this.props.cursorPos !== nextProps.cursorPos || this.props.selectStartPos !== nextProps.selectStartPos) {
+    if (this.props.cursorPos !== nextProps.cursorPos
+      || this.props.selectStartPos !== nextProps.selectStartPos) {
       this.setState({
         selectStartPos: nextProps.selectStartPos,
         cursorPos: nextProps.cursorPos,
@@ -78,97 +100,115 @@ export class SequenceEditor extends React.Component {
         showSelection: (nextProps.selectStartPos !== nextProps.cursorPos),
       });
     }
-
   }
 
   shouldComponentUpdate(np, ns) {
-    let update = !compareProps(this.props, np) || !compareProps(this.state, ns);
+    const update = !compareProps(this.props, np) || !compareProps(this.state, ns);
     return update;
   }
 
-  componentDidUpdate() {
-
+  onScroll(e) {
+    const scrollPos = e.target.scrollTop;
+    for (let i = 0; i < this.rowY.length; i++) {
+      if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+        const block = this.splitBlocks[i];
+        if (block.length > 0) this.props.onBlockChanged(block);
+        break;
+      }
+    }
   }
 
-  componentWillUpdate() {
+  onSetCursor(cursorPos, rowNumber) {
+    this.setState({
+      cursorPos,
+      showCursor: true,
+      selectStartPos: cursorPos,
+      showSelection: false,
+    });
+    if (this.props.onSetCursor) {
+      this.props.onSetCursor(cursorPos);
+    }
 
+    if (this.props.onBlockChanged) {
+      const row = Math.floor(cursorPos / this.colNum);
+      const x = cursorPos % this.colNum;
+      const blocks = this.splitBlocks[row];
+      for (let i = 0; i < blocks.length; i++) {
+        if (x >= blocks[i].start) {
+          this.props.onBlockChanged([blocks[i]]);
+        }
+      }
+    }
   }
 
-  render() {
-    let { width, height, sequence, features } = this.props;
-    this.colNum = Math.floor(width / this.unitWidth) - 10;
-
-    this.sequence = new DNASeq(this.props.sequence);
-
-    if (this.props.showEnzymes) {
-      this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
-    }
-    //console.log(this.enzymeSites);
-    if (this.props.showAA) {
-      this.aas = this.calcAAs(sequence, features);
-    }
-
-    if (this.colNum < 20)
-      this.colNum = 20;
-    if (this.props.showAA) {
-      this.calcAAs(this.sequence.toString(), this.props.features);
-      this.aaRows = this.splitAAs(this.colNum);
+  onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
+    if (cursorPosStart) {
+      this.setState({
+        cursorPos,
+        showCursor: true,
+        showSelection: true,
+        selectStartPos: cursorPosStart,
+      });
+    } else {
+      this.setState({
+        cursorPos,
+        showCursor: true,
+        showSelection: true,
+      });
     }
 
-    if (this.props.showEnzymes) {
-      this.enzymeRows = this.splitEnzymes(this.colNum);
+    if (this.props.onSelecting) {
+      if (cursorPosStart) {
+        console.log('full start', cursorPosStart, cursorPos);
+        this.props.onSelecting(cursorPos, cursorPosStart);
+      } else {
+        this.props.onSelecting(cursorPos, this.state.selectStartPos);
+      }
     }
+  }
 
-    this.splitRows(this.colNum);
-    return (
-      <div style={Object.assign(this.props.style, {
-        width:width,
-        height:height,
-        overflowY:'scroll',
-      })}
-           onScroll={(e) => {
-             let scrollPos = e.target.scrollTop;
-             for (let i = 0; i < this.rowY.length; i++) {
-               if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-                 let block = this.splitBlocks[i];
-                 if (block.length > 0)
-                   this.props.onBlockChanged(block);
-                 break;
-               }
+  onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
+    if (highLightStart === highLightEnd) {
+      this.setState({ highLightStart, highLightEnd, showHighLight: false });
+    } else {
+      this.setState({ highLightStart, highLightEnd, showHighLight: true });
+    }
+  }
 
-             }
-           }}
-                 >
-                           {this.textRows}
-                       </div>
-               );
+  onRowCalculatedHeight(row, height) {
+    this.rowHeight[row] = height;
+    if (row > 0) {
+      this.rowY[row] = this.rowY[row - 1] + height;
+    } else {
+      this.rowY[0] = 0;
+    }
   }
 
   isOverlap(a1, b1, a2, b2) {
-    let a3 = Math.max(a1, a2);
-    let b3 = Math.min(b1, b2);
+    const a3 = Math.max(a1, a2);
+    const b3 = Math.min(b1, b2);
     //console.log(a1,a2,b1,b2);
     if (a3 < b3) {
       return { start: a3, end: b3 };
-    } else {
-      return undefined;
     }
+
+    return undefined;
   }
 
   calcAAs(sequence, features) {
-    let s = new DNASeq(sequence);
-    let re = [];
-    for (let i in features) {
+    const s = new DNASeq(sequence);
+    const re = [];
+    for (let i = 0; i < features.length; i++) {
       if (features[i].type === 'CDS') {
-        let f = features[i];
-        let lOri = f.end - f.start;
-        let l = Math.floor(lOri / 3) * 3;
+        const f = features[i];
+        const lOri = f.end - f.start;
+        const l = Math.floor(lOri / 3) * 3;
         if (f.strand === '-') {
-          let realStart = f.start + lOri - l;
-          let aa = s.substr(realStart, l).reverseComplement().toAASeq();
+          const realStart = f.start + lOri - l;
+          const aa = s.substr(realStart, l).reverseComplement().toAASeq();
           re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
         } else {
-          let aa = s.substr(f.start, l).toAASeq();
+          const aa = s.substr(f.start, l).toAASeq();
           re.push({ seq: aa, start: f.start, len: l, strand: f.strand });
         }
       }
@@ -179,10 +219,10 @@ export class SequenceEditor extends React.Component {
 
   findFeaturesInRow(start, len) {
     //console.log("sss",start,len,this.props.features);
-    let re = [];
-    for (let i in this.props.features) {
-      let f = this.props.features[i];
-      let overlap = this.isOverlap(start, start + len, f.start, f.end);
+    const re = [];
+    for (let i = 0; i < this.props.features.length; i++) {
+      const f = this.props.features[i];
+      const overlap = this.isOverlap(start, start + len, f.start, f.end);
       if (overlap) {
         re.push({
           start: overlap.start,
@@ -204,16 +244,16 @@ export class SequenceEditor extends React.Component {
   }
 
   initialRowPos(sequence, width) {
-    let colNum = Math.floor(width / this.unitWidth) - 10;
-    let totalRows = Math.ceil(sequence.length / colNum);
+    const colNum = Math.floor(width / this.unitWidth) - 10;
+    const totalRows = Math.ceil(sequence.length / colNum);
     this.rowHeight = Array(totalRows);
     this.rowY = Array(totalRows);
   }
 
   splitAAs(colNum) {
     //console.log("splitAAS",this.aas);
-    let aas = this.aas;
-    let re = new Array(Math.ceil(this.props.sequence.length / colNum));
+    const aas = this.aas;
+    const re = new Array(Math.ceil(this.props.sequence.length / colNum));
     for (let i = 0; i < re.length; i++) {
       re[i] = [];
     }
@@ -221,25 +261,24 @@ export class SequenceEditor extends React.Component {
     if (!aas) return re;
 
     for (let i = 0; i < aas.length; i++) {
-      let aa = aas[i];
-      let aaSeq = aa.strand === '-' ? aa.seq.reverse() : aa.seq;
-      let startRow = Math.floor(aa.start / colNum);
+      const aa = aas[i];
+      const aaSeq = aa.strand === '-' ? aa.seq.reverse() : aa.seq;
+      const startRow = Math.floor(aa.start / colNum);
       let startIdx = aa.start % colNum;
-      let endRow = Math.ceil((aa.start + aa.len) / colNum);
+      const endRow = Math.ceil((aa.start + aa.len) / colNum);
       //			console.log("startRow",startRow,endRow,aa.start,aa.len,colNum);
       let leftStyle = 'full';
       let rightStyle = 'full';
-      let endIdx = colNum;
+      const endIdx = colNum;
       let startOffset = 0;
-      let leftStyles = ['full', 'right1', 'right2'];
-      let rightStyles = ['full', 'left1', 'left2'];
+      const leftStyles = ['full', 'right1', 'right2'];
+      const rightStyles = ['full', 'left1', 'left2'];
       let aaOffset = 0;
       let repeatAA = 0;
       let rightStyleIdx;
       let nextStartOffset;
       for (let row = startRow; row < endRow; row++) {
-
-        let leftStyleIdx = (startIdx + 3 - startOffset) % 3;
+        const leftStyleIdx = (startIdx + 3 - startOffset) % 3;
         //console.log("startOffset",startOffset);
         if (row === startRow) {
           leftStyle = 'left3';
@@ -258,24 +297,24 @@ export class SequenceEditor extends React.Component {
 
         //let seq = calcAASeq(row,aaOffset,(endIdx-startIdx),aa);
         aaOffset += repeatAA;
-        let bpLen = endIdx - startIdx;
-        let bpLenOld = -leftStyleIdx * repeatAA;
-        let bpLenNew = bpLen - bpLenOld;
-        let aaSubLen = Math.ceil(bpLenNew / 3) + Math.ceil(bpLenOld / 3);
-        let seq = aaSeq.substr(aaOffset, aaSubLen).toString();
+        const bpLen = endIdx - startIdx;
+        const bpLenOld = -leftStyleIdx * repeatAA;
+        const bpLenNew = bpLen - bpLenOld;
+        const aaSubLen = Math.ceil(bpLenNew / 3) + Math.ceil(bpLenOld / 3);
+        const seq = aaSeq.substr(aaOffset, aaSubLen).toString();
         //console.log("aaSeq",seq);
 
-        let newAARow = {
+        const newAARow = {
           start: startIdx,
           end: endIdx,
-          leftStyle: leftStyle,
-          rightStyle: rightStyle,
-          row: row,
-          seq: seq,
-          startOffset: startOffset,
+          leftStyle,
+          rightStyle,
+          row,
+          seq,
+          startOffset,
           seqLen: seq.length,
-          aaOffset: aaOffset,
-          repeatAA: repeatAA,
+          aaOffset,
+          repeatAA,
           strand: aa.strand,
         };
         //console.log("newAARow",newAARow);
@@ -289,7 +328,6 @@ export class SequenceEditor extends React.Component {
         rightStyle = 'full';
         //repeatAA = nextRepeatAA;
         startOffset = nextStartOffset;
-
       }
     }
     //console.log("re",re);
@@ -297,13 +335,12 @@ export class SequenceEditor extends React.Component {
   }
 
   splitEnzymes(colNum) {
-    let re = new Array(Math.ceil(this.props.sequence.length / colNum));
+    const re = new Array(Math.ceil(this.props.sequence.length / colNum));
     for (let i = 0; i < re.length; i++) {
       re[i] = { rs: [], cs: [] };
     }
 
-    if (!this.props.showEnzymes)
-      return re;
+    if (!this.props.showEnzymes) return re;
 
     if (!this.enzymeSites || !this.enzymeSites.length) {
       console.warn('no enzymes');
@@ -311,12 +348,12 @@ export class SequenceEditor extends React.Component {
     }
 
     for (let i = 0; i < this.enzymeSites.length; i++) {
-      let es = this.enzymeSites[i];
+      const es = this.enzymeSites[i];
 
-      let enzyme = es.enzyme;
-      let row = Math.floor(es.anchor / colNum);
-      let row2 = Math.floor((es.anchor + enzyme.rs.length) / colNum);
-      let col = es.anchor % colNum;
+      const enzyme = es.enzyme;
+      const row = Math.floor(es.anchor / colNum);
+      const row2 = Math.floor((es.anchor + enzyme.rs.length) / colNum);
+      const col = es.anchor % colNum;
       if (row === row2) {
         re[row].rs.push({ rs: [col, col + enzyme.rs.length], name: enzyme.name, id: i });
       } else {
@@ -327,7 +364,7 @@ export class SequenceEditor extends React.Component {
       for (let j = 0; j < enzyme.csNumber; j++) {
         let csU;
         let csD;
-        let cs = es.getCuttingSite(j);
+        const cs = es.getCuttingSite(j);
         if (es.strand === '-') {
           csU = cs[1];
           csD = cs[0];
@@ -336,11 +373,11 @@ export class SequenceEditor extends React.Component {
           csD = cs[1];
         }
 
-        let rowU = Math.floor(csU / colNum);
-        let colU = csU % colNum;
+        const rowU = Math.floor(csU / colNum);
+        const colU = csU % colNum;
 
-        let rowD = Math.floor(csD / colNum);
-        let colD = csD % colNum;
+        const rowD = Math.floor(csD / colNum);
+        const colD = csD % colNum;
 
         if (rowU === rowD) { // upper site and lower site are in same row
           if (re[rowU]) {
@@ -357,71 +394,33 @@ export class SequenceEditor extends React.Component {
             re[rowD].cs.push({ style: 'DR', pos: [colD, colNum], id: i });//down right ┌
           }
         }
-
       }
-
     }
 
     return re;
   }
 
-  onSetCursor(cursorPos, rowNumber) {
-    this.setState({ cursorPos: cursorPos, showCursor: true, selectStartPos: cursorPos, showSelection: false });
-    if (this.props.onSetCursor) {
-      this.props.onSetCursor(cursorPos);
-    }
-
-    if (this.props.onBlockChanged) {
-      let row = Math.floor(cursorPos / this.colNum);
-      let x = cursorPos % this.colNum;
-      let blocks = this.splitBlocks[row];
-      for (let i in blocks) {
-        if (x >= blocks[i].start) {
-          this.props.onBlockChanged([blocks[i]]);
-        }
-      }
-    }
-  }
-
-  onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-    if (cursorPosStart) {
-      this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true, selectStartPos: cursorPosStart });
-    } else {
-      this.setState({ cursorPos: cursorPos, showCursor: true, showSelection: true });
-    }
-
-    if (this.props.onSelecting) {
-      if (cursorPosStart) {
-        console.log('full start', cursorPosStart, cursorPos);
-        this.props.onSelecting(cursorPos, cursorPosStart);
-      } else {
-        this.props.onSelecting(cursorPos, this.state.selectStartPos);
-      }
-    }
-
-  }
-
-  onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-    if (highLightStart === highLightEnd) {
-      this.setState({ highLightStart, highLightEnd, showHighLight: false });
-    } else {
-      this.setState({ highLightStart, highLightEnd, showHighLight: true });
-    }
-  }
-
-  onRowCalculatedHeight(row, height) {
-    this.rowHeight[row] = height;
-    if (row > 0) {
-      this.rowY[row] = this.rowY[row - 1] + height;
-    } else {
-      this.rowY[0] = 0;
-    }
-  }
-
   splitRows(colNum) {
-    let sequence = this.props.sequence;
-    let { cursorPos, showCursor, selectStartPos, showSelection, showHighLight, highLightStart, highLightEnd } = this.state;
-    let { showEnzymes, showLadder, showRS, showFeatures, showRuler, showBlockBar, blocks, showAA } = this.props;
+    let { showSelection, showCursor } = this.props;
+    const { sequence } = this.props;
+    const {
+      cursorPos,
+
+      selectStartPos,
+      showHighLight,
+      highLightStart,
+      highLightEnd,
+      } = this.state;
+    const {
+      showEnzymes,
+      showLadder,
+      showRS,
+      showFeatures,
+      showRuler,
+      showBlockBar,
+      blocks,
+      showAA,
+      } = this.props;
 
     this.textRows = [];
     let j = 0;
@@ -435,52 +434,45 @@ export class SequenceEditor extends React.Component {
     }
 
     this.splitBlocks = [];
-    let splitBlocks = this.splitBlocks;
+    const splitBlocks = this.splitBlocks;
     for (let j = 0; j < sequence.length; j += colNum) {
       splitBlocks.push([]);
     }
 
     if (blocks) {
       for (let i = 0; i < blocks.length; i++) {
-        let start = blocks[i].start;
-        let len = blocks[i].length;
-        let blockEnd = start + len;
-        let blockRowIdx = Math.floor(start / colNum);
+        const start = blocks[i].start;
+        const len = blocks[i].length;
+        const blockEnd = start + len;
+        const blockRowIdx = Math.floor(start / colNum);
 
         for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
-          let start = Math.max(blocks[i].start - j * colNum, 0);
-          let end = Math.min(blockEnd - j * colNum, colNum);
+          const start = Math.max(blocks[i].start - j * colNum, 0);
+          const end = Math.min(blockEnd - j * colNum, colNum);
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
               name: blocks[i].name,
-              start: start,
+              start,
               len: end - start,
             });
-
           }
         }
       }
     }
 
     for (let i = 0, rowCount = 0; i < sequence.length; i += colNum, rowCount++) {
-
-      let featureFrags = this.findFeaturesInRow(i, colNum);
+      const featureFrags = this.findFeaturesInRow(i, colNum);
       //let aaFrags = this.findAAInRow(i,colNum);
 
-      let aaFrags = this.aaRows[rowCount];
-      let enzymeFrags = this.enzymeRows[rowCount];
+      const aaFrags = this.aaRows[rowCount];
+      const enzymeFrags = this.enzymeRows[rowCount];
 
-      let rowCursorPos, rowSelectStartPos;
-      //if(cursorPos>selectStartPos) {
+      let rowCursorPos;
+
       rowCursorPos = 0;
-      //	rowSelectStartPos = 0;
-      //}
-      //else{
-      //	rowCursorPos = 0;
-      //	rowSelectStartPos = colNum;
-      //}
-      let rowShowStartPos = false;
+
+      const rowShowStartPos = false;
       let rowShowCursor = false;
       let rowShowSelection = false;
 
@@ -492,8 +484,6 @@ export class SequenceEditor extends React.Component {
       let rowHighLightRightPos = colNum;
       let rowShowHighLight = false;
 
-      let showEnzyme = true;
-
       if (showCursor && cursorPos >= i && cursorPos <= i + colNum) {
         rowCursorPos = cursorPos - i;
         rowShowCursor = true;
@@ -501,8 +491,8 @@ export class SequenceEditor extends React.Component {
       }
 
       if (showSelection) {
-        let selectLeftPos = Math.min(selectStartPos, cursorPos);
-        let selectRightPos = Math.max(selectStartPos, cursorPos);
+        const selectLeftPos = Math.min(selectStartPos, cursorPos);
+        const selectRightPos = Math.max(selectStartPos, cursorPos);
         rowShowCursor = false;
         if (selectLeftPos >= i && selectLeftPos <= i + colNum) {
           rowSelectLeftPos = selectLeftPos - i;
@@ -523,8 +513,8 @@ export class SequenceEditor extends React.Component {
       }
 
       if (showHighLight) {
-        let highLightLeftPos = Math.min(highLightStart, highLightEnd);
-        let highLightRightPos = Math.max(highLightStart, highLightEnd);
+        const highLightLeftPos = Math.min(highLightStart, highLightEnd);
+        const highLightRightPos = Math.max(highLightStart, highLightEnd);
 
         if (highLightLeftPos >= i && highLightLeftPos <= i + colNum) {
           rowHighLightLeftPos = highLightLeftPos - i;
@@ -537,7 +527,7 @@ export class SequenceEditor extends React.Component {
         }
       }
 
-      let subSequence = sequence.substr(i, colNum);
+      const subSequence = sequence.substr(i, colNum);
 
       this.textRows.push(
         <SequenceRow
@@ -547,9 +537,9 @@ export class SequenceEditor extends React.Component {
           rowNumber={rowCount}
           features={featureFrags}
           unitWidth={this.unitWidth}
-          onSetCursor={this.onSetCursor.bind(this)}
-          onSetCursorMoving={this.onSelecting.bind(this)}
-          onSetHighLight={this.onSetHighLight.bind(this)}
+          onSetCursor={this.onSetCursor}
+          onSetCursorMoving={this.onSelecting}
+          onSetHighLight={this.onSetHighLight}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}
           selectLeftPos={rowSelectLeftPos}
@@ -574,12 +564,50 @@ export class SequenceEditor extends React.Component {
           blocks={splitBlocks[rowCount]}
           aas={aaFrags}
           enzymes={enzymeFrags}
-          onCalculatedHeight={this.onRowCalculatedHeight.bind(this)}
-        >
-        </SequenceRow>);
+          onCalculatedHeight={this.onRowCalculatedHeight}
+        />);
 
       j++;
     }
+  }
+
+  render() {
+    const { width, height, sequence, features } = this.props;
+    this.colNum = Math.floor(width / this.unitWidth) - 10;
+
+    this.sequence = new DNASeq(this.props.sequence);
+
+    if (this.props.showEnzymes) {
+      this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+    }
+    //console.log(this.enzymeSites);
+    if (this.props.showAA) {
+      this.aas = this.calcAAs(sequence, features);
+    }
+
+    if (this.colNum < 20) this.colNum = 20;
+    if (this.props.showAA) {
+      this.calcAAs(this.sequence.toString(), this.props.features);
+      this.aaRows = this.splitAAs(this.colNum);
+    }
+
+    if (this.props.showEnzymes) {
+      this.enzymeRows = this.splitEnzymes(this.colNum);
+    }
+
+    this.splitRows(this.colNum);
+    return (
+      <div
+        style={Object.assign(this.props.style, {
+          width,
+          height,
+          overflowY: 'scroll',
+        })}
+        onScroll={this.onScroll}
+      >
+        {this.textRows}
+      </div>
+    );
   }
 
 }

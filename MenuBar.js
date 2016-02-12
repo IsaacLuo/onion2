@@ -2,6 +2,7 @@
  * Created by luoyi on 1/12/2016.
  */
 import React from 'react';
+import { EyeIcon } from './MenuBar/EyeIcon';
 import './css/Onion.css';
 import jQuery from 'jquery';
 const $ = jQuery;
@@ -15,7 +16,7 @@ export class MenuBar extends React.Component {
     showFeatures: React.PropTypes.bool,
     showRuler: React.PropTypes.bool,
     showBlockBar: React.PropTypes.bool,
-    onSelect: React.PropTypes.bool,
+    onSelect: React.PropTypes.func,
     showAA: React.PropTypes.bool,
   };
   static defaultProps = {

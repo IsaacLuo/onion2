@@ -1,28 +1,43 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import { LA } from './../LA';
-import Feature from './Feature';
-var $ = require('jquery');
+import { Feature } from './Feature';
+const $ = require('jquery');
 
 // this is a feature builder
 export class FeatureGroup extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { selectedFeature:this.props.selectedFeature };
-  }
+  static propTypes = {
+    selectedFeature: React.PropTypes.number,
+    angleSpan: React.PropTypes.array,
+    seqLength: React.PropTypes.number,
+    features: React.PropTypes.array,
+    radius: React.PropTypes.number,
+    globalRotateAngle: React.PropTypes.number,
+    theme: React.PropTypes.string,
+  };
 
   static defaultProps = {
     angleSpan: [0, 360],
   };
 
+  constructor(props) {
+    super(props);
+    this.state = { selectedFeature: props.selectedFeature };
+    this.onClick = this.onClick.bind(this);
+  }
+
+  onClick(e) {
+    const id = $(e.target).closest('.featureArrowG').data('featureid');
+    this.setState({ selectedFeature: id });
+  }
+
   calcFeaturePos() {
-    let { angleSpan } = this.props;
-    var featureArrows = [];
-    let seqLength = this.props.seqLength;
+    const { angleSpan } = this.props;
+    const featureArrows = [];
     this.la = new LA(this.props.seqLength, angleSpan[0], angleSpan[1]);
-    for (let i in this.props.features) {
-      let feature = this.props.features[i];
-      let arrow = Object.assign({}, feature);
+    for (let i = 0; i < this.props.features.length; i++) {
+      const feature = this.props.features[i];
+      const arrow = Object.assign({}, feature);
       arrow.arrowStartAngle = this.la.a(arrow.start);
       arrow.arcLen = this.la.a(arrow.end) - arrow.arrowStartAngle;
 
@@ -33,10 +48,9 @@ export class FeatureGroup extends React.Component {
   }
 
   buildFeatureArrows(featureArrows) {
-    let { theme } = this.props;
-    let doms = [];
-    for (let i in featureArrows) {
-      let feature = featureArrows[i];
+    const doms = [];
+    for (let i = 0; i < featureArrows.length; i++) {
+      const feature = featureArrows[i];
       doms.push(
         <Feature
           arrowStartAngle={feature.arrowStartAngle}
@@ -45,31 +59,25 @@ export class FeatureGroup extends React.Component {
           radius = {this.props.radius}
           text = {feature.text}
           key={i}
-          featureID = {parseInt(i)}
+          featureID = {i}
           strand = {feature.strand}
-          highLight = {parseInt(i) === this.state.selectedFeature}
+          highLight = {i === this.state.selectedFeature}
           globalRotateAngle = {this.props.globalRotateAngle}
           theme = {this.props.theme}
-        >
-        </Feature>
+        />
       );
     }
 
     return doms;
-
   }
 
   render() {
-
-    let featureArrows = this.calcFeaturePos();
-    let doms = this.buildFeatureArrows(featureArrows);
+    const featureArrows = this.calcFeaturePos();
+    const doms = this.buildFeatureArrows(featureArrows);
     return (
       <g
-      onClick={(e) => {
-        let id = $(e.target).closest('.featureArrowG').data('featureid');
-        this.setState({ selectedFeature:id });
-      }}
-    >
+        onClick={this.onClick}
+      >
       {doms}
     </g>
     );
