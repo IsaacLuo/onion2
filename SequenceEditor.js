@@ -7,15 +7,16 @@ import { compareProps } from './reactHelper';
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
   static propTypes = {
-    sequence: React.PropTypes.string,                      //dna sequence, in ACGT
+    sequence: React.PropTypes.string, //dna sequence, in ACGT
     theme: React.PropTypes.oneOf(['normal', 'nowrap']),
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+    enzymeList: React.PropTypes.object,
   };
   static defaultProps = {
-    sequence: 'NO SEQUENCE',                     //debug sequence, it should be repalced by inputing
+    sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
     theme: 'normal',
-    showBlockBar: true,                          //show block bars in genome-designer
+    showBlockBar: true, //show block bars in genome-designer
     style: {},
   };
 
@@ -29,8 +30,11 @@ export class SequenceEditor extends React.Component {
       seqFontSize: 16,
       seqFontUnitWidth: 10, //9.609375,
     };
-    //Maybe I need to render a letter first, then calculate its size, it's necessary because the letter width is little difference on different browser.
-    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};font-size:${this.myCSS.seqFontSize};color:'#2C3543';letterSpacing:0;position:absolute;left:0px;top:-100px`;
+    //Maybe I need to render a letter first, then calculate its size, it's necessary because
+    // the letter width is little difference on different browser.
+    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};
+    // font-size:${this.myCSS.seqFontSize};color:'#2C3543';
+    // letterSpacing:0;position:absolute;left:0px;top:-100px`;
     //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
     //var width = document.getElementById('bp1').getBoundingClientRect().width;
     this.seqMainStyle = {
@@ -42,10 +46,10 @@ export class SequenceEditor extends React.Component {
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };
-    this.seqCompStyle = this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, this.seqMainStyle);
+    this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, this.seqMainStyle);
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
-    this.sequence = new DNASeq(this.props.sequence);    //Bio.js sequence object, used for calculation
+    this.sequence = new DNASeq(this.props.sequence);
     this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
 
     this.aas = this.calcAAs(this.props.sequence, this.props.features);

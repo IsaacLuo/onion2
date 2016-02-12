@@ -9,7 +9,7 @@ import { compareProps } from './../reactHelper';
 
 import jQuery from 'jquery';
 
-let $ = jQuery;
+const $ = jQuery;
 
 import '../css/Onion.css';
 

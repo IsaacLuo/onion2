@@ -28,29 +28,17 @@ export class AminoAcidMarker extends React.Component {
     this.onClick = this.onClick.bind(this);
   }
 
-  static colorDict = {
-    F: '#F3DACA',
-    L: '#D3D34F',
-    I: '#F1E8BB',
-    M: '#F1EBAA',
-    A: '#C3E6F0',
-    Y: '#CAC9C9',
-    H: '#D8D9D8',
-    Q: '#EFD79A',
-    C: '#9CCFD2',
-    W: '#A5A8BA',
-    R: '#DEEBC8',
-    '*': '#8BACAB',
-    V: '#C5DEAE',
-    S: '#D2E19E',
-    P: '#DDE7EB',
-    T: '#ABDAE1',
-    N: '#D9BA9B',
-    K: '#CCE8E7',
-    D: '#B1DDE7',
-    E: '#BADAA9',
-    G: '#DBDBDB',
-  };
+  onClick(e) {
+    if (this.props.onSelect) {
+      this.props.onSelect(this, e);
+    }
+  }
+
+  onMouseOver(e) {
+    if (this.props.onMouseOver) {
+      this.props.onMouseOver(this, e);
+    }
+  }
 
   genPath(pts) {
     let re = `M ${pts[0].x} ${pts[0].y}`;
@@ -60,9 +48,9 @@ export class AminoAcidMarker extends React.Component {
 
     re += 'Z';
     return re;
-  };
+  }
 
-  genPathWithStyle(w,style, direction) {
+  genPathWithStyle(w, style, direction) {
     if (direction === '-') {
       if (style === 'full') {
         return this.genPath([
@@ -192,7 +180,7 @@ export class AminoAcidMarker extends React.Component {
         ]);
       }
     }
-  };
+  }
 
 
   textPos(style, w) {
@@ -214,19 +202,31 @@ export class AminoAcidMarker extends React.Component {
       default:
         return 0;
     }
+  }
+
+  static colorDict = {
+    F: '#F3DACA',
+    L: '#D3D34F',
+    I: '#F1E8BB',
+    M: '#F1EBAA',
+    A: '#C3E6F0',
+    Y: '#CAC9C9',
+    H: '#D8D9D8',
+    Q: '#EFD79A',
+    C: '#9CCFD2',
+    W: '#A5A8BA',
+    R: '#DEEBC8',
+    '*': '#8BACAB',
+    V: '#C5DEAE',
+    S: '#D2E19E',
+    P: '#DDE7EB',
+    T: '#ABDAE1',
+    N: '#D9BA9B',
+    K: '#CCE8E7',
+    D: '#B1DDE7',
+    E: '#BADAA9',
+    G: '#DBDBDB',
   };
-
-  onClick(e) {
-    if (this.props.onSelect) {
-      this.props.onSelect(this, e);
-    }
-  }
-
-  onMouseOver(e) {
-    if (this.props.onMouseOver) {
-      this.props.onMouseOver(this, e);
-    }
-  }
 
   render() {
     const { x, y, w, h, aa, style, direction } = this.props;
@@ -238,7 +238,7 @@ export class AminoAcidMarker extends React.Component {
         onMouseOver={this.onMouseOver}
       >
         <path
-          d={this.genPathWithStyle(w,style, direction)}
+          d={this.genPathWithStyle(w, style, direction)}
           fill={AminoAcidMarker.colorDict[aa]}
         />
         {(style !== 'left1' && style !== 'right1') && <text

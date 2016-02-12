@@ -3,7 +3,8 @@
  */
 import React from 'react';
 
-//Emzyme label is a text showing enzyme restriction site and cutting site on a strand, a part of PlasmidViewer
+// Emzyme label is a text showing enzyme restriction site and cutting site on a strand,
+// a part of PlasmidViewer
 export class RestrictionSite extends React.Component {
   static propTypes = {
     x: React.PropTypes.number,
