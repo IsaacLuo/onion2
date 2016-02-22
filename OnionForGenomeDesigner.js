@@ -56,6 +56,7 @@ export class OnionForGenomeDesigner extends React.Component {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
       if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+      this.state.features = [];
     }
 
     this.state.blocks = nextProps.blocks;
@@ -115,7 +116,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
   render() {
     //set a minimum size;
-    const width = Math.max(this.props.width, 100);
+    const width = Math.max(this.props.width, 300);
     const height = Math.max(this.props.height, 100);
 
     const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;

@@ -200,6 +200,10 @@ export class SequenceEditor extends React.Component {
   }
 
   calcAAs(sequence, features) {
+    if (!sequence || !features) {
+      return [];
+    }
+
     const s = new DNASeq(sequence);
     const re = [];
     for (let i = 0; i < features.length; i++) {

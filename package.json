@@ -1,22 +1,16 @@
 {
   "name": "onion2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Onion Extensions",
   "region": "sequenceDetail",
   "readable": "onion2",
   "scripts": {
-    "build": "npm install && webpack main.js index.js"
+    "build": "npm install && webpack -d main.js index.js"
   },
   "devDependencies": {
-    "babel-eslint": "^4.1.8",
-    "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^5.0.0",
-    "eslint-plugin-react": "^3.16.1",
     "json-loader": "^0.5.4"
   },
   "dependencies": {
-    "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^5.0.0",
     "json-loader": "^0.5.4"
   }
 }
