@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "17eb8d75d63b3e1d3aa3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "97fdb7bd7fe407191969"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -26836,6 +26836,48 @@
 	      block: null,
 	      rendered: Date.now()
 	    };
+	
+	    window.gd.store.subscribe(function (state, lastAction) {
+	      var last = [];
+	      var current = state.ui.currentBlocks;
+	      if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
+	        return item !== last[index];
+	      }))) {
+	        (function () {
+	          var currentBlocks = current;
+	          var readBlockCount = currentBlocks.length;
+	          var onionBlocks = [];
+	          var start = 0;
+	          var totalSequence = '';
+	
+	          var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
+	            var block = state.blocks[currentBlocks[i]];
+	
+	            block.getSequence().then(function (sequence) {
+	              if (sequence) {
+	                onionBlocks.push({
+	                  color: block.metadata.color,
+	                  start: start,
+	                  length: sequence.length
+	                });
+	                start += sequence.length;
+	                totalSequence += sequence;
+	                if (i === count - 1) {
+	                  _this.setState({ blocks: onionBlocks, sequence: totalSequence });
+	                } else {
+	                  readSequenceFromBlock(i + 1, count);
+	                }
+	              }
+	            });
+	          };
+	
+	          readSequenceFromBlock(0, readBlockCount);
+	
+	          last = current;
+	        })();
+	      }
+	    });
+	
 	    return _this;
 	  }
 	
@@ -26905,64 +26947,24 @@
 	    container: container
 	  }), container);
 	
-	  var subscriber = window.gd.store.subscribe(function (state, lastAction) {
-	    var last = [];
-	    var current = state.ui.currentBlocks;
-	    if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
-	      return item !== last[index];
-	    }))) {
-	
-	      var block = state.blocks[current[0]];
-	      block.getSequence().then(function (sequence) {
-	        console.log(sequence);
-	      });
-	
-	      console.log(current);
-	      last = current;
-	    }
-	  });
-	
-	  //window.gd.store.subscribe(
-	  //  (state, lastAction) => {
-	  //    let last = [];
-	  //    const current = state.ui.currentBlocks;
-	  //    if (current &&
-	  //      current.length &&
-	  //      (current.length !== last.length
-	  //        || !current.every((item, index) => item !== last[index])
-	  //      )) {
-	  //      const currentBlocks = current;
-	  //      const readBlockCount = currentBlocks.length;
-	  //      const onionBlocks = [];
-	  //      let start = 0;
-	  //      let totalSequence = '';
+	  //var subscriber = window.gd.store.subscribe(function (state, lastAction) {
+	  //  var last = [];
+	  //  var current = state.ui.currentBlocks;
+	  //  if (current &&
+	  //    current.length &&
+	  //    (current.length !== last.length ||
+	  //    !current.every(function (item, index) {return item !== last[index]}))
+	  //  ) {
 	  //
-	  //      const readSequenceFromBlock = (i, count) => {
-	  //        const block = state.blocks[currentBlocks[i]];
+	  //    var block = state.blocks[current[0]];
+	  //    block.getSequence().then(function (sequence) {
+	  //      console.log(sequence);
+	  //    });
 	  //
-	  //        block.getSequence().then(sequence => {
-	  //          if (sequence) {
-	  //            onionBlocks.push({
-	  //              color: block.metadata.color,
-	  //              start,
-	  //              length: sequence.length,
-	  //            });
-	  //            start += sequence.length;
-	  //            totalSequence += sequence;
-	  //            if (i === count - 1) {
-	  //              this.setState({ blocks: onionBlocks, sequence: totalSequence });
-	  //            } else {
-	  //              readSequenceFromBlock(i + 1, count);
-	  //            }
-	  //          }
-	  //        });
-	  //      };
-	  //
-	  //      readSequenceFromBlock(0, readBlockCount);
-	  //
-	  //      last = current;
-	  //    }
-	  //  });
+	  //    console.log(current);
+	  //    last = current;
+	  //  }
+	  //});
 	}
 	
 	window.gd.registerExtension(manifest, render);
