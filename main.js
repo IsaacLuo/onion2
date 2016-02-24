@@ -61,7 +61,7 @@ class OnionViewer extends React.Component {
         last = current;
       }
     });
-    
+
   }
 
   componentWillMount() {

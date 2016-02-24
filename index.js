@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "97fdb7bd7fe407191969"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b14a593498ddcb3f4c72"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23443,9 +23443,16 @@
 	      var onSelect = this.props.onSelect;
 	
 	      var $target = $(e.target);
+	      if ($target.prop('nodeName') !== 'a') {
+	        $target = $target.parents('a');
+	      }
+	
 	      var cmd = $target.data('cmd');
-	      var value = $target.data('value');
-	      onSelect(cmd, value);
+	      //I don't know why $.data() always returns true;
+	      //const value = $target.data('val');
+	      var value = $target.attr('data-val') === 'true';
+	      console.log(value);
+	      onSelect(cmd, !value);
 	    }
 	  }, {
 	    key: 'render',
@@ -23479,7 +23486,7 @@
 	                cursor: 'pointer'
 	              },
 	              'data-cmd': cmd,
-	              'data-value': value,
+	              'data-val': value,
 	              onClick: _this2.onSelect
 	            },
 	            text
@@ -23834,6 +23841,7 @@
 	    _this.onSelecting = _this.onSelecting.bind(_this);
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
 	    _this.onBlockChanged = _this.onBlockChanged.bind(_this);
+	    _this.menuCommand = _this.menuCommand.bind(_this);
 	    return _this;
 	  }
 	
@@ -23963,6 +23971,8 @@
 	      var selectedSeq = sequence.substr(selectionStart, selectionLength);
 	
 	      var menuTitle = this.state.menuTitle;
+	
+	      console.log(this.state);
 	
 	      return _react3.default.createElement(
 	        'div',

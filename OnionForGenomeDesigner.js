@@ -49,6 +49,7 @@ export class OnionForGenomeDesigner extends React.Component {
     this.onSelecting = this.onSelecting.bind(this);
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
     this.onBlockChanged = this.onBlockChanged.bind(this);
+    this.menuCommand = this.menuCommand.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -156,6 +157,8 @@ export class OnionForGenomeDesigner extends React.Component {
     const selectedSeq = sequence.substr(selectionStart, selectionLength);
 
     const menuTitle = this.state.menuTitle;
+
+    console.log(this.state);
 
     return (
       <div
