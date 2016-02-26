@@ -23,7 +23,7 @@ export class PlasmidViewer extends React.Component {
     plasmidR: React.PropTypes.number,
     theme: React.PropTypes.string,
     enzymes: React.PropTypes.array,
-    selectedFeature: React.PropTypes.array,
+    selectedFeature: React.PropTypes.number,
     cursorPos: React.PropTypes.number,
     selectionStart: React.PropTypes.number,
     selectionLength: React.PropTypes.number,
@@ -40,6 +40,7 @@ export class PlasmidViewer extends React.Component {
     cursorPos: 0,
     selectionStart: 0,
     selectionLength: 0,
+    mode: 'normal',
   };
 
   constructor(props) {
@@ -329,6 +330,7 @@ export class PlasmidViewer extends React.Component {
         </div>
       );
     } else {
+      console.log(plasmidR,seqLength);
       plasmid = (
         <div>
           <svg

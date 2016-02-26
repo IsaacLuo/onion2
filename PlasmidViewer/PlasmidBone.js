@@ -1,16 +1,6 @@
 import React from 'react';
 import { LA } from './../LA';
 
-function PosOnPlasmid(children, angle = 0) {
-  let transform;
-  transform = `rotate(${angle},0,0)`;
-  return (
-    <g transform={ transform }>
-      { children }
-    </g>
-  );
-}
-
 // the plasmid circle component
 export class PlasmidBone extends React.Component {
   static propTypes = {
@@ -44,8 +34,8 @@ export class PlasmidBone extends React.Component {
       const p = markPos[i];
       const angle = la.a(p);
       markLines.push(
-        <PosOnPlasmid
-          angle={angle}
+        <g
+          transform={`rotate(${angle},0,0)`}
           key={i}
         >
           <line
@@ -69,7 +59,7 @@ export class PlasmidBone extends React.Component {
               {p}
             </textPath>
           </text>
-        </PosOnPlasmid>
+        </g>
       );
     }
 

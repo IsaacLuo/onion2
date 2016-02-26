@@ -280,4 +280,3 @@ export class Feature extends React.Component {
   }
 
 }
-module.exports = Feature;
