@@ -30,10 +30,17 @@ export class MenuBar extends React.Component {
 
   onSelect(e) {
     const { onSelect } = this.props;
-    const $target = $(e.target);
+    let $target = $(e.target);
+    if ($target.prop('nodeName') !== 'a') {
+      $target = $target.parents('a');
+    }
+    
     const cmd = $target.data('cmd');
-    const value = $target.data('value');
-    onSelect(cmd, value);
+    //I don't know why $.data() always returns true;
+    //const value = $target.data('val');
+    const value = $target.attr('data-val') === 'true';
+    console.log(value);
+    onSelect(cmd, !value);
   }
 
   render() {
@@ -60,7 +67,7 @@ export class MenuBar extends React.Component {
               cursor: 'pointer',
             }}
             data-cmd={cmd}
-            data-value={value}
+            data-val={value}
             onClick={this.onSelect}
           >
             {text}
