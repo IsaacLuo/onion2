@@ -219,6 +219,30 @@ export class Feature extends React.Component {
     return anchor;
   }
 
+  splitColor(color){
+    if(color[0]=='#') {
+      const r = color.slice(1, 3);
+      const g = color.slice(3, 5);
+      const b = color.slice(5, 7);
+      console.log('rgb',r,g,b);
+      return [parseInt(r,16), parseInt(g,16), parseInt(b,16)];
+    } else if (color.slice(0,4) == 'rgb(') {
+      return  color.slice(3).split(/\s/);
+    }
+  }
+
+  narrowColor(color) {
+    let rgb = this.splitColor(color);
+    let [r,g,b] = rgb;
+    let t = 230;
+    if(r>t) r=t;
+    if(g>t) g=t;
+    if(b>t) b=t;
+    let re = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
+    console.log(re);
+    return re;
+  }
+
   render() {
     const { globalRotateAngle, arrowStartAngle, arcLen, theme } = this.props;
     const arrowD = this.calcArrowPath(theme);
@@ -234,6 +258,11 @@ export class Feature extends React.Component {
     }
 
     const strokeColor = (this.props.highLight) ? 'red' : 'black';
+    const strokeWidth =
+      this.props.highLight ? 1:0;
+
+    let fill = this.narrowColor(this.props.color);
+
     return (
       <g
         transform ={`rotate(${1 * arrowStartAngle})`}
@@ -242,15 +271,15 @@ export class Feature extends React.Component {
       >
         <path
           d={arrowD}
-          strokeWidth={0}
+          strokeWidth={strokeWidth}
           stroke={strokeColor}
-          fill={this.props.color}
+          fill={fill}
         >
         </path>
         <path
           d={textD}
           fill="none"
-          strokeWidth={0}
+          strokeWidth={strokeWidth}
           stroke={"none"}
           id={`feature_text_path_${this.props.featureID}`}
         >

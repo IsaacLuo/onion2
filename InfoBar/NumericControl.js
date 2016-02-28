@@ -84,6 +84,7 @@ export class NumericControl extends React.Component
         style = {Object.assign({
           display: 'inline-block',
           verticalAlign: 'middle',
+          whiteSpace: 'nowrap',
         }, style)}
       >
         <input

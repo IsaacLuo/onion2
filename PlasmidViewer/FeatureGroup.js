@@ -18,6 +18,7 @@ export class FeatureGroup extends React.Component {
 
   static defaultProps = {
     angleSpan: [0, 360],
+    features: [],
   };
 
   constructor(props) {
@@ -32,11 +33,12 @@ export class FeatureGroup extends React.Component {
   }
 
   calcFeaturePos() {
-    const { angleSpan } = this.props;
+    const { angleSpan, features } = this.props;
     const featureArrows = [];
+    console.log(features);
     this.la = new LA(this.props.seqLength, angleSpan[0], angleSpan[1]);
-    for (let i = 0; i < this.props.features.length; i++) {
-      const feature = this.props.features[i];
+    for (let i in features) {
+      const feature = features[i];
       const arrow = Object.assign({}, feature);
       arrow.arrowStartAngle = this.la.a(arrow.start);
       arrow.arcLen = this.la.a(arrow.end) - arrow.arrowStartAngle;

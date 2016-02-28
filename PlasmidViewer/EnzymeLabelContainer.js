@@ -5,9 +5,9 @@ import EnzymeLabel from './EnzymeLabel';
 export class EnzymeLabelContainer extends React.Component
 {
   static propTypes = {
-    plasmidR: React.PropTypes.number,
-    enzymeR: React.PropTypes.number,
-    enzymes: React.PropTypes.array,
+    plasmidR: React.PropTypes.number.isRequired,
+    enzymeR: React.PropTypes.number.isRequired,
+    enzymes: React.PropTypes.array.isRequired,
   };
 
   constructor(props) {
@@ -76,35 +76,40 @@ export class EnzymeLabelContainer extends React.Component
   }
 
   fillEnzymes(enzymes) {
+    this.textPath = [];
+
     for (let i = 0; i < enzymes.length; i++) {
       const enzyme = enzymes[i];
       const rootPos = enzyme.rootPos;
       //find nearestPos
       const ePos = this.findNearestPos(rootPos);
-      ePos.items.push({ name: enzyme.name, rootPos: enzyme.rootPos });
+      ePos.items.push({ name: enzyme.enzyme.name, rootPos: enzyme.rootPos });
     }
 
-    for (let i = 0; i < this.enzymePoses; i++) {
-      const enzymePos = this.enzymePoses[i];
-      if (enzymePos.items.length > 0) {
-        let names = '';
-        for (let j = 0; j < enzymePos.items.length; j++) {
-          names += ` ${enzymePos.items[j].name}`;
+    for (let i in this.enzymePoses) {
+      if (this.enzymePoses.hasOwnProperty(i)) {
+        const enzymePos = this.enzymePoses[i];
+        if (enzymePos.items.length > 0) {
+          let names = '';
+          for (let j = 0; j < enzymePos.items.length; j++) {
+            names += ` ${enzymePos.items[j].name}`;
+          }
+          //console.log(enzymePos.items[0].rootPos)
+          this.textPath.push(this.genTextPath(
+            enzymePos.items[0].rootPos.x,
+            enzymePos.items[0].rootPos.y,
+            enzymePos.x,
+            enzymePos.y,
+            100,
+            Math.random() + i,
+            names));
         }
-        //console.log(enzymePos.items[0].rootPos)
-        this.textPath.push(this.genTextPath(
-          enzymePos.items[0].rootPos.x,
-          enzymePos.items[0].rootPos.y,
-          enzymePos.x,
-          enzymePos.y,
-          100,
-          Math.random() + i,
-          names));
       }
     }
   }
 
   render() {
+    this.resetR(this.props.plasmidR, this.props.enzymeR);
     this.calcAllPosition();
     this.fillEnzymes(this.props.enzymes);
 

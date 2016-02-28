@@ -79,8 +79,9 @@ export class InfoBar extends React.Component {
       marginTop: 10,
       marginBottom: 10,
       color: 'A5A6A2',
-      verticalAlign: 'middle',
-      width: 90,
+      verticalAlign: 'top',
+      minWidth: 90,
+      whiteSpace: 'nowrap',
     };
 
     const length = endPos - startPos;

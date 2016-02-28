@@ -7,7 +7,9 @@ import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
-import { PlasmidViewer } from './PlasmidViewer/PlasmidViewer';
+import { PlasmidViewer } from './PlasmidViewer';
+
+import { DNASeq } from './Bio/DNASeq';
 
 const $ = require('jquery');
 window.$ = $;
@@ -22,6 +24,7 @@ export class OnionForCailabLIMS extends React.Component {
     sequence: React.PropTypes.string,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+    title: React.PropTypes.string,
   };
   constructor(props) {
     super(props);
@@ -35,13 +38,14 @@ export class OnionForCailabLIMS extends React.Component {
       showRS: true,
       showFeatures: true,
       showRuler: true,
-      showBlockBar: true,
+      showBlockBar: false,
       showAA: true,
 
       blocks: props.blocks,   //blocks data, an array of {name,color,start,length}
 
       menuTitle: 'unknown',
       sequence: props.sequence, //DNA sequence, in ACGT
+      features: props.features,
     };
 
     this.enzymeList = loadEnzymeList('caiLab');
@@ -119,6 +123,7 @@ export class OnionForCailabLIMS extends React.Component {
     const width = Math.max(this.props.width, 100);
     const height = Math.max(this.props.height, 100);
 
+    const { title }  = this.props;
     const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
     let sequence;
     let features;
@@ -157,42 +162,58 @@ export class OnionForCailabLIMS extends React.Component {
 
     const menuTitle = this.state.menuTitle;
 
+    const editorHeight = height-42-86;
+
+    let sequenceEditorWidth;
+    let plasmidViewerWidth;
+    if(width>=1024){
+      sequenceEditorWidth = width*0.618;
+      plasmidViewerWidth = width-sequenceEditorWidth;
+    } else {
+      sequenceEditorWidth = width;
+      plasmidViewerWidth = width;
+
+    }
+
+
+
+    let seqObj = new DNASeq(sequence)
+    let enzymes = seqObj.calcEnzymeSites(this.enzymeList);
+
+    const plasmidR = Math.min(plasmidViewerWidth/2-100,editorHeight/2-100);
+    const enzymeR = plasmidR+20;
+
     return (
-      <div>
-        <div>
-          <PlasmidViewer
-            mode="normal"
-            name="test"
-            theme="default"
-            seqLength={sequence.length}
-            features={features}
-            plasmidR={150}
-            enzymes={[]}
-            showViewAngle={false}
-            selectedFeature={-1}
-            onWheel={()=>{}}
-          />
-          </div>
+      <div className="onionPanel">
       <div
         style={{
-          width: '100%',
-          position: 'relative',
+          width,
           height,
           marginTop: 0,
         }}
       >
-
-
         <MenuBar
-          title={menuTitle}
+          title={title}
           showEnzymes={showEnzymes}
           showRS={showRS}
           showFeatures={showFeatures}
           showRuler={showRuler}
-          showBlockBar={showBlockBar}
+          showBlockBar={false}
           showAA={showAA}
           onSelect={this.menuCommand}
         />
+        <div
+          style={{
+          verticalAlign: "top",
+          }}
+        >
+        <div
+          style={{
+            width: sequenceEditorWidth,
+            verticalAlign: "top",
+            display: 'inline-block',
+          }}
+        >
         <SequenceEditor
           sequence={sequence}
           showComplement
@@ -200,8 +221,8 @@ export class OnionForCailabLIMS extends React.Component {
           onSetCursor={this.onSetCursor}
           onSelecting={this.onSelecting}
           enzymeList={this.enzymeList}
-          width={width}
-          height={height - 30 - 86}
+          width={sequenceEditorWidth}
+          height={editorHeight}
           showEnzymes={showEnzymes}
           showLadder={showRuler || !showRuler && showRS}
           showRS={showRS}
@@ -214,27 +235,51 @@ export class OnionForCailabLIMS extends React.Component {
           selectStartPos={this.state.startCursorPos}
           onBlockChanged={this.onBlockChanged}
         />
-
-
-
+        </div>
+        {(plasmidViewerWidth > 0) &&
+        <div
+          style={{
+            width: plasmidViewerWidth,
+            verticalAlign: "top",
+            display: 'inline-block',
+          }}>
+        <PlasmidViewer
+          mode="normal"
+          name = { title }
+          theme="default"
+          seqLength={sequence.length}
+          features={features}
+          plasmidR={plasmidR}
+          enzymeR={enzymeR}
+          enzymes={enzymes}
+          showViewAngle={false}
+          selectedFeature={-1}
+          onWheel={()=>{}}
+          width={plasmidViewerWidth}
+          height={editorHeight}
+          cursorPos={this.state.cursorPos}
+          selectionStart={selectionStart}
+          selectionLength={selectionLength}
+        />
+          </div>
+        }
+          </div>
         <InfoBar
-          width={width}
-          height={30}
           startPos={selectionStart}
           endPos={selectionStart + selectionLength}
           seq={selectedSeq}
           style={{
             textAlign: 'right',
             width,
-            height: 30,
+            height: 42,
             background: '#eaebf1',
             marginBottom: 0,
           }}
-
           onChange={this.onInfoBarChange}
         />
-      </div>
+
         </div>
+      </div>
     );
   }
 }

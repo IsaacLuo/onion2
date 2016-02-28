@@ -4,8 +4,8 @@ import React from 'react';
 // a part of PlasmidViewer
 export class EnzymeLabel extends React.Component {
   static propTypes = {
-    rootPos: React.PropTypes.number,
-    textPos: React.PropTypes.number,
+    rootPos: React.PropTypes.object,
+    textPos: React.PropTypes.object,
     l: React.PropTypes.number,
     text: React.PropTypes.string,
   };

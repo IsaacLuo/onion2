@@ -1,14 +1,14 @@
 import React from 'react';
-import { PlasmidBone } from './PlasmidBone';
-import { PlasmidBoneC } from './PlasmidBoneC';
-import { PlasmidBoneNAL } from './PlasmidBoneNAL';
-import FeatureGroup from './FeatureGroup';
+import { PlasmidBone } from './PlasmidViewer/PlasmidBone';
+import { PlasmidBoneC } from './PlasmidViewer/PlasmidBoneC';
+import { PlasmidBoneNAL } from './PlasmidViewer/PlasmidBoneNAL';
+import FeatureGroup from './PlasmidViewer/FeatureGroup';
 
-import EnzymeLabelContainer from './EnzymeLabelContainer';
-import { LA } from './../LA';
-import { PlasmidViewerCursorMeter, PlasmidViewerCursorGeneral } from './PlasmidViewerCursor';
-import { PlasmidViewerSelectionGeneral } from './PlasmidViewerSelection';
-import { PlasmidViewerVisibleArea } from './PlasmidViewerVisibleArea';
+import EnzymeLabelContainer from './PlasmidViewer/EnzymeLabelContainer';
+import { LA } from './LA';
+import { PlasmidViewerCursorMeter, PlasmidViewerCursorGeneral } from './PlasmidViewer/PlasmidViewerCursor';
+import { PlasmidViewerSelectionGeneral } from './PlasmidViewer/PlasmidViewerSelection';
+import { PlasmidViewerVisibleArea } from './PlasmidViewer/PlasmidViewerVisibleArea';
 
 //the PlasmidViewer component of onion
 export class PlasmidViewer extends React.Component {
@@ -41,6 +41,7 @@ export class PlasmidViewer extends React.Component {
     selectionStart: 0,
     selectionLength: 0,
     mode: 'normal',
+    enzymes: [],
   };
 
   constructor(props) {
@@ -68,7 +69,7 @@ export class PlasmidViewer extends React.Component {
 
     const enzymes = _enzymes;
     for (let i = 0; i < enzymes.length; i++) {
-      enzymes[i].rootPos = xy(la.a(enzymes[i].pos[0]) + rotateAngle);
+      enzymes[i].rootPos = xy(la.a(enzymes[i].anchor) + rotateAngle);
     }
 
     return enzymes;
@@ -88,10 +89,12 @@ export class PlasmidViewer extends React.Component {
       selectionLength,
       showViewAngle,
       } = this.props;
-    let { rotateAngle } = this.props;
+    let { rotateAngle, enzymeR } = this.props;
 
-    let enzymes = this.props.enzymes;
+    let {enzymes} = this.props;
+
     let enzymeRootR = plasmidR;
+    if( !enzymeR ) enzymeR = plasmidR+50;
     if (theme === 'C') enzymeRootR = plasmidR + 10;
 
     enzymes = this.calcEnzymeRoot(enzymes, enzymeRootR);
@@ -171,7 +174,7 @@ export class PlasmidViewer extends React.Component {
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
-                enzymeR={plasmidR + 50}
+                enzymeR={enzymeR}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
               />}
@@ -207,7 +210,7 @@ export class PlasmidViewer extends React.Component {
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
-                enzymeR={plasmidR + 50}
+                enzymeR={enzymeR}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
               />}
@@ -243,7 +246,7 @@ export class PlasmidViewer extends React.Component {
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
-                enzymeR={plasmidR + 50}
+                enzymeR={enzymeR}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
               />}
@@ -307,7 +310,7 @@ export class PlasmidViewer extends React.Component {
             </g>
             <g className="enzyme">
               {false && mode === 'normal' && <EnzymeLabelContainer
-                enzymeR={plasmidR + 50}
+                enzymeR={enzymeR}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
               />}
@@ -390,7 +393,7 @@ export class PlasmidViewer extends React.Component {
             </g>
             <g className="enzyme">
               {mode === 'normal' && <EnzymeLabelContainer
-                enzymeR={plasmidR + 50}
+                enzymeR={enzymeR}
                 plasmidR={plasmidR}
                 enzymes={enzymes}
               />}
