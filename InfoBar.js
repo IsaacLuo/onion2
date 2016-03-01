@@ -32,34 +32,37 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onChangeStart = this.onChangeStart.bind(this);
-    this.onChangeEnd = this.onChangeEnd.bind(this);
+
+    this.initCallBack();
   }
 
-  onChangeStart(o, v, e) {
-    if (this.props.onChange) {
-      const { startPos, endPos } = this.props;
-      const vv = v - 1;
-      if (startPos === endPos) {		//cursorMode
-        this.props.onChange(vv, vv);
-      } else {
-        this.props.onChange(vv, Math.max(endPos, vv));
+  initCallBack() {
+    this.onChangeStart = (o, v, e) => {
+      if (this.props.onChange) {
+        const { startPos, endPos } = this.props;
+        const vv = v - 1;
+        if (startPos === endPos) {		//cursorMode
+          this.props.onChange(vv, vv);
+        } else {
+          this.props.onChange(vv, Math.max(endPos, vv));
+        }
       }
-    }
 
-    return false;
-  }
+      return false;
+    };
 
-  onChangeEnd(o, v, e) {
-    if (this.props.onChange) {
-      const { startPos, endPos } = this.props;
-      const vv = v;
-      if (startPos === endPos && vv < startPos) {		//cursorMode
-        this.props.onChange(vv, vv);
-      } else {
-        this.props.onChange(Math.min(startPos, vv), vv);
+    this.onChangeEnd = (o, v, e) => {
+      if (this.props.onChange) {
+        const { startPos, endPos } = this.props;
+        const vv = v;
+        if (startPos === endPos && vv < startPos) {		//cursorMode
+          this.props.onChange(vv, vv);
+        } else {
+          this.props.onChange(Math.min(startPos, vv), vv);
+        }
       }
-    }
+    };
+
   }
 
   render() {

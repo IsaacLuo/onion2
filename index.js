@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b14a593498ddcb3f4c72"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "8eaf96f4ad74ff192b45"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -15743,7 +15743,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".noselect {\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n", ""]);
+	exports.push([module.id, ".noselect {\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n\r\n", ""]);
 	
 	// exports
 
@@ -22983,46 +22983,48 @@
 	
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfoBar).call(this, props));
 	
-	    _this.onChangeStart = _this.onChangeStart.bind(_this);
-	    _this.onChangeEnd = _this.onChangeEnd.bind(_this);
+	    _this.initCallBack();
 	    return _this;
 	  }
 	
 	  _createClass(InfoBar, [{
-	    key: 'onChangeStart',
-	    value: function onChangeStart(o, v, e) {
-	      if (this.props.onChange) {
-	        var _props = this.props;
-	        var startPos = _props.startPos;
-	        var endPos = _props.endPos;
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
 	
-	        var vv = v - 1;
-	        if (startPos === endPos) {
-	          //cursorMode
-	          this.props.onChange(vv, vv);
-	        } else {
-	          this.props.onChange(vv, Math.max(endPos, vv));
+	      this.onChangeStart = function (o, v, e) {
+	        if (_this2.props.onChange) {
+	          var _props = _this2.props;
+	          var startPos = _props.startPos;
+	          var endPos = _props.endPos;
+	
+	          var vv = v - 1;
+	          if (startPos === endPos) {
+	            //cursorMode
+	            _this2.props.onChange(vv, vv);
+	          } else {
+	            _this2.props.onChange(vv, Math.max(endPos, vv));
+	          }
 	        }
-	      }
 	
-	      return false;
-	    }
-	  }, {
-	    key: 'onChangeEnd',
-	    value: function onChangeEnd(o, v, e) {
-	      if (this.props.onChange) {
-	        var _props2 = this.props;
-	        var startPos = _props2.startPos;
-	        var endPos = _props2.endPos;
+	        return false;
+	      };
 	
-	        var vv = v;
-	        if (startPos === endPos && vv < startPos) {
-	          //cursorMode
-	          this.props.onChange(vv, vv);
-	        } else {
-	          this.props.onChange(Math.min(startPos, vv), vv);
+	      this.onChangeEnd = function (o, v, e) {
+	        if (_this2.props.onChange) {
+	          var _props2 = _this2.props;
+	          var startPos = _props2.startPos;
+	          var endPos = _props2.endPos;
+	
+	          var vv = v;
+	          if (startPos === endPos && vv < startPos) {
+	            //cursorMode
+	            _this2.props.onChange(vv, vv);
+	          } else {
+	            _this2.props.onChange(Math.min(startPos, vv), vv);
+	          }
 	        }
-	      }
+	      };
 	    }
 	  }, {
 	    key: 'render',
@@ -23043,8 +23045,9 @@
 	        marginTop: 10,
 	        marginBottom: 10,
 	        color: 'A5A6A2',
-	        verticalAlign: 'middle',
-	        width: 90
+	        verticalAlign: 'top',
+	        minWidth: 90,
+	        whiteSpace: 'nowrap'
 	      };
 	
 	      var length = endPos - startPos;
@@ -23218,9 +23221,8 @@
 	    _this.state = {
 	      value: props.value
 	    };
-	    _this.onPlus = _this.onPlus.bind(_this);
-	    _this.onMinus = _this.onMinus.bind(_this);
-	    _this.onChange = _this.onChange.bind(_this);
+	
+	    _this.initCallBack();
 	    return _this;
 	  }
 	
@@ -23232,41 +23234,45 @@
 	      };
 	    }
 	  }, {
-	    key: 'onChange',
-	    value: function onChange(e) {
-	      var newValue = parseInt(e.target.value, 10);
-	      var update = true;
-	      if (this.props.onChange) {
-	        update = this.props.onChange(this, newValue, e);
-	      }
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
 	
-	      if (update) {
-	        this.setState({ value: newValue });
-	      }
-	    }
-	  }, {
-	    key: 'onPlus',
-	    value: function onPlus() {
-	      var n = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var e = arguments[1];
+	      this.onChange = function (e) {
+	        var newValue = parseInt(e.target.value, 10);
+	        var update = true;
+	        if (_this2.props.onChange) {
+	          update = _this2.props.onChange(_this2, newValue, e);
+	        }
 	
-	      var newValue = this.state.value + n;
-	      var update = true;
-	      if (this.props.onChange) {
-	        update = this.props.onChange(this, newValue, newValue);
-	      }
+	        if (update) {
+	          _this2.setState({ value: newValue });
+	        }
+	      };
 	
-	      if (update) {
-	        this.setState({ value: newValue });
-	      }
-	    }
-	  }, {
-	    key: 'onMinus',
-	    value: function onMinus() {
-	      var n = arguments.length <= 0 || arguments[0] === undefined ? -1 : arguments[0];
-	      var e = arguments[1];
+	      this.onPlus = function (e) {
+	        var newValue = _this2.state.value + 1;
+	        var update = true;
+	        if (_this2.props.onChange) {
+	          update = _this2.props.onChange(_this2, newValue, newValue);
+	        }
 	
-	      this.onPlus(n, e);
+	        if (update) {
+	          _this2.setState({ value: newValue });
+	        }
+	      };
+	
+	      this.onMinus = function (e) {
+	        var newValue = _this2.state.value - 1;
+	        var update = true;
+	        if (_this2.props.onChange) {
+	          update = _this2.props.onChange(_this2, newValue, newValue);
+	        }
+	
+	        if (update) {
+	          _this2.setState({ value: newValue });
+	        }
+	      };
 	    }
 	  }, {
 	    key: 'render',
@@ -23288,7 +23294,8 @@
 	        {
 	          style: Object.assign({
 	            display: 'inline-block',
-	            verticalAlign: 'middle'
+	            verticalAlign: 'middle',
+	            whiteSpace: 'nowrap'
 	          }, style)
 	        },
 	        _react3.default.createElement('input', {

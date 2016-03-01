@@ -30,9 +30,8 @@ export class NumericControl extends React.Component
     this.state = {
       value: props.value,
     };
-    this.onPlus = this.onPlus.bind(this);
-    this.onMinus = this.onMinus.bind(this);
-    this.onChange = this.onChange.bind(this);
+
+    this.initCallBack();
   }
 
   componentWillReceiveProps(np) {
@@ -41,33 +40,45 @@ export class NumericControl extends React.Component
     };
   }
 
-  onChange(e) {
-    const newValue = parseInt(e.target.value, 10);
-    let update = true;
-    if (this.props.onChange) {
-      update = this.props.onChange(this, newValue, e);
-    }
+  initCallBack() {
+    this.onChange = (e) => {
+      const newValue = parseInt(e.target.value, 10);
+      let update = true;
+      if (this.props.onChange) {
+        update = this.props.onChange(this, newValue, e);
+      }
 
-    if (update) {
-      this.setState({ value: newValue });
-    }
+      if (update) {
+        this.setState({ value: newValue });
+      }
+    };
+
+    this.onPlus = (e) => {
+      const newValue = this.state.value + 1;
+      let update = true;
+      if (this.props.onChange) {
+        update = this.props.onChange(this, newValue, newValue);
+      }
+
+      if (update) {
+        this.setState({ value: newValue });
+      }
+    };
+
+    this.onMinus = (e) => {
+      const newValue = this.state.value - 1;
+      let update = true;
+      if (this.props.onChange) {
+        update = this.props.onChange(this, newValue, newValue);
+      }
+
+      if (update) {
+        this.setState({ value: newValue });
+      }
+    };
   }
 
-  onPlus(n = 1, e) {
-    const newValue = this.state.value + n;
-    let update = true;
-    if (this.props.onChange) {
-      update = this.props.onChange(this, newValue, newValue);
-    }
 
-    if (update) {
-      this.setState({ value: newValue });
-    }
-  }
-
-  onMinus(n = -1, e) {
-    this.onPlus(n, e);
-  }
 
   render() {
     const { style, valueBoxStyle } = this.props;
