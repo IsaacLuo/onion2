@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8eaf96f4ad74ff192b45"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f2bca6740c9f6dcbf1ea"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23449,15 +23449,16 @@
 	    value: function onSelect(e) {
 	      var onSelect = this.props.onSelect;
 	
-	      var $target = $(e.target);
-	      if ($target.prop('nodeName') !== 'a') {
-	        $target = $target.parents('a');
+	
+	      var target = e.target;
+	      while (target.nodeName.toUpperCase() !== 'A') {
+	        target = target.parentNode;
 	      }
 	
-	      var cmd = $target.data('cmd');
 	      //I don't know why $.data() always returns true;
 	      //const value = $target.data('val');
-	      var value = $target.attr('data-val') === 'true';
+	      var cmd = target.getAttribute('data-cmd');
+	      var value = target.getAttribute('data-val') === 'true';
 	      console.log(value);
 	      onSelect(cmd, !value);
 	    }
