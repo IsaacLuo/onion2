@@ -37,6 +37,7 @@ class OnionViewer extends React.Component {
 
         const readSequenceFromBlock = (i, count) => {
           const block = state.blocks[currentBlocks[i]];
+          console.log(block);
 
           block.getSequence().then(sequence => {
             if (sequence) {
@@ -44,6 +45,7 @@ class OnionViewer extends React.Component {
                 color: block.metadata.color,
                 start,
                 length: sequence.length,
+                name: block.metadata.name,
               });
               start += sequence.length;
               totalSequence += sequence;

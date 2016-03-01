@@ -82,12 +82,7 @@ export class SequenceEditor extends React.Component {
 
     //initial operations
     this.initialRowPos(this.props.sequence, this.props.width);
-
-    this.onScroll = this.onScroll.bind(this);
-    this.onSetCursor = this.onSetCursor.bind(this);
-    this.onSelecting = this.onSelecting.bind(this);
-    this.onSetHighLight = this.onSetHighLight.bind(this);
-    this.onRowCalculatedHeight = this.onRowCalculatedHeight.bind(this);
+    this.initCallBack();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,81 +106,86 @@ export class SequenceEditor extends React.Component {
     return update;
   }
 
-  onScroll(e) {
-    const scrollPos = e.target.scrollTop;
-    for (let i = 0; i < this.rowY.length; i++) {
-      if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-        const block = this.splitBlocks[i];
-        if (block.length > 0) this.props.onBlockChanged(block);
-        break;
-      }
-    }
-  }
-
-  onSetCursor(cursorPos, rowNumber) {
-    this.setState({
-      cursorPos,
-      showCursor: true,
-      selectStartPos: cursorPos,
-      showSelection: false,
-    });
-    if (this.props.onSetCursor) {
-      this.props.onSetCursor(cursorPos);
-    }
-
-    if (this.props.onBlockChanged) {
-      const row = Math.floor(cursorPos / this.colNum);
-      const x = cursorPos % this.colNum;
-      const blocks = this.splitBlocks[row];
-      for (let i = 0; i < blocks.length; i++) {
-        if (x >= blocks[i].start) {
-          this.props.onBlockChanged([blocks[i]]);
+  initCallBack() {
+    const self = this;
+    
+    this.onScroll = (e) => {
+      const scrollPos = e.target.scrollTop;
+      for (let i = 0; i < this.rowY.length; i++) {
+        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+          const block = this.splitBlocks[i];
+          if (block.length > 0) this.props.onBlockChanged(block);
+          break;
         }
       }
-    }
-  }
+    };
 
-  onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-    if (cursorPosStart) {
+    this.onSetCursor = (cursorPos, rowNumber) => {
       this.setState({
         cursorPos,
         showCursor: true,
-        showSelection: true,
-        selectStartPos: cursorPosStart,
+        selectStartPos: cursorPos,
+        showSelection: false,
       });
-    } else {
-      this.setState({
-        cursorPos,
-        showCursor: true,
-        showSelection: true,
-      });
-    }
-
-    if (this.props.onSelecting) {
-      if (cursorPosStart) {
-        console.log('full start', cursorPosStart, cursorPos);
-        this.props.onSelecting(cursorPos, cursorPosStart);
-      } else {
-        this.props.onSelecting(cursorPos, this.state.selectStartPos);
+      if (this.props.onSetCursor) {
+        this.props.onSetCursor(cursorPos);
       }
-    }
-  }
 
-  onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-    if (highLightStart === highLightEnd) {
-      this.setState({ highLightStart, highLightEnd, showHighLight: false });
-    } else {
-      this.setState({ highLightStart, highLightEnd, showHighLight: true });
-    }
-  }
+      if (this.props.onBlockChanged) {
+        const row = Math.floor(cursorPos / this.colNum);
+        const x = cursorPos % this.colNum;
+        const blocks = this.splitBlocks[row];
+        for (let i = 0; i < blocks.length; i++) {
+          if (x >= blocks[i].start) {
+            this.props.onBlockChanged([blocks[i]]);
+          }
+        }
+      }
+    };
 
-  onRowCalculatedHeight(row, height) {
-    this.rowHeight[row] = height;
-    if (row > 0) {
-      this.rowY[row] = this.rowY[row - 1] + height;
-    } else {
-      this.rowY[0] = 0;
-    }
+    this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
+      if (cursorPosStart) {
+        this.setState({
+          cursorPos,
+          showCursor: true,
+          showSelection: true,
+          selectStartPos: cursorPosStart,
+        });
+      } else {
+        this.setState({
+          cursorPos,
+          showCursor: true,
+          showSelection: true,
+        });
+      }
+
+      if (this.props.onSelecting) {
+        if (cursorPosStart) {
+          console.log('full start', cursorPosStart, cursorPos);
+          this.props.onSelecting(cursorPos, cursorPosStart);
+        } else {
+          this.props.onSelecting(cursorPos, this.state.selectStartPos);
+        }
+      }
+    };
+
+    this.onSetHighLight = (highLightStart, rowNumber, highLightEnd, rowNumberStart) => {
+      if (highLightStart === highLightEnd) {
+        this.setState({ highLightStart, highLightEnd, showHighLight: false });
+      } else {
+        this.setState({ highLightStart, highLightEnd, showHighLight: true });
+      }
+    };
+
+    this.onRowCalculatedHeight = (row, height) => {
+      this.rowHeight[row] = height;
+      if (row > 0) {
+        this.rowY[row] = this.rowY[row - 1] + height;
+      } else {
+        this.rowY[0] = 0;
+      }
+    };
+
   }
 
   isOverlap(a1, b1, a2, b2) {

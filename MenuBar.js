@@ -30,7 +30,7 @@ export class MenuBar extends React.Component {
 
   onSelect(e) {
     const { onSelect } = this.props;
-    
+
     let target = e.target;
     while (target.nodeName.toUpperCase() !== 'A') {
       target = target.parentNode;
