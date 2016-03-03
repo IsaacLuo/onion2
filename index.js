@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0c4132ffb491d60b8582"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e002d90dc8b0aa4086f3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23511,7 +23511,7 @@
 	          {
 	            style: {
 	              height: 43,
-	              fontSize: 16
+	              fontSize: 12
 	            }
 	          },
 	          _react3.default.createElement(
@@ -23980,7 +23980,7 @@
 	
 	      var menuTitle = this.state.menuTitle;
 	
-	      console.log(this.state);
+	      //console.log(this.state);
 	
 	      return _react3.default.createElement(
 	        'div',
@@ -24137,12 +24137,12 @@
 	  function SequenceEditor(props) {
 	    _classCallCheck(this, SequenceEditor);
 	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
 	
-	    _this.textRows = [];
+	    _this2.textRows = [];
 	
 	    // style of sequence
-	    _this.myCSS = {
+	    _this2.myCSS = {
 	      seqFontFamily: 'Cousine,Monospace',
 	      seqFontSize: 16,
 	      seqFontUnitWidth: 10 };
@@ -24154,24 +24154,24 @@
 	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
 	    //var width = document.getElementById('bp1').getBoundingClientRect().width;
 	    //9.609375,
-	    _this.seqMainStyle = {
+	    _this2.seqMainStyle = {
 	      //	display: "inline-block",
-	      fontFamily: _this.myCSS.seqFontFamily,
-	      fontSize: _this.myCSS.seqFontSize,
+	      fontFamily: _this2.myCSS.seqFontFamily,
+	      fontSize: _this2.myCSS.seqFontSize,
 	      fill: '#2C3543',
 	      letterSpacing: 10 - 9.609375,
 	      alignmentBaseline: 'before-edge',
 	      WebkitUserSelect: 'none'
 	    };
-	    _this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, _this.seqMainStyle);
-	    _this.unitWidth = _this.myCSS.seqFontUnitWidth;
+	    _this2.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, _this2.seqMainStyle);
+	    _this2.unitWidth = _this2.myCSS.seqFontUnitWidth;
 	
-	    _this.sequence = new _DNASeq.DNASeq(_this.props.sequence);
-	    _this.enzymeSites = _this.sequence.calcEnzymeSites(_this.props.enzymeList);
+	    _this2.sequence = new _DNASeq.DNASeq(_this2.props.sequence);
+	    _this2.enzymeSites = _this2.sequence.calcEnzymeSites(_this2.props.enzymeList);
 	
-	    _this.aas = _this.calcAAs(_this.props.sequence, _this.props.features);
+	    _this2.aas = _this2.calcAAs(_this2.props.sequence, _this2.props.features);
 	
-	    _this.state = {
+	    _this2.state = {
 	      cursorPos: 0,
 	      selectStartPos: 0,
 	      showCursor: false,
@@ -24179,9 +24179,9 @@
 	    };
 	
 	    //initial operations
-	    _this.initialRowPos(_this.props.sequence, _this.props.width);
-	    _this.initCallBack();
-	    return _this;
+	    _this2.initialRowPos(_this2.props.sequence, _this2.props.width);
+	    _this2.initCallBack();
+	    return _this2;
 	  }
 	
 	  _createClass(SequenceEditor, [{
@@ -24209,39 +24209,39 @@
 	  }, {
 	    key: 'initCallBack',
 	    value: function initCallBack() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
-	      var self = this;
+	      var _this = this;
 	
 	      this.onScroll = function (e) {
 	        var scrollPos = e.target.scrollTop;
-	        for (var i = 0; i < _this2.rowY.length; i++) {
-	          if (scrollPos <= _this2.rowY[i] + _this2.rowHeight[i]) {
-	            var block = _this2.splitBlocks[i];
-	            if (block.length > 0) _this2.props.onBlockChanged(block);
+	        for (var i = 0; i < _this3.rowY.length; i++) {
+	          if (scrollPos <= _this3.rowY[i] + _this3.rowHeight[i]) {
+	            var block = _this3.splitBlocks[i];
+	            if (block.length > 0) _this3.props.onBlockChanged(block);
 	            break;
 	          }
 	        }
 	      };
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
-	        _this2.setState({
+	        _this3.setState({
 	          cursorPos: cursorPos,
 	          showCursor: true,
 	          selectStartPos: cursorPos,
 	          showSelection: false
 	        });
-	        if (_this2.props.onSetCursor) {
-	          _this2.props.onSetCursor(cursorPos);
+	        if (_this3.props.onSetCursor) {
+	          _this3.props.onSetCursor(cursorPos);
 	        }
 	
-	        if (_this2.props.onBlockChanged) {
-	          var row = Math.floor(cursorPos / _this2.colNum);
-	          var x = cursorPos % _this2.colNum;
-	          var blocks = _this2.splitBlocks[row];
+	        if (_this3.props.onBlockChanged) {
+	          var row = Math.floor(cursorPos / _this3.colNum);
+	          var x = cursorPos % _this3.colNum;
+	          var blocks = _this3.splitBlocks[row];
 	          for (var i = 0; i < blocks.length; i++) {
 	            if (x >= blocks[i].start) {
-	              _this2.props.onBlockChanged([blocks[i]]);
+	              _this3.props.onBlockChanged([blocks[i]]);
 	            }
 	          }
 	        }
@@ -24249,44 +24249,44 @@
 	
 	      this.onSelecting = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
 	        if (cursorPosStart) {
-	          _this2.setState({
+	          _this3.setState({
 	            cursorPos: cursorPos,
 	            showCursor: true,
 	            showSelection: true,
 	            selectStartPos: cursorPosStart
 	          });
 	        } else {
-	          _this2.setState({
+	          _this3.setState({
 	            cursorPos: cursorPos,
 	            showCursor: true,
 	            showSelection: true
 	          });
 	        }
 	
-	        if (_this2.props.onSelecting) {
+	        if (_this3.props.onSelecting) {
 	          if (cursorPosStart) {
 	            console.log('full start', cursorPosStart, cursorPos);
-	            _this2.props.onSelecting(cursorPos, cursorPosStart);
+	            _this3.props.onSelecting(cursorPos, cursorPosStart);
 	          } else {
-	            _this2.props.onSelecting(cursorPos, _this2.state.selectStartPos);
+	            _this3.props.onSelecting(cursorPos, _this3.state.selectStartPos);
 	          }
 	        }
 	      };
 	
 	      this.onSetHighLight = function (highLightStart, rowNumber, highLightEnd, rowNumberStart) {
 	        if (highLightStart === highLightEnd) {
-	          _this2.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
 	        } else {
-	          _this2.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
 	        }
 	      };
 	
 	      this.onRowCalculatedHeight = function (row, height) {
-	        _this2.rowHeight[row] = height;
+	        _this3.rowHeight[row] = height;
 	        if (row > 0) {
-	          _this2.rowY[row] = _this2.rowY[row - 1] + height;
+	          _this3.rowY[row] = _this3.rowY[row - 1] + height;
 	        } else {
-	          _this2.rowY[0] = 0;
+	          _this3.rowY[0] = 0;
 	        }
 	      };
 	    }
@@ -26846,8 +26846,8 @@
 	    var container = props.container;
 	
 	    _this.state = {
-	      width: container.offsetWidth,
-	      height: container.offsetHeight,
+	      width: props.width,
+	      height: props.height,
 	      block: null,
 	      rendered: Date.now()
 	    };
@@ -26937,17 +26937,16 @@
 	      var _state = this.state;
 	      var sequence = _state.sequence;
 	      var features = _state.features;
+	      var blocks = _state.blocks;
 	      var width = _state.width;
 	      var height = _state.height;
-	      var blocks = _state.blocks;
-	      //can't read correct width and height, I don't know why.
+	      //console.log('render dimensions', width, height);
 	
-	      console.log('render dimensions', width, height);
 	      return _react3.default.createElement(_OnionForGenomeDesigner.OnionForGenomeDesigner, {
 	        sequence: sequence,
 	        features: features,
 	        width: width,
-	        height: 400,
+	        height: height,
 	        blocks: blocks
 	      });
 	    }
@@ -26958,10 +26957,22 @@
 	  container: _react3.default.PropTypes.object
 	}, _temp));
 	
-	function render(container) {
+	function render(container, options) {
 	  container.className += ' onionContainer';
+	
+	  console.log(options.boundingBox);
+	  var _options$boundingBox = options.boundingBox;
+	  var left = _options$boundingBox.left;
+	  var top = _options$boundingBox.top;
+	  var width = _options$boundingBox.width;
+	  var height = _options$boundingBox.height;
+	
 	  _reactDom2.default.render(_react3.default.createElement(OnionViewer, {
-	    container: container
+	    container: container,
+	    left: left,
+	    top: top,
+	    width: width,
+	    height: height
 	  }), container);
 	
 	  //var subscriber = window.gd.store.subscribe(function (state, lastAction) {

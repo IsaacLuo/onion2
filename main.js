@@ -15,8 +15,8 @@ class OnionViewer extends React.Component {
     super(props);
     const { container } = props;
     this.state = {
-      width: container.offsetWidth,
-      height: container.offsetHeight,
+      width: props.width,
+      height: props.height,
       block: null,
       rendered: Date.now(),
     };
@@ -95,25 +95,31 @@ class OnionViewer extends React.Component {
   }
 
   render() {
-    const { sequence, features, width, height, blocks } = this.state;
-    //can't read correct width and height, I don't know why.
-    console.log('render dimensions', width, height);
+    const { sequence, features, blocks, width, height } = this.state;
+    //console.log('render dimensions', width, height);
     return (
       <OnionForGenomeDesigner
         sequence={sequence}
         features={features}
         width={width}
-        height={400}
+        height={height}
         blocks={blocks}
       />
     );
   }
 }
 
-function render(container) {
+function render(container, options) {
   container.className += ' onionContainer';
+
+  console.log(options.boundingBox);
+  const { left, top, width, height } = options.boundingBox;
   ReactDOM.render(<OnionViewer
     container={container}
+    left={left}
+    top={top}
+    width={width}
+    height={height}
   />, container);
 
   //var subscriber = window.gd.store.subscribe(function (state, lastAction) {

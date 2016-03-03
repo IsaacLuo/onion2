@@ -107,8 +107,8 @@ export class SequenceEditor extends React.Component {
   }
 
   initCallBack() {
-    const self = this;
-    
+    const _this = this;
+
     this.onScroll = (e) => {
       const scrollPos = e.target.scrollTop;
       for (let i = 0; i < this.rowY.length; i++) {

@@ -158,7 +158,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
     const menuTitle = this.state.menuTitle;
 
-    console.log(this.state);
+    //console.log(this.state);
 
     return (
       <div
