@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "e002d90dc8b0aa4086f3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "954842f6a66b777fde9e"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23511,7 +23511,7 @@
 	          {
 	            style: {
 	              height: 43,
-	              fontSize: 12
+	              fontSize: '0.9rem'
 	            }
 	          },
 	          _react3.default.createElement(
