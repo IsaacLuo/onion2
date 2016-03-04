@@ -1,9 +1,9 @@
 {
-  "name": "onion2",
+  "name": "Sequence Detail",
   "version": "2.0.1",
   "description": "Onion Extensions",
   "region": "sequenceDetail",
-  "readable": "onion2",
+  "readable": "Sequence Detail",
   "scripts": {
     "build": "npm install && webpack -d main.js index.js"
   },

@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "954842f6a66b777fde9e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6035695a7e41f97d5669"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22672,11 +22672,11 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"name": "onion2",
+		"name": "Sequence Detail",
 		"version": "2.0.1",
 		"description": "Onion Extensions",
 		"region": "sequenceDetail",
-		"readable": "onion2",
+		"readable": "Sequence Detail",
 		"scripts": {
 			"build": "npm install && webpack -d main.js index.js"
 		},
