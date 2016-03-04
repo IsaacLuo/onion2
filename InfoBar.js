@@ -62,7 +62,6 @@ export class InfoBar extends React.Component {
         }
       }
     };
-
   }
 
   render() {
@@ -104,6 +103,7 @@ export class InfoBar extends React.Component {
           <NumericControl
             value={startPos + 1}
             style={{ marginLeft: 10 }}
+            showValue={startPos >= 0}
             onChange={this.onChangeStart}
           />
         </div>
@@ -115,7 +115,9 @@ export class InfoBar extends React.Component {
           <span className="noselect"> end:</span>
           <NumericControl
             value={endPos}
-            style={{ marginLeft: 0, color: startPos < endPos ? 'black' : 'rgba(127,127,127,0)' }}
+            showValue={startPos < endPos}
+            minValue={startPos}
+            style={{ marginLeft: 0 }}
             onChange={this.onChangeEnd}
           />
         </div>

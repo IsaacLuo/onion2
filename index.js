@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6035695a7e41f97d5669"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "d0f541fa31a2998d93de"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23073,6 +23073,7 @@
 	          _react3.default.createElement(_NumericControl.NumericControl, {
 	            value: startPos + 1,
 	            style: { marginLeft: 10 },
+	            showValue: startPos >= 0,
 	            onChange: this.onChangeStart
 	          })
 	        ),
@@ -23088,7 +23089,9 @@
 	          ),
 	          _react3.default.createElement(_NumericControl.NumericControl, {
 	            value: endPos,
-	            style: { marginLeft: 0, color: startPos < endPos ? 'black' : 'rgba(127,127,127,0)' },
+	            showValue: startPos < endPos,
+	            minValue: startPos,
+	            style: { marginLeft: 0 },
 	            onChange: this.onChangeEnd
 	          })
 	        ),
@@ -23219,7 +23222,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericControl).call(this, props));
 	
 	    _this.state = {
-	      value: props.value
+	      value: props.value,
+	      showValue: props.showValue
 	    };
 	
 	    _this.initCallBack();
@@ -23229,24 +23233,50 @@
 	  _createClass(NumericControl, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(np) {
-	      this.state = {
-	        value: np.value
-	      };
+	      if (this.state.value != np.value) {
+	        this.state.value = np.value;
+	      }
+	      if (this.state.showValue != np.showValue) {
+	        this.state.showValue = np.showValue;
+	      }
 	    }
 	  }, {
 	    key: 'initCallBack',
 	    value: function initCallBack() {
 	      var _this2 = this;
 	
+	      this.onFocus = function (e) {
+	        e.target.select();
+	      };
 	      this.onChange = function (e) {
-	        var newValue = parseInt(e.target.value, 10);
-	        var update = true;
-	        if (_this2.props.onChange) {
-	          update = _this2.props.onChange(_this2, newValue, e);
-	        }
+	        _this2.setState({ value: e.target.value, showValue: true });
+	      };
 	
-	        if (update) {
-	          _this2.setState({ value: newValue });
+	      this.onBlur = function (e) {
+	        if (_this2.props.onChange) {
+	          var _props = _this2.props;
+	          var value = _props.value;
+	          var minValue = _props.minValue;
+	          var maxValue = _props.maxValue;
+	
+	          var newValue = parseInt(e.target.value, 10);
+	          if (!newValue) {
+	            newValue = value;
+	          } else {
+	            if (newValue > maxValue) {
+	              newValue = maxValue;
+	            } else if (newValue < minValue) {
+	              newValue = minValue;
+	            }
+	          }
+	          _this2.props.onChange(_this2, newValue, e);
+	        }
+	      };
+	
+	      this.onKeyPress = function (e) {
+	        if (e.which === 13) {
+	          _this2.onBlur(e);
+	          e.target.select();
 	        }
 	      };
 	
@@ -23258,7 +23288,7 @@
 	        }
 	
 	        if (update) {
-	          _this2.setState({ value: newValue });
+	          _this2.setState({ value: newValue, showValue: true });
 	        }
 	      };
 	
@@ -23270,16 +23300,17 @@
 	        }
 	
 	        if (update) {
-	          _this2.setState({ value: newValue });
+	          _this2.setState({ value: newValue, showValue: true });
 	        }
 	      };
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var style = _props.style;
-	      var valueBoxStyle = _props.valueBoxStyle;
+	      var _props2 = this.props;
+	      var style = _props2.style;
+	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var showValue = this.state.showValue;
 	      var upDownStyle = this.props.upDownStyle;
 	
 	      upDownStyle = Object.assign({
@@ -23288,7 +23319,7 @@
 	        verticalAlign: 'middle'
 	      }, upDownStyle);
 	
-	      var value = this.state.value;
+	      var value = showValue ? this.state.value : '';
 	      return _react3.default.createElement(
 	        'div',
 	        {
@@ -23302,8 +23333,12 @@
 	          type: 'text',
 	          style: Object.assign({
 	            display: 'inline-block'
-	          }, valueBoxStyle), value: value, size: '5',
-	          onChange: this.onChange
+	          }, //color: showValue ? '#000000' : '#ffffff',
+	          valueBoxStyle), value: value, size: '5',
+	          onChange: this.onChange,
+	          onKeyPress: this.onKeyPress,
+	          onFocus: this.onFocus,
+	          onBlur: this.onBlur
 	        }),
 	        _react3.default.createElement(
 	          'div',
@@ -23337,8 +23372,10 @@
 	  style: _react3.default.PropTypes.object,
 	  valueBoxStyle: _react3.default.PropTypes.object,
 	  upDownStyle: _react3.default.PropTypes.object,
-	  onChange: _react3.default.PropTypes.func
-	
+	  onChange: _react3.default.PropTypes.func,
+	  showValue: _react3.default.PropTypes.bool,
+	  minValue: _react3.default.PropTypes.number,
+	  maxValue: _react3.default.PropTypes.number
 	}, _class.defaultProps = {
 	  style: {},
 	  valueBoxStyle: {
@@ -23348,7 +23385,9 @@
 	  },
 	  upDownStyle: {
 	    height: 20
-	  }
+	  },
+	  minValue: -Number.MAX_SAFE_INTEGER,
+	  maxValue: Number.MAX_SAFE_INTEGER
 	}, _temp));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
@@ -23825,8 +23864,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionForGenomeDesigner).call(this, props));
 	
 	    _this.state = {
-	      cursorPos: 0, //current cursor position from 0 to sequence.length
-	      startCursorPos: 0, //mouse down cursor position in selecting
+	      cursorPos: -1, //current cursor position from 0 to sequence.length
+	      startCursorPos: -1, //mouse down cursor position in selecting
 	
 	      //layers switch
 	      showEnzymes: true,

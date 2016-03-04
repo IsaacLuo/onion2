@@ -8,12 +8,13 @@ export class NumericControl extends React.Component
     valueBoxStyle: React.PropTypes.object,
     upDownStyle: React.PropTypes.object,
     onChange: React.PropTypes.func,
-
+    showValue: React.PropTypes.bool,
+    minValue: React.PropTypes.number,
+    maxValue: React.PropTypes.number,
   };
 
   static defaultProps = {
     style: {
-
     },
     valueBoxStyle: {
       background: '#ffffff',
@@ -23,33 +24,59 @@ export class NumericControl extends React.Component
     upDownStyle: {
       height: 20,
     },
+    minValue: -Number.MAX_SAFE_INTEGER,
+    maxValue: Number.MAX_SAFE_INTEGER,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       value: props.value,
+      showValue: props.showValue,
     };
 
     this.initCallBack();
   }
 
   componentWillReceiveProps(np) {
-    this.state = {
-      value: np.value,
-    };
+    if (this.state.value != np.value) {
+      this.state.value = np.value;
+    }
+    if (this.state.showValue != np.showValue) {
+      this.state.showValue = np.showValue;
+    }
+
   }
 
   initCallBack() {
+    this.onFocus = (e) => {
+      e.target.select();
+    }
     this.onChange = (e) => {
-      const newValue = parseInt(e.target.value, 10);
-      let update = true;
-      if (this.props.onChange) {
-        update = this.props.onChange(this, newValue, e);
-      }
+      this.setState({ value: e.target.value, showValue: true });
+    };
 
-      if (update) {
-        this.setState({ value: newValue });
+    this.onBlur = (e) => {
+      if (this.props.onChange) {
+        const { value, minValue, maxValue } = this.props;
+        let newValue = parseInt(e.target.value, 10);
+        if (!newValue) {
+          newValue = value;
+        } else {
+          if (newValue > maxValue) {
+            newValue = maxValue;
+          } else if (newValue < minValue) {
+            newValue = minValue;
+          }
+        }
+        this.props.onChange(this, newValue, e);
+      }
+    };
+
+    this.onKeyPress = (e) => {
+      if (e.which === 13) {
+        this.onBlur(e);
+        e.target.select();
       }
     };
 
@@ -61,7 +88,7 @@ export class NumericControl extends React.Component
       }
 
       if (update) {
-        this.setState({ value: newValue });
+        this.setState({ value: newValue, showValue: true });
       }
     };
 
@@ -73,15 +100,14 @@ export class NumericControl extends React.Component
       }
 
       if (update) {
-        this.setState({ value: newValue });
+        this.setState({ value: newValue, showValue: true });
       }
     };
   }
 
-
-
   render() {
     const { style, valueBoxStyle } = this.props;
+    const { showValue } = this.state;
     let { upDownStyle } = this.props;
     upDownStyle = Object.assign({
       display: 'inline-block',
@@ -89,7 +115,7 @@ export class NumericControl extends React.Component
       verticalAlign: 'middle',
     }, upDownStyle);
 
-    const value = this.state.value;
+    const value = showValue ? this.state.value : '';
     return (
       <div
         style = {Object.assign({
@@ -102,8 +128,12 @@ export class NumericControl extends React.Component
           type="text"
           style = {Object.assign({
             display: 'inline-block',
+            //color: showValue ? '#000000' : '#ffffff',
           }, valueBoxStyle)} value = {value} size="5"
           onChange={this.onChange}
+          onKeyPress={this.onKeyPress}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
         />
         <div
           style = {upDownStyle}
