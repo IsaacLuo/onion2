@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "c9a732486d0971f49319"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "46da3f71147bded0d49b"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24182,8 +24182,8 @@
 	    // style of sequence
 	    _this2.myCSS = {
 	      seqFontFamily: 'Cousine,Monospace',
-	      seqFontSize: '12pt',
-	      seqFontUnitWidth: 10 };
+	      seqFontSize: 12,
+	      seqFontUnitWidth: 7.1943 };
 	    //Maybe I need to render a letter first, then calculate its size, it's necessary because
 	    // the letter width is little difference on different browser.
 	    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};
@@ -24198,7 +24198,7 @@
 	      fontSize: _this2.myCSS.seqFontSize,
 	      fill: '#2C3543',
 	      //letterSpacing: (10 - 9.609375),
-	      letterSpacing: 0.2,
+	      //letterSpacing: 0.8056146,
 	      alignmentBaseline: 'before-edge',
 	      WebkitUserSelect: 'none'
 	    };
@@ -25003,7 +25003,8 @@
 	            style: {
 	              textAnchor: 'middle',
 	              alignmentBaseline: 'central',
-	              WebkitUserSelect: 'none'
+	              WebkitUserSelect: 'none',
+	              fontSize: 12
 	            }
 	          },
 	          aa
