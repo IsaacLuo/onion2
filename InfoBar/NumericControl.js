@@ -18,6 +18,7 @@ export class NumericControl extends React.Component
     },
     valueBoxStyle: {
       background: '#ffffff',
+      color: '#3b3e4c',
       borderWidth: 0,
       textAlign: 'right',
     },

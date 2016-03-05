@@ -46,7 +46,7 @@ export class SequenceEditor extends React.Component {
     // style of sequence
     this.myCSS = {
       seqFontFamily: 'Cousine,Monospace',
-      seqFontSize: 16,
+      seqFontSize: '12pt',
       seqFontUnitWidth: 10, //9.609375,
     };
     //Maybe I need to render a letter first, then calculate its size, it's necessary because
@@ -61,7 +61,8 @@ export class SequenceEditor extends React.Component {
       fontFamily: this.myCSS.seqFontFamily,
       fontSize: this.myCSS.seqFontSize,
       fill: '#2C3543',
-      letterSpacing: (10 - 9.609375),
+      //letterSpacing: (10 - 9.609375),
+      letterSpacing: 0.2,
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };

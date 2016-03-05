@@ -216,7 +216,11 @@ export class OnionForGenomeDesigner extends React.Component {
             width,
             height: 30,
             background: '#eaebf1',
+            fontSize: 12,
+            fontFamily: 'Helvetica, Arial, sans-serif',
             marginBottom: 0,
+            lineHeight: '12px',
+            verticalAlign: 'top',
           }}
 
           onChange={this.onInfoBarChange}

@@ -82,7 +82,8 @@ export class MenuBar extends React.Component {
         <div
           style={{
             height: 43,
-            fontSize: '0.9rem',
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontSize: 12,
           }}
         >
           <div
