@@ -140,11 +140,11 @@ export class NumericControl extends React.Component
           style = {upDownStyle}
         >
           <svg width="18" height="20">
-            <g onClick={this.onPlus} >
+            <g onClick={this.onPlus} className="cursorPointer">
               <path d="M 5 7 L 9 3 L 13 7" fill="none" stroke="#757884"/>
               <rect width="18" height="10" strokeWidth="0" fill="rgba(127,127,127,0.001)"/>
             </g>
-            <g onClick={this.onMinus} >
+            <g onClick={this.onMinus} className="cursorPointer">
               <path d="M 5 13 L 9 17 L 13 13" fill="none" stroke="#757884"/>
               <rect y="10" width="18" height="10" strokeWidth="0" fill="rgba(127,127,127,0.001)"/>
             </g>

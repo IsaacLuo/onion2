@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4d02759f3f00e288c1a5"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4f86cf2b7998baf8ef08"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -77,33 +77,47 @@
 /******/ 		};
 /******/ 		for(var name in __webpack_require__) {
 /******/ 			if(Object.prototype.hasOwnProperty.call(__webpack_require__, name)) {
-/******/ 				fn[name] = __webpack_require__[name];
+/******/ 				Object.defineProperty(fn, name, (function(name) {
+/******/ 					return {
+/******/ 						configurable: true,
+/******/ 						enumerable: true,
+/******/ 						get: function() {
+/******/ 							return __webpack_require__[name];
+/******/ 						},
+/******/ 						set: function(value) {
+/******/ 							__webpack_require__[name] = value;
+/******/ 						}
+/******/ 					};
+/******/ 				}(name)));
 /******/ 			}
 /******/ 		}
-/******/ 		fn.e = function(chunkId, callback) {
-/******/ 			if(hotStatus === "ready")
-/******/ 				hotSetStatus("prepare");
-/******/ 			hotChunksLoading++;
-/******/ 			__webpack_require__.e(chunkId, function() {
-/******/ 				try {
-/******/ 					callback.call(null, fn);
-/******/ 				} finally {
-/******/ 					finishChunkLoading();
-/******/ 				}
+/******/ 		Object.defineProperty(fn, "e", {
+/******/ 			enumerable: true,
+/******/ 			value: function(chunkId, callback) {
+/******/ 				if(hotStatus === "ready")
+/******/ 					hotSetStatus("prepare");
+/******/ 				hotChunksLoading++;
+/******/ 				__webpack_require__.e(chunkId, function() {
+/******/ 					try {
+/******/ 						callback.call(null, fn);
+/******/ 					} finally {
+/******/ 						finishChunkLoading();
+/******/ 					}
 /******/ 	
-/******/ 				function finishChunkLoading() {
-/******/ 					hotChunksLoading--;
-/******/ 					if(hotStatus === "prepare") {
-/******/ 						if(!hotWaitingFilesMap[chunkId]) {
-/******/ 							hotEnsureUpdateChunk(chunkId);
-/******/ 						}
-/******/ 						if(hotChunksLoading === 0 && hotWaitingFiles === 0) {
-/******/ 							hotUpdateDownloaded();
+/******/ 					function finishChunkLoading() {
+/******/ 						hotChunksLoading--;
+/******/ 						if(hotStatus === "prepare") {
+/******/ 							if(!hotWaitingFilesMap[chunkId]) {
+/******/ 								hotEnsureUpdateChunk(chunkId);
+/******/ 							}
+/******/ 							if(hotChunksLoading === 0 && hotWaitingFiles === 0) {
+/******/ 								hotUpdateDownloaded();
+/******/ 							}
 /******/ 						}
 /******/ 					}
-/******/ 				}
-/******/ 			});
-/******/ 		};
+/******/ 				});
+/******/ 			}
+/******/ 		});
 /******/ 		return fn;
 /******/ 	}
 /******/ 	
@@ -793,16 +807,14 @@
 
 	'use strict';
 	
-	Object.defineProperty(exports, '__esModule', {
-	  value: true
-	});
-	
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
-	
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
-	exports['default'] = catchErrors;
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = catchErrors;
 	function catchErrors(_ref) {
 	  var filename = _ref.filename;
 	  var components = _ref.components;
@@ -853,8 +865,6 @@
 	    return ReactClass;
 	  };
 	}
-	
-	module.exports = exports['default'];
 
 /***/ },
 /* 8 */
@@ -1825,7 +1835,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var _react = __webpack_require__(6);
 	
@@ -3593,11 +3603,12 @@
 
 	'use strict';
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	
 	exports.compareProps = compareProps;
 	exports.comparePropsDebug = comparePropsDebug;
 	/**
@@ -15447,12 +15458,12 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.DNASeq = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Seq2 = __webpack_require__(71);
 	
@@ -15732,7 +15743,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".noselect {\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n\r\n\r\n", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}", ""]);
 	
 	// exports
 
@@ -17908,12 +17919,13 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.EnzymeSite = exports.Enzyme = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
 	exports.loadEnzymeList = loadEnzymeList;
 	
 	var _EnzymeList = __webpack_require__(114);
@@ -18054,11 +18066,11 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -22692,12 +22704,12 @@
 
 	'use strict';
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 	exports.AASeq = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _Seq2 = __webpack_require__(71);
 	
@@ -22893,6 +22905,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.InfoBar = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -22915,11 +22932,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.InfoBar = undefined;
-	
 	var _DNASeq = __webpack_require__(44);
 	
 	var _NumericControl = __webpack_require__(116);
@@ -22939,14 +22951,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/InfoBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/InfoBar.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/InfoBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/InfoBar.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -22961,6 +22973,7 @@
 	   */
 	
 	//import ReactDOM from 'react-dom';
+	
 	
 	//The Inforbar shows the selection start site, end site, GC content and TM value
 	
@@ -23050,7 +23063,7 @@
 	      return _react3.default.createElement(
 	        'div',
 	        {
-	          style: this.props.style
+	          style: Object.assign(_extends({}, this.props.style), { whiteSpace: 'nowrap', overflow: 'hidden' })
 	        },
 	        showPos && _react3.default.createElement(
 	          'div',
@@ -23152,6 +23165,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.NumericControl = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -23172,11 +23190,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.NumericControl = undefined;
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23192,14 +23205,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/InfoBar/NumericControl.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/InfoBar/NumericControl.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/InfoBar/NumericControl.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/InfoBar/NumericControl.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -23348,13 +23361,13 @@
 	            { width: '18', height: '20' },
 	            _react3.default.createElement(
 	              'g',
-	              { onClick: this.onPlus },
+	              { onClick: this.onPlus, className: 'cursorPointer' },
 	              _react3.default.createElement('path', { d: 'M 5 7 L 9 3 L 13 7', fill: 'none', stroke: '#757884' }),
 	              _react3.default.createElement('rect', { width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
 	            ),
 	            _react3.default.createElement(
 	              'g',
-	              { onClick: this.onMinus },
+	              { onClick: this.onMinus, className: 'cursorPointer' },
 	              _react3.default.createElement('path', { d: 'M 5 13 L 9 17 L 13 13', fill: 'none', stroke: '#757884' }),
 	              _react3.default.createElement('rect', { y: '10', width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
 	            )
@@ -23396,6 +23409,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.MenuBar = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -23415,11 +23433,6 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.MenuBar = undefined;
 	
 	var _EyeIcon = __webpack_require__(118);
 	
@@ -23444,14 +23457,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/MenuBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/MenuBar.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/MenuBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/MenuBar.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -23464,6 +23477,7 @@
 	} /**
 	   * Created by luoyi on 1/12/2016.
 	   */
+	
 	
 	var $ = _jquery2.default;
 	
@@ -23485,6 +23499,7 @@
 	    key: 'onSelect',
 	    value: function onSelect(e) {
 	      var onSelect = this.props.onSelect;
+	
 	
 	      var target = e.target;
 	      while (target.nodeName.toUpperCase() !== 'A') {
@@ -23548,7 +23563,9 @@
 	            style: {
 	              height: 43,
 	              fontFamily: 'Helvetica, Arial, sans-serif',
-	              fontSize: 12
+	              fontSize: 12,
+	              whiteSpace: 'nowrap',
+	              overflow: 'hidden'
 	            }
 	          },
 	          _react3.default.createElement(
@@ -23623,6 +23640,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.EyeIcon = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -23643,11 +23665,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.EyeIcon = undefined;
-	
 	__webpack_require__(69);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -23665,14 +23682,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/MenuBar/EyeIcon.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/MenuBar/EyeIcon.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/MenuBar/EyeIcon.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/MenuBar/EyeIcon.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -23685,6 +23702,7 @@
 	} /**
 	   * Created by luoyi on 12/02/2016.
 	   */
+	
 	
 	var EyeIcon = exports.EyeIcon = _wrapComponent('EyeIcon')((_temp = _class = function (_React$Component) {
 	  _inherits(EyeIcon, _React$Component);
@@ -23755,7 +23773,9 @@
 	// some data for testing
 	var onionFile = exports.onionFile = {
 	  name: 'pIB2-SEC13-mEGFP',
-	  features: [{ start: 1, end: 211, strand: '-', color: '#8EC78D', text: 'test', textColor: 'black', type: 'CDS' }, { start: 186, end: 673, strand: '+', color: '#C5C4C1', text: 'GAP promoter', textColor: 'black', type: 'promoter' }, { start: 690, end: 1632, strand: '+', color: '#D28482', text: 'SEC13', textColor: 'yellow', type: 'CDS' }, { start: 1652, end: 2372, strand: '+', color: '#8EC78D', text: 'mEGFP', textColor: 'black', type: 'CDS' }, { start: 2758, end: 3348, strand: '-', color: '#C5C4C1', text: 'ori', textColor: 'black', type: 'rep_origin' }, { start: 2481, end: 2697, strand: '.', color: '#EFAC7E', text: 'AOX1 Terminator', textColor: 'black', type: 'terminator' }, { start: 3517, end: 4378, strand: '-', color: '#8EC78D', text: 'AmpR', textColor: 'black', type: 'CDS' }, { start: 4477, end: 7012, strand: '+', color: '#EFAC7E', text: 'PpHIS4', textColor: 'black', type: 'CDS' }],
+	  features: [
+	  //{ start: 1, end: 211, strand: '-', color: '#8EC78D', text: 'test', textColor: 'black', type: 'CDS' },
+	  { start: 186, end: 673, strand: '+', color: '#C5C4C1', text: 'GAP promoter', textColor: 'black', type: 'promoter' }, { start: 690, end: 1632, strand: '+', color: '#D28482', text: 'SEC13', textColor: 'yellow', type: 'unknown' }, { start: 1652, end: 2372, strand: '+', color: '#8EC78D', text: 'mEGFP', textColor: 'black', type: 'CDS' }, { start: 2758, end: 3348, strand: '-', color: '#C5C4C1', text: 'ori', textColor: 'black', type: 'rep_origin' }, { start: 2481, end: 2697, strand: '.', color: '#EFAC7E', text: 'AOX1 Terminator', textColor: 'black', type: 'terminator' }, { start: 3517, end: 4378, strand: '-', color: '#8EC78D', text: 'AmpR', textColor: 'black', type: 'unknown' }, { start: 4477, end: 7012, strand: '+', color: '#EFAC7E', text: 'PpHIS4', textColor: 'black', type: 'CDS' }],
 	  enzymes: [],
 	  primers: [],
 	  blocks: [{ start: 0, length: 10, color: '#ABC7C7', name: 'block1' }, { start: 10, length: 200, color: '#C7CDCD', name: 'block2' }, { start: 200, length: 5235, color: '#CDABCC', name: 'block3' }],
@@ -23769,6 +23789,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module, global) {'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.OnionForGenomeDesigner = undefined;
 	
 	var _redboxReact2 = __webpack_require__(10);
 	
@@ -23789,11 +23814,6 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.OnionForGenomeDesigner = undefined;
 	
 	var _SequenceEditor = __webpack_require__(121);
 	
@@ -23822,14 +23842,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/OnionForGenomeDesigner.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -23843,9 +23863,11 @@
 	   * Created by Isaac on 21/01/2016.
 	   */
 	
+	
 	var $ = __webpack_require__(26);
 	window.$ = $;
 	global.jQuery = $;
+	
 	
 	// OnionForGenomeDesigner assembles MenuBar, SequenceEditor and InfoBar together,
 	// designed for genome-designer
@@ -23920,12 +23942,11 @@
 	  }, {
 	    key: 'onSelecting',
 	    value: function onSelecting(pos1, pos2) {
-	      if (!pos1 || !pos2) {
+	      if (pos1 >= 0 && pos2 >= 0) {
+	        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	      } else {
 	        console.error(pos1, pos2);
-	        debugger;
 	      }
-	
-	      this.setState({ cursorPos: pos1, startCursorPos: pos2 });
 	    }
 	
 	    //while user changes the value of start and end numeric control on info bar
@@ -24020,13 +24041,12 @@
 	        'div',
 	        {
 	          style: {
-	            width: '100%',
+	            width: width,
 	            position: 'relative',
 	            height: height,
-	            marginTop: 0,
-	            display: 'flex',
-	            flexDirection: 'column'
-	          }
+	            marginTop: 0
+	          },
+	          className: 'noselect'
 	        },
 	        _react3.default.createElement(_MenuBar.MenuBar, {
 	          title: menuTitle,
@@ -24098,6 +24118,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.SequenceEditor = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -24119,11 +24144,6 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.SequenceEditor = undefined;
 	
 	var _SequenceRow = __webpack_require__(128);
 	
@@ -24150,14 +24170,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -24580,6 +24600,7 @@
 	      var blocks = _props.blocks;
 	      var showAA = _props.showAA;
 	
+	
 	      this.textRows = [];
 	      var j = 0;
 	      if (showSelection) {
@@ -24767,7 +24788,8 @@
 	          style: (_Object = Object).assign.apply(_Object, _toConsumableArray(this.props.style).concat([{
 	            width: width,
 	            height: height,
-	            overflowY: 'scroll'
+	            overflowY: 'scroll',
+	            overflowX: 'hidden'
 	          }])),
 	          onScroll: this.onScroll
 	        },
@@ -24816,6 +24838,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.AminoAcidMarker = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -24836,11 +24863,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.AminoAcidMarker = undefined;
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24856,14 +24878,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/AminoAcidMarker.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/AminoAcidMarker.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/AminoAcidMarker.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/AminoAcidMarker.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -24876,6 +24898,7 @@
 	} /**
 	   * Created by luoyi on 18/01/2016.
 	   */
+	
 	
 	var AminoAcidMarker = exports.AminoAcidMarker = _wrapComponent('AminoAcidMarker')((_temp = _class = function (_React$Component) {
 	  _inherits(AminoAcidMarker, _React$Component);
@@ -24986,6 +25009,7 @@
 	      var style = _props.style;
 	      var direction = _props.direction;
 	
+	
 	      return _react3.default.createElement(
 	        'g',
 	        {
@@ -25061,6 +25085,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.CDSBar = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25081,11 +25110,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.CDSBar = undefined;
-	
 	var _AminoAcidMarker = __webpack_require__(122);
 	
 	var _reactHelper = __webpack_require__(22);
@@ -25105,14 +25129,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/CDSBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/CDSBar.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/CDSBar.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/CDSBar.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -25269,6 +25293,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.CuttingSite = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25289,11 +25318,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.CuttingSite = undefined;
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25309,14 +25333,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/CuttingSite.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/CuttingSite.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/CuttingSite.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/CuttingSite.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -25329,6 +25353,7 @@
 	} /**
 	   * Created by Isaac on 25/01/2016.
 	   */
+	
 	
 	// Emzyme label is a text showing enzyme restriction site and cutting site on a strand,
 	// a part of PlasmidViewer
@@ -25407,6 +25432,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.RestrictionSite = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25427,11 +25457,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.RestrictionSite = undefined;
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25447,14 +25472,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/RestrictionSite.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/RestrictionSite.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/RestrictionSite.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/RestrictionSite.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -25467,6 +25492,7 @@
 	} /**
 	   * Created by Isaac on 25/01/2016.
 	   */
+	
 	
 	// Emzyme label is a text showing enzyme restriction site and cutting site on a strand,
 	// a part of PlasmidViewer
@@ -25518,6 +25544,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.RulerLocation = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25538,11 +25569,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.RulerLocation = undefined;
-	
 	var _reactHelper = __webpack_require__(22);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -25560,14 +25586,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/RulerLocation.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/RulerLocation.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/RulerLocation.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/RulerLocation.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -25580,6 +25606,7 @@
 	} /**
 	   * Created by luoyi on 06/01/2016.
 	   */
+	
 	
 	// the ruler on the bottom of each SequenceRow
 	
@@ -25615,6 +25642,7 @@
 	    key: 'generateTexts',
 	    value: function generateTexts(x, y, w, h, d, u) {
 	      var texts = this.props.texts;
+	
 	
 	      var re = [];
 	      var i = 0;
@@ -25688,6 +25716,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.SequenceFeatureArrow = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25708,11 +25741,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.SequenceFeatureArrow = undefined;
-	
 	var _reactHelper = __webpack_require__(22);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -25730,14 +25758,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/SequenceFeature.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/SequenceFeature.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/SequenceFeature.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/SequenceFeature.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -25869,6 +25897,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.SequenceRow = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -25888,11 +25921,6 @@
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.SequenceRow = undefined;
 	
 	var _StrainText = __webpack_require__(129);
 	
@@ -25929,14 +25957,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/SequenceRow.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/SequenceRow.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/SequenceRow.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/SequenceRow.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -26352,6 +26380,7 @@
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
 	
+	
 	      var sequenceRowWidth = sequence.length * unitWidth;
 	
 	      var unitHeight = 13.5;
@@ -26647,6 +26676,11 @@
 
 	/* WEBPACK VAR INJECTION */(function(module) {'use strict';
 	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.StrainText = undefined;
+	
 	var _redboxReact2 = __webpack_require__(10);
 	
 	var _redboxReact3 = _interopRequireDefault(_redboxReact2);
@@ -26667,11 +26701,6 @@
 	
 	var _class, _temp;
 	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.StrainText = undefined;
-	
 	var _reactHelper = __webpack_require__(22);
 	
 	var _DNASeq = __webpack_require__(44);
@@ -26691,14 +26720,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/StrainText.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/StrainText.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/SequenceEditor/StrainText.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/SequenceEditor/StrainText.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -26711,6 +26740,7 @@
 	} /**
 	   * Created by Isaac on 20/01/2016.
 	   */
+	
 	
 	var StrainText = exports.StrainText = _wrapComponent('StrainText')((_temp = _class = function (_React$Component) {
 	  _inherits(StrainText, _React$Component);
@@ -26843,14 +26873,14 @@
 	};
 	
 	var _reactTransformHmr2 = (0, _reactTransformHmr4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/main.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
 	  components: _components,
 	  locals: [module],
 	  imports: [_react3.default]
 	});
 	
 	var _reactTransformCatchErrors2 = (0, _reactTransformCatchErrors4.default)({
-	  filename: 'D:/git/genome-designer/extensions/onion2/main.js',
+	  filename: 'C:/Users/luoyi/Documents/git/genome-designer/extensions/onion2/main.js',
 	  components: _components,
 	  locals: [],
 	  imports: [_react3.default, _redboxReact3.default]
@@ -37820,7 +37850,9 @@
 	  '__set__': __Rewire__,
 	  '__ResetDependency__': __ResetDependency__
 	};
-	var filenameWithoutLoaders = function filenameWithoutLoaders(filename) {
+	var filenameWithoutLoaders = function filenameWithoutLoaders() {
+	  var filename = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+	
 	  var index = filename.lastIndexOf('!');
 	
 	  return index < 0 ? filename : filename.substr(index + 1);
@@ -37863,7 +37895,8 @@
 	
 	exports.filenameHasLoaders = _filenameHasLoaders;
 	var filenameHasSchema = function filenameHasSchema(filename) {
-	  return /^[\w]+\:/.test(filename);
+	  return (/^[\w]+\:/.test(filename)
+	  );
 	};
 	
 	var _filenameHasSchema = filenameHasSchema;
@@ -38393,7 +38426,7 @@
 	  if (obj.action == "building") {
 	    if (options.log) console.log("[HMR] bundle rebuilding");
 	  } else if (obj.action == "built") {
-	    if (options.log) console.log("[HMR] bundle rebuilt in " + obj.time + "ms");
+	    if (options.log) console.log("[HMR] bundle " + (obj.name ? obj.name + " " : "") + "rebuilt in " + obj.time + "ms");
 	    if (obj.errors.length > 0) {
 	      problems('errors', obj);
 	    } else {

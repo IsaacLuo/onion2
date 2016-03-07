@@ -611,6 +611,7 @@ export class SequenceEditor extends React.Component {
           width,
           height,
           overflowY: 'scroll',
+          overflowX: 'hidden',
         })}
         onScroll={this.onScroll}
       >
