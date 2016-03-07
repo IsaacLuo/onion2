@@ -66,7 +66,7 @@ export class SequenceEditor extends React.Component {
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };
-    this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, this.seqMainStyle);
+    this.seqCompStyle = Object.assign({ ...this.seqMainStyle }, { fill: '#B7BBC2' });
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(this.props.sequence);

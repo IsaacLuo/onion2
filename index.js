@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "46da3f71147bded0d49b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4d02759f3f00e288c1a5"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24114,6 +24114,8 @@
 	
 	var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
@@ -24202,7 +24204,7 @@
 	      alignmentBaseline: 'before-edge',
 	      WebkitUserSelect: 'none'
 	    };
-	    _this2.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, _this2.seqMainStyle);
+	    _this2.seqCompStyle = Object.assign(_extends({}, _this2.seqMainStyle), { fill: '#B7BBC2' });
 	    _this2.unitWidth = _this2.myCSS.seqFontUnitWidth;
 	
 	    _this2.sequence = new _DNASeq.DNASeq(_this2.props.sequence);
