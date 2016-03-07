@@ -77,12 +77,12 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user drags on editor
   onSelecting(pos1, pos2) {
-    if (!pos1 || !pos2) {
+    if (pos1 >= 0 && pos2 >= 0) {
+      this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+    } else {
       console.error(pos1, pos2);
-      debugger;
     }
 
-    this.setState({ cursorPos: pos1, startCursorPos: pos2 });
   }
 
   //while user changes the value of start and end numeric control on info bar
@@ -170,6 +170,7 @@ export class OnionForGenomeDesigner extends React.Component {
           display: 'flex',
           flexDirection: 'column',
         }}
+        className="noselect"
       >
         <MenuBar
           title={menuTitle}

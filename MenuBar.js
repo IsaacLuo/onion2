@@ -84,6 +84,8 @@ export class MenuBar extends React.Component {
             height: 43,
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: 12,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
           }}
         >
           <div

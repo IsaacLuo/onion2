@@ -96,7 +96,8 @@ export class InfoBar extends React.Component {
 
     return (
       <div
-        style={this.props.style}
+        style={Object.assign({ ...this.props.style },
+          { whiteSpace: 'nowrap', overflow: 'hidden' })}
       >
         {showPos &&
         <div
