@@ -163,12 +163,10 @@ export class OnionForGenomeDesigner extends React.Component {
     return (
       <div
         style={{
-          width: '100%',
+          width,
           position: 'relative',
           height,
           marginTop: 0,
-          display: 'flex',
-          flexDirection: 'column',
         }}
         className="noselect"
       >

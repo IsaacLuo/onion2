@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0ad0b5cd483e9095a2f1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4f86cf2b7998baf8ef08"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24041,12 +24041,10 @@
 	        'div',
 	        {
 	          style: {
-	            width: '100%',
+	            width: width,
 	            position: 'relative',
 	            height: height,
-	            marginTop: 0,
-	            display: 'flex',
-	            flexDirection: 'column'
+	            marginTop: 0
 	          },
 	          className: 'noselect'
 	        },
@@ -24790,7 +24788,8 @@
 	          style: (_Object = Object).assign.apply(_Object, _toConsumableArray(this.props.style).concat([{
 	            width: width,
 	            height: height,
-	            overflowY: 'scroll'
+	            overflowY: 'scroll',
+	            overflowX: 'hidden'
 	          }])),
 	          onScroll: this.onScroll
 	        },
