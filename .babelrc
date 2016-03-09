@@ -5,7 +5,7 @@
     "development": {
       "plugins": [
           // must be an array with options object as second item
-          ["react-transform", {
+          /*["react-transform", {
             // must be an array of objects
             "transforms": [{
               // can be an NPM module name or a local path
@@ -21,7 +21,7 @@
             // by default we only look for `React.createClass` (and ES6 classes)
             // but you can tell the plugin to look for different component factories:
             // factoryMethods: ["React.createClass", "createClass"]
-          }]
+          }]*/
       ]
     }
   }
