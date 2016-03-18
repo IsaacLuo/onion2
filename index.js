@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4f86cf2b7998baf8ef08"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6b8da61ec10e2e96aa59"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -15743,7 +15743,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
 	
 	// exports
 
@@ -23896,9 +23896,11 @@
 	      blocks: props.blocks, //blocks data, an array of {name,color,start,length}
 	
 	      menuTitle: 'unknown',
-	      sequence: props.sequence };
+	      sequence: props.sequence, //DNA sequence, in ACGT
 	
-	    //DNA sequence, in ACGT
+	      focus: true
+	    };
+	
 	    _this.enzymeList = (0, _Enzyme.loadEnzymeList)('caiLab');
 	
 	    _this.onSetCursor = _this.onSetCursor.bind(_this);
@@ -23906,10 +23908,33 @@
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
 	    _this.onBlockChanged = _this.onBlockChanged.bind(_this);
 	    _this.menuCommand = _this.menuCommand.bind(_this);
+	    _this.initCallBack();
 	    return _this;
 	  }
 	
 	  _createClass(OnionForGenomeDesigner, [{
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      this.onKeyPress = function (e) {
+	        console.log(e, e.target, e.which);
+	      };
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this2 = this;
+	
+	      console.log('OnionForGenomeDesigner mount');
+	      $(document).click(function (e) {
+	        if ($(e.target).closest('.onionPanel').length === 0) {
+	          console.log('not onion click');
+	          _this2.setState({ focus: false });
+	        } else {
+	          _this2.setState({ focus: true });
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (nextProps.sequence !== this.props.sequence) {
@@ -24046,7 +24071,9 @@
 	            height: height,
 	            marginTop: 0
 	          },
-	          className: 'noselect'
+	          className: 'noselect onionPanel',
+	          tabIndex: '0',
+	          onKeyPress: this.onKeyPress
 	        },
 	        _react3.default.createElement(_MenuBar.MenuBar, {
 	          title: menuTitle,
@@ -24077,7 +24104,8 @@
 	          blocks: blocks,
 	          cursorPos: this.state.cursorPos,
 	          selectStartPos: this.state.startCursorPos,
-	          onBlockChanged: this.onBlockChanged
+	          onBlockChanged: this.onBlockChanged,
+	          focus: this.state.focus
 	        }),
 	        _react3.default.createElement(_InfoBar.InfoBar, {
 	          width: width,
@@ -24350,6 +24378,8 @@
 	          _this3.rowY[0] = 0;
 	        }
 	      };
+	
+	      this.onClick = function (e) {};
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -24599,6 +24629,7 @@
 	      var showBlockBar = _props.showBlockBar;
 	      var blocks = _props.blocks;
 	      var showAA = _props.showAA;
+	      var focus = _props.focus;
 	
 	
 	      this.textRows = [];
@@ -24708,6 +24739,16 @@
 	
 	        var subSequence = sequence.substr(i, colNum);
 	
+	        var selectionStyle = undefined;
+	        if (!focus) {
+	          rowShowCursor = false;
+	          rowShowLeftCursor = false;
+	          rowShowRightCursor = false;
+	          selectionStyle = { fill: '#F2F2F2' };
+	        } else {
+	          selectionStyle = { fill: '#EDF2F8' };
+	        }
+	
 	        this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
 	          sequence: subSequence,
 	          idxStart: i,
@@ -24725,6 +24766,7 @@
 	          showLeftCursor: rowShowLeftCursor,
 	          showRightCursor: rowShowRightCursor,
 	          showSelection: rowShowSelection,
+	          selectionStyle: selectionStyle,
 	          showStartPos: rowShowStartPos,
 	          seqMainStyle: this.seqMainStyle,
 	          seqCompStyle: this.seqCompStyle,
@@ -24791,7 +24833,8 @@
 	            overflowY: 'scroll',
 	            overflowX: 'hidden'
 	          }])),
-	          onScroll: this.onScroll
+	          onScroll: this.onScroll,
+	          onClick: this.onClick
 	        },
 	        this.textRows
 	      );
@@ -26499,7 +26542,7 @@
 	              y: ep.selectionY,
 	              width: cursorRight - cursorLeft,
 	              height: ep.selectionH,
-	              fill: this.props.selectionColor,
+	              style: this.props.selectionStyle,
 	              key: 'rectSelection'
 	            }),
 	            showHighLight && _react3.default.createElement('rect', {
@@ -26645,7 +26688,7 @@
 	  showFeatures: _react3.default.PropTypes.bool,
 	  showRuler: _react3.default.PropTypes.bool,
 	  onCalculatedHeight: _react3.default.PropTypes.func,
-	  selectionColor: _react3.default.PropTypes.string,
+	  selectionStyle: _react3.default.PropTypes.object,
 	  theme: _react3.default.PropTypes.string,
 	  cursorColor: _react3.default.PropTypes.string
 	
@@ -26663,7 +26706,7 @@
 	  showBlockBar: true,
 	  showAA: true,
 	  cursorColor: '#4E77BA',
-	  selectionColor: '#EDF2F8',
+	  selectionStyle: { fill: '#EDF2F8' },
 	  featureHeight: 18,
 	  ruler2d: 10,
 	  translateX: 10

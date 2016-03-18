@@ -187,6 +187,9 @@ export class SequenceEditor extends React.Component {
       }
     };
 
+    this.onClick = (e) => {
+    }
+
   }
 
   isOverlap(a1, b1, a2, b2) {
@@ -429,6 +432,7 @@ export class SequenceEditor extends React.Component {
       showBlockBar,
       blocks,
       showAA,
+      focus,
       } = this.props;
 
     this.textRows = [];
@@ -538,6 +542,16 @@ export class SequenceEditor extends React.Component {
 
       const subSequence = sequence.substr(i, colNum);
 
+      let selectionStyle;
+      if (!focus) {
+        rowShowCursor = false;
+        rowShowLeftCursor = false;
+        rowShowRightCursor = false;
+        selectionStyle = { fill: '#F2F2F2' };
+      } else {
+        selectionStyle = { fill: '#EDF2F8' }
+      }
+
       this.textRows.push(
         <SequenceRow
           sequence={subSequence}
@@ -556,6 +570,7 @@ export class SequenceEditor extends React.Component {
           showLeftCursor={rowShowLeftCursor}
           showRightCursor={rowShowRightCursor}
           showSelection={rowShowSelection}
+          selectionStyle={selectionStyle}
           showStartPos={rowShowStartPos}
           seqMainStyle={this.seqMainStyle}
           seqCompStyle={this.seqCompStyle}
@@ -614,6 +629,7 @@ export class SequenceEditor extends React.Component {
           overflowX: 'hidden',
         })}
         onScroll={this.onScroll}
+        onClick={this.onClick}
       >
         {this.textRows}
       </div>

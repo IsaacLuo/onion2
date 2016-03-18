@@ -41,6 +41,8 @@ export class OnionForGenomeDesigner extends React.Component {
 
       menuTitle: 'unknown',
       sequence: props.sequence, //DNA sequence, in ACGT
+
+      focus: true,
     };
 
     this.enzymeList = loadEnzymeList('caiLab');
@@ -50,6 +52,25 @@ export class OnionForGenomeDesigner extends React.Component {
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
     this.onBlockChanged = this.onBlockChanged.bind(this);
     this.menuCommand = this.menuCommand.bind(this);
+    this.initCallBack();
+  }
+
+  initCallBack() {
+    this.onKeyPress  = (e) => {
+      console.log(e,e.target,e.which);
+    };
+  }
+
+  componentDidMount() {
+    console.log('OnionForGenomeDesigner mount');
+    $(document).click((e) => {
+      if ($(e.target).closest('.onionPanel').length === 0) {
+        console.log('not onion click');
+        this.setState({ focus: false });
+      } else {
+        this.setState({ focus: true });
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -168,7 +189,9 @@ export class OnionForGenomeDesigner extends React.Component {
           height,
           marginTop: 0,
         }}
-        className="noselect"
+        className="noselect onionPanel"
+        tabIndex="0"
+        onKeyPress ={this.onKeyPress }
       >
         <MenuBar
           title={menuTitle}
@@ -202,6 +225,7 @@ export class OnionForGenomeDesigner extends React.Component {
           cursorPos={this.state.cursorPos}
           selectStartPos={this.state.startCursorPos}
           onBlockChanged={this.onBlockChanged}
+          focus={this.state.focus}
         />
 
         <InfoBar

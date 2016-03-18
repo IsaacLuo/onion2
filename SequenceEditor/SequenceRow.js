@@ -51,7 +51,7 @@ export class SequenceRow extends React.Component {
     showFeatures: React.PropTypes.bool,
     showRuler: React.PropTypes.bool,
     onCalculatedHeight: React.PropTypes.func,
-    selectionColor: React.PropTypes.string,
+    selectionStyle: React.PropTypes.object,
     theme: React.PropTypes.string,
     cursorColor: React.PropTypes.string,
 
@@ -70,7 +70,7 @@ export class SequenceRow extends React.Component {
     showBlockBar: true,
     showAA: true,
     cursorColor: '#4E77BA',
-    selectionColor: '#EDF2F8',
+    selectionStyle: { fill: '#EDF2F8' },
     featureHeight: 18,
     ruler2d: 10,
     translateX: 10,
@@ -536,7 +536,7 @@ export class SequenceRow extends React.Component {
               y={ep.selectionY}
               width={cursorRight - cursorLeft}
               height={ep.selectionH}
-              fill={this.props.selectionColor}
+              style={this.props.selectionStyle}
               key="rectSelection"
             />
             }
