@@ -162,7 +162,7 @@ export class OnionForCailabLIMS extends React.Component {
 
     const menuTitle = this.state.menuTitle;
 
-    const editorHeight = height-42-86;
+    const editorHeight = height-42;
 
     let sequenceEditorWidth;
     let plasmidViewerWidth;
@@ -192,16 +192,6 @@ export class OnionForCailabLIMS extends React.Component {
           marginTop: 0,
         }}
       >
-        <MenuBar
-          title={title}
-          showEnzymes={showEnzymes}
-          showRS={showRS}
-          showFeatures={showFeatures}
-          showRuler={showRuler}
-          showBlockBar={false}
-          showAA={showAA}
-          onSelect={this.menuCommand}
-        />
         <div
           style={{
           verticalAlign: "top",
@@ -214,27 +204,7 @@ export class OnionForCailabLIMS extends React.Component {
             display: 'inline-block',
           }}
         >
-        <SequenceEditor
-          sequence={sequence}
-          showComplement
-          features={features}
-          onSetCursor={this.onSetCursor}
-          onSelecting={this.onSelecting}
-          enzymeList={this.enzymeList}
-          width={sequenceEditorWidth}
-          height={editorHeight}
-          showEnzymes={showEnzymes}
-          showLadder={showRuler || !showRuler && showRS}
-          showRS={showRS}
-          showFeatures={showFeatures}
-          showRuler={showRuler}
-          showBlockBar={showBlockBar}
-          showAA={showAA}
-          blocks={blocks}
-          cursorPos={this.state.cursorPos}
-          selectStartPos={this.state.startCursorPos}
-          onBlockChanged={this.onBlockChanged}
-        />
+
         </div>
         {(plasmidViewerWidth > 0) &&
         <div
@@ -283,3 +253,34 @@ export class OnionForCailabLIMS extends React.Component {
     );
   }
 }
+//<MenuBar
+//  title={title}
+//  showEnzymes={showEnzymes}
+//  showRS={showRS}
+//  showFeatures={showFeatures}
+//  showRuler={showRuler}
+//  showBlockBar={false}
+//  showAA={showAA}
+//  onSelect={this.menuCommand}
+///>
+//<SequenceEditor
+//  sequence={sequence}
+//  showComplement
+//  features={features}
+//  onSetCursor={this.onSetCursor}
+//  onSelecting={this.onSelecting}
+//  enzymeList={this.enzymeList}
+//  width={sequenceEditorWidth}
+//  height={editorHeight}
+//  showEnzymes={showEnzymes}
+//  showLadder={showRuler || !showRuler && showRS}
+//  showRS={showRS}
+//  showFeatures={showFeatures}
+//  showRuler={showRuler}
+//  showBlockBar={showBlockBar}
+//  showAA={showAA}
+//  blocks={blocks}
+//  cursorPos={this.state.cursorPos}
+//  selectStartPos={this.state.startCursorPos}
+//  onBlockChanged={this.onBlockChanged}
+///>
