@@ -7,6 +7,7 @@ import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
+import ComboKeys from 'combokeys';
 
 const $ = require('jquery');
 window.$ = $;
@@ -53,11 +54,21 @@ export class OnionForGenomeDesigner extends React.Component {
     this.onBlockChanged = this.onBlockChanged.bind(this);
     this.menuCommand = this.menuCommand.bind(this);
     this.initCallBack();
+
   }
 
   initCallBack() {
-    this.onKeyPress  = (e) => {
-      console.log(e,e.target,e.which);
+    this.onHotKey = () => {
+      const pos1 = this.state.cursorPos;
+      const pos2 = this.state.startCursorPos;
+      if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
+        let selectedStr = this.state.sequence.substring(pos1, pos2);
+        console.log(selectedStr);
+        //document.clipboardData.setData('text/plain', selectedStr);
+        let dom = document.getElementById('onionPanel')
+        document.addEventListener('copy',(e)=>{console.log(e);});
+
+      }
     };
   }
 
@@ -71,6 +82,9 @@ export class OnionForGenomeDesigner extends React.Component {
         this.setState({ focus: true });
       }
     });
+
+    this.comboKeys = new ComboKeys(document.getElementById('onionPanel'));
+    this.comboKeys.bind('mod+c', this.onHotKey);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -190,8 +204,8 @@ export class OnionForGenomeDesigner extends React.Component {
           marginTop: 0,
         }}
         className="noselect onionPanel"
+        id="onionPanel"
         tabIndex="0"
-        onKeyPress ={this.onKeyPress }
       >
         <MenuBar
           title={menuTitle}

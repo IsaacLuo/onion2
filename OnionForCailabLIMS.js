@@ -204,7 +204,7 @@ export class OnionForCailabLIMS extends React.Component {
         />
         <div
           style={{
-          verticalAlign: "top",
+            verticalAlign: "top",
           }}
         >
         <div
