@@ -66,7 +66,7 @@ export class OnionForGenomeDesigner extends React.Component {
         console.log(selectedStr);
         //document.clipboardData.setData('text/plain', selectedStr);
         let dom = document.getElementById('onionPanel')
-        document.addEventListener('copy',(e)=>{console.log(e);});
+        document.addEventListener('copy', (e) => {console.log(e);});
 
       }
     };

@@ -30,6 +30,7 @@ export class SequenceEditor extends React.Component {
     onSelecting: React.PropTypes.func,
     onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
+    focus: React.PropTypes.bool,
 
   };
   static defaultProps = {
@@ -111,14 +112,14 @@ export class SequenceEditor extends React.Component {
     const _this = this;
 
     this.onScroll = (e) => {
-      const scrollPos = e.target.scrollTop;
-      for (let i = 0; i < this.rowY.length; i++) {
-        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-          const block = this.splitBlocks[i];
-          if (block.length > 0) this.props.onBlockChanged(block);
-          break;
-        }
-      }
+      // const scrollPos = e.target.scrollTop;
+      // for (let i = 0; i < this.rowY.length; i++) {
+      //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+      //     const block = this.splitBlocks[i];
+      //     if (block.length > 0) this.props.onBlockChanged(block);
+      //     break;
+      //   }
+      // }
     };
 
     this.onSetCursor = (cursorPos, rowNumber) => {
@@ -145,6 +146,7 @@ export class SequenceEditor extends React.Component {
     };
 
     this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
+      if(this.props.focus);
       if (cursorPosStart) {
         this.setState({
           cursorPos,

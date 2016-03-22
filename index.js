@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "715b4d5e4cde63f766e9"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7e062890f1529bb367a4"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25616,14 +25616,14 @@
 	      var _this = this;
 	
 	      this.onScroll = function (e) {
-	        var scrollPos = e.target.scrollTop;
-	        for (var i = 0; i < _this3.rowY.length; i++) {
-	          if (scrollPos <= _this3.rowY[i] + _this3.rowHeight[i]) {
-	            var block = _this3.splitBlocks[i];
-	            if (block.length > 0) _this3.props.onBlockChanged(block);
-	            break;
-	          }
-	        }
+	        // const scrollPos = e.target.scrollTop;
+	        // for (let i = 0; i < this.rowY.length; i++) {
+	        //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+	        //     const block = this.splitBlocks[i];
+	        //     if (block.length > 0) this.props.onBlockChanged(block);
+	        //     break;
+	        //   }
+	        // }
 	      };
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
@@ -25650,6 +25650,7 @@
 	      };
 	
 	      this.onSelecting = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
+	        if (_this3.props.focus) ;
 	        if (cursorPosStart) {
 	          _this3.setState({
 	            cursorPos: cursorPos,
@@ -26178,7 +26179,8 @@
 	  onSetCursor: _react3.default.PropTypes.func,
 	  onSelecting: _react3.default.PropTypes.func,
 	  onRowCalculatedHeight: _react3.default.PropTypes.func,
-	  showSelection: _react3.default.PropTypes.bool
+	  showSelection: _react3.default.PropTypes.bool,
+	  focus: _react3.default.PropTypes.bool
 	
 	}, _class.defaultProps = {
 	  sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
@@ -28328,7 +28330,10 @@
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      console.log('componentDidMount:');
+	
 	      window.addEventListener('resize', this.updateDimensions.bind(this));
+	      //let target = $('.ProjectDetail-chrome').get(0);
+	      //target.addEventListener('resize', this.updateDimensions.bind(this));
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
@@ -28345,9 +28350,10 @@
 	
 	      var _width = $('.ProjectDetail-chrome').width();
 	      var _height = $('.ProjectDetail-chrome').height();
-	      var width = Math.max(100, _width);
+	      var height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
+	      var width = Math.max(300, _width);
 	      var height = Math.max(100, _height);
-	      console.log('updateDimensions:', container, width, height);
+	      console.log('updateDimensions:', container, width, height, height2);
 	      this.setState({ width: width, height: height });
 	    }
 	  }, {

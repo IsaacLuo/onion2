@@ -76,7 +76,10 @@ class OnionViewer extends React.Component {
 
   componentDidMount() {
     console.log('componentDidMount:');
+
     window.addEventListener('resize', this.updateDimensions.bind(this));
+    //let target = $('.ProjectDetail-chrome').get(0);
+    //target.addEventListener('resize', this.updateDimensions.bind(this));
   }
 
   componentWillUnmount() {
@@ -88,9 +91,10 @@ class OnionViewer extends React.Component {
     const { container } = this.props;
     const _width = $('.ProjectDetail-chrome').width();
     const _height = $('.ProjectDetail-chrome').height();
-    const width = Math.max(100, _width);
+    let height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
+    const width = Math.max(300, _width);
     const height = Math.max(100, _height);
-    console.log('updateDimensions:', container, width, height);
+    console.log('updateDimensions:', container, width, height, height2);
     this.setState({ width, height });
   }
 
