@@ -86,8 +86,8 @@ class OnionViewer extends React.Component {
   //read dimensions of onion container
   updateDimensions() {
     const { container } = this.props;
-    const _width = $('.onionContainer').width();
-    const _height = $('.onionContainer').height();
+    const _width = $('.ProjectDetail-chrome').width();
+    const _height = $('.ProjectDetail-chrome').height();
     const width = Math.max(100, _width);
     const height = Math.max(100, _height);
     console.log('updateDimensions:', container, width, height);

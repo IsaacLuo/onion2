@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "019c5a2cca6774d8b4c6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "715b4d5e4cde63f766e9"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25223,7 +25223,9 @@
 	          console.log(selectedStr);
 	          //document.clipboardData.setData('text/plain', selectedStr);
 	          var dom = document.getElementById('onionPanel');
-	          //dom.dispatchEvent(new ClipboardEvent('copy'));
+	          document.addEventListener('copy', function (e) {
+	            console.log(e);
+	          });
 	        }
 	      };
 	    }
@@ -28341,8 +28343,8 @@
 	    value: function updateDimensions() {
 	      var container = this.props.container;
 	
-	      var _width = $('.onionContainer').width();
-	      var _height = $('.onionContainer').height();
+	      var _width = $('.ProjectDetail-chrome').width();
+	      var _height = $('.ProjectDetail-chrome').height();
 	      var width = Math.max(100, _width);
 	      var height = Math.max(100, _height);
 	      console.log('updateDimensions:', container, width, height);
