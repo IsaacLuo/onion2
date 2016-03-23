@@ -102,22 +102,25 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user move cursor by clicking
   onSetCursor(pos) {
-    if (!pos) {
-      console.error(pos);
-      debugger;
-    }
+    if (this.state.focus) {
+      if (!pos) {
+        console.error(pos);
+        debugger;
+      }
 
-    this.setState({ cursorPos: pos, startCursorPos: pos });
+      this.setState({ cursorPos: pos, startCursorPos: pos });
+    }
   }
 
   //while user drags on editor
   onSelecting(pos1, pos2) {
-    if (pos1 >= 0 && pos2 >= 0) {
-      this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-    } else {
-      console.error(pos1, pos2);
+    if (this.state.focus) {
+      if (pos1 >= 0 && pos2 >= 0) {
+        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+      } else {
+        console.error(pos1, pos2);
+      }
     }
-
   }
 
   //while user changes the value of start and end numeric control on info bar

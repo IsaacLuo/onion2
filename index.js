@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7e062890f1529bb367a4"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "f4f96ac9531af5aed685"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25267,12 +25267,14 @@
 	  }, {
 	    key: 'onSetCursor',
 	    value: function onSetCursor(pos) {
-	      if (!pos) {
-	        console.error(pos);
-	        debugger;
-	      }
+	      if (this.state.focus) {
+	        if (!pos) {
+	          console.error(pos);
+	          debugger;
+	        }
 	
-	      this.setState({ cursorPos: pos, startCursorPos: pos });
+	        this.setState({ cursorPos: pos, startCursorPos: pos });
+	      }
 	    }
 	
 	    //while user drags on editor
@@ -25280,10 +25282,12 @@
 	  }, {
 	    key: 'onSelecting',
 	    value: function onSelecting(pos1, pos2) {
-	      if (pos1 >= 0 && pos2 >= 0) {
-	        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-	      } else {
-	        console.error(pos1, pos2);
+	      if (this.state.focus) {
+	        if (pos1 >= 0 && pos2 >= 0) {
+	          this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	        } else {
+	          console.error(pos1, pos2);
+	        }
 	      }
 	    }
 	
@@ -25627,51 +25631,54 @@
 	      };
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
-	        _this3.setState({
-	          cursorPos: cursorPos,
-	          showCursor: true,
-	          selectStartPos: cursorPos,
-	          showSelection: false
-	        });
-	        if (_this3.props.onSetCursor) {
-	          _this3.props.onSetCursor(cursorPos);
-	        }
+	        if (_this3.props.focus) {
+	          _this3.setState({
+	            cursorPos: cursorPos,
+	            showCursor: true,
+	            selectStartPos: cursorPos,
+	            showSelection: false
+	          });
+	          if (_this3.props.onSetCursor) {
+	            _this3.props.onSetCursor(cursorPos);
+	          }
 	
-	        if (_this3.props.onBlockChanged) {
-	          var row = Math.floor(cursorPos / _this3.colNum);
-	          var x = cursorPos % _this3.colNum;
-	          var blocks = _this3.splitBlocks[row];
-	          for (var i = 0; i < blocks.length; i++) {
-	            if (x >= blocks[i].start) {
-	              _this3.props.onBlockChanged([blocks[i]]);
+	          if (_this3.props.onBlockChanged) {
+	            var row = Math.floor(cursorPos / _this3.colNum);
+	            var x = cursorPos % _this3.colNum;
+	            var blocks = _this3.splitBlocks[row];
+	            for (var i = 0; i < blocks.length; i++) {
+	              if (x >= blocks[i].start) {
+	                _this3.props.onBlockChanged([blocks[i]]);
+	              }
 	            }
 	          }
 	        }
 	      };
 	
 	      this.onSelecting = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-	        if (_this3.props.focus) ;
-	        if (cursorPosStart) {
-	          _this3.setState({
-	            cursorPos: cursorPos,
-	            showCursor: true,
-	            showSelection: true,
-	            selectStartPos: cursorPosStart
-	          });
-	        } else {
-	          _this3.setState({
-	            cursorPos: cursorPos,
-	            showCursor: true,
-	            showSelection: true
-	          });
-	        }
-	
-	        if (_this3.props.onSelecting) {
+	        if (_this3.props.focus) {
 	          if (cursorPosStart) {
-	            console.log('full start', cursorPosStart, cursorPos);
-	            _this3.props.onSelecting(cursorPos, cursorPosStart);
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true,
+	              selectStartPos: cursorPosStart
+	            });
 	          } else {
-	            _this3.props.onSelecting(cursorPos, _this3.state.selectStartPos);
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true
+	            });
+	          }
+	
+	          if (_this3.props.onSelecting) {
+	            if (cursorPosStart) {
+	              console.log('full start', cursorPosStart, cursorPos);
+	              _this3.props.onSelecting(cursorPos, cursorPosStart);
+	            } else {
+	              _this3.props.onSelecting(cursorPos, _this3.state.selectStartPos);
+	            }
 	          }
 	        }
 	      };
@@ -27372,6 +27379,7 @@
 	      //console.log(cursorPos);
 	      //this.setState(cursorPos)
 	      this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+	      e.preventDefault();
 	    }
 	  }, {
 	    key: 'onMouseMove',

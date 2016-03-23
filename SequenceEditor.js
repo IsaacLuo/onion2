@@ -123,51 +123,54 @@ export class SequenceEditor extends React.Component {
     };
 
     this.onSetCursor = (cursorPos, rowNumber) => {
-      this.setState({
-        cursorPos,
-        showCursor: true,
-        selectStartPos: cursorPos,
-        showSelection: false,
-      });
-      if (this.props.onSetCursor) {
-        this.props.onSetCursor(cursorPos);
-      }
+      if (this.props.focus) {
+        this.setState({
+          cursorPos,
+          showCursor: true,
+          selectStartPos: cursorPos,
+          showSelection: false,
+        });
+        if (this.props.onSetCursor) {
+          this.props.onSetCursor(cursorPos);
+        }
 
-      if (this.props.onBlockChanged) {
-        const row = Math.floor(cursorPos / this.colNum);
-        const x = cursorPos % this.colNum;
-        const blocks = this.splitBlocks[row];
-        for (let i = 0; i < blocks.length; i++) {
-          if (x >= blocks[i].start) {
-            this.props.onBlockChanged([blocks[i]]);
+        if (this.props.onBlockChanged) {
+          const row = Math.floor(cursorPos / this.colNum);
+          const x = cursorPos % this.colNum;
+          const blocks = this.splitBlocks[row];
+          for (let i = 0; i < blocks.length; i++) {
+            if (x >= blocks[i].start) {
+              this.props.onBlockChanged([blocks[i]]);
+            }
           }
         }
       }
     };
 
     this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
-      if(this.props.focus);
-      if (cursorPosStart) {
-        this.setState({
-          cursorPos,
-          showCursor: true,
-          showSelection: true,
-          selectStartPos: cursorPosStart,
-        });
-      } else {
-        this.setState({
-          cursorPos,
-          showCursor: true,
-          showSelection: true,
-        });
-      }
-
-      if (this.props.onSelecting) {
+      if (this.props.focus) {
         if (cursorPosStart) {
-          console.log('full start', cursorPosStart, cursorPos);
-          this.props.onSelecting(cursorPos, cursorPosStart);
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+            selectStartPos: cursorPosStart,
+          });
         } else {
-          this.props.onSelecting(cursorPos, this.state.selectStartPos);
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+          });
+        }
+
+        if (this.props.onSelecting) {
+          if (cursorPosStart) {
+            console.log('full start', cursorPosStart, cursorPos);
+            this.props.onSelecting(cursorPos, cursorPosStart);
+          } else {
+            this.props.onSelecting(cursorPos, this.state.selectStartPos);
+          }
         }
       }
     };
