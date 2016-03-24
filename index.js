@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "05a0e02443ae5110bb07"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "1879126de98b05ce4e10"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25270,7 +25270,7 @@
 	      if (this.state.focus) {
 	        var pos = _pos;
 	        var sequenceLen = this.state.sequence.length;
-	        if (pos < 0) pos = 0;else if (pos >= sequenceLen) pos = sequenceLen - 1;
+	        if (pos < 0) pos = 0;else if (pos > sequenceLen) pos = sequenceLen;
 	
 	        this.setState({ cursorPos: pos, startCursorPos: pos });
 	      }
@@ -28289,7 +28289,7 @@
 	
 	          var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
 	            var block = state.blocks[currentBlocks[i]];
-	            console.log(block);
+	            console.log('currentBlocks', currentBlocks, i, block);
 	
 	            block.getSequence().then(function (sequence) {
 	              if (sequence) {
@@ -28324,7 +28324,6 @@
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      console.log('componentwillmount');
-	
 	      //this.updateDimensions();
 	    }
 	  }, {

@@ -37,7 +37,7 @@ class OnionViewer extends React.Component {
 
         const readSequenceFromBlock = (i, count) => {
           const block = state.blocks[currentBlocks[i]];
-          console.log(block);
+          console.log('currentBlocks',currentBlocks,i,block);
 
           block.getSequence().then(sequence => {
             if (sequence) {
@@ -68,9 +68,6 @@ class OnionViewer extends React.Component {
 
   componentWillMount() {
     console.log('componentwillmount');
-
-
-
     //this.updateDimensions();
   }
 
