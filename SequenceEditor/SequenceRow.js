@@ -53,7 +53,7 @@ export class SequenceRow extends React.Component {
     onCalculatedHeight: React.PropTypes.func,
     selectionStyle: React.PropTypes.object,
     theme: React.PropTypes.string,
-    cursorColor: React.PropTypes.string,
+    cursorStyle: React.PropTypes.object,
 
   };
   static defaultProps = {
@@ -69,7 +69,7 @@ export class SequenceRow extends React.Component {
     showRuler2: true,
     showBlockBar: true,
     showAA: true,
-    cursorColor: '#4E77BA',
+    cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
     selectionStyle: { fill: '#EDF2F8' },
     featureHeight: 18,
     ruler2d: 10,
@@ -420,6 +420,7 @@ export class SequenceRow extends React.Component {
       showRS,
       showFeatures,
       showRuler,
+      cursorStyle,
       } = this.props;
 
     const sequenceRowWidth = sequence.length * unitWidth;
@@ -584,9 +585,7 @@ export class SequenceRow extends React.Component {
             <g>
               <path
                 d={`M ${cursorX} ${ep.selectionY} L ${cursorX} ${ep.selectionYB}`}
-                stroke={this.props.cursorColor}
-                strokeWidth="2"
-                fill={this.props.cursorColor}
+                style={cursorStyle}
               >
               </path>
             </g>
@@ -595,20 +594,18 @@ export class SequenceRow extends React.Component {
             <g>
               <path
                 d={`M ${cursorLeft} ${ep.selectionY} L ${cursorLeft} ${ep.selectionYB}`}
-                stroke={this.props.cursorColor}
-                strokeWidth="2"
-                fill={this.props.cursorColor}
+                style={cursorStyle}
               >
               </path>
               <text
                 x={cursorLeft + unitWidth / 2}
                 y={ep.selectionYB}
-                fill={this.props.cursorColor}
                 style={{
                   WebkitUserSelect: 'none',
                   fontSize: 13,
                   alignmentBaseline: 'before-edge',
                   textAnchor: 'middle',
+                  fill: cursorStyle.fill,
                 }}
               >
                 {selectLeftPos + idxStart + 1}
@@ -619,23 +616,19 @@ export class SequenceRow extends React.Component {
             <g>
               <path
                 d={`M ${cursorRight} ${ep.selectionY} L ${cursorRight} ${ep.selectionYB}`}
-                stroke={this.props.cursorColor}
-                strokeWidth="2"
-                fill={this.props.cursorColor}
+                style={cursorStyle}
               >
               </path>
               {showRightCursorText &&
               <text
                 x={cursorRight - unitWidth / 2}
                 y={ep.selectionYB}
-
-                fill={this.props.cursorColor}
                 style={{
                   WebkitUserSelect: 'none',
                   fontSize: 13,
                   alignmentBaseline: 'before-edge',
                   textAnchor: 'middle',
-
+                  fill: cursorStyle.fill,
                 }}
               >
                 {selectRightPos + idxStart}

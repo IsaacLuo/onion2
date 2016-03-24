@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "f4f96ac9531af5aed685"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "05a0e02443ae5110bb07"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -25178,8 +25178,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionForGenomeDesigner).call(this, props));
 	
 	    _this.state = {
-	      cursorPos: -1, //current cursor position from 0 to sequence.length
-	      startCursorPos: -1, //mouse down cursor position in selecting
+	      cursorPos: 0, //current cursor position from 0 to sequence.length
+	      startCursorPos: 0, //mouse down cursor position in selecting
 	
 	      //layers switch
 	      showEnzymes: true,
@@ -25266,12 +25266,11 @@
 	
 	  }, {
 	    key: 'onSetCursor',
-	    value: function onSetCursor(pos) {
+	    value: function onSetCursor(_pos) {
 	      if (this.state.focus) {
-	        if (!pos) {
-	          console.error(pos);
-	          debugger;
-	        }
+	        var pos = _pos;
+	        var sequenceLen = this.state.sequence.length;
+	        if (pos < 0) pos = 0;else if (pos >= sequenceLen) pos = sequenceLen - 1;
 	
 	        this.setState({ cursorPos: pos, startCursorPos: pos });
 	      }
@@ -25580,7 +25579,7 @@
 	    _this2.state = {
 	      cursorPos: 0,
 	      selectStartPos: 0,
-	      showCursor: false,
+	      showCursor: true,
 	      showSelection: false
 	    };
 	
@@ -26061,13 +26060,13 @@
 	        var subSequence = sequence.substr(i, colNum);
 	
 	        var selectionStyle = undefined;
+	        var cursorStyle = undefined;
 	        if (!focus) {
-	          rowShowCursor = false;
-	          rowShowLeftCursor = false;
-	          rowShowRightCursor = false;
 	          selectionStyle = { fill: '#F2F2F2' };
+	          cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
 	        } else {
 	          selectionStyle = { fill: '#EDF2F8' };
+	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
 	        }
 	
 	        this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
@@ -26082,6 +26081,7 @@
 	          onSetHighLight: this.onSetHighLight,
 	          cursorPos: rowCursorPos,
 	          showCursor: rowShowCursor,
+	          cursorStyle: cursorStyle,
 	          selectLeftPos: rowSelectLeftPos,
 	          selectRightPos: rowSelectRightPos,
 	          showLeftCursor: rowShowLeftCursor,
@@ -27745,6 +27745,7 @@
 	      var showRS = _props9.showRS;
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
+	      var cursorStyle = _props9.cursorStyle;
 	
 	
 	      var sequenceRowWidth = sequence.length * unitWidth;
@@ -27895,9 +27896,7 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorX + ' ' + ep.selectionY + ' L ' + cursorX + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              })
 	            ),
 	            showLeftCursor && _react3.default.createElement(
@@ -27905,21 +27904,19 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorLeft + ' ' + ep.selectionY + ' L ' + cursorLeft + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              _react3.default.createElement(
 	                'text',
 	                {
 	                  x: cursorLeft + unitWidth / 2,
 	                  y: ep.selectionYB,
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectLeftPos + idxStart + 1
@@ -27930,23 +27927,19 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorRight + ' ' + ep.selectionY + ' L ' + cursorRight + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              showRightCursorText && _react3.default.createElement(
 	                'text',
 	                {
 	                  x: cursorRight - unitWidth / 2,
 	                  y: ep.selectionYB,
-	
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
-	
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectRightPos + idxStart
@@ -28013,7 +28006,7 @@
 	  onCalculatedHeight: _react3.default.PropTypes.func,
 	  selectionStyle: _react3.default.PropTypes.object,
 	  theme: _react3.default.PropTypes.string,
-	  cursorColor: _react3.default.PropTypes.string
+	  cursorStyle: _react3.default.PropTypes.object
 	
 	}, _class.defaultProps = {
 	  sequence: 'NOTHING',
@@ -28028,7 +28021,7 @@
 	  showRuler2: true,
 	  showBlockBar: true,
 	  showAA: true,
-	  cursorColor: '#4E77BA',
+	  cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
 	  selectionStyle: { fill: '#EDF2F8' },
 	  featureHeight: 18,
 	  ruler2d: 10,

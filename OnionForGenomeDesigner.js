@@ -26,8 +26,8 @@ export class OnionForGenomeDesigner extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cursorPos: -1,           //current cursor position from 0 to sequence.length
-      startCursorPos: -1,      //mouse down cursor position in selecting
+      cursorPos: 0,           //current cursor position from 0 to sequence.length
+      startCursorPos: 0,      //mouse down cursor position in selecting
 
       //layers switch
       showEnzymes: true,
@@ -101,12 +101,12 @@ export class OnionForGenomeDesigner extends React.Component {
   //====================event response=====================
 
   //while user move cursor by clicking
-  onSetCursor(pos) {
+  onSetCursor(_pos) {
     if (this.state.focus) {
-      if (!pos) {
-        console.error(pos);
-        debugger;
-      }
+      let pos = _pos;
+      const sequenceLen = this.state.sequence.length;
+      if (pos < 0) pos = 0;
+      else if (pos > sequenceLen) pos = sequenceLen;
 
       this.setState({ cursorPos: pos, startCursorPos: pos });
     }

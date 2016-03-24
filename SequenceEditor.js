@@ -78,7 +78,7 @@ export class SequenceEditor extends React.Component {
     this.state = {
       cursorPos: 0,
       selectStartPos: 0,
-      showCursor: false,
+      showCursor: true,
       showSelection: false,
     };
 
@@ -548,13 +548,13 @@ export class SequenceEditor extends React.Component {
       const subSequence = sequence.substr(i, colNum);
 
       let selectionStyle;
+      let cursorStyle;
       if (!focus) {
-        rowShowCursor = false;
-        rowShowLeftCursor = false;
-        rowShowRightCursor = false;
         selectionStyle = { fill: '#F2F2F2' };
+        cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
       } else {
-        selectionStyle = { fill: '#EDF2F8' }
+        selectionStyle = { fill: '#EDF2F8' };
+        cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
       }
 
       this.textRows.push(
@@ -570,6 +570,7 @@ export class SequenceEditor extends React.Component {
           onSetHighLight={this.onSetHighLight}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}
+          cursorStyle={cursorStyle}
           selectLeftPos={rowSelectLeftPos}
           selectRightPos={rowSelectRightPos}
           showLeftCursor={rowShowLeftCursor}
