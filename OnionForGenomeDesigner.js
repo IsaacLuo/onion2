@@ -7,7 +7,6 @@ import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
-import ComboKeys from 'combokeys';
 
 const $ = require('jquery');
 window.$ = $;
@@ -82,9 +81,6 @@ export class OnionForGenomeDesigner extends React.Component {
         this.setState({ focus: true });
       }
     });
-
-    this.comboKeys = new ComboKeys(document.getElementById('onionPanel'));
-    this.comboKeys.bind('mod+c', this.onHotKey);
   }
 
   componentWillReceiveProps(nextProps) {
