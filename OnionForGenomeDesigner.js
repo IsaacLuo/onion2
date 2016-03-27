@@ -244,8 +244,8 @@ export class OnionForGenomeDesigner extends React.Component {
         <InfoBar
           width={width}
           height={30}
-          startPos={selectionStart}
-          endPos={selectionStart + selectionLength}
+          startPos={selectionLength > 0 ? selectionStart : -1}
+          endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
           seq={selectedSeq}
           style={{
             textAlign: 'right',

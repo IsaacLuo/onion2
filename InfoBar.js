@@ -32,12 +32,12 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.initCallBack();
   }
 
   initCallBack() {
     this.onChangeStart = (o, v, e) => {
+      this.showStartValue = true;
       if (this.props.onChange) {
         const { startPos, endPos } = this.props;
         const vv = v - 1;
