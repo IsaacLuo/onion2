@@ -5,6 +5,63 @@ const manifest = require('json!./package.json');
 
 const $ = require('jquery');
 
+class OnionBuilder {
+  constructor() {
+    this.sequenceDict = {};
+    this.onionBlocks = [];
+  }
+
+  setBlock(blocks) {
+    this.onionBlocks = [];
+    let start = 0;
+    let renderStart = 0;
+    for (const block of blocks) {
+      const { length, md5 } = block.sequence;
+      const { name, color } = block.metadata;
+      this.onionBlocks.push({
+        md5,
+        length,
+        name,
+        color,
+        start,
+        renderStart,
+        originBlock: block,
+      });
+      start += length;
+      if (length == 0) {
+        renderStart += 10;
+      } else {
+        renderStart += length;
+      }
+    }
+  }
+
+  getSequence() {
+    let seq = [];
+    let completeFlag = true;
+    for (let i = 0; i < this.onionBlocks.length; i++) {
+      const { md5, length, originBlock } = this.onionBlocks[i];
+
+      if (this.sequenceDict[md5] && this.sequenceDict[md5]) {
+        seq.push(this.sequenceDict[md5]);
+      } else {
+        completeFlag = false;
+        seq.push('.'.repeat(length));
+        originBlock.getSequence().then(sequence => {
+          seq[i] = sequence;
+        });
+      }
+    }
+
+    return { seq: seq.join(''), completeFlag };
+  }
+
+  setBlocks(blocks) {
+    this.blocks = blocks;
+  }
+
+}
+
 // OnionViewer reads data from blocks, and converts it to onion format.
 class OnionViewer extends React.Component {
   static propTypes = {
@@ -22,46 +79,74 @@ class OnionViewer extends React.Component {
     };
 
     window.gd.store.subscribe((state, lastAction) => {
+      console.log(`lastAction,`, lastAction);
       let last = [];
-      const current = state.ui.currentBlocks;
-      if (current &&
-        current.length &&
-        (current.length !== last.length
-          || !current.every((item, index) => item !== last[index])
-        )) {
-        const currentBlocks = current;
-        const readBlockCount = currentBlocks.length;
-        const onionBlocks = [];
-        let start = 0;
-        let totalSequence = '';
-
-        const readSequenceFromBlock = (i, count) => {
-          const block = state.blocks[currentBlocks[i]];
-          console.log('currentBlocks',currentBlocks,i,block);
-
-          block.getSequence().then(sequence => {
-            if (sequence) {
-              onionBlocks.push({
-                color: block.metadata.color,
-                start,
-                length: sequence.length,
-                name: block.metadata.name,
-              });
-              start += sequence.length;
-              totalSequence += sequence;
-              if (i === count - 1) {
-                this.setState({ blocks: onionBlocks, sequence: totalSequence });
-              } else {
-                readSequenceFromBlock(i + 1, count);
+      if (lastAction.type === 'FOCUS_BLOCKS') {
+        let leafBlocks = [];
+        const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+        if (topSelectedBlocks && topSelectedBlocks.length) {
+          for (let block of topSelectedBlocks) {
+            const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+            if (children && children.length === 0 ) {
+              leafBlocks.push(block);
+            } else {
+              for (let node of children) {
+                if (node.components && node.components.length === 0) {
+                  leafBlocks.push(node);
+                }
               }
             }
-          });
-        };
+          }
+        }
 
-        readSequenceFromBlock(0, readBlockCount);
+        for (let block of leafBlocks) {
+          console.log(block.metadata.name);
+          const { length, md5 } = block.sequence;
+          const { name, color } = block.metadata;
+        }
 
-        last = current;
+
       }
+
+
+      // const current = state.ui.currentBlocks;
+      // if (current &&
+      //   current.length &&
+      //   (current.length !== last.length
+      //     || !current.every((item, index) => item !== last[index])
+      //   )) {
+      //   const currentBlocks = current;
+      //   const readBlockCount = currentBlocks.length;
+      //   const onionBlocks = [];
+      //   let start = 0;
+      //   let totalSequence = '';
+      //
+      //   const readSequenceFromBlock = (i, count) => {
+      //     const block = state.blocks[currentBlocks[i]];
+      //     console.log('currentBlocks', currentBlocks,i,block);
+      //
+      //     block.getSequence().then(sequence => {
+      //       if (sequence) {
+      //         onionBlocks.push({
+      //           color: block.metadata.color,
+      //           start,
+      //           length: sequence.length,
+      //           name: block.metadata.name,
+      //         });
+      //         start += sequence.length;
+      //         totalSequence += sequence;
+      //         if (i === count - 1) {
+      //           this.setState({ blocks: onionBlocks, sequence: totalSequence });
+      //         } else {
+      //           readSequenceFromBlock(i + 1, count);
+      //         }
+      //       }
+      //     });
+      //   };
+      //
+      //   readSequenceFromBlock(0, readBlockCount);
+
+       // last = current;
     });
 
   }
