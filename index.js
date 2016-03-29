@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d7e2dbd201e81462781c"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "72fa637499408246a439"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -3615,8 +3615,11 @@
 	 * Created by Isaac on 20/01/2016.
 	 */
 	
-	function compareProps(props1, props2) {
-	  var list = arguments.length <= 2 || arguments[2] === undefined ? Object.keys(props1) : arguments[2];
+	function compareProps(props1, props2, list) {
+	  if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
+	    list = Object.keys(props1);
+	  }
+	
 	  var _iteratorNormalCompletion = true;
 	  var _didIteratorError = false;
 	  var _iteratorError = undefined;
@@ -23954,7 +23957,7 @@
 	      if (nextProps.sequence !== this.props.sequence) {
 	        //reset state sequence
 	        this.state.sequence = nextProps.sequence;
-	        if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+	        if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
 	        this.state.features = [];
 	      }
 	
@@ -23968,7 +23971,7 @@
 	  }, {
 	    key: 'onSetCursor',
 	    value: function onSetCursor(_pos) {
-	      if (this.state.focus) {
+	      if (this.state.focus && this.state.sequence) {
 	        var pos = _pos;
 	        var sequenceLen = this.state.sequence.length;
 	        if (pos < 0) pos = 0;else if (pos > sequenceLen) pos = sequenceLen;
@@ -26965,8 +26968,9 @@
 	  }
 	
 	  _createClass(OnionBuilder, [{
-	    key: 'setBlock',
-	    value: function setBlock(blocks) {
+	    key: 'setBlocks',
+	    value: function setBlocks(blocks) {
+	      this.originalBlocks = blocks;
 	      this.onionBlocks = [];
 	      var start = 0;
 	      var renderStart = 0;
@@ -26990,8 +26994,7 @@
 	            name: name,
 	            color: color,
 	            start: start,
-	            renderStart: renderStart,
-	            originBlock: block
+	            renderStart: renderStart
 	          });
 	          start += length;
 	          if (length == 0) {
@@ -27014,46 +27017,72 @@
 	          }
 	        }
 	      }
+	
+	      return this.updateSequence();
 	    }
 	  }, {
-	    key: 'getSequence',
-	    value: function getSequence() {
+	    key: 'setEventBlockUpdated',
+	    value: function setEventBlockUpdated(fn) {
+	      this.onBlockUpdated = fn;
+	    }
+	  }, {
+	    key: 'updateSequence',
+	    value: function updateSequence() {
 	      var _this = this;
 	
-	      var seq = [];
 	      var completeFlag = true;
 	
 	      var _loop = function _loop(i) {
 	        var _onionBlocks$i = _this.onionBlocks[i];
 	        var md5 = _onionBlocks$i.md5;
 	        var length = _onionBlocks$i.length;
-	        var name = _onionBlocks$i.name;
-	        var color = _onionBlocks$i.color;
-	        var start = _onionBlocks$i.start;
-	        var originBlock = _onionBlocks$i.originBlock;
 	
-	
-	        if (_this.sequenceDict[md5] && _this.sequenceDict[md5]) {
-	          seq.push(_this.sequenceDict[md5]);
-	        } else {
+	        var originalBlock = _this.originalBlocks[i];
+	        if (!_this.sequenceDict[md5]) {
 	          completeFlag = false;
-	          seq.push('.'.repeat(length));
-	          originBlock.getSequence().then(function (sequence) {
-	            seq[i] = sequence;
-	          });
+	          if (originalBlock.getSequence) {
+	            originalBlock.getSequence().then(function (sequence) {
+	              _this.sequenceDict[md5] = sequence;
+	              _this.onBlockUpdated(i);
+	            });
+	          } else {
+	            console.warn(originalBlock);
+	          }
 	        }
 	      };
 	
 	      for (var i = 0; i < this.onionBlocks.length; i++) {
 	        _loop(i);
 	      }
-	
-	      return { seq: seq, completeFlag: completeFlag };
+	      if (completeFlag === true) {
+	        this.onBlockUpdated();
+	      }
 	    }
 	  }, {
-	    key: 'setBlocks',
-	    value: function setBlocks(blocks) {
-	      this.blocks = blocks;
+	    key: 'getSequence',
+	    value: function getSequence() {
+	      var seq = [];
+	      var completeFlag = true;
+	      for (var i = 0; i < this.onionBlocks.length; i++) {
+	        var _onionBlocks$i2 = this.onionBlocks[i];
+	        var _md = _onionBlocks$i2.md5;
+	        var length = _onionBlocks$i2.length;
+	
+	
+	        if (this.sequenceDict[_md] && this.sequenceDict[_md]) {
+	          seq.push(this.sequenceDict[_md]);
+	        } else {
+	          completeFlag = false;
+	          seq.push('.'.repeat(length));
+	        }
+	      }
+	
+	      return { seq: seq.join(''), completeFlag: completeFlag };
+	    }
+	  }, {
+	    key: 'getBlocks',
+	    value: function getBlocks() {
+	      return this.onionBlocks;
 	    }
 	  }]);
 	
@@ -27079,6 +27108,22 @@
 	      block: null,
 	      rendered: Date.now()
 	    };
+	    _this2.onionBuilder = new OnionBuilder();
+	    _this2.onionBuilder.setEventBlockUpdated(function () {
+	      console.log('!!!!!!sequence loaded', _this2.onionBuilder.getSequence());
+	
+	      var _this2$onionBuilder$g = _this2.onionBuilder.getSequence();
+	
+	      var seq = _this2$onionBuilder$g.seq;
+	      var completeFlag = _this2$onionBuilder$g.completeFlag;
+	
+	      if (completeFlag || _this2.allowToRefresh) {
+	        _this2.setState({
+	          sequence: seq,
+	          blocks: _this2.onionBuilder.getBlocks()
+	        });
+	      }
+	    });
 	
 	    window.gd.store.subscribe(function (state, lastAction) {
 	      console.log('lastAction,', lastAction);
@@ -27143,36 +27188,7 @@
 	          }
 	        }
 	
-	        var _iteratorNormalCompletion4 = true;
-	        var _didIteratorError4 = false;
-	        var _iteratorError4 = undefined;
-	
-	        try {
-	          for (var _iterator4 = leafBlocks[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-	            var block = _step4.value;
-	
-	            console.log(block.metadata.name);
-	            var _block$sequence2 = block.sequence;
-	            var _length = _block$sequence2.length;
-	            var _md = _block$sequence2.md5;
-	            var _block$metadata2 = block.metadata;
-	            var name = _block$metadata2.name;
-	            var color = _block$metadata2.color;
-	          }
-	        } catch (err) {
-	          _didIteratorError4 = true;
-	          _iteratorError4 = err;
-	        } finally {
-	          try {
-	            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-	              _iterator4.return();
-	            }
-	          } finally {
-	            if (_didIteratorError4) {
-	              throw _iteratorError4;
-	            }
-	          }
-	        }
+	        _this2.onionBuilder.setBlocks(leafBlocks);
 	      }
 	
 	      // const current = state.ui.currentBlocks;
@@ -27232,11 +27248,21 @@
 	      window.addEventListener('resize', this.updateDimensions.bind(this));
 	      //let target = $('.ProjectDetail-chrome').get(0);
 	      //target.addEventListener('resize', this.updateDimensions.bind(this));
+	      this.allowToRefresh = true;
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      window.removeEventListener('resize', this.updateDimensions.bind(this));
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      var _this3 = this;
+	
+	      setTimeout(function () {
+	        _this3.allowToRefresh = true;
+	      }, 1000);
 	    }
 	
 	    //read dimensions of onion container

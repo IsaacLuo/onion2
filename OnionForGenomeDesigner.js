@@ -87,7 +87,7 @@ export class OnionForGenomeDesigner extends React.Component {
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
-      if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+      if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
       this.state.features = [];
     }
 
@@ -98,7 +98,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user move cursor by clicking
   onSetCursor(_pos) {
-    if (this.state.focus) {
+    if (this.state.focus && this.state.sequence) {
       let pos = _pos;
       const sequenceLen = this.state.sequence.length;
       if (pos < 0) pos = 0;
