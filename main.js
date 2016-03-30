@@ -15,24 +15,22 @@ class OnionBuilder {
     this.originalBlocks = blocks;
     this.onionBlocks = [];
     let start = 0;
-    let renderStart = 0;
+    let realStart = 0;
     for (const block of blocks) {
       const { length, md5 } = block.sequence;
       const { name, color } = block.metadata;
+      let fakeLength = length === 0 ? 13 : length;
       this.onionBlocks.push({
         md5,
-        length,
+        length: fakeLength,
         name,
         color,
         start,
-        renderStart,
+        realStart,
+        realLength: length,
       });
-      start += length;
-      if (length == 0) {
-        renderStart += 10;
-      } else {
-        renderStart += length;
-      }
+      realStart += length;
+      start += fakeLength;
     }
 
     return this.updateSequence();
@@ -70,9 +68,11 @@ class OnionBuilder {
     let seq = [];
     let completeFlag = true;
     for (let i = 0; i < this.onionBlocks.length; i++) {
-      const { md5, length } = this.onionBlocks[i];
-
-      if (this.sequenceDict[md5] && this.sequenceDict[md5]) {
+      const { md5, length, realLength } = this.onionBlocks[i];
+      if (realLength === 0) {
+        //empty block
+        seq.push('X'.repeat(length));
+      } else if (this.sequenceDict[md5]) {
         seq.push(this.sequenceDict[md5]);
       } else {
         completeFlag = false;

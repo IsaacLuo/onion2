@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "72fa637499408246a439"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "01eb79f658684bec9dfb"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -15492,7 +15492,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -15655,7 +15655,7 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 	
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c' };
+	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -24679,6 +24679,8 @@
 	          var len = blocks[i].length;
 	          var blockEnd = start + len;
 	          var blockRowIdx = Math.floor(start / colNum);
+	          var realStart = blocks[i].realStart;
+	          var realLength = blocks[i].realLength;
 	
 	          for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
 	            var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
@@ -24688,7 +24690,9 @@
 	                color: blocks[i].color,
 	                name: blocks[i].name,
 	                start: _start,
-	                len: end - _start
+	                len: end - _start,
+	                realStart: realStart,
+	                realLength: realLength
 	              });
 	            }
 	          }
@@ -26318,6 +26322,46 @@
 	      return re;
 	    }
 	  }, {
+	    key: 'generateSpanDef',
+	    value: function generateSpanDef() {
+	      var blocks = this.props.blocks;
+	
+	      var re = [];
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+	
+	          console.log('bbbblock', block);
+	          re.push({
+	            start: block.start,
+	            length: block.len,
+	            style: {
+	              fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543'
+	            }
+	          });
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return re;
+	    }
+	  }, {
 	    key: 'calcCursorPos',
 	    value: function calcCursorPos(e) {
 	      var thisDOM = this.refs.SequenceRow;
@@ -26589,7 +26633,8 @@
 	              seqMainStyle: seqMainStyle,
 	              seqCompStyle: seqCompStyle,
 	              sequence: sequence,
-	              unitWidth: unitWidth
+	              unitWidth: unitWidth,
+	              spanDef: this.generateSpanDef()
 	            }),
 	            showAA && this.generateAABars(ep.aaY, ep.aaH),
 	            showFeatures && this.generateFeatures(ep.featureY),
@@ -26760,6 +26805,8 @@
 	
 	var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
 	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
 	var _class, _temp;
@@ -26844,8 +26891,46 @@
 	      var seqCompStyle = _props.seqCompStyle;
 	      var sequence = _props.sequence;
 	      var unitWidth = _props.unitWidth;
+	      var spanDef = _props.spanDef;
 	
 	      var rs = new _DNASeq.DNASeq(sequence);
+	      var psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
+	      var rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
+	
+	      if (spanDef) {
+	        var psRender2 = [];
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	          for (var _iterator = spanDef[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var span = _step.value;
+	
+	            psRender2.push(_react3.default.createElement(
+	              'tspan',
+	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
+	              psRender.substr(span.start, span.length)
+	            ));
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+	
+	        psRender = psRender2;
+	      }
+	
 	      return _react3.default.createElement(
 	        'g',
 	        null,
@@ -26854,18 +26939,20 @@
 	          {
 	            style: seqMainStyle,
 	            x: '0',
-	            y: ep.seqY
+	            y: ep.seqY,
+	            xmlSpace: 'preserve'
 	          },
-	          sequence
+	          psRender
 	        ),
 	        showRS && _react3.default.createElement(
 	          'text',
 	          {
 	            style: seqCompStyle,
 	            x: '0',
-	            y: ep.compY
+	            y: ep.compY,
+	            xmlSpace: 'preserve'
 	          },
-	          rs.complement().toString()
+	          rsRender
 	        ),
 	        showLadder && _react3.default.createElement('path', {
 	          d: this.generateRuler(0, ep.rulerY, sequenceRowWidth, ep.rulerH, unitWidth),
@@ -26885,7 +26972,8 @@
 	  seqMainStyle: _react3.default.PropTypes.object,
 	  seqCompStyle: _react3.default.PropTypes.object,
 	  sequence: _react3.default.PropTypes.string,
-	  unitWidth: _react3.default.PropTypes.number
+	  unitWidth: _react3.default.PropTypes.number,
+	  spanDef: _react3.default.PropTypes.array
 	}, _temp));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
@@ -26973,7 +27061,7 @@
 	      this.originalBlocks = blocks;
 	      this.onionBlocks = [];
 	      var start = 0;
-	      var renderStart = 0;
+	      var realStart = 0;
 	      var _iteratorNormalCompletion = true;
 	      var _didIteratorError = false;
 	      var _iteratorError = undefined;
@@ -26988,20 +27076,18 @@
 	          var name = _block$metadata.name;
 	          var color = _block$metadata.color;
 	
+	          var fakeLength = length === 0 ? 13 : length;
 	          this.onionBlocks.push({
 	            md5: md5,
-	            length: length,
+	            length: fakeLength,
 	            name: name,
 	            color: color,
 	            start: start,
-	            renderStart: renderStart
+	            realStart: realStart,
+	            realLength: length
 	          });
-	          start += length;
-	          if (length == 0) {
-	            renderStart += 10;
-	          } else {
-	            renderStart += length;
-	          }
+	          realStart += length;
+	          start += fakeLength;
 	        }
 	      } catch (err) {
 	        _didIteratorError = true;
@@ -27067,9 +27153,12 @@
 	        var _onionBlocks$i2 = this.onionBlocks[i];
 	        var _md = _onionBlocks$i2.md5;
 	        var length = _onionBlocks$i2.length;
+	        var realLength = _onionBlocks$i2.realLength;
 	
-	
-	        if (this.sequenceDict[_md] && this.sequenceDict[_md]) {
+	        if (realLength === 0) {
+	          //empty block
+	          seq.push('X'.repeat(length));
+	        } else if (this.sequenceDict[_md]) {
 	          seq.push(this.sequenceDict[_md]);
 	        } else {
 	          completeFlag = false;

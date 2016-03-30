@@ -463,16 +463,22 @@ export class SequenceEditor extends React.Component {
         const len = blocks[i].length;
         const blockEnd = start + len;
         const blockRowIdx = Math.floor(start / colNum);
+        const realStart = blocks[i].realStart;
+        const realLength = blocks[i].realLength;
 
         for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
+          const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
+          const realLength = blocks[i].realLength ? Math.min(blocks[i].realStart + blocks[i].realLength - j * colNum, colNum);
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
               name: blocks[i].name,
               start,
               len: end - start,
+              realStart,
+              realLength,
             });
           }
         }

@@ -4,7 +4,7 @@ import { AASeq } from './AASeq';
 
 export class DNASeq extends Seq
 {
-  static complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c' };
+  static complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
 
   static codonDict = {
     TTT: 'F',
@@ -78,7 +78,7 @@ export class DNASeq extends Seq
   }
 
   removeInvalidLetter(src) {
-    return src.replace(/[^A|^G|^T|^C]/gi, '');
+    return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
   }
 
   reverseComplement() {

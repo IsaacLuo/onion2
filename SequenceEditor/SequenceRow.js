@@ -305,6 +305,22 @@ export class SequenceRow extends React.Component {
     return re;
   }
 
+  generateSpanDef() {
+    const { blocks } = this.props;
+    const re = [];
+    for (const block of blocks) {
+      console.log('bbbblock',block);
+      re.push({
+        start: block.start,
+        length: block.len,
+        style: {
+          fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543',
+        },
+      });
+    }
+    return re;
+  }
+
   calcCursorPos(e) {
     const thisDOM = this.refs.SequenceRow;
     let clickedPos = (
@@ -563,6 +579,7 @@ export class SequenceRow extends React.Component {
               seqCompStyle={seqCompStyle}
               sequence={sequence}
               unitWidth={unitWidth}
+              spanDef={this.generateSpanDef()}
             />
 
             {showAA &&
