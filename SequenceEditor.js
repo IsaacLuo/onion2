@@ -124,6 +124,13 @@ export class SequenceEditor extends React.Component {
 
     this.onSetCursor = (cursorPos, rowNumber) => {
       if (this.props.focus) {
+        //shift if in emptyBlock
+        const currentBlock = this.findBlockByIndex(cursorPos);
+        if (currentBlock && currentBlock.realLength === 0) {
+          this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+          return; //prevent default
+        }
+
         this.setState({
           cursorPos,
           showCursor: true,
@@ -195,6 +202,16 @@ export class SequenceEditor extends React.Component {
     this.onClick = (e) => {
     }
 
+  }
+
+  findBlockByIndex(index) {
+    const { blocks } = this.props;
+    for (const block of blocks) {
+      if (index >= block.start && index < block.start + block.length) {
+        return block;
+      }
+    }
+    return null;
   }
 
   isOverlap(a1, b1, a2, b2) {
@@ -470,7 +487,7 @@ export class SequenceEditor extends React.Component {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
           const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
-          const realLength = blocks[i].realLength ? Math.min(blocks[i].realStart + blocks[i].realLength - j * colNum, colNum);
+          const realLength = blocks[i].realLength;
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,

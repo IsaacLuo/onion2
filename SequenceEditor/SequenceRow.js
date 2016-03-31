@@ -309,7 +309,6 @@ export class SequenceRow extends React.Component {
     const { blocks } = this.props;
     const re = [];
     for (const block of blocks) {
-      console.log('bbbblock',block);
       re.push({
         start: block.start,
         length: block.len,

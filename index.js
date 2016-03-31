@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "01eb79f658684bec9dfb"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "0cdf81f2fcaac2604eba"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24335,6 +24335,13 @@
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
 	        if (_this3.props.focus) {
+	          //shift if in emptyBlock
+	          var currentBlock = _this3.findBlockByIndex(cursorPos);
+	          if (currentBlock && currentBlock.realLength === 0) {
+	            _this3.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+	            return; //prevent default
+	          }
+	
 	          _this3.setState({
 	            cursorPos: cursorPos,
 	            showCursor: true,
@@ -24404,6 +24411,39 @@
 	      };
 	
 	      this.onClick = function (e) {};
+	    }
+	  }, {
+	    key: 'findBlockByIndex',
+	    value: function findBlockByIndex(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+	
+	          if (index >= block.start && index < block.start + block.length) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return null;
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -24685,14 +24725,16 @@
 	          for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
 	            var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
 	            var end = Math.min(blockEnd - _j2 * colNum, colNum);
+	            var _realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - _j2 * colNum, 0) : _start;
+	            var _realLength = blocks[i].realLength;
 	            if (splitBlocks[_j2]) {
 	              splitBlocks[_j2].push({
 	                color: blocks[i].color,
 	                name: blocks[i].name,
 	                start: _start,
 	                len: end - _start,
-	                realStart: realStart,
-	                realLength: realLength
+	                realStart: _realStart,
+	                realLength: _realLength
 	              });
 	            }
 	          }
@@ -26335,7 +26377,6 @@
 	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var block = _step.value;
 	
-	          console.log('bbbblock', block);
 	          re.push({
 	            start: block.start,
 	            length: block.len,
