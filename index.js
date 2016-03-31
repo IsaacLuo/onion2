@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "0cdf81f2fcaac2604eba"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e3e9a566879ba7429574"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -24338,7 +24338,7 @@
 	          //shift if in emptyBlock
 	          var currentBlock = _this3.findBlockByIndex(cursorPos);
 	          if (currentBlock && currentBlock.realLength === 0) {
-	            _this3.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+	            _this3.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
 	            return; //prevent default
 	          }
 	
@@ -24367,6 +24367,12 @@
 	
 	      this.onSelecting = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
 	        if (_this3.props.focus) {
+	          var currentBlock = _this3.findBlockByIndex(cursorPos);
+	          if (currentBlock && currentBlock.realLength === 0) {
+	            //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+	            if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	          }
+	
 	          if (cursorPosStart) {
 	            _this3.setState({
 	              cursorPos: cursorPos,

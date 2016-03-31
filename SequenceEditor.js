@@ -127,7 +127,7 @@ export class SequenceEditor extends React.Component {
         //shift if in emptyBlock
         const currentBlock = this.findBlockByIndex(cursorPos);
         if (currentBlock && currentBlock.realLength === 0) {
-          this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+          this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
           return; //prevent default
         }
 
@@ -156,6 +156,13 @@ export class SequenceEditor extends React.Component {
 
     this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
       if (this.props.focus) {
+        const currentBlock = this.findBlockByIndex(cursorPos);
+        if (currentBlock && currentBlock.realLength === 0) {
+          //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+          if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+          else cursorPos = currentBlock.start;
+        }
+
         if (cursorPosStart) {
           this.setState({
             cursorPos,
