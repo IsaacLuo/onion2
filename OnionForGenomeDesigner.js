@@ -25,8 +25,8 @@ export class OnionForGenomeDesigner extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cursorPos: -1,           //current cursor position from 0 to sequence.length
-      startCursorPos: -1,      //mouse down cursor position in selecting
+      cursorPos: 0,           //current cursor position from 0 to sequence.length
+      startCursorPos: 0,      //mouse down cursor position in selecting
 
       //layers switch
       showEnzymes: true,
@@ -41,6 +41,8 @@ export class OnionForGenomeDesigner extends React.Component {
 
       menuTitle: 'unknown',
       sequence: props.sequence, //DNA sequence, in ACGT
+
+      focus: true,
     };
 
     this.enzymeList = loadEnzymeList('caiLab');
@@ -50,13 +52,42 @@ export class OnionForGenomeDesigner extends React.Component {
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
     this.onBlockChanged = this.onBlockChanged.bind(this);
     this.menuCommand = this.menuCommand.bind(this);
+    this.initCallBack();
+
+  }
+
+  initCallBack() {
+    this.onHotKey = () => {
+      const pos1 = this.state.cursorPos;
+      const pos2 = this.state.startCursorPos;
+      if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
+        let selectedStr = this.state.sequence.substring(pos1, pos2);
+        console.log(selectedStr);
+        //document.clipboardData.setData('text/plain', selectedStr);
+        let dom = document.getElementById('onionPanel')
+        document.addEventListener('copy', (e) => {console.log(e);});
+
+      }
+    };
+  }
+
+  componentDidMount() {
+    console.log('OnionForGenomeDesigner mount');
+    $(document).click((e) => {
+      if ($(e.target).closest('.onionPanel').length === 0) {
+        console.log('not onion click');
+        this.setState({ focus: false });
+      } else {
+        this.setState({ focus: true });
+      }
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
-      if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+      if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
       this.state.features = [];
     }
 
@@ -66,23 +97,26 @@ export class OnionForGenomeDesigner extends React.Component {
   //====================event response=====================
 
   //while user move cursor by clicking
-  onSetCursor(pos) {
-    if (!pos) {
-      console.error(pos);
-      debugger;
-    }
+  onSetCursor(_pos) {
+    if (this.state.focus && this.state.sequence) {
+      let pos = _pos;
+      const sequenceLen = this.state.sequence.length;
+      if (pos < 0) pos = 0;
+      else if (pos > sequenceLen) pos = sequenceLen;
 
-    this.setState({ cursorPos: pos, startCursorPos: pos });
+      this.setState({ cursorPos: pos, startCursorPos: pos });
+    }
   }
 
   //while user drags on editor
   onSelecting(pos1, pos2) {
-    if (pos1 >= 0 && pos2 >= 0) {
-      this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-    } else {
-      console.error(pos1, pos2);
+    if (this.state.focus) {
+      if (pos1 >= 0 && pos2 >= 0) {
+        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+      } else {
+        console.error(pos1, pos2);
+      }
     }
-
   }
 
   //while user changes the value of start and end numeric control on info bar
@@ -168,7 +202,9 @@ export class OnionForGenomeDesigner extends React.Component {
           height,
           marginTop: 0,
         }}
-        className="noselect"
+        className="noselect onionPanel"
+        id="onionPanel"
+        tabIndex="0"
       >
         <MenuBar
           title={menuTitle}
@@ -202,13 +238,14 @@ export class OnionForGenomeDesigner extends React.Component {
           cursorPos={this.state.cursorPos}
           selectStartPos={this.state.startCursorPos}
           onBlockChanged={this.onBlockChanged}
+          focus={this.state.focus}
         />
 
         <InfoBar
           width={width}
           height={30}
-          startPos={selectionStart}
-          endPos={selectionStart + selectionLength}
+          startPos={selectionLength > 0 ? selectionStart : -1}
+          endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
           seq={selectedSeq}
           style={{
             textAlign: 'right',

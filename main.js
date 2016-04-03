@@ -5,6 +5,90 @@ const manifest = require('json!./package.json');
 
 const $ = require('jquery');
 
+class OnionBuilder {
+  constructor() {
+    this.sequenceDict = {};
+    this.onionBlocks = [];
+  }
+
+  setBlocks(blocks) {
+    this.originalBlocks = blocks;
+    this.onionBlocks = [];
+    let start = 0;
+    let realStart = 0;
+    for (const block of blocks) {
+      const { length, md5 } = block.sequence;
+      const { name, color } = block.metadata;
+      let fakeLength = length === 0 ? 13 : length;
+      this.onionBlocks.push({
+        md5,
+        length: fakeLength,
+        name,
+        color,
+        start,
+        realStart,
+        realLength: length,
+      });
+      realStart += length;
+      start += fakeLength;
+    }
+
+    return this.updateSequence();
+  }
+
+  setEventBlockUpdated(fn) {
+    this.onBlockUpdated = fn;
+  }
+
+  updateSequence() {
+    let completeFlag = true;
+    for (let i = 0; i < this.onionBlocks.length; i++) {
+      const { md5, length } = this.onionBlocks[i];
+      const originalBlock = this.originalBlocks[i];
+      if (!this.sequenceDict[md5]) {
+        completeFlag = false;
+        if (originalBlock.getSequence) {
+          originalBlock.getSequence()
+            .then(sequence => {
+              this.sequenceDict[md5] = sequence;
+              this.onBlockUpdated(i);
+            });
+        } else {
+          console.warn(originalBlock);
+        }
+      }
+
+    }
+    if (completeFlag === true) {
+      this.onBlockUpdated();
+    }
+  }
+
+  getSequence() {
+    let seq = [];
+    let completeFlag = true;
+    for (let i = 0; i < this.onionBlocks.length; i++) {
+      const { md5, length, realLength } = this.onionBlocks[i];
+      if (realLength === 0) {
+        //empty block
+        seq.push('X'.repeat(length));
+      } else if (this.sequenceDict[md5]) {
+        seq.push(this.sequenceDict[md5]);
+      } else {
+        completeFlag = false;
+        seq.push('.'.repeat(length));
+      }
+    }
+
+    return { seq: seq.join(''), completeFlag };
+  }
+
+  getBlocks() {
+    return this.onionBlocks;
+  }
+
+}
+
 // OnionViewer reads data from blocks, and converts it to onion format.
 class OnionViewer extends React.Component {
   static propTypes = {
@@ -20,77 +104,116 @@ class OnionViewer extends React.Component {
       block: null,
       rendered: Date.now(),
     };
+    this.onionBuilder = new OnionBuilder();
+    this.onionBuilder.setEventBlockUpdated( () => {
+      console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
+      const { seq, completeFlag } = this.onionBuilder.getSequence();
+      if (completeFlag || this.allowToRefresh) {
+        this.setState({
+          sequence: seq,
+          blocks: this.onionBuilder.getBlocks(),
+        });
+      }
+    });
 
     window.gd.store.subscribe((state, lastAction) => {
+      console.log(`lastAction,`, lastAction);
       let last = [];
-      const current = state.ui.currentBlocks;
-      if (current &&
-        current.length &&
-        (current.length !== last.length
-          || !current.every((item, index) => item !== last[index])
-        )) {
-        const currentBlocks = current;
-        const readBlockCount = currentBlocks.length;
-        const onionBlocks = [];
-        let start = 0;
-        let totalSequence = '';
-
-        const readSequenceFromBlock = (i, count) => {
-          const block = state.blocks[currentBlocks[i]];
-          console.log(block);
-
-          block.getSequence().then(sequence => {
-            if (sequence) {
-              onionBlocks.push({
-                color: block.metadata.color,
-                start,
-                length: sequence.length,
-                name: block.metadata.name,
-              });
-              start += sequence.length;
-              totalSequence += sequence;
-              if (i === count - 1) {
-                this.setState({ blocks: onionBlocks, sequence: totalSequence });
-              } else {
-                readSequenceFromBlock(i + 1, count);
+      if (lastAction.type === 'FOCUS_BLOCKS') {
+        let leafBlocks = [];
+        const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+        if (topSelectedBlocks && topSelectedBlocks.length) {
+          for (let block of topSelectedBlocks) {
+            const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+            if (children && children.length === 0 ) {
+              leafBlocks.push(block);
+            } else {
+              for (let node of children) {
+                if (node.components && node.components.length === 0) {
+                  leafBlocks.push(node);
+                }
               }
             }
-          });
-        };
+          }
+        }
 
-        readSequenceFromBlock(0, readBlockCount);
-
-        last = current;
+        this.onionBuilder.setBlocks(leafBlocks);
       }
+
+
+      // const current = state.ui.currentBlocks;
+      // if (current &&
+      //   current.length &&
+      //   (current.length !== last.length
+      //     || !current.every((item, index) => item !== last[index])
+      //   )) {
+      //   const currentBlocks = current;
+      //   const readBlockCount = currentBlocks.length;
+      //   const onionBlocks = [];
+      //   let start = 0;
+      //   let totalSequence = '';
+      //
+      //   const readSequenceFromBlock = (i, count) => {
+      //     const block = state.blocks[currentBlocks[i]];
+      //     console.log('currentBlocks', currentBlocks,i,block);
+      //
+      //     block.getSequence().then(sequence => {
+      //       if (sequence) {
+      //         onionBlocks.push({
+      //           color: block.metadata.color,
+      //           start,
+      //           length: sequence.length,
+      //           name: block.metadata.name,
+      //         });
+      //         start += sequence.length;
+      //         totalSequence += sequence;
+      //         if (i === count - 1) {
+      //           this.setState({ blocks: onionBlocks, sequence: totalSequence });
+      //         } else {
+      //           readSequenceFromBlock(i + 1, count);
+      //         }
+      //       }
+      //     });
+      //   };
+      //
+      //   readSequenceFromBlock(0, readBlockCount);
+
+       // last = current;
     });
 
   }
 
   componentWillMount() {
     console.log('componentwillmount');
-
-
-
     //this.updateDimensions();
   }
 
   componentDidMount() {
     console.log('componentDidMount:');
+
     window.addEventListener('resize', this.updateDimensions.bind(this));
+    //let target = $('.ProjectDetail-chrome').get(0);
+    //target.addEventListener('resize', this.updateDimensions.bind(this));
+    this.allowToRefresh = true;
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.updateDimensions.bind(this));
   }
 
+  componentDidUpdate() {
+    setTimeout(() => {this.allowToRefresh = true;}, 1000);
+  }
+
   //read dimensions of onion container
   updateDimensions() {
     const { container } = this.props;
-    const _width = $('.onionContainer').width();
-    const _height = $('.onionContainer').height();
-    const width = Math.max(100, _width);
+    const _width = $('.ProjectDetail-chrome').width();
+    const _height = $('.ProjectDetail-chrome').height();
+    let height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
+    const width = Math.max(300, _width);
     const height = Math.max(100, _height);
-    console.log('updateDimensions:', container, width, height);
+    console.log('updateDimensions:', container, width, height, height2);
     this.setState({ width, height });
   }
 

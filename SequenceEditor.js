@@ -30,6 +30,7 @@ export class SequenceEditor extends React.Component {
     onSelecting: React.PropTypes.func,
     onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
+    focus: React.PropTypes.bool,
 
   };
   static defaultProps = {
@@ -77,7 +78,7 @@ export class SequenceEditor extends React.Component {
     this.state = {
       cursorPos: 0,
       selectStartPos: 0,
-      showCursor: false,
+      showCursor: true,
       showSelection: false,
     };
 
@@ -111,61 +112,79 @@ export class SequenceEditor extends React.Component {
     const _this = this;
 
     this.onScroll = (e) => {
-      const scrollPos = e.target.scrollTop;
-      for (let i = 0; i < this.rowY.length; i++) {
-        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-          const block = this.splitBlocks[i];
-          if (block.length > 0) this.props.onBlockChanged(block);
-          break;
-        }
-      }
+      // const scrollPos = e.target.scrollTop;
+      // for (let i = 0; i < this.rowY.length; i++) {
+      //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+      //     const block = this.splitBlocks[i];
+      //     if (block.length > 0) this.props.onBlockChanged(block);
+      //     break;
+      //   }
+      // }
     };
 
     this.onSetCursor = (cursorPos, rowNumber) => {
-      this.setState({
-        cursorPos,
-        showCursor: true,
-        selectStartPos: cursorPos,
-        showSelection: false,
-      });
-      if (this.props.onSetCursor) {
-        this.props.onSetCursor(cursorPos);
-      }
+      if (this.props.focus) {
+        //shift if in emptyBlock
+        const currentBlock = this.findBlockByIndex(cursorPos);
+        if (currentBlock && currentBlock.realLength === 0) {
+          this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+          return; //prevent default
+        }
 
-      if (this.props.onBlockChanged) {
-        const row = Math.floor(cursorPos / this.colNum);
-        const x = cursorPos % this.colNum;
-        const blocks = this.splitBlocks[row];
-        for (let i = 0; i < blocks.length; i++) {
-          if (x >= blocks[i].start) {
-            this.props.onBlockChanged([blocks[i]]);
+        this.setState({
+          cursorPos,
+          showCursor: true,
+          selectStartPos: cursorPos,
+          showSelection: false,
+        });
+        if (this.props.onSetCursor) {
+          this.props.onSetCursor(cursorPos);
+        }
+
+        if (this.props.onBlockChanged) {
+          const row = Math.floor(cursorPos / this.colNum);
+          const x = cursorPos % this.colNum;
+          const blocks = this.splitBlocks[row];
+          for (let i = 0; i < blocks.length; i++) {
+            if (x >= blocks[i].start) {
+              this.props.onBlockChanged([blocks[i]]);
+            }
           }
         }
       }
     };
 
     this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
-      if (cursorPosStart) {
-        this.setState({
-          cursorPos,
-          showCursor: true,
-          showSelection: true,
-          selectStartPos: cursorPosStart,
-        });
-      } else {
-        this.setState({
-          cursorPos,
-          showCursor: true,
-          showSelection: true,
-        });
-      }
+      if (this.props.focus) {
+        const currentBlock = this.findBlockByIndex(cursorPos);
+        if (currentBlock && currentBlock.realLength === 0) {
+          //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+          if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+          else cursorPos = currentBlock.start;
+        }
 
-      if (this.props.onSelecting) {
         if (cursorPosStart) {
-          console.log('full start', cursorPosStart, cursorPos);
-          this.props.onSelecting(cursorPos, cursorPosStart);
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+            selectStartPos: cursorPosStart,
+          });
         } else {
-          this.props.onSelecting(cursorPos, this.state.selectStartPos);
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+          });
+        }
+
+        if (this.props.onSelecting) {
+          if (cursorPosStart) {
+            console.log('full start', cursorPosStart, cursorPos);
+            this.props.onSelecting(cursorPos, cursorPosStart);
+          } else {
+            this.props.onSelecting(cursorPos, this.state.selectStartPos);
+          }
         }
       }
     };
@@ -187,6 +206,19 @@ export class SequenceEditor extends React.Component {
       }
     };
 
+    this.onClick = (e) => {
+    }
+
+  }
+
+  findBlockByIndex(index) {
+    const { blocks } = this.props;
+    for (const block of blocks) {
+      if (index >= block.start && index < block.start + block.length) {
+        return block;
+      }
+    }
+    return null;
   }
 
   isOverlap(a1, b1, a2, b2) {
@@ -429,6 +461,7 @@ export class SequenceEditor extends React.Component {
       showBlockBar,
       blocks,
       showAA,
+      focus,
       } = this.props;
 
     this.textRows = [];
@@ -454,16 +487,22 @@ export class SequenceEditor extends React.Component {
         const len = blocks[i].length;
         const blockEnd = start + len;
         const blockRowIdx = Math.floor(start / colNum);
+        const realStart = blocks[i].realStart;
+        const realLength = blocks[i].realLength;
 
         for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
+          const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
+          const realLength = blocks[i].realLength;
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
               name: blocks[i].name,
               start,
               len: end - start,
+              realStart,
+              realLength,
             });
           }
         }
@@ -538,6 +577,16 @@ export class SequenceEditor extends React.Component {
 
       const subSequence = sequence.substr(i, colNum);
 
+      let selectionStyle;
+      let cursorStyle;
+      if (!focus) {
+        selectionStyle = { fill: '#F2F2F2' };
+        cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+      } else {
+        selectionStyle = { fill: '#EDF2F8' };
+        cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+      }
+
       this.textRows.push(
         <SequenceRow
           sequence={subSequence}
@@ -551,11 +600,13 @@ export class SequenceEditor extends React.Component {
           onSetHighLight={this.onSetHighLight}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}
+          cursorStyle={cursorStyle}
           selectLeftPos={rowSelectLeftPos}
           selectRightPos={rowSelectRightPos}
           showLeftCursor={rowShowLeftCursor}
           showRightCursor={rowShowRightCursor}
           showSelection={rowShowSelection}
+          selectionStyle={selectionStyle}
           showStartPos={rowShowStartPos}
           seqMainStyle={this.seqMainStyle}
           seqCompStyle={this.seqCompStyle}
@@ -614,6 +665,7 @@ export class SequenceEditor extends React.Component {
           overflowX: 'hidden',
         })}
         onScroll={this.onScroll}
+        onClick={this.onClick}
       >
         {this.textRows}
       </div>

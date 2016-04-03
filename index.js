@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4f86cf2b7998baf8ef08"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "e3e9a566879ba7429574"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -882,7 +882,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 	
-	var _reactProxy = __webpack_require__(178);
+	var _reactProxy = __webpack_require__(154);
 	
 	var _globalWindow = __webpack_require__(146);
 	
@@ -1849,7 +1849,7 @@
 	
 	var _errorStackParser2 = _interopRequireDefault(_errorStackParser);
 	
-	var _objectAssign = __webpack_require__(171);
+	var _objectAssign = __webpack_require__(147);
 	
 	var _objectAssign2 = _interopRequireDefault(_objectAssign);
 	
@@ -3615,8 +3615,11 @@
 	 * Created by Isaac on 20/01/2016.
 	 */
 	
-	function compareProps(props1, props2) {
-	  var list = arguments.length <= 2 || arguments[2] === undefined ? Object.keys(props1) : arguments[2];
+	function compareProps(props1, props2, list) {
+	  if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
+	    list = Object.keys(props1);
+	  }
+	
 	  var _iteratorNormalCompletion = true;
 	  var _didIteratorError = false;
 	  var _iteratorError = undefined;
@@ -13909,7 +13912,7 @@
 /* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var getLength = __webpack_require__(162),
+	var getLength = __webpack_require__(170),
 	    isLength = __webpack_require__(35);
 	
 	/**
@@ -14542,7 +14545,7 @@
 /* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var isNative = __webpack_require__(167);
+	var isNative = __webpack_require__(175);
 	
 	/**
 	 * Gets the native function at `key` of `object`.
@@ -15489,7 +15492,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -15652,7 +15655,7 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 	
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c' };
+	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -15743,7 +15746,7 @@
 	
 	
 	// module
-	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
 	
 	// exports
 
@@ -18547,6 +18550,26 @@
 /* 79 */
 /***/ function(module, exports) {
 
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = supportsProtoAssignment;
+	var x = {};
+	var y = { supports: true };
+	try {
+	  x.__proto__ = y;
+	} catch (err) {}
+	
+	function supportsProtoAssignment() {
+	  return x.supports || false;
+	};
+
+/***/ },
+/* 80 */
+/***/ function(module, exports) {
+
 	/** Used as the `TypeError` message for "Functions" methods. */
 	var FUNC_ERROR_TEXT = 'Expected a function';
 	
@@ -18608,13 +18631,13 @@
 
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var getNative = __webpack_require__(34),
 	    isArrayLike = __webpack_require__(27),
 	    isObject = __webpack_require__(23),
-	    shimKeys = __webpack_require__(165);
+	    shimKeys = __webpack_require__(173);
 	
 	/* Native method references for those with the same name as other `lodash` methods. */
 	var nativeKeys = getNative(Object, 'keys');
@@ -18657,26 +18680,6 @@
 	
 	module.exports = keys;
 
-
-/***/ },
-/* 81 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = supportsProtoAssignment;
-	var x = {};
-	var y = { supports: true };
-	try {
-	  x.__proto__ = y;
-	} catch (err) {}
-	
-	function supportsProtoAssignment() {
-	  return x.supports || false;
-	};
 
 /***/ },
 /* 82 */
@@ -22672,7 +22675,7 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"name": "Sequence Detail",
+		"name": "SequenceDetail",
 		"version": "2.0.1",
 		"description": "Onion Extensions",
 		"region": "sequenceDetail",
@@ -22995,6 +22998,7 @@
 	      var _this2 = this;
 	
 	      this.onChangeStart = function (o, v, e) {
+	        _this2.showStartValue = true;
 	        if (_this2.props.onChange) {
 	          var _props = _this2.props;
 	          var startPos = _props.startPos;
@@ -23881,8 +23885,8 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionForGenomeDesigner).call(this, props));
 	
 	    _this.state = {
-	      cursorPos: -1, //current cursor position from 0 to sequence.length
-	      startCursorPos: -1, //mouse down cursor position in selecting
+	      cursorPos: 0, //current cursor position from 0 to sequence.length
+	      startCursorPos: 0, //mouse down cursor position in selecting
 	
 	      //layers switch
 	      showEnzymes: true,
@@ -23896,9 +23900,11 @@
 	      blocks: props.blocks, //blocks data, an array of {name,color,start,length}
 	
 	      menuTitle: 'unknown',
-	      sequence: props.sequence };
+	      sequence: props.sequence, //DNA sequence, in ACGT
 	
-	    //DNA sequence, in ACGT
+	      focus: true
+	    };
+	
 	    _this.enzymeList = (0, _Enzyme.loadEnzymeList)('caiLab');
 	
 	    _this.onSetCursor = _this.onSetCursor.bind(_this);
@@ -23906,16 +23912,52 @@
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
 	    _this.onBlockChanged = _this.onBlockChanged.bind(_this);
 	    _this.menuCommand = _this.menuCommand.bind(_this);
+	    _this.initCallBack();
+	
 	    return _this;
 	  }
 	
 	  _createClass(OnionForGenomeDesigner, [{
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
+	
+	      this.onHotKey = function () {
+	        var pos1 = _this2.state.cursorPos;
+	        var pos2 = _this2.state.startCursorPos;
+	        if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
+	          var selectedStr = _this2.state.sequence.substring(pos1, pos2);
+	          console.log(selectedStr);
+	          //document.clipboardData.setData('text/plain', selectedStr);
+	          var dom = document.getElementById('onionPanel');
+	          document.addEventListener('copy', function (e) {
+	            console.log(e);
+	          });
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var _this3 = this;
+	
+	      console.log('OnionForGenomeDesigner mount');
+	      $(document).click(function (e) {
+	        if ($(e.target).closest('.onionPanel').length === 0) {
+	          console.log('not onion click');
+	          _this3.setState({ focus: false });
+	        } else {
+	          _this3.setState({ focus: true });
+	        }
+	      });
+	    }
+	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
 	      if (nextProps.sequence !== this.props.sequence) {
 	        //reset state sequence
 	        this.state.sequence = nextProps.sequence;
-	        if (nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+	        if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
 	        this.state.features = [];
 	      }
 	
@@ -23928,13 +23970,14 @@
 	
 	  }, {
 	    key: 'onSetCursor',
-	    value: function onSetCursor(pos) {
-	      if (!pos) {
-	        console.error(pos);
-	        debugger;
-	      }
+	    value: function onSetCursor(_pos) {
+	      if (this.state.focus && this.state.sequence) {
+	        var pos = _pos;
+	        var sequenceLen = this.state.sequence.length;
+	        if (pos < 0) pos = 0;else if (pos > sequenceLen) pos = sequenceLen;
 	
-	      this.setState({ cursorPos: pos, startCursorPos: pos });
+	        this.setState({ cursorPos: pos, startCursorPos: pos });
+	      }
 	    }
 	
 	    //while user drags on editor
@@ -23942,10 +23985,12 @@
 	  }, {
 	    key: 'onSelecting',
 	    value: function onSelecting(pos1, pos2) {
-	      if (pos1 >= 0 && pos2 >= 0) {
-	        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-	      } else {
-	        console.error(pos1, pos2);
+	      if (this.state.focus) {
+	        if (pos1 >= 0 && pos2 >= 0) {
+	          this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	        } else {
+	          console.error(pos1, pos2);
+	        }
 	      }
 	    }
 	
@@ -24046,7 +24091,9 @@
 	            height: height,
 	            marginTop: 0
 	          },
-	          className: 'noselect'
+	          className: 'noselect onionPanel',
+	          id: 'onionPanel',
+	          tabIndex: '0'
 	        },
 	        _react3.default.createElement(_MenuBar.MenuBar, {
 	          title: menuTitle,
@@ -24077,13 +24124,14 @@
 	          blocks: blocks,
 	          cursorPos: this.state.cursorPos,
 	          selectStartPos: this.state.startCursorPos,
-	          onBlockChanged: this.onBlockChanged
+	          onBlockChanged: this.onBlockChanged,
+	          focus: this.state.focus
 	        }),
 	        _react3.default.createElement(_InfoBar.InfoBar, {
 	          width: width,
 	          height: 30,
-	          startPos: selectionStart,
-	          endPos: selectionStart + selectionLength,
+	          startPos: selectionLength > 0 ? selectionStart : -1,
+	          endPos: selectionLength > 0 ? selectionStart + selectionLength : -1,
 	          seq: selectedSeq,
 	          style: {
 	            textAlign: 'right',
@@ -24235,7 +24283,7 @@
 	    _this2.state = {
 	      cursorPos: 0,
 	      selectStartPos: 0,
-	      showCursor: false,
+	      showCursor: true,
 	      showSelection: false
 	    };
 	
@@ -24275,61 +24323,78 @@
 	      var _this = this;
 	
 	      this.onScroll = function (e) {
-	        var scrollPos = e.target.scrollTop;
-	        for (var i = 0; i < _this3.rowY.length; i++) {
-	          if (scrollPos <= _this3.rowY[i] + _this3.rowHeight[i]) {
-	            var block = _this3.splitBlocks[i];
-	            if (block.length > 0) _this3.props.onBlockChanged(block);
-	            break;
-	          }
-	        }
+	        // const scrollPos = e.target.scrollTop;
+	        // for (let i = 0; i < this.rowY.length; i++) {
+	        //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+	        //     const block = this.splitBlocks[i];
+	        //     if (block.length > 0) this.props.onBlockChanged(block);
+	        //     break;
+	        //   }
+	        // }
 	      };
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
-	        _this3.setState({
-	          cursorPos: cursorPos,
-	          showCursor: true,
-	          selectStartPos: cursorPos,
-	          showSelection: false
-	        });
-	        if (_this3.props.onSetCursor) {
-	          _this3.props.onSetCursor(cursorPos);
-	        }
+	        if (_this3.props.focus) {
+	          //shift if in emptyBlock
+	          var currentBlock = _this3.findBlockByIndex(cursorPos);
+	          if (currentBlock && currentBlock.realLength === 0) {
+	            _this3.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+	            return; //prevent default
+	          }
 	
-	        if (_this3.props.onBlockChanged) {
-	          var row = Math.floor(cursorPos / _this3.colNum);
-	          var x = cursorPos % _this3.colNum;
-	          var blocks = _this3.splitBlocks[row];
-	          for (var i = 0; i < blocks.length; i++) {
-	            if (x >= blocks[i].start) {
-	              _this3.props.onBlockChanged([blocks[i]]);
+	          _this3.setState({
+	            cursorPos: cursorPos,
+	            showCursor: true,
+	            selectStartPos: cursorPos,
+	            showSelection: false
+	          });
+	          if (_this3.props.onSetCursor) {
+	            _this3.props.onSetCursor(cursorPos);
+	          }
+	
+	          if (_this3.props.onBlockChanged) {
+	            var row = Math.floor(cursorPos / _this3.colNum);
+	            var x = cursorPos % _this3.colNum;
+	            var blocks = _this3.splitBlocks[row];
+	            for (var i = 0; i < blocks.length; i++) {
+	              if (x >= blocks[i].start) {
+	                _this3.props.onBlockChanged([blocks[i]]);
+	              }
 	            }
 	          }
 	        }
 	      };
 	
 	      this.onSelecting = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-	        if (cursorPosStart) {
-	          _this3.setState({
-	            cursorPos: cursorPos,
-	            showCursor: true,
-	            showSelection: true,
-	            selectStartPos: cursorPosStart
-	          });
-	        } else {
-	          _this3.setState({
-	            cursorPos: cursorPos,
-	            showCursor: true,
-	            showSelection: true
-	          });
-	        }
+	        if (_this3.props.focus) {
+	          var currentBlock = _this3.findBlockByIndex(cursorPos);
+	          if (currentBlock && currentBlock.realLength === 0) {
+	            //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+	            if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	          }
 	
-	        if (_this3.props.onSelecting) {
 	          if (cursorPosStart) {
-	            console.log('full start', cursorPosStart, cursorPos);
-	            _this3.props.onSelecting(cursorPos, cursorPosStart);
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true,
+	              selectStartPos: cursorPosStart
+	            });
 	          } else {
-	            _this3.props.onSelecting(cursorPos, _this3.state.selectStartPos);
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true
+	            });
+	          }
+	
+	          if (_this3.props.onSelecting) {
+	            if (cursorPosStart) {
+	              console.log('full start', cursorPosStart, cursorPos);
+	              _this3.props.onSelecting(cursorPos, cursorPosStart);
+	            } else {
+	              _this3.props.onSelecting(cursorPos, _this3.state.selectStartPos);
+	            }
 	          }
 	        }
 	      };
@@ -24350,6 +24415,41 @@
 	          _this3.rowY[0] = 0;
 	        }
 	      };
+	
+	      this.onClick = function (e) {};
+	    }
+	  }, {
+	    key: 'findBlockByIndex',
+	    value: function findBlockByIndex(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+	
+	          if (index >= block.start && index < block.start + block.length) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return null;
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -24599,6 +24699,7 @@
 	      var showBlockBar = _props.showBlockBar;
 	      var blocks = _props.blocks;
 	      var showAA = _props.showAA;
+	      var focus = _props.focus;
 	
 	
 	      this.textRows = [];
@@ -24624,16 +24725,22 @@
 	          var len = blocks[i].length;
 	          var blockEnd = start + len;
 	          var blockRowIdx = Math.floor(start / colNum);
+	          var realStart = blocks[i].realStart;
+	          var realLength = blocks[i].realLength;
 	
 	          for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
 	            var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
 	            var end = Math.min(blockEnd - _j2 * colNum, colNum);
+	            var _realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - _j2 * colNum, 0) : _start;
+	            var _realLength = blocks[i].realLength;
 	            if (splitBlocks[_j2]) {
 	              splitBlocks[_j2].push({
 	                color: blocks[i].color,
 	                name: blocks[i].name,
 	                start: _start,
-	                len: end - _start
+	                len: end - _start,
+	                realStart: _realStart,
+	                realLength: _realLength
 	              });
 	            }
 	          }
@@ -24708,6 +24815,16 @@
 	
 	        var subSequence = sequence.substr(i, colNum);
 	
+	        var selectionStyle = undefined;
+	        var cursorStyle = undefined;
+	        if (!focus) {
+	          selectionStyle = { fill: '#F2F2F2' };
+	          cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+	        } else {
+	          selectionStyle = { fill: '#EDF2F8' };
+	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+	        }
+	
 	        this.textRows.push(_react3.default.createElement(_SequenceRow.SequenceRow, {
 	          sequence: subSequence,
 	          idxStart: i,
@@ -24720,11 +24837,13 @@
 	          onSetHighLight: this.onSetHighLight,
 	          cursorPos: rowCursorPos,
 	          showCursor: rowShowCursor,
+	          cursorStyle: cursorStyle,
 	          selectLeftPos: rowSelectLeftPos,
 	          selectRightPos: rowSelectRightPos,
 	          showLeftCursor: rowShowLeftCursor,
 	          showRightCursor: rowShowRightCursor,
 	          showSelection: rowShowSelection,
+	          selectionStyle: selectionStyle,
 	          showStartPos: rowShowStartPos,
 	          seqMainStyle: this.seqMainStyle,
 	          seqCompStyle: this.seqCompStyle,
@@ -24791,7 +24910,8 @@
 	            overflowY: 'scroll',
 	            overflowX: 'hidden'
 	          }])),
-	          onScroll: this.onScroll
+	          onScroll: this.onScroll,
+	          onClick: this.onClick
 	        },
 	        this.textRows
 	      );
@@ -24822,7 +24942,8 @@
 	  onSetCursor: _react3.default.PropTypes.func,
 	  onSelecting: _react3.default.PropTypes.func,
 	  onRowCalculatedHeight: _react3.default.PropTypes.func,
-	  showSelection: _react3.default.PropTypes.bool
+	  showSelection: _react3.default.PropTypes.bool,
+	  focus: _react3.default.PropTypes.bool
 	
 	}, _class.defaultProps = {
 	  sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
@@ -26014,6 +26135,7 @@
 	      //console.log(cursorPos);
 	      //this.setState(cursorPos)
 	      this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+	      e.preventDefault();
 	    }
 	  }, {
 	    key: 'onMouseMove',
@@ -26248,6 +26370,45 @@
 	      return re;
 	    }
 	  }, {
+	    key: 'generateSpanDef',
+	    value: function generateSpanDef() {
+	      var blocks = this.props.blocks;
+	
+	      var re = [];
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+	
+	          re.push({
+	            start: block.start,
+	            length: block.len,
+	            style: {
+	              fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543'
+	            }
+	          });
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return re;
+	    }
+	  }, {
 	    key: 'calcCursorPos',
 	    value: function calcCursorPos(e) {
 	      var thisDOM = this.refs.SequenceRow;
@@ -26379,6 +26540,7 @@
 	      var showRS = _props9.showRS;
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
+	      var cursorStyle = _props9.cursorStyle;
 	
 	
 	      var sequenceRowWidth = sequence.length * unitWidth;
@@ -26499,7 +26661,7 @@
 	              y: ep.selectionY,
 	              width: cursorRight - cursorLeft,
 	              height: ep.selectionH,
-	              fill: this.props.selectionColor,
+	              style: this.props.selectionStyle,
 	              key: 'rectSelection'
 	            }),
 	            showHighLight && _react3.default.createElement('rect', {
@@ -26518,7 +26680,8 @@
 	              seqMainStyle: seqMainStyle,
 	              seqCompStyle: seqCompStyle,
 	              sequence: sequence,
-	              unitWidth: unitWidth
+	              unitWidth: unitWidth,
+	              spanDef: this.generateSpanDef()
 	            }),
 	            showAA && this.generateAABars(ep.aaY, ep.aaH),
 	            showFeatures && this.generateFeatures(ep.featureY),
@@ -26529,9 +26692,7 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorX + ' ' + ep.selectionY + ' L ' + cursorX + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              })
 	            ),
 	            showLeftCursor && _react3.default.createElement(
@@ -26539,21 +26700,19 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorLeft + ' ' + ep.selectionY + ' L ' + cursorLeft + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              _react3.default.createElement(
 	                'text',
 	                {
 	                  x: cursorLeft + unitWidth / 2,
 	                  y: ep.selectionYB,
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectLeftPos + idxStart + 1
@@ -26564,23 +26723,19 @@
 	              null,
 	              _react3.default.createElement('path', {
 	                d: 'M ' + cursorRight + ' ' + ep.selectionY + ' L ' + cursorRight + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              showRightCursorText && _react3.default.createElement(
 	                'text',
 	                {
 	                  x: cursorRight - unitWidth / 2,
 	                  y: ep.selectionYB,
-	
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
-	
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectRightPos + idxStart
@@ -26645,9 +26800,9 @@
 	  showFeatures: _react3.default.PropTypes.bool,
 	  showRuler: _react3.default.PropTypes.bool,
 	  onCalculatedHeight: _react3.default.PropTypes.func,
-	  selectionColor: _react3.default.PropTypes.string,
+	  selectionStyle: _react3.default.PropTypes.object,
 	  theme: _react3.default.PropTypes.string,
-	  cursorColor: _react3.default.PropTypes.string
+	  cursorStyle: _react3.default.PropTypes.object
 	
 	}, _class.defaultProps = {
 	  sequence: 'NOTHING',
@@ -26662,8 +26817,8 @@
 	  showRuler2: true,
 	  showBlockBar: true,
 	  showAA: true,
-	  cursorColor: '#4E77BA',
-	  selectionColor: '#EDF2F8',
+	  cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
+	  selectionStyle: { fill: '#EDF2F8' },
 	  featureHeight: 18,
 	  ruler2d: 10,
 	  translateX: 10
@@ -26696,6 +26851,8 @@
 	var _reactTransformHmr3 = __webpack_require__(8);
 	
 	var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
@@ -26781,8 +26938,46 @@
 	      var seqCompStyle = _props.seqCompStyle;
 	      var sequence = _props.sequence;
 	      var unitWidth = _props.unitWidth;
+	      var spanDef = _props.spanDef;
 	
 	      var rs = new _DNASeq.DNASeq(sequence);
+	      var psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
+	      var rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
+	
+	      if (spanDef) {
+	        var psRender2 = [];
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+	
+	        try {
+	          for (var _iterator = spanDef[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var span = _step.value;
+	
+	            psRender2.push(_react3.default.createElement(
+	              'tspan',
+	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
+	              psRender.substr(span.start, span.length)
+	            ));
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+	
+	        psRender = psRender2;
+	      }
+	
 	      return _react3.default.createElement(
 	        'g',
 	        null,
@@ -26791,18 +26986,20 @@
 	          {
 	            style: seqMainStyle,
 	            x: '0',
-	            y: ep.seqY
+	            y: ep.seqY,
+	            xmlSpace: 'preserve'
 	          },
-	          sequence
+	          psRender
 	        ),
 	        showRS && _react3.default.createElement(
 	          'text',
 	          {
 	            style: seqCompStyle,
 	            x: '0',
-	            y: ep.compY
+	            y: ep.compY,
+	            xmlSpace: 'preserve'
 	          },
-	          rs.complement().toString()
+	          rsRender
 	        ),
 	        showLadder && _react3.default.createElement('path', {
 	          d: this.generateRuler(0, ep.rulerY, sequenceRowWidth, ep.rulerH, unitWidth),
@@ -26822,7 +27019,8 @@
 	  seqMainStyle: _react3.default.PropTypes.object,
 	  seqCompStyle: _react3.default.PropTypes.object,
 	  sequence: _react3.default.PropTypes.string,
-	  unitWidth: _react3.default.PropTypes.number
+	  unitWidth: _react3.default.PropTypes.number,
+	  spanDef: _react3.default.PropTypes.array
 	}, _temp));
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)(module)))
 
@@ -26848,11 +27046,11 @@
 	
 	var _reactTransformHmr4 = _interopRequireDefault(_reactTransformHmr3);
 	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
 	var _class, _temp;
 	
-	var _reactDom = __webpack_require__(173);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _reactDom = __webpack_require__(149);
 	
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 	
@@ -26860,11 +27058,11 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
 	var _components = {
 	  OnionViewer: {
@@ -26896,7 +27094,139 @@
 	
 	var $ = __webpack_require__(26);
 	
+	var OnionBuilder = function () {
+	  function OnionBuilder() {
+	    _classCallCheck(this, OnionBuilder);
+	
+	    this.sequenceDict = {};
+	    this.onionBlocks = [];
+	  }
+	
+	  _createClass(OnionBuilder, [{
+	    key: 'setBlocks',
+	    value: function setBlocks(blocks) {
+	      this.originalBlocks = blocks;
+	      this.onionBlocks = [];
+	      var start = 0;
+	      var realStart = 0;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+	
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+	          var _block$sequence = block.sequence;
+	          var length = _block$sequence.length;
+	          var md5 = _block$sequence.md5;
+	          var _block$metadata = block.metadata;
+	          var name = _block$metadata.name;
+	          var color = _block$metadata.color;
+	
+	          var fakeLength = length === 0 ? 13 : length;
+	          this.onionBlocks.push({
+	            md5: md5,
+	            length: fakeLength,
+	            name: name,
+	            color: color,
+	            start: start,
+	            realStart: realStart,
+	            realLength: length
+	          });
+	          realStart += length;
+	          start += fakeLength;
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	
+	      return this.updateSequence();
+	    }
+	  }, {
+	    key: 'setEventBlockUpdated',
+	    value: function setEventBlockUpdated(fn) {
+	      this.onBlockUpdated = fn;
+	    }
+	  }, {
+	    key: 'updateSequence',
+	    value: function updateSequence() {
+	      var _this = this;
+	
+	      var completeFlag = true;
+	
+	      var _loop = function _loop(i) {
+	        var _onionBlocks$i = _this.onionBlocks[i];
+	        var md5 = _onionBlocks$i.md5;
+	        var length = _onionBlocks$i.length;
+	
+	        var originalBlock = _this.originalBlocks[i];
+	        if (!_this.sequenceDict[md5]) {
+	          completeFlag = false;
+	          if (originalBlock.getSequence) {
+	            originalBlock.getSequence().then(function (sequence) {
+	              _this.sequenceDict[md5] = sequence;
+	              _this.onBlockUpdated(i);
+	            });
+	          } else {
+	            console.warn(originalBlock);
+	          }
+	        }
+	      };
+	
+	      for (var i = 0; i < this.onionBlocks.length; i++) {
+	        _loop(i);
+	      }
+	      if (completeFlag === true) {
+	        this.onBlockUpdated();
+	      }
+	    }
+	  }, {
+	    key: 'getSequence',
+	    value: function getSequence() {
+	      var seq = [];
+	      var completeFlag = true;
+	      for (var i = 0; i < this.onionBlocks.length; i++) {
+	        var _onionBlocks$i2 = this.onionBlocks[i];
+	        var _md = _onionBlocks$i2.md5;
+	        var length = _onionBlocks$i2.length;
+	        var realLength = _onionBlocks$i2.realLength;
+	
+	        if (realLength === 0) {
+	          //empty block
+	          seq.push('X'.repeat(length));
+	        } else if (this.sequenceDict[_md]) {
+	          seq.push(this.sequenceDict[_md]);
+	        } else {
+	          completeFlag = false;
+	          seq.push('.'.repeat(length));
+	        }
+	      }
+	
+	      return { seq: seq.join(''), completeFlag: completeFlag };
+	    }
+	  }, {
+	    key: 'getBlocks',
+	    value: function getBlocks() {
+	      return this.onionBlocks;
+	    }
+	  }]);
+	
+	  return OnionBuilder;
+	}();
+	
 	// OnionViewer reads data from blocks, and converts it to onion format.
+	
 	
 	var OnionViewer = _wrapComponent('OnionViewer')((_temp = _class = function (_React$Component) {
 	  _inherits(OnionViewer, _React$Component);
@@ -26904,80 +27234,171 @@
 	  function OnionViewer(props) {
 	    _classCallCheck(this, OnionViewer);
 	
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
 	
 	    var container = props.container;
 	
-	    _this.state = {
+	    _this2.state = {
 	      width: props.width,
 	      height: props.height,
 	      block: null,
 	      rendered: Date.now()
 	    };
+	    _this2.onionBuilder = new OnionBuilder();
+	    _this2.onionBuilder.setEventBlockUpdated(function () {
+	      console.log('!!!!!!sequence loaded', _this2.onionBuilder.getSequence());
 	
-	    window.gd.store.subscribe(function (state, lastAction) {
-	      var last = [];
-	      var current = state.ui.currentBlocks;
-	      if (current && current.length && (current.length !== last.length || !current.every(function (item, index) {
-	        return item !== last[index];
-	      }))) {
-	        (function () {
-	          var currentBlocks = current;
-	          var readBlockCount = currentBlocks.length;
-	          var onionBlocks = [];
-	          var start = 0;
-	          var totalSequence = '';
+	      var _this2$onionBuilder$g = _this2.onionBuilder.getSequence();
 	
-	          var readSequenceFromBlock = function readSequenceFromBlock(i, count) {
-	            var block = state.blocks[currentBlocks[i]];
-	            console.log(block);
+	      var seq = _this2$onionBuilder$g.seq;
+	      var completeFlag = _this2$onionBuilder$g.completeFlag;
 	
-	            block.getSequence().then(function (sequence) {
-	              if (sequence) {
-	                onionBlocks.push({
-	                  color: block.metadata.color,
-	                  start: start,
-	                  length: sequence.length,
-	                  name: block.metadata.name
-	                });
-	                start += sequence.length;
-	                totalSequence += sequence;
-	                if (i === count - 1) {
-	                  _this.setState({ blocks: onionBlocks, sequence: totalSequence });
-	                } else {
-	                  readSequenceFromBlock(i + 1, count);
-	                }
-	              }
-	            });
-	          };
-	
-	          readSequenceFromBlock(0, readBlockCount);
-	
-	          last = current;
-	        })();
+	      if (completeFlag || _this2.allowToRefresh) {
+	        _this2.setState({
+	          sequence: seq,
+	          blocks: _this2.onionBuilder.getBlocks()
+	        });
 	      }
 	    });
 	
-	    return _this;
+	    window.gd.store.subscribe(function (state, lastAction) {
+	      console.log('lastAction,', lastAction);
+	      var last = [];
+	      if (lastAction.type === 'FOCUS_BLOCKS') {
+	        var leafBlocks = [];
+	        var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+	        if (topSelectedBlocks && topSelectedBlocks.length) {
+	          var _iteratorNormalCompletion2 = true;
+	          var _didIteratorError2 = false;
+	          var _iteratorError2 = undefined;
+	
+	          try {
+	            for (var _iterator2 = topSelectedBlocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	              var block = _step2.value;
+	
+	              var children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+	              if (children && children.length === 0) {
+	                leafBlocks.push(block);
+	              } else {
+	                var _iteratorNormalCompletion3 = true;
+	                var _didIteratorError3 = false;
+	                var _iteratorError3 = undefined;
+	
+	                try {
+	                  for (var _iterator3 = children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                    var node = _step3.value;
+	
+	                    if (node.components && node.components.length === 0) {
+	                      leafBlocks.push(node);
+	                    }
+	                  }
+	                } catch (err) {
+	                  _didIteratorError3 = true;
+	                  _iteratorError3 = err;
+	                } finally {
+	                  try {
+	                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                      _iterator3.return();
+	                    }
+	                  } finally {
+	                    if (_didIteratorError3) {
+	                      throw _iteratorError3;
+	                    }
+	                  }
+	                }
+	              }
+	            }
+	          } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	          } finally {
+	            try {
+	              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	              }
+	            } finally {
+	              if (_didIteratorError2) {
+	                throw _iteratorError2;
+	              }
+	            }
+	          }
+	        }
+	
+	        _this2.onionBuilder.setBlocks(leafBlocks);
+	      }
+	
+	      // const current = state.ui.currentBlocks;
+	      // if (current &&
+	      //   current.length &&
+	      //   (current.length !== last.length
+	      //     || !current.every((item, index) => item !== last[index])
+	      //   )) {
+	      //   const currentBlocks = current;
+	      //   const readBlockCount = currentBlocks.length;
+	      //   const onionBlocks = [];
+	      //   let start = 0;
+	      //   let totalSequence = '';
+	      //
+	      //   const readSequenceFromBlock = (i, count) => {
+	      //     const block = state.blocks[currentBlocks[i]];
+	      //     console.log('currentBlocks', currentBlocks,i,block);
+	      //
+	      //     block.getSequence().then(sequence => {
+	      //       if (sequence) {
+	      //         onionBlocks.push({
+	      //           color: block.metadata.color,
+	      //           start,
+	      //           length: sequence.length,
+	      //           name: block.metadata.name,
+	      //         });
+	      //         start += sequence.length;
+	      //         totalSequence += sequence;
+	      //         if (i === count - 1) {
+	      //           this.setState({ blocks: onionBlocks, sequence: totalSequence });
+	      //         } else {
+	      //           readSequenceFromBlock(i + 1, count);
+	      //         }
+	      //       }
+	      //     });
+	      //   };
+	      //
+	      //   readSequenceFromBlock(0, readBlockCount);
+	
+	      // last = current;
+	    });
+	
+	    return _this2;
 	  }
 	
 	  _createClass(OnionViewer, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      console.log('componentwillmount');
-	
 	      //this.updateDimensions();
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      console.log('componentDidMount:');
+	
 	      window.addEventListener('resize', this.updateDimensions.bind(this));
+	      //let target = $('.ProjectDetail-chrome').get(0);
+	      //target.addEventListener('resize', this.updateDimensions.bind(this));
+	      this.allowToRefresh = true;
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      window.removeEventListener('resize', this.updateDimensions.bind(this));
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      var _this3 = this;
+	
+	      setTimeout(function () {
+	        _this3.allowToRefresh = true;
+	      }, 1000);
 	    }
 	
 	    //read dimensions of onion container
@@ -26987,11 +27408,12 @@
 	    value: function updateDimensions() {
 	      var container = this.props.container;
 	
-	      var _width = $('.onionContainer').width();
-	      var _height = $('.onionContainer').height();
-	      var width = Math.max(100, _width);
+	      var _width = $('.ProjectDetail-chrome').width();
+	      var _height = $('.ProjectDetail-chrome').height();
+	      var height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
+	      var width = Math.max(300, _width);
 	      var height = Math.max(100, _height);
-	      console.log('updateDimensions:', container, width, height);
+	      console.log('updateDimensions:', container, width, height, height2);
 	      this.setState({ width: width, height: height });
 	    }
 	  }, {
@@ -27943,901 +28365,6 @@
 
 /***/ },
 /* 147 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseDifference = __webpack_require__(153),
-	    baseFlatten = __webpack_require__(154),
-	    isArrayLike = __webpack_require__(27),
-	    isObjectLike = __webpack_require__(28),
-	    restParam = __webpack_require__(79);
-	
-	/**
-	 * Creates an array of unique `array` values not included in the other
-	 * provided arrays using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
-	 * for equality comparisons.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Array
-	 * @param {Array} array The array to inspect.
-	 * @param {...Array} [values] The arrays of values to exclude.
-	 * @returns {Array} Returns the new array of filtered values.
-	 * @example
-	 *
-	 * _.difference([1, 2, 3], [4, 2]);
-	 * // => [1, 3]
-	 */
-	var difference = restParam(function(array, values) {
-	  return (isObjectLike(array) && isArrayLike(array))
-	    ? baseDifference(array, baseFlatten(values, false, true))
-	    : [];
-	});
-	
-	module.exports = difference;
-
-
-/***/ },
-/* 148 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(159),
-	    getNative = __webpack_require__(34);
-	
-	/** Native method references. */
-	var Set = getNative(global, 'Set');
-	
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeCreate = getNative(Object, 'create');
-	
-	/**
-	 *
-	 * Creates a cache object to store unique values.
-	 *
-	 * @private
-	 * @param {Array} [values] The values to cache.
-	 */
-	function SetCache(values) {
-	  var length = values ? values.length : 0;
-	
-	  this.data = { 'hash': nativeCreate(null), 'set': new Set };
-	  while (length--) {
-	    this.push(values[length]);
-	  }
-	}
-	
-	// Add functions to the `Set` cache.
-	SetCache.prototype.push = cachePush;
-	
-	module.exports = SetCache;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 149 */
-/***/ function(module, exports) {
-
-	/**
-	 * Appends the elements of `values` to `array`.
-	 *
-	 * @private
-	 * @param {Array} array The array to modify.
-	 * @param {Array} values The values to append.
-	 * @returns {Array} Returns `array`.
-	 */
-	function arrayPush(array, values) {
-	  var index = -1,
-	      length = values.length,
-	      offset = array.length;
-	
-	  while (++index < length) {
-	    array[offset + index] = values[index];
-	  }
-	  return array;
-	}
-	
-	module.exports = arrayPush;
-
-
-/***/ },
-/* 150 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var keys = __webpack_require__(80);
-	
-	/**
-	 * A specialized version of `_.assign` for customizing assigned values without
-	 * support for argument juggling, multiple sources, and `this` binding `customizer`
-	 * functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @param {Function} customizer The function to customize assigned values.
-	 * @returns {Object} Returns `object`.
-	 */
-	function assignWith(object, source, customizer) {
-	  var index = -1,
-	      props = keys(source),
-	      length = props.length;
-	
-	  while (++index < length) {
-	    var key = props[index],
-	        value = object[key],
-	        result = customizer(value, source[key], key, object, source);
-	
-	    if ((result === result ? (result !== value) : (value === value)) ||
-	        (value === undefined && !(key in object))) {
-	      object[key] = result;
-	    }
-	  }
-	  return object;
-	}
-	
-	module.exports = assignWith;
-
-
-/***/ },
-/* 151 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseCopy = __webpack_require__(152),
-	    keys = __webpack_require__(80);
-	
-	/**
-	 * The base implementation of `_.assign` without support for argument juggling,
-	 * multiple sources, and `customizer` functions.
-	 *
-	 * @private
-	 * @param {Object} object The destination object.
-	 * @param {Object} source The source object.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseAssign(object, source) {
-	  return source == null
-	    ? object
-	    : baseCopy(source, keys(source), object);
-	}
-	
-	module.exports = baseAssign;
-
-
-/***/ },
-/* 152 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copies properties of `source` to `object`.
-	 *
-	 * @private
-	 * @param {Object} source The object to copy properties from.
-	 * @param {Array} props The property names to copy.
-	 * @param {Object} [object={}] The object to copy properties to.
-	 * @returns {Object} Returns `object`.
-	 */
-	function baseCopy(source, props, object) {
-	  object || (object = {});
-	
-	  var index = -1,
-	      length = props.length;
-	
-	  while (++index < length) {
-	    var key = props[index];
-	    object[key] = source[key];
-	  }
-	  return object;
-	}
-	
-	module.exports = baseCopy;
-
-
-/***/ },
-/* 153 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseIndexOf = __webpack_require__(155),
-	    cacheIndexOf = __webpack_require__(158),
-	    createCache = __webpack_require__(161);
-	
-	/** Used as the size to enable large array optimizations. */
-	var LARGE_ARRAY_SIZE = 200;
-	
-	/**
-	 * The base implementation of `_.difference` which accepts a single array
-	 * of values to exclude.
-	 *
-	 * @private
-	 * @param {Array} array The array to inspect.
-	 * @param {Array} values The values to exclude.
-	 * @returns {Array} Returns the new array of filtered values.
-	 */
-	function baseDifference(array, values) {
-	  var length = array ? array.length : 0,
-	      result = [];
-	
-	  if (!length) {
-	    return result;
-	  }
-	  var index = -1,
-	      indexOf = baseIndexOf,
-	      isCommon = true,
-	      cache = (isCommon && values.length >= LARGE_ARRAY_SIZE) ? createCache(values) : null,
-	      valuesLength = values.length;
-	
-	  if (cache) {
-	    indexOf = cacheIndexOf;
-	    isCommon = false;
-	    values = cache;
-	  }
-	  outer:
-	  while (++index < length) {
-	    var value = array[index];
-	
-	    if (isCommon && value === value) {
-	      var valuesIndex = valuesLength;
-	      while (valuesIndex--) {
-	        if (values[valuesIndex] === value) {
-	          continue outer;
-	        }
-	      }
-	      result.push(value);
-	    }
-	    else if (indexOf(values, value, 0) < 0) {
-	      result.push(value);
-	    }
-	  }
-	  return result;
-	}
-	
-	module.exports = baseDifference;
-
-
-/***/ },
-/* 154 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var arrayPush = __webpack_require__(149),
-	    isArguments = __webpack_require__(48),
-	    isArray = __webpack_require__(49),
-	    isArrayLike = __webpack_require__(27),
-	    isObjectLike = __webpack_require__(28);
-	
-	/**
-	 * The base implementation of `_.flatten` with added support for restricting
-	 * flattening and specifying the start index.
-	 *
-	 * @private
-	 * @param {Array} array The array to flatten.
-	 * @param {boolean} [isDeep] Specify a deep flatten.
-	 * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
-	 * @param {Array} [result=[]] The initial result value.
-	 * @returns {Array} Returns the new flattened array.
-	 */
-	function baseFlatten(array, isDeep, isStrict, result) {
-	  result || (result = []);
-	
-	  var index = -1,
-	      length = array.length;
-	
-	  while (++index < length) {
-	    var value = array[index];
-	    if (isObjectLike(value) && isArrayLike(value) &&
-	        (isStrict || isArray(value) || isArguments(value))) {
-	      if (isDeep) {
-	        // Recursively flatten arrays (susceptible to call stack limits).
-	        baseFlatten(value, isDeep, isStrict, result);
-	      } else {
-	        arrayPush(result, value);
-	      }
-	    } else if (!isStrict) {
-	      result[result.length] = value;
-	    }
-	  }
-	  return result;
-	}
-	
-	module.exports = baseFlatten;
-
-
-/***/ },
-/* 155 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var indexOfNaN = __webpack_require__(163);
-	
-	/**
-	 * The base implementation of `_.indexOf` without support for binary searches.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {*} value The value to search for.
-	 * @param {number} fromIndex The index to search from.
-	 * @returns {number} Returns the index of the matched value, else `-1`.
-	 */
-	function baseIndexOf(array, value, fromIndex) {
-	  if (value !== value) {
-	    return indexOfNaN(array, fromIndex);
-	  }
-	  var index = fromIndex - 1,
-	      length = array.length;
-	
-	  while (++index < length) {
-	    if (array[index] === value) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-	
-	module.exports = baseIndexOf;
-
-
-/***/ },
-/* 156 */
-/***/ function(module, exports) {
-
-	/**
-	 * The base implementation of `_.property` without support for deep paths.
-	 *
-	 * @private
-	 * @param {string} key The key of the property to get.
-	 * @returns {Function} Returns the new function.
-	 */
-	function baseProperty(key) {
-	  return function(object) {
-	    return object == null ? undefined : object[key];
-	  };
-	}
-	
-	module.exports = baseProperty;
-
-
-/***/ },
-/* 157 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var identity = __webpack_require__(170);
-	
-	/**
-	 * A specialized version of `baseCallback` which only supports `this` binding
-	 * and specifying the number of arguments to provide to `func`.
-	 *
-	 * @private
-	 * @param {Function} func The function to bind.
-	 * @param {*} thisArg The `this` binding of `func`.
-	 * @param {number} [argCount] The number of arguments to provide to `func`.
-	 * @returns {Function} Returns the callback.
-	 */
-	function bindCallback(func, thisArg, argCount) {
-	  if (typeof func != 'function') {
-	    return identity;
-	  }
-	  if (thisArg === undefined) {
-	    return func;
-	  }
-	  switch (argCount) {
-	    case 1: return function(value) {
-	      return func.call(thisArg, value);
-	    };
-	    case 3: return function(value, index, collection) {
-	      return func.call(thisArg, value, index, collection);
-	    };
-	    case 4: return function(accumulator, value, index, collection) {
-	      return func.call(thisArg, accumulator, value, index, collection);
-	    };
-	    case 5: return function(value, other, key, object, source) {
-	      return func.call(thisArg, value, other, key, object, source);
-	    };
-	  }
-	  return function() {
-	    return func.apply(thisArg, arguments);
-	  };
-	}
-	
-	module.exports = bindCallback;
-
-
-/***/ },
-/* 158 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(23);
-	
-	/**
-	 * Checks if `value` is in `cache` mimicking the return signature of
-	 * `_.indexOf` by returning `0` if the value is found, else `-1`.
-	 *
-	 * @private
-	 * @param {Object} cache The cache to search.
-	 * @param {*} value The value to search for.
-	 * @returns {number} Returns `0` if `value` is found, else `-1`.
-	 */
-	function cacheIndexOf(cache, value) {
-	  var data = cache.data,
-	      result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
-	
-	  return result ? 0 : -1;
-	}
-	
-	module.exports = cacheIndexOf;
-
-
-/***/ },
-/* 159 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(23);
-	
-	/**
-	 * Adds `value` to the cache.
-	 *
-	 * @private
-	 * @name push
-	 * @memberOf SetCache
-	 * @param {*} value The value to cache.
-	 */
-	function cachePush(value) {
-	  var data = this.data;
-	  if (typeof value == 'string' || isObject(value)) {
-	    data.set.add(value);
-	  } else {
-	    data.hash[value] = true;
-	  }
-	}
-	
-	module.exports = cachePush;
-
-
-/***/ },
-/* 160 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var bindCallback = __webpack_require__(157),
-	    isIterateeCall = __webpack_require__(164),
-	    restParam = __webpack_require__(79);
-	
-	/**
-	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
-	 *
-	 * @private
-	 * @param {Function} assigner The function to assign values.
-	 * @returns {Function} Returns the new assigner function.
-	 */
-	function createAssigner(assigner) {
-	  return restParam(function(object, sources) {
-	    var index = -1,
-	        length = object == null ? 0 : sources.length,
-	        customizer = length > 2 ? sources[length - 2] : undefined,
-	        guard = length > 2 ? sources[2] : undefined,
-	        thisArg = length > 1 ? sources[length - 1] : undefined;
-	
-	    if (typeof customizer == 'function') {
-	      customizer = bindCallback(customizer, thisArg, 5);
-	      length -= 2;
-	    } else {
-	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
-	      length -= (customizer ? 1 : 0);
-	    }
-	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
-	      customizer = length < 3 ? undefined : customizer;
-	      length = 1;
-	    }
-	    while (++index < length) {
-	      var source = sources[index];
-	      if (source) {
-	        assigner(object, source, customizer);
-	      }
-	    }
-	    return object;
-	  });
-	}
-	
-	module.exports = createAssigner;
-
-
-/***/ },
-/* 161 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(148),
-	    getNative = __webpack_require__(34);
-	
-	/** Native method references. */
-	var Set = getNative(global, 'Set');
-	
-	/* Native method references for those with the same name as other `lodash` methods. */
-	var nativeCreate = getNative(Object, 'create');
-	
-	/**
-	 * Creates a `Set` cache object to optimize linear searches of large arrays.
-	 *
-	 * @private
-	 * @param {Array} [values] The values to cache.
-	 * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
-	 */
-	function createCache(values) {
-	  return (nativeCreate && Set) ? new SetCache(values) : null;
-	}
-	
-	module.exports = createCache;
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 162 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var baseProperty = __webpack_require__(156);
-	
-	/**
-	 * Gets the "length" property value of `object`.
-	 *
-	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
-	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {*} Returns the "length" value.
-	 */
-	var getLength = baseProperty('length');
-	
-	module.exports = getLength;
-
-
-/***/ },
-/* 163 */
-/***/ function(module, exports) {
-
-	/**
-	 * Gets the index at which the first occurrence of `NaN` is found in `array`.
-	 *
-	 * @private
-	 * @param {Array} array The array to search.
-	 * @param {number} fromIndex The index to search from.
-	 * @param {boolean} [fromRight] Specify iterating from right to left.
-	 * @returns {number} Returns the index of the matched `NaN`, else `-1`.
-	 */
-	function indexOfNaN(array, fromIndex, fromRight) {
-	  var length = array.length,
-	      index = fromIndex + (fromRight ? 0 : -1);
-	
-	  while ((fromRight ? index-- : ++index < length)) {
-	    var other = array[index];
-	    if (other !== other) {
-	      return index;
-	    }
-	  }
-	  return -1;
-	}
-	
-	module.exports = indexOfNaN;
-
-
-/***/ },
-/* 164 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArrayLike = __webpack_require__(27),
-	    isIndex = __webpack_require__(47),
-	    isObject = __webpack_require__(23);
-	
-	/**
-	 * Checks if the provided arguments are from an iteratee call.
-	 *
-	 * @private
-	 * @param {*} value The potential iteratee value argument.
-	 * @param {*} index The potential iteratee index or key argument.
-	 * @param {*} object The potential iteratee object argument.
-	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
-	 */
-	function isIterateeCall(value, index, object) {
-	  if (!isObject(object)) {
-	    return false;
-	  }
-	  var type = typeof index;
-	  if (type == 'number'
-	      ? (isArrayLike(object) && isIndex(index, object.length))
-	      : (type == 'string' && index in object)) {
-	    var other = object[index];
-	    return value === value ? (value === other) : (other !== other);
-	  }
-	  return false;
-	}
-	
-	module.exports = isIterateeCall;
-
-
-/***/ },
-/* 165 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(48),
-	    isArray = __webpack_require__(49),
-	    isIndex = __webpack_require__(47),
-	    isLength = __webpack_require__(35),
-	    keysIn = __webpack_require__(169);
-	
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-	
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-	
-	/**
-	 * A fallback implementation of `Object.keys` which creates an array of the
-	 * own enumerable property names of `object`.
-	 *
-	 * @private
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 */
-	function shimKeys(object) {
-	  var props = keysIn(object),
-	      propsLength = props.length,
-	      length = propsLength && object.length;
-	
-	  var allowIndexes = !!length && isLength(length) &&
-	    (isArray(object) || isArguments(object));
-	
-	  var index = -1,
-	      result = [];
-	
-	  while (++index < propsLength) {
-	    var key = props[index];
-	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-	
-	module.exports = shimKeys;
-
-
-/***/ },
-/* 166 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isObject = __webpack_require__(23);
-	
-	/** `Object#toString` result references. */
-	var funcTag = '[object Function]';
-	
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objToString = objectProto.toString;
-	
-	/**
-	 * Checks if `value` is classified as a `Function` object.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
-	 * @example
-	 *
-	 * _.isFunction(_);
-	 * // => true
-	 *
-	 * _.isFunction(/abc/);
-	 * // => false
-	 */
-	function isFunction(value) {
-	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in older versions of Chrome and Safari which return 'function' for regexes
-	  // and Safari 8 which returns 'object' for typed array constructors.
-	  return isObject(value) && objToString.call(value) == funcTag;
-	}
-	
-	module.exports = isFunction;
-
-
-/***/ },
-/* 167 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isFunction = __webpack_require__(166),
-	    isObjectLike = __webpack_require__(28);
-	
-	/** Used to detect host constructors (Safari > 5). */
-	var reIsHostCtor = /^\[object .+?Constructor\]$/;
-	
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-	
-	/** Used to resolve the decompiled source of functions. */
-	var fnToString = Function.prototype.toString;
-	
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-	
-	/** Used to detect if a method is native. */
-	var reIsNative = RegExp('^' +
-	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
-	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
-	);
-	
-	/**
-	 * Checks if `value` is a native function.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Lang
-	 * @param {*} value The value to check.
-	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
-	 * @example
-	 *
-	 * _.isNative(Array.prototype.push);
-	 * // => true
-	 *
-	 * _.isNative(_);
-	 * // => false
-	 */
-	function isNative(value) {
-	  if (value == null) {
-	    return false;
-	  }
-	  if (isFunction(value)) {
-	    return reIsNative.test(fnToString.call(value));
-	  }
-	  return isObjectLike(value) && reIsHostCtor.test(value);
-	}
-	
-	module.exports = isNative;
-
-
-/***/ },
-/* 168 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var assignWith = __webpack_require__(150),
-	    baseAssign = __webpack_require__(151),
-	    createAssigner = __webpack_require__(160);
-	
-	/**
-	 * Assigns own enumerable properties of source object(s) to the destination
-	 * object. Subsequent sources overwrite property assignments of previous sources.
-	 * If `customizer` is provided it's invoked to produce the assigned values.
-	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
-	 * (objectValue, sourceValue, key, object, source).
-	 *
-	 * **Note:** This method mutates `object` and is based on
-	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
-	 *
-	 * @static
-	 * @memberOf _
-	 * @alias extend
-	 * @category Object
-	 * @param {Object} object The destination object.
-	 * @param {...Object} [sources] The source objects.
-	 * @param {Function} [customizer] The function to customize assigned values.
-	 * @param {*} [thisArg] The `this` binding of `customizer`.
-	 * @returns {Object} Returns `object`.
-	 * @example
-	 *
-	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
-	 * // => { 'user': 'fred', 'age': 40 }
-	 *
-	 * // using a customizer callback
-	 * var defaults = _.partialRight(_.assign, function(value, other) {
-	 *   return _.isUndefined(value) ? other : value;
-	 * });
-	 *
-	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
-	 * // => { 'user': 'barney', 'age': 36 }
-	 */
-	var assign = createAssigner(function(object, source, customizer) {
-	  return customizer
-	    ? assignWith(object, source, customizer)
-	    : baseAssign(object, source);
-	});
-	
-	module.exports = assign;
-
-
-/***/ },
-/* 169 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var isArguments = __webpack_require__(48),
-	    isArray = __webpack_require__(49),
-	    isIndex = __webpack_require__(47),
-	    isLength = __webpack_require__(35),
-	    isObject = __webpack_require__(23);
-	
-	/** Used for native method references. */
-	var objectProto = Object.prototype;
-	
-	/** Used to check objects for own properties. */
-	var hasOwnProperty = objectProto.hasOwnProperty;
-	
-	/**
-	 * Creates an array of the own and inherited enumerable property names of `object`.
-	 *
-	 * **Note:** Non-object values are coerced to objects.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Object
-	 * @param {Object} object The object to query.
-	 * @returns {Array} Returns the array of property names.
-	 * @example
-	 *
-	 * function Foo() {
-	 *   this.a = 1;
-	 *   this.b = 2;
-	 * }
-	 *
-	 * Foo.prototype.c = 3;
-	 *
-	 * _.keysIn(new Foo);
-	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
-	 */
-	function keysIn(object) {
-	  if (object == null) {
-	    return [];
-	  }
-	  if (!isObject(object)) {
-	    object = Object(object);
-	  }
-	  var length = object.length;
-	  length = (length && isLength(length) &&
-	    (isArray(object) || isArguments(object)) && length) || 0;
-	
-	  var Ctor = object.constructor,
-	      index = -1,
-	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
-	      result = Array(length),
-	      skipIndexes = length > 0;
-	
-	  while (++index < length) {
-	    result[index] = (index + '');
-	  }
-	  for (var key in object) {
-	    if (!(skipIndexes && isIndex(key, length)) &&
-	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
-	      result.push(key);
-	    }
-	  }
-	  return result;
-	}
-	
-	module.exports = keysIn;
-
-
-/***/ },
-/* 170 */
-/***/ function(module, exports) {
-
-	/**
-	 * This method returns the first argument provided to it.
-	 *
-	 * @static
-	 * @memberOf _
-	 * @category Utility
-	 * @param {*} value Any value.
-	 * @returns {*} Returns `value`.
-	 * @example
-	 *
-	 * var object = { 'user': 'fred' };
-	 *
-	 * _.identity(object) === object;
-	 * // => true
-	 */
-	function identity(value) {
-	  return value;
-	}
-	
-	module.exports = identity;
-
-
-/***/ },
-/* 171 */
 /***/ function(module, exports) {
 
 	/* eslint-disable no-unused-vars */
@@ -28882,7 +28409,7 @@
 
 
 /***/ },
-/* 172 */
+/* 148 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -28927,7 +28454,7 @@
 	module.exports = exports["default"];
 
 /***/ },
-/* 173 */
+/* 149 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28936,7 +28463,7 @@
 
 
 /***/ },
-/* 174 */
+/* 150 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29006,7 +28533,7 @@
 	};
 
 /***/ },
-/* 175 */
+/* 151 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29019,19 +28546,19 @@
 	exports.default = proxyClass;
 	exports.default = createClassProxy;
 	
-	var _createPrototypeProxy = __webpack_require__(176);
+	var _createPrototypeProxy = __webpack_require__(152);
 	
 	var _createPrototypeProxy2 = _interopRequireDefault(_createPrototypeProxy);
 	
-	var _bindAutoBindMethods = __webpack_require__(174);
+	var _bindAutoBindMethods = __webpack_require__(150);
 	
 	var _bindAutoBindMethods2 = _interopRequireDefault(_bindAutoBindMethods);
 	
-	var _deleteUnknownAutoBindMethods = __webpack_require__(177);
+	var _deleteUnknownAutoBindMethods = __webpack_require__(153);
 	
 	var _deleteUnknownAutoBindMethods2 = _interopRequireDefault(_deleteUnknownAutoBindMethods);
 	
-	var _supportsProtoAssignment = __webpack_require__(81);
+	var _supportsProtoAssignment = __webpack_require__(79);
 	
 	var _supportsProtoAssignment2 = _interopRequireDefault(_supportsProtoAssignment);
 	
@@ -29213,7 +28740,7 @@
 	}
 
 /***/ },
-/* 176 */
+/* 152 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29223,11 +28750,11 @@
 	});
 	exports.default = createPrototypeProxy;
 	
-	var _assign = __webpack_require__(168);
+	var _assign = __webpack_require__(176);
 	
 	var _assign2 = _interopRequireDefault(_assign);
 	
-	var _difference = __webpack_require__(147);
+	var _difference = __webpack_require__(155);
 	
 	var _difference2 = _interopRequireDefault(_difference);
 	
@@ -29394,7 +28921,7 @@
 	};
 
 /***/ },
-/* 177 */
+/* 153 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -29477,7 +29004,7 @@
 	}
 
 /***/ },
-/* 178 */
+/* 154 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -29487,15 +29014,15 @@
 	});
 	exports.getForceUpdate = exports.createProxy = undefined;
 	
-	var _supportsProtoAssignment = __webpack_require__(81);
+	var _supportsProtoAssignment = __webpack_require__(79);
 	
 	var _supportsProtoAssignment2 = _interopRequireDefault(_supportsProtoAssignment);
 	
-	var _createClassProxy = __webpack_require__(175);
+	var _createClassProxy = __webpack_require__(151);
 	
 	var _createClassProxy2 = _interopRequireDefault(_createClassProxy);
 	
-	var _reactDeepForceUpdate = __webpack_require__(172);
+	var _reactDeepForceUpdate = __webpack_require__(148);
 	
 	var _reactDeepForceUpdate2 = _interopRequireDefault(_reactDeepForceUpdate);
 	
@@ -29507,6 +29034,901 @@
 	
 	exports.createProxy = _createClassProxy2.default;
 	exports.getForceUpdate = _reactDeepForceUpdate2.default;
+
+/***/ },
+/* 155 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseDifference = __webpack_require__(161),
+	    baseFlatten = __webpack_require__(162),
+	    isArrayLike = __webpack_require__(27),
+	    isObjectLike = __webpack_require__(28),
+	    restParam = __webpack_require__(80);
+	
+	/**
+	 * Creates an array of unique `array` values not included in the other
+	 * provided arrays using [`SameValueZero`](http://ecma-international.org/ecma-262/6.0/#sec-samevaluezero)
+	 * for equality comparisons.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Array
+	 * @param {Array} array The array to inspect.
+	 * @param {...Array} [values] The arrays of values to exclude.
+	 * @returns {Array} Returns the new array of filtered values.
+	 * @example
+	 *
+	 * _.difference([1, 2, 3], [4, 2]);
+	 * // => [1, 3]
+	 */
+	var difference = restParam(function(array, values) {
+	  return (isObjectLike(array) && isArrayLike(array))
+	    ? baseDifference(array, baseFlatten(values, false, true))
+	    : [];
+	});
+	
+	module.exports = difference;
+
+
+/***/ },
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var cachePush = __webpack_require__(167),
+	    getNative = __webpack_require__(34);
+	
+	/** Native method references. */
+	var Set = getNative(global, 'Set');
+	
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCreate = getNative(Object, 'create');
+	
+	/**
+	 *
+	 * Creates a cache object to store unique values.
+	 *
+	 * @private
+	 * @param {Array} [values] The values to cache.
+	 */
+	function SetCache(values) {
+	  var length = values ? values.length : 0;
+	
+	  this.data = { 'hash': nativeCreate(null), 'set': new Set };
+	  while (length--) {
+	    this.push(values[length]);
+	  }
+	}
+	
+	// Add functions to the `Set` cache.
+	SetCache.prototype.push = cachePush;
+	
+	module.exports = SetCache;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 157 */
+/***/ function(module, exports) {
+
+	/**
+	 * Appends the elements of `values` to `array`.
+	 *
+	 * @private
+	 * @param {Array} array The array to modify.
+	 * @param {Array} values The values to append.
+	 * @returns {Array} Returns `array`.
+	 */
+	function arrayPush(array, values) {
+	  var index = -1,
+	      length = values.length,
+	      offset = array.length;
+	
+	  while (++index < length) {
+	    array[offset + index] = values[index];
+	  }
+	  return array;
+	}
+	
+	module.exports = arrayPush;
+
+
+/***/ },
+/* 158 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var keys = __webpack_require__(81);
+	
+	/**
+	 * A specialized version of `_.assign` for customizing assigned values without
+	 * support for argument juggling, multiple sources, and `this` binding `customizer`
+	 * functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {Function} customizer The function to customize assigned values.
+	 * @returns {Object} Returns `object`.
+	 */
+	function assignWith(object, source, customizer) {
+	  var index = -1,
+	      props = keys(source),
+	      length = props.length;
+	
+	  while (++index < length) {
+	    var key = props[index],
+	        value = object[key],
+	        result = customizer(value, source[key], key, object, source);
+	
+	    if ((result === result ? (result !== value) : (value === value)) ||
+	        (value === undefined && !(key in object))) {
+	      object[key] = result;
+	    }
+	  }
+	  return object;
+	}
+	
+	module.exports = assignWith;
+
+
+/***/ },
+/* 159 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseCopy = __webpack_require__(160),
+	    keys = __webpack_require__(81);
+	
+	/**
+	 * The base implementation of `_.assign` without support for argument juggling,
+	 * multiple sources, and `customizer` functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseAssign(object, source) {
+	  return source == null
+	    ? object
+	    : baseCopy(source, keys(source), object);
+	}
+	
+	module.exports = baseAssign;
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copies properties of `source` to `object`.
+	 *
+	 * @private
+	 * @param {Object} source The object to copy properties from.
+	 * @param {Array} props The property names to copy.
+	 * @param {Object} [object={}] The object to copy properties to.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseCopy(source, props, object) {
+	  object || (object = {});
+	
+	  var index = -1,
+	      length = props.length;
+	
+	  while (++index < length) {
+	    var key = props[index];
+	    object[key] = source[key];
+	  }
+	  return object;
+	}
+	
+	module.exports = baseCopy;
+
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseIndexOf = __webpack_require__(163),
+	    cacheIndexOf = __webpack_require__(166),
+	    createCache = __webpack_require__(169);
+	
+	/** Used as the size to enable large array optimizations. */
+	var LARGE_ARRAY_SIZE = 200;
+	
+	/**
+	 * The base implementation of `_.difference` which accepts a single array
+	 * of values to exclude.
+	 *
+	 * @private
+	 * @param {Array} array The array to inspect.
+	 * @param {Array} values The values to exclude.
+	 * @returns {Array} Returns the new array of filtered values.
+	 */
+	function baseDifference(array, values) {
+	  var length = array ? array.length : 0,
+	      result = [];
+	
+	  if (!length) {
+	    return result;
+	  }
+	  var index = -1,
+	      indexOf = baseIndexOf,
+	      isCommon = true,
+	      cache = (isCommon && values.length >= LARGE_ARRAY_SIZE) ? createCache(values) : null,
+	      valuesLength = values.length;
+	
+	  if (cache) {
+	    indexOf = cacheIndexOf;
+	    isCommon = false;
+	    values = cache;
+	  }
+	  outer:
+	  while (++index < length) {
+	    var value = array[index];
+	
+	    if (isCommon && value === value) {
+	      var valuesIndex = valuesLength;
+	      while (valuesIndex--) {
+	        if (values[valuesIndex] === value) {
+	          continue outer;
+	        }
+	      }
+	      result.push(value);
+	    }
+	    else if (indexOf(values, value, 0) < 0) {
+	      result.push(value);
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = baseDifference;
+
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var arrayPush = __webpack_require__(157),
+	    isArguments = __webpack_require__(48),
+	    isArray = __webpack_require__(49),
+	    isArrayLike = __webpack_require__(27),
+	    isObjectLike = __webpack_require__(28);
+	
+	/**
+	 * The base implementation of `_.flatten` with added support for restricting
+	 * flattening and specifying the start index.
+	 *
+	 * @private
+	 * @param {Array} array The array to flatten.
+	 * @param {boolean} [isDeep] Specify a deep flatten.
+	 * @param {boolean} [isStrict] Restrict flattening to arrays-like objects.
+	 * @param {Array} [result=[]] The initial result value.
+	 * @returns {Array} Returns the new flattened array.
+	 */
+	function baseFlatten(array, isDeep, isStrict, result) {
+	  result || (result = []);
+	
+	  var index = -1,
+	      length = array.length;
+	
+	  while (++index < length) {
+	    var value = array[index];
+	    if (isObjectLike(value) && isArrayLike(value) &&
+	        (isStrict || isArray(value) || isArguments(value))) {
+	      if (isDeep) {
+	        // Recursively flatten arrays (susceptible to call stack limits).
+	        baseFlatten(value, isDeep, isStrict, result);
+	      } else {
+	        arrayPush(result, value);
+	      }
+	    } else if (!isStrict) {
+	      result[result.length] = value;
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = baseFlatten;
+
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var indexOfNaN = __webpack_require__(171);
+	
+	/**
+	 * The base implementation of `_.indexOf` without support for binary searches.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {*} value The value to search for.
+	 * @param {number} fromIndex The index to search from.
+	 * @returns {number} Returns the index of the matched value, else `-1`.
+	 */
+	function baseIndexOf(array, value, fromIndex) {
+	  if (value !== value) {
+	    return indexOfNaN(array, fromIndex);
+	  }
+	  var index = fromIndex - 1,
+	      length = array.length;
+	
+	  while (++index < length) {
+	    if (array[index] === value) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+	
+	module.exports = baseIndexOf;
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports) {
+
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+	
+	module.exports = baseProperty;
+
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(178);
+	
+	/**
+	 * A specialized version of `baseCallback` which only supports `this` binding
+	 * and specifying the number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function bindCallback(func, thisArg, argCount) {
+	  if (typeof func != 'function') {
+	    return identity;
+	  }
+	  if (thisArg === undefined) {
+	    return func;
+	  }
+	  switch (argCount) {
+	    case 1: return function(value) {
+	      return func.call(thisArg, value);
+	    };
+	    case 3: return function(value, index, collection) {
+	      return func.call(thisArg, value, index, collection);
+	    };
+	    case 4: return function(accumulator, value, index, collection) {
+	      return func.call(thisArg, accumulator, value, index, collection);
+	    };
+	    case 5: return function(value, other, key, object, source) {
+	      return func.call(thisArg, value, other, key, object, source);
+	    };
+	  }
+	  return function() {
+	    return func.apply(thisArg, arguments);
+	  };
+	}
+	
+	module.exports = bindCallback;
+
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(23);
+	
+	/**
+	 * Checks if `value` is in `cache` mimicking the return signature of
+	 * `_.indexOf` by returning `0` if the value is found, else `-1`.
+	 *
+	 * @private
+	 * @param {Object} cache The cache to search.
+	 * @param {*} value The value to search for.
+	 * @returns {number} Returns `0` if `value` is found, else `-1`.
+	 */
+	function cacheIndexOf(cache, value) {
+	  var data = cache.data,
+	      result = (typeof value == 'string' || isObject(value)) ? data.set.has(value) : data.hash[value];
+	
+	  return result ? 0 : -1;
+	}
+	
+	module.exports = cacheIndexOf;
+
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(23);
+	
+	/**
+	 * Adds `value` to the cache.
+	 *
+	 * @private
+	 * @name push
+	 * @memberOf SetCache
+	 * @param {*} value The value to cache.
+	 */
+	function cachePush(value) {
+	  var data = this.data;
+	  if (typeof value == 'string' || isObject(value)) {
+	    data.set.add(value);
+	  } else {
+	    data.hash[value] = true;
+	  }
+	}
+	
+	module.exports = cachePush;
+
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var bindCallback = __webpack_require__(165),
+	    isIterateeCall = __webpack_require__(172),
+	    restParam = __webpack_require__(80);
+	
+	/**
+	 * Creates a `_.assign`, `_.defaults`, or `_.merge` function.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return restParam(function(object, sources) {
+	    var index = -1,
+	        length = object == null ? 0 : sources.length,
+	        customizer = length > 2 ? sources[length - 2] : undefined,
+	        guard = length > 2 ? sources[2] : undefined,
+	        thisArg = length > 1 ? sources[length - 1] : undefined;
+	
+	    if (typeof customizer == 'function') {
+	      customizer = bindCallback(customizer, thisArg, 5);
+	      length -= 2;
+	    } else {
+	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+	      length -= (customizer ? 1 : 0);
+	    }
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+	
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {var SetCache = __webpack_require__(156),
+	    getNative = __webpack_require__(34);
+	
+	/** Native method references. */
+	var Set = getNative(global, 'Set');
+	
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeCreate = getNative(Object, 'create');
+	
+	/**
+	 * Creates a `Set` cache object to optimize linear searches of large arrays.
+	 *
+	 * @private
+	 * @param {Array} [values] The values to cache.
+	 * @returns {null|Object} Returns the new cache object if `Set` is supported, else `null`.
+	 */
+	function createCache(values) {
+	  return (nativeCreate && Set) ? new SetCache(values) : null;
+	}
+	
+	module.exports = createCache;
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 170 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var baseProperty = __webpack_require__(164);
+	
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+	
+	module.exports = getLength;
+
+
+/***/ },
+/* 171 */
+/***/ function(module, exports) {
+
+	/**
+	 * Gets the index at which the first occurrence of `NaN` is found in `array`.
+	 *
+	 * @private
+	 * @param {Array} array The array to search.
+	 * @param {number} fromIndex The index to search from.
+	 * @param {boolean} [fromRight] Specify iterating from right to left.
+	 * @returns {number} Returns the index of the matched `NaN`, else `-1`.
+	 */
+	function indexOfNaN(array, fromIndex, fromRight) {
+	  var length = array.length,
+	      index = fromIndex + (fromRight ? 0 : -1);
+	
+	  while ((fromRight ? index-- : ++index < length)) {
+	    var other = array[index];
+	    if (other !== other) {
+	      return index;
+	    }
+	  }
+	  return -1;
+	}
+	
+	module.exports = indexOfNaN;
+
+
+/***/ },
+/* 172 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArrayLike = __webpack_require__(27),
+	    isIndex = __webpack_require__(47),
+	    isObject = __webpack_require__(23);
+	
+	/**
+	 * Checks if the provided arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	      ? (isArrayLike(object) && isIndex(index, object.length))
+	      : (type == 'string' && index in object)) {
+	    var other = object[index];
+	    return value === value ? (value === other) : (other !== other);
+	  }
+	  return false;
+	}
+	
+	module.exports = isIterateeCall;
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(48),
+	    isArray = __webpack_require__(49),
+	    isIndex = __webpack_require__(47),
+	    isLength = __webpack_require__(35),
+	    keysIn = __webpack_require__(177);
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+	
+	  var allowIndexes = !!length && isLength(length) &&
+	    (isArray(object) || isArguments(object));
+	
+	  var index = -1,
+	      result = [];
+	
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = shimKeys;
+
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isObject = __webpack_require__(23);
+	
+	/** `Object#toString` result references. */
+	var funcTag = '[object Function]';
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+	
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 which returns 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+	
+	module.exports = isFunction;
+
+
+/***/ },
+/* 175 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isFunction = __webpack_require__(174),
+	    isObjectLike = __webpack_require__(28);
+	
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+	
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+	
+	module.exports = isNative;
+
+
+/***/ },
+/* 176 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var assignWith = __webpack_require__(158),
+	    baseAssign = __webpack_require__(159),
+	    createAssigner = __webpack_require__(168);
+	
+	/**
+	 * Assigns own enumerable properties of source object(s) to the destination
+	 * object. Subsequent sources overwrite property assignments of previous sources.
+	 * If `customizer` is provided it's invoked to produce the assigned values.
+	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
+	 * (objectValue, sourceValue, key, object, source).
+	 *
+	 * **Note:** This method mutates `object` and is based on
+	 * [`Object.assign`](http://ecma-international.org/ecma-262/6.0/#sec-object.assign).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias extend
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {*} [thisArg] The `this` binding of `customizer`.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+	 * // => { 'user': 'fred', 'age': 40 }
+	 *
+	 * // using a customizer callback
+	 * var defaults = _.partialRight(_.assign, function(value, other) {
+	 *   return _.isUndefined(value) ? other : value;
+	 * });
+	 *
+	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+	 * // => { 'user': 'barney', 'age': 36 }
+	 */
+	var assign = createAssigner(function(object, source, customizer) {
+	  return customizer
+	    ? assignWith(object, source, customizer)
+	    : baseAssign(object, source);
+	});
+	
+	module.exports = assign;
+
+
+/***/ },
+/* 177 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var isArguments = __webpack_require__(48),
+	    isArray = __webpack_require__(49),
+	    isIndex = __webpack_require__(47),
+	    isLength = __webpack_require__(35),
+	    isObject = __webpack_require__(23);
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength(length) &&
+	    (isArray(object) || isArguments(object)) && length) || 0;
+	
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+	
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = keysIn;
+
+
+/***/ },
+/* 178 */
+/***/ function(module, exports) {
+
+	/**
+	 * This method returns the first argument provided to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.identity(object) === object;
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+	
+	module.exports = identity;
+
 
 /***/ },
 /* 179 */

@@ -15,6 +15,7 @@ export class StrainText extends React.Component {
     seqCompStyle: React.PropTypes.object,
     sequence: React.PropTypes.string,
     unitWidth: React.PropTypes.number,
+    spanDef: React.PropTypes.array,
   };
 
   shouldComponentUpdate(nextProps) {
@@ -43,23 +44,42 @@ export class StrainText extends React.Component {
       seqCompStyle,
       sequence,
       unitWidth,
+      spanDef,
       } = this.props;
     const rs = new DNASeq(sequence);
+    let psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
+    const rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
+
+    if (spanDef) {
+      const psRender2 = [];
+      for (const span of spanDef) {
+        psRender2.push(
+          <tspan style={{ ...seqMainStyle, ...span.style }} key={span.start}>
+            {psRender.substr(span.start, span.length)}
+          </tspan>
+        );
+      }
+
+      psRender = psRender2;
+    }
+
     return (
       <g>
         <text
           style={seqMainStyle}
           x="0"
           y={ep.seqY}
+          xmlSpace="preserve"
         >
-          {sequence}
+          {psRender}
         </text>
         {showRS && <text
           style={seqCompStyle}
           x="0"
           y={ep.compY}
+          xmlSpace="preserve"
         >
-          {rs.complement().toString()}
+          {rsRender}
         </text>
         }
         {showLadder && <path
