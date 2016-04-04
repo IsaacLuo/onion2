@@ -14,6 +14,7 @@ export class FeatureGroup extends React.Component {
     radius: React.PropTypes.number,
     globalRotateAngle: React.PropTypes.number,
     theme: React.PropTypes.string,
+    onSelect: React.PropTypes.func,
   };
 
   static defaultProps = {
@@ -24,18 +25,26 @@ export class FeatureGroup extends React.Component {
   constructor(props) {
     super(props);
     this.state = { selectedFeature: props.selectedFeature };
-    this.onClick = this.onClick.bind(this);
+    this.initCallBack();
   }
 
-  onClick(e) {
-    const id = $(e.target).closest('.featureArrowG').data('featureid');
-    this.setState({ selectedFeature: id });
+  initCallBack() {
+    const _this = this;
+    this.onClick = (e) => {
+      const id = $(e.target).closest('.featureArrowG').data('featureid');
+      //console.log('id',id);
+      _this.setState({selectedFeature: id});
+      if(_this.props.onSelect) {
+        const feature = _this.props.features[id];
+        _this.props.onSelect(feature.end, feature.start);
+      }
+    }
   }
 
   calcFeaturePos() {
     const { angleSpan, features } = this.props;
     const featureArrows = [];
-    console.log(features);
+   // console.log(features);
     this.la = new LA(this.props.seqLength, angleSpan[0], angleSpan[1]);
     for (let i in features) {
       const feature = features[i];

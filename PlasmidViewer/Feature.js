@@ -12,7 +12,7 @@ export class Feature extends React.Component {
     globalRotateAngle: React.PropTypes.number,
     theme: React.PropTypes.string,
     highLight: React.PropTypes.bool,
-    featureID: React.PropTypes.string,
+    featureID: React.PropTypes.number,
   };
 
   constructor(props) {

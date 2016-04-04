@@ -27,7 +27,7 @@ export class SequenceEditor extends React.Component {
     style: React.PropTypes.object,
     onBlockChanged: React.PropTypes.func,
     onSetCursor: React.PropTypes.func,
-    onSelecting: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
     onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
     focus: React.PropTypes.bool,
@@ -146,7 +146,7 @@ export class SequenceEditor extends React.Component {
           //shift if in emptyBlock
           const currentBlock = this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
-            this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
             return; //prevent default
           }
         }
@@ -174,7 +174,7 @@ export class SequenceEditor extends React.Component {
       }
     };
 
-    this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
+    this.onSelect = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
       if (this.props.focus) {
         if(this.props.blocks) {
           const currentBlock = this.findBlockByIndex(cursorPos);
@@ -200,12 +200,12 @@ export class SequenceEditor extends React.Component {
           });
         }
 
-        if (this.props.onSelecting) {
+        if (this.props.onSelect) {
           if (cursorPosStart) {
             console.log('full start', cursorPosStart, cursorPos);
-            this.props.onSelecting(cursorPos, cursorPosStart);
+            this.props.onSelect(cursorPos, cursorPosStart);
           } else {
-            this.props.onSelecting(cursorPos, this.state.selectStartPos);
+            this.props.onSelect(cursorPos, this.state.selectStartPos);
           }
         }
       }
@@ -618,7 +618,7 @@ export class SequenceEditor extends React.Component {
           features={featureFrags}
           unitWidth={this.unitWidth}
           onSetCursor={this.onSetCursor}
-          onSetCursorMoving={this.onSelecting}
+          onSetCursorMoving={this.onSelect}
           onSetHighLight={this.onSetHighLight}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}

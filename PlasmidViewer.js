@@ -32,6 +32,8 @@ export class PlasmidViewer extends React.Component {
     showCursor: React.PropTypes.bool,
 
     onWheel: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
+
   };
 
   static defaultProps = {
@@ -368,6 +370,7 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={theme}
+                onSelect={this.props.onSelect}
               />
               {
                 this.props.showCursor &&
