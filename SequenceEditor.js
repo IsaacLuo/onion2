@@ -86,6 +86,7 @@ export class SequenceEditor extends React.Component {
     //initial operations
     this.initialRowPos(this.props.sequence, this.props.width);
     this.initCallBack();
+    $('body').mouseup((e)=>{$('body').css('-webkit-user-select','text')});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -122,6 +123,22 @@ export class SequenceEditor extends React.Component {
       //   }
       // }
     };
+
+    this.onMouseMove = (e) => {
+        // if(e.buttons === 1) {
+        //   const { clientX, clientY, target } = e;
+        //   const editor = $(target).parents('.SequenceEditor');
+        //   console.log("mousemove",clientX, clientY);
+        //   if(clientY < 200) {
+        //     console.log('scrollUp');
+        //     editor.scrollTop(editor.scrollTop()-10);
+        //   }
+        //   else if (clientX > this.props.height-200) {
+        //     console.log('scrollDown')
+        //     editor.scrollTop(editor.scrollTop()+10);
+        //   }
+        // }
+    }
 
     this.onSetCursor = (cursorPos, rowNumber) => {
       if (this.props.focus) {
@@ -671,6 +688,7 @@ export class SequenceEditor extends React.Component {
         },style)}
         onScroll={this.onScroll}
         onClick={this.onClick}
+        onMouseMove={this.onMouseMove}
         className="SequenceEditor"
       >
         {this.textRows}
