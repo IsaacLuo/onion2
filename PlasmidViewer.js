@@ -27,7 +27,10 @@ export class PlasmidViewer extends React.Component {
     cursorPos: React.PropTypes.number,
     selectionStart: React.PropTypes.number,
     selectionLength: React.PropTypes.number,
+
     showViewAngle: React.PropTypes.bool,
+    showCursor: React.PropTypes.bool,
+
     onWheel: React.PropTypes.func,
   };
 
@@ -43,6 +46,7 @@ export class PlasmidViewer extends React.Component {
     mode: 'normal',
     enzymes: [],
     plasmidR: 240,
+    showCursor: false,
   };
 
   constructor(props) {
@@ -90,6 +94,7 @@ export class PlasmidViewer extends React.Component {
       selectionLength,
       showViewAngle,
       style,
+      showCursor,
       } = this.props;
     let { rotateAngle, enzymeR } = this.props;
 
@@ -362,12 +367,15 @@ export class PlasmidViewer extends React.Component {
                 globalRotateAngle={rotateAngle}
                 theme={theme}
               />
-              <g className="cursor">
-                <PlasmidViewerCursorGeneral
-                  angle={cursorPos * 360 / seqLength}
-                  radius={plasmidR}
-                />
-              </g>
+              {
+                this.props.showCursor &&
+                <g className="cursor">
+                  <PlasmidViewerCursorGeneral
+                    angle={cursorPos * 360 / seqLength}
+                    radius={plasmidR}
+                  />
+                </g>
+              }
               <g className="selection">
                 <PlasmidViewerSelectionGeneral
                   angle={selectionStart * 360 / seqLength}
@@ -383,6 +391,7 @@ export class PlasmidViewer extends React.Component {
                 y={0}
                 fontSize={16}
                 style={{ dominantBaseline: 'text-after-edge', textAnchor: 'middle' }}
+                className="noselect cursorDefault"
               >
                 {name}
               </text>
@@ -391,6 +400,7 @@ export class PlasmidViewer extends React.Component {
                 y={0}
                 fontSize={10}
                 style={{ dominantBaseline: 'text-before-edge', textAnchor: 'middle' }}
+                className="noselect cursorDefault"
               >
                 {`${seqLength} bp`}
               </text>

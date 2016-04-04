@@ -51,7 +51,11 @@ export class PlasmidBone extends React.Component {
 
             fontSize="12"
             textAnchor="start"
-            style={{ alignmentBaseline: 'text-before-edge' }}
+            style={{
+             alignmentBaseline: 'text-before-edge',
+             cursor: 'default',
+              }}
+            className="noselect"
           >
             <textPath
               xlinkHref="#markTextPath"
