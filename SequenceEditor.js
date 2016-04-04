@@ -38,6 +38,7 @@ export class SequenceEditor extends React.Component {
     theme: 'normal',
     showBlockBar: true, //show block bars in genome-designer
     style: {},
+    focus: true,
   };
 
   constructor(props) {
@@ -124,11 +125,13 @@ export class SequenceEditor extends React.Component {
 
     this.onSetCursor = (cursorPos, rowNumber) => {
       if (this.props.focus) {
-        //shift if in emptyBlock
-        const currentBlock = this.findBlockByIndex(cursorPos);
-        if (currentBlock && currentBlock.realLength === 0) {
-          this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
-          return; //prevent default
+        if(this.props.blocks) {
+          //shift if in emptyBlock
+          const currentBlock = this.findBlockByIndex(cursorPos);
+          if (currentBlock && currentBlock.realLength === 0) {
+            this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            return; //prevent default
+          }
         }
 
         this.setState({
