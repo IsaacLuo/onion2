@@ -100,7 +100,8 @@ export class SequenceRow extends React.Component {
     //console.log(cursorPos);
     //this.setState(cursorPos)
     this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
-    e.preventDefault();
+    //e.preventDefault();
+    $('body').css('-webkit-user-select', 'none');
   }
 
   onMouseMove(e) {

@@ -38,6 +38,7 @@ export class SequenceEditor extends React.Component {
     theme: 'normal',
     showBlockBar: true, //show block bars in genome-designer
     style: {},
+    focus: true,
   };
 
   constructor(props) {
@@ -85,6 +86,7 @@ export class SequenceEditor extends React.Component {
     //initial operations
     this.initialRowPos(this.props.sequence, this.props.width);
     this.initCallBack();
+    $('body').mouseup((e)=>{$('body').css('-webkit-user-select','text')});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -122,13 +124,31 @@ export class SequenceEditor extends React.Component {
       // }
     };
 
+    this.onMouseMove = (e) => {
+        // if(e.buttons === 1) {
+        //   const { clientX, clientY, target } = e;
+        //   const editor = $(target).parents('.SequenceEditor');
+        //   console.log("mousemove",clientX, clientY);
+        //   if(clientY < 200) {
+        //     console.log('scrollUp');
+        //     editor.scrollTop(editor.scrollTop()-10);
+        //   }
+        //   else if (clientX > this.props.height-200) {
+        //     console.log('scrollDown')
+        //     editor.scrollTop(editor.scrollTop()+10);
+        //   }
+        // }
+    }
+
     this.onSetCursor = (cursorPos, rowNumber) => {
       if (this.props.focus) {
-        //shift if in emptyBlock
-        const currentBlock = this.findBlockByIndex(cursorPos);
-        if (currentBlock && currentBlock.realLength === 0) {
-          this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
-          return; //prevent default
+        if(this.props.blocks) {
+          //shift if in emptyBlock
+          const currentBlock = this.findBlockByIndex(cursorPos);
+          if (currentBlock && currentBlock.realLength === 0) {
+            this.onSelecting(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            return; //prevent default
+          }
         }
 
         this.setState({
@@ -156,11 +176,13 @@ export class SequenceEditor extends React.Component {
 
     this.onSelecting = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
       if (this.props.focus) {
-        const currentBlock = this.findBlockByIndex(cursorPos);
-        if (currentBlock && currentBlock.realLength === 0) {
-          //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
-          if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
-          else cursorPos = currentBlock.start;
+        if(this.props.blocks) {
+          const currentBlock = this.findBlockByIndex(cursorPos);
+          if (currentBlock && currentBlock.realLength === 0) {
+            //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+            if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+            else cursorPos = currentBlock.start;
+          }
         }
 
         if (cursorPosStart) {
@@ -666,6 +688,7 @@ export class SequenceEditor extends React.Component {
         },style)}
         onScroll={this.onScroll}
         onClick={this.onClick}
+        onMouseMove={this.onMouseMove}
         className="SequenceEditor"
       >
         {this.textRows}
