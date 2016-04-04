@@ -28,6 +28,7 @@ export class PlasmidViewer extends React.Component {
     selectionStart: React.PropTypes.number,
     selectionLength: React.PropTypes.number,
     showViewAngle: React.PropTypes.bool,
+
     onWheel: React.PropTypes.func,
   };
 
@@ -48,12 +49,14 @@ export class PlasmidViewer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
-    this.onWheel = this.onWheel.bind(this);
+    this.initCallBack();
   }
+  initCallBack() {
 
-  onWheel(e) {
-    this.props.onWheel(e);
-    e.preventDefault();
+    this.onWheel = (e) => {
+      this.props.onWheel(e);
+      e.preventDefault();
+    }
   }
 
   calcEnzymeRoot(_enzymes, r) {
