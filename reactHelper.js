@@ -2,7 +2,11 @@
  * Created by Isaac on 20/01/2016.
  */
 
-export function compareProps(props1, props2, list = Object.keys(props1)) {
+export function compareProps(props1, props2, list) {
+  if (!list && typeof (props1) === 'object') {
+    list = Object.keys(props1);
+  }
+
   for (const item of list) {
     if (!props2) {
       return false;

@@ -12,7 +12,7 @@ export class Feature extends React.Component {
     globalRotateAngle: React.PropTypes.number,
     theme: React.PropTypes.string,
     highLight: React.PropTypes.bool,
-    featureID: React.PropTypes.string,
+    featureID: React.PropTypes.number,
   };
 
   constructor(props) {
@@ -224,7 +224,7 @@ export class Feature extends React.Component {
       const r = color.slice(1, 3);
       const g = color.slice(3, 5);
       const b = color.slice(5, 7);
-      console.log('rgb',r,g,b);
+      //console.log('rgb',r,g,b);
       return [parseInt(r,16), parseInt(g,16), parseInt(b,16)];
     } else if (color.slice(0,4) == 'rgb(') {
       return  color.slice(3).split(/\s/);
@@ -243,7 +243,7 @@ export class Feature extends React.Component {
     if(b>t) b=t;
     else if(b<m) b=t;
     let re = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
-    console.log(re);
+   // console.log(re);
     return re;
   }
 

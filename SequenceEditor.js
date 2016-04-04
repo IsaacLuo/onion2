@@ -27,9 +27,10 @@ export class SequenceEditor extends React.Component {
     style: React.PropTypes.object,
     onBlockChanged: React.PropTypes.func,
     onSetCursor: React.PropTypes.func,
-    onSelecting: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
     onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
+    focus: React.PropTypes.bool,
 
   };
   static defaultProps = {
@@ -37,6 +38,7 @@ export class SequenceEditor extends React.Component {
     theme: 'normal',
     showBlockBar: true, //show block bars in genome-designer
     style: {},
+    focus: true,
   };
 
   constructor(props) {
@@ -46,8 +48,8 @@ export class SequenceEditor extends React.Component {
     // style of sequence
     this.myCSS = {
       seqFontFamily: 'Cousine,Monospace',
-      seqFontSize: 16,
-      seqFontUnitWidth: 10, //9.609375,
+      seqFontSize: 12,
+      seqFontUnitWidth: 7.1943, //9.609375,
     };
     //Maybe I need to render a letter first, then calculate its size, it's necessary because
     // the letter width is little difference on different browser.
@@ -61,11 +63,12 @@ export class SequenceEditor extends React.Component {
       fontFamily: this.myCSS.seqFontFamily,
       fontSize: this.myCSS.seqFontSize,
       fill: '#2C3543',
-      letterSpacing: (10 - 9.609375),
+      //letterSpacing: (10 - 9.609375),
+      //letterSpacing: 0.8056146,
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };
-    this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, this.seqMainStyle);
+    this.seqCompStyle = Object.assign({ ...this.seqMainStyle }, { fill: '#B7BBC2' });
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(this.props.sequence);
@@ -76,18 +79,14 @@ export class SequenceEditor extends React.Component {
     this.state = {
       cursorPos: 0,
       selectStartPos: 0,
-      showCursor: false,
+      showCursor: true,
       showSelection: false,
     };
 
     //initial operations
     this.initialRowPos(this.props.sequence, this.props.width);
-
-    this.onScroll = this.onScroll.bind(this);
-    this.onSetCursor = this.onSetCursor.bind(this);
-    this.onSelecting = this.onSelecting.bind(this);
-    this.onSetHighLight = this.onSetHighLight.bind(this);
-    this.onRowCalculatedHeight = this.onRowCalculatedHeight.bind(this);
+    this.initCallBack();
+    $('body').mouseup((e)=>{$('body').css('-webkit-user-select','text')});
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,81 +110,137 @@ export class SequenceEditor extends React.Component {
     return update;
   }
 
-  onScroll(e) {
-    const scrollPos = e.target.scrollTop;
-    for (let i = 0; i < this.rowY.length; i++) {
-      if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-        const block = this.splitBlocks[i];
-        if (block.length > 0) this.props.onBlockChanged(block);
-        break;
-      }
-    }
-  }
+  initCallBack() {
+    const _this = this;
 
-  onSetCursor(cursorPos, rowNumber) {
-    this.setState({
-      cursorPos,
-      showCursor: true,
-      selectStartPos: cursorPos,
-      showSelection: false,
-    });
-    if (this.props.onSetCursor) {
-      this.props.onSetCursor(cursorPos);
+    this.onScroll = (e) => {
+      // const scrollPos = e.target.scrollTop;
+      // for (let i = 0; i < this.rowY.length; i++) {
+      //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+      //     const block = this.splitBlocks[i];
+      //     if (block.length > 0) this.props.onBlockChanged(block);
+      //     break;
+      //   }
+      // }
+    };
+
+    this.onMouseMove = (e) => {
+        // if(e.buttons === 1) {
+        //   const { clientX, clientY, target } = e;
+        //   const editor = $(target).parents('.SequenceEditor');
+        //   console.log("mousemove",clientX, clientY);
+        //   if(clientY < 200) {
+        //     console.log('scrollUp');
+        //     editor.scrollTop(editor.scrollTop()-10);
+        //   }
+        //   else if (clientX > this.props.height-200) {
+        //     console.log('scrollDown')
+        //     editor.scrollTop(editor.scrollTop()+10);
+        //   }
+        // }
     }
 
-    if (this.props.onBlockChanged) {
-      const row = Math.floor(cursorPos / this.colNum);
-      const x = cursorPos % this.colNum;
-      const blocks = this.splitBlocks[row];
-      for (let i = 0; i < blocks.length; i++) {
-        if (x >= blocks[i].start) {
-          this.props.onBlockChanged([blocks[i]]);
+    this.onSetCursor = (cursorPos, rowNumber) => {
+      if (this.props.focus) {
+        if(this.props.blocks) {
+          //shift if in emptyBlock
+          const currentBlock = this.findBlockByIndex(cursorPos);
+          if (currentBlock && currentBlock.realLength === 0) {
+            this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            return; //prevent default
+          }
+        }
+
+        this.setState({
+          cursorPos,
+          showCursor: true,
+          selectStartPos: cursorPos,
+          showSelection: false,
+        });
+        if (this.props.onSetCursor) {
+          this.props.onSetCursor(cursorPos);
+        }
+
+        if (this.props.onBlockChanged) {
+          const row = Math.floor(cursorPos / this.colNum);
+          const x = cursorPos % this.colNum;
+          const blocks = this.splitBlocks[row];
+          for (let i = 0; i < blocks.length; i++) {
+            if (x >= blocks[i].start) {
+              this.props.onBlockChanged([blocks[i]]);
+            }
+          }
         }
       }
+    };
+
+    this.onSelect = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
+      if (this.props.focus) {
+        if(this.props.blocks) {
+          const currentBlock = this.findBlockByIndex(cursorPos);
+          if (currentBlock && currentBlock.realLength === 0) {
+            //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+            if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+            else cursorPos = currentBlock.start;
+          }
+        }
+
+        if (cursorPosStart) {
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+            selectStartPos: cursorPosStart,
+          });
+        } else {
+          this.setState({
+            cursorPos,
+            showCursor: true,
+            showSelection: true,
+          });
+        }
+
+        if (this.props.onSelect) {
+          if (cursorPosStart) {
+            console.log('full start', cursorPosStart, cursorPos);
+            this.props.onSelect(cursorPos, cursorPosStart);
+          } else {
+            this.props.onSelect(cursorPos, this.state.selectStartPos);
+          }
+        }
+      }
+    };
+
+    this.onSetHighLight = (highLightStart, rowNumber, highLightEnd, rowNumberStart) => {
+      if (highLightStart === highLightEnd) {
+        this.setState({ highLightStart, highLightEnd, showHighLight: false });
+      } else {
+        this.setState({ highLightStart, highLightEnd, showHighLight: true });
+      }
+    };
+
+    this.onRowCalculatedHeight = (row, height) => {
+      this.rowHeight[row] = height;
+      if (row > 0) {
+        this.rowY[row] = this.rowY[row - 1] + height;
+      } else {
+        this.rowY[0] = 0;
+      }
+    };
+
+    this.onClick = (e) => {
     }
+
   }
 
-  onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-    if (cursorPosStart) {
-      this.setState({
-        cursorPos,
-        showCursor: true,
-        showSelection: true,
-        selectStartPos: cursorPosStart,
-      });
-    } else {
-      this.setState({
-        cursorPos,
-        showCursor: true,
-        showSelection: true,
-      });
-    }
-
-    if (this.props.onSelecting) {
-      if (cursorPosStart) {
-        console.log('full start', cursorPosStart, cursorPos);
-        this.props.onSelecting(cursorPos, cursorPosStart);
-      } else {
-        this.props.onSelecting(cursorPos, this.state.selectStartPos);
+  findBlockByIndex(index) {
+    const { blocks } = this.props;
+    for (const block of blocks) {
+      if (index >= block.start && index < block.start + block.length) {
+        return block;
       }
     }
-  }
-
-  onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-    if (highLightStart === highLightEnd) {
-      this.setState({ highLightStart, highLightEnd, showHighLight: false });
-    } else {
-      this.setState({ highLightStart, highLightEnd, showHighLight: true });
-    }
-  }
-
-  onRowCalculatedHeight(row, height) {
-    this.rowHeight[row] = height;
-    if (row > 0) {
-      this.rowY[row] = this.rowY[row - 1] + height;
-    } else {
-      this.rowY[0] = 0;
-    }
+    return null;
   }
 
   isOverlap(a1, b1, a2, b2) {
@@ -428,6 +483,7 @@ export class SequenceEditor extends React.Component {
       showBlockBar,
       blocks,
       showAA,
+      focus,
       } = this.props;
 
     this.textRows = [];
@@ -453,16 +509,22 @@ export class SequenceEditor extends React.Component {
         const len = blocks[i].length;
         const blockEnd = start + len;
         const blockRowIdx = Math.floor(start / colNum);
+        const realStart = blocks[i].realStart;
+        const realLength = blocks[i].realLength;
 
         for (let j = blockRowIdx; j < Math.ceil((start + len) / colNum); j++) {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
+          const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
+          const realLength = blocks[i].realLength;
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
               name: blocks[i].name,
               start,
               len: end - start,
+              realStart,
+              realLength,
             });
           }
         }
@@ -537,6 +599,16 @@ export class SequenceEditor extends React.Component {
 
       const subSequence = sequence.substr(i, colNum);
 
+      let selectionStyle;
+      let cursorStyle;
+      if (!focus) {
+        selectionStyle = { fill: '#F2F2F2' };
+        cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+      } else {
+        selectionStyle = { fill: '#EDF2F8' };
+        cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+      }
+
       this.textRows.push(
         <SequenceRow
           sequence={subSequence}
@@ -546,15 +618,17 @@ export class SequenceEditor extends React.Component {
           features={featureFrags}
           unitWidth={this.unitWidth}
           onSetCursor={this.onSetCursor}
-          onSetCursorMoving={this.onSelecting}
+          onSetCursorMoving={this.onSelect}
           onSetHighLight={this.onSetHighLight}
           cursorPos={rowCursorPos}
           showCursor={rowShowCursor}
+          cursorStyle={cursorStyle}
           selectLeftPos={rowSelectLeftPos}
           selectRightPos={rowSelectRightPos}
           showLeftCursor={rowShowLeftCursor}
           showRightCursor={rowShowRightCursor}
           showSelection={rowShowSelection}
+          selectionStyle={selectionStyle}
           showStartPos={rowShowStartPos}
           seqMainStyle={this.seqMainStyle}
           seqCompStyle={this.seqCompStyle}
@@ -580,7 +654,7 @@ export class SequenceEditor extends React.Component {
   }
 
   render() {
-    const { width, height, sequence, features } = this.props;
+    const { width, height, sequence, features, style } = this.props;
     this.colNum = Math.floor(width / this.unitWidth) - 10;
 
     this.sequence = new DNASeq(this.props.sequence);
@@ -606,12 +680,16 @@ export class SequenceEditor extends React.Component {
     this.splitRows(this.colNum);
     return (
       <div
-        style={Object.assign(...this.props.style, {
+        style={Object.assign({
           width,
           height,
           overflowY: 'scroll',
-        })}
+          overflowX: 'hidden',
+        },style)}
         onScroll={this.onScroll}
+        onClick={this.onClick}
+        onMouseMove={this.onMouseMove}
+        className="SequenceEditor"
       >
         {this.textRows}
       </div>

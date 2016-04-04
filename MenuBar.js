@@ -30,15 +30,16 @@ export class MenuBar extends React.Component {
 
   onSelect(e) {
     const { onSelect } = this.props;
-    let $target = $(e.target);
-    if ($target.prop('nodeName') !== 'a') {
-      $target = $target.parents('a');
+
+    let target = e.target;
+    while (target.nodeName.toUpperCase() !== 'A') {
+      target = target.parentNode;
     }
-    
-    const cmd = $target.data('cmd');
+
     //I don't know why $.data() always returns true;
     //const value = $target.data('val');
-    const value = $target.attr('data-val') === 'true';
+    const cmd = target.getAttribute('data-cmd');
+    const value = target.getAttribute('data-val') === 'true';
     console.log(value);
     onSelect(cmd, !value);
   }
@@ -81,7 +82,10 @@ export class MenuBar extends React.Component {
         <div
           style={{
             height: 43,
-            fontSize: 16,
+            fontFamily: 'Helvetica, Arial, sans-serif',
+            fontSize: 12,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
           }}
         >
           <div

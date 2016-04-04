@@ -248,6 +248,7 @@ export class AminoAcidMarker extends React.Component {
             textAnchor: 'middle',
             alignmentBaseline: 'central',
             WebkitUserSelect: 'none',
+            fontSize: 12,
           }}
         >{aa}</text>}
       </g>

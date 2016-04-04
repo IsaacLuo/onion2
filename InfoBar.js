@@ -32,34 +32,36 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onChangeStart = this.onChangeStart.bind(this);
-    this.onChangeEnd = this.onChangeEnd.bind(this);
+    this.initCallBack();
   }
 
-  onChangeStart(o, v, e) {
-    if (this.props.onChange) {
-      const { startPos, endPos } = this.props;
-      const vv = v - 1;
-      if (startPos === endPos) {		//cursorMode
-        this.props.onChange(vv, vv);
-      } else {
-        this.props.onChange(vv, Math.max(endPos, vv));
+  initCallBack() {
+    this.onChangeStart = (o, v, e) => {
+      this.showStartValue = true;
+      if (this.props.onChange) {
+        const { startPos, endPos } = this.props;
+        const vv = v - 1;
+        if (startPos === endPos) {		//cursorMode
+          this.props.onChange(vv, vv);
+        } else {
+          this.props.onChange(vv, Math.max(endPos, vv));
+        }
       }
-    }
 
-    return false;
-  }
+      return false;
+    };
 
-  onChangeEnd(o, v, e) {
-    if (this.props.onChange) {
-      const { startPos, endPos } = this.props;
-      const vv = v;
-      if (startPos === endPos && vv < startPos) {		//cursorMode
-        this.props.onChange(vv, vv);
-      } else {
-        this.props.onChange(Math.min(startPos, vv), vv);
+    this.onChangeEnd = (o, v, e) => {
+      if (this.props.onChange) {
+        const { startPos, endPos } = this.props;
+        const vv = v;
+        if (startPos === endPos && vv < startPos) {		//cursorMode
+          this.props.onChange(vv, vv);
+        } else {
+          this.props.onChange(Math.min(startPos, vv), vv);
+        }
       }
-    }
+    };
   }
 
   render() {
@@ -74,15 +76,18 @@ export class InfoBar extends React.Component {
       } = this.props;
     const itemStyle = {
       display: 'inline-block',
+      marginTop: 9,
       marginLeft: 10,
       marginRight: 10,
-      marginTop: 10,
-      marginBottom: 10,
-      color: 'A5A6A2',
+      color: '#757884',
       verticalAlign: 'top',
       minWidth: 90,
       whiteSpace: 'nowrap',
+      fontFamily: 'Helvetica, Arial, sans-serif',
+      fontSize: 12,
     };
+
+    const itemStyleWithNumeric = Object.assign({ ...itemStyle }, { marginTop: 5 });
 
     const length = endPos - startPos;
     const dna = new DNASeq(seq);
@@ -91,28 +96,42 @@ export class InfoBar extends React.Component {
 
     return (
       <div
-        style={this.props.style}
+        style={Object.assign({ ...this.props.style },
+          { whiteSpace: 'nowrap', overflow: 'hidden' })}
       >
         {showPos &&
         <div
-          style={itemStyle}
+          style={itemStyleWithNumeric}
         >
-          <span className="noselect"> start:</span>
+          <div
+            style={{ display: 'inline-block', marginTop: 4, marginRight: 0 }}
+          >
+          start:
+          </div>
           <NumericControl
             value={startPos + 1}
-            style={{ marginLeft: 10 }}
+            style={{ marginLeft: 8 }}
+            valueBoxStyle={{ height: 20 }}
+            showValue={startPos >= 0}
             onChange={this.onChangeStart}
           />
         </div>
         }
         {showPos &&
         <div
-          style={itemStyle}
+          style={itemStyleWithNumeric}
         >
-          <span className="noselect"> end:</span>
+          <div
+            style={{ display: 'inline-block', marginTop: 4, marginRight: 0 }}
+          >
+            end:
+          </div>
           <NumericControl
             value={endPos}
-            style={{ marginLeft: 0, color: startPos < endPos ? 'black' : 'rgba(127,127,127,0)' }}
+            showValue={startPos < endPos}
+            minValue={startPos}
+            style={{ marginLeft: 8 }}
+            valueBoxStyle={{ height: 20 }}
             onChange={this.onChangeEnd}
           />
         </div>

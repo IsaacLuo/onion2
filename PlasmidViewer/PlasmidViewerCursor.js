@@ -67,12 +67,14 @@ export class PlasmidViewerCursorGeneral extends PlasmidViewerCursor {
 
     const cursorH = 20;
 
-    const d = `M 0 ${-r - cursorH} \
-    L 0 ${-r + cursorH} \
-    M -5 ${-r - cursorH} \
-    L 5 ${-r - cursorH} \
-    M -5 ${-r + cursorH} \
-    L 5 ${-r + cursorH}`;
+    //const d = `M 0 ${-r - cursorH} \
+    //L 0 ${-r + cursorH} \
+    //M -5 ${-r - cursorH} \
+    //L 5 ${-r - cursorH} \
+    //M -5 ${-r + cursorH} \
+    //L 5 ${-r + cursorH}`;
+
+    const d = `M 0 ${-r - cursorH} L 0 ${-r + cursorH}`;
 
     return (
       <g
@@ -81,8 +83,8 @@ export class PlasmidViewerCursorGeneral extends PlasmidViewerCursor {
         {<path
           d = {d}
           fill="none"
-          strokeWidth={3}
-          stroke="red"
+          strokeWidth={2}
+          stroke="#4E77BA"
         />}
       </g>
     );

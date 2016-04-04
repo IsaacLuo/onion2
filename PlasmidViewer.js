@@ -14,7 +14,7 @@ import { PlasmidViewerVisibleArea } from './PlasmidViewer/PlasmidViewerVisibleAr
 export class PlasmidViewer extends React.Component {
   static propTypes = {
     rotateAngle: React.PropTypes.number,
-    seqLength: React.PropTypes.number,
+    seqLength: React.PropTypes.number.isRequired,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     mode: React.PropTypes.string,
@@ -27,8 +27,13 @@ export class PlasmidViewer extends React.Component {
     cursorPos: React.PropTypes.number,
     selectionStart: React.PropTypes.number,
     selectionLength: React.PropTypes.number,
+
     showViewAngle: React.PropTypes.bool,
+    showCursor: React.PropTypes.bool,
+
     onWheel: React.PropTypes.func,
+    onSelect: React.PropTypes.func,
+
   };
 
   static defaultProps = {
@@ -42,17 +47,21 @@ export class PlasmidViewer extends React.Component {
     selectionLength: 0,
     mode: 'normal',
     enzymes: [],
+    plasmidR: 240,
+    showCursor: false,
   };
 
   constructor(props) {
     super(props);
     this.state = {};
-    this.onWheel = this.onWheel.bind(this);
+    this.initCallBack();
   }
+  initCallBack() {
 
-  onWheel(e) {
-    this.props.onWheel(e);
-    e.preventDefault();
+    this.onWheel = (e) => {
+      this.props.onWheel(e);
+      e.preventDefault();
+    }
   }
 
   calcEnzymeRoot(_enzymes, r) {
@@ -88,6 +97,8 @@ export class PlasmidViewer extends React.Component {
       selectionStart,
       selectionLength,
       showViewAngle,
+      style,
+      showCursor,
       } = this.props;
     let { rotateAngle, enzymeR } = this.props;
 
@@ -335,7 +346,9 @@ export class PlasmidViewer extends React.Component {
     } else {
       console.log(plasmidR,seqLength);
       plasmid = (
-        <div>
+        <div
+        style = {style}
+        >
           <svg
             width={width}
             height={height}
@@ -357,13 +370,17 @@ export class PlasmidViewer extends React.Component {
                 selectedFeature={selectedFeature}
                 globalRotateAngle={rotateAngle}
                 theme={theme}
+                onSelect={this.props.onSelect}
               />
-              <g className="cursor">
-                <PlasmidViewerCursorGeneral
-                  angle={cursorPos * 360 / seqLength}
-                  radius={plasmidR}
-                />
-              </g>
+              {
+                this.props.showCursor &&
+                <g className="cursor">
+                  <PlasmidViewerCursorGeneral
+                    angle={cursorPos * 360 / seqLength}
+                    radius={plasmidR}
+                  />
+                </g>
+              }
               <g className="selection">
                 <PlasmidViewerSelectionGeneral
                   angle={selectionStart * 360 / seqLength}
@@ -379,6 +396,7 @@ export class PlasmidViewer extends React.Component {
                 y={0}
                 fontSize={16}
                 style={{ dominantBaseline: 'text-after-edge', textAnchor: 'middle' }}
+                className="noselect cursorDefault"
               >
                 {name}
               </text>
@@ -387,6 +405,7 @@ export class PlasmidViewer extends React.Component {
                 y={0}
                 fontSize={10}
                 style={{ dominantBaseline: 'text-before-edge', textAnchor: 'middle' }}
+                className="noselect cursorDefault"
               >
                 {`${seqLength} bp`}
               </text>
