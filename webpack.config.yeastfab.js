@@ -3,6 +3,7 @@ var webpack = require('webpack');
 var webpackBase = require('./webpack.config.base');
 
 module.exports = Object.assign({}, webpackBase, {
+  devtool: 'source-map',
 	    entry  : [
 		    './mainYeastfab.js'
 	],
