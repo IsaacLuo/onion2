@@ -14,7 +14,7 @@ import { PlasmidViewerVisibleArea } from './PlasmidViewer/PlasmidViewerVisibleAr
 export class PlasmidViewer extends React.Component {
   static propTypes = {
     rotateAngle: React.PropTypes.number,
-    seqLength: React.PropTypes.number,
+    seqLength: React.PropTypes.number.isRequired,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
     mode: React.PropTypes.string,
@@ -42,6 +42,7 @@ export class PlasmidViewer extends React.Component {
     selectionLength: 0,
     mode: 'normal',
     enzymes: [],
+    plasmidR: 240,
   };
 
   constructor(props) {
@@ -88,6 +89,7 @@ export class PlasmidViewer extends React.Component {
       selectionStart,
       selectionLength,
       showViewAngle,
+      style,
       } = this.props;
     let { rotateAngle, enzymeR } = this.props;
 
@@ -335,7 +337,9 @@ export class PlasmidViewer extends React.Component {
     } else {
       console.log(plasmidR,seqLength);
       plasmid = (
-        <div>
+        <div
+        style = {style}
+        >
           <svg
             width={width}
             height={height}

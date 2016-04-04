@@ -632,7 +632,7 @@ export class SequenceEditor extends React.Component {
   }
 
   render() {
-    const { width, height, sequence, features } = this.props;
+    const { width, height, sequence, features, style } = this.props;
     this.colNum = Math.floor(width / this.unitWidth) - 10;
 
     this.sequence = new DNASeq(this.props.sequence);
@@ -658,14 +658,15 @@ export class SequenceEditor extends React.Component {
     this.splitRows(this.colNum);
     return (
       <div
-        style={Object.assign(...this.props.style, {
+        style={Object.assign({
           width,
           height,
           overflowY: 'scroll',
           overflowX: 'hidden',
-        })}
+        },style)}
         onScroll={this.onScroll}
         onClick={this.onClick}
+        className="SequenceEditor"
       >
         {this.textRows}
       </div>

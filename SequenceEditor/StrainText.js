@@ -46,11 +46,12 @@ export class StrainText extends React.Component {
       unitWidth,
       spanDef,
       } = this.props;
-    const rs = new DNASeq(sequence);
-    let psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
-    const rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
-
-    if (spanDef) {
+    let psRender;
+    let rsRender;
+    if (spanDef && spanDef.length > 0) {
+      const rs = new DNASeq(sequence);
+      psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
+      rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
       const psRender2 = [];
       for (const span of spanDef) {
         psRender2.push(
@@ -59,8 +60,10 @@ export class StrainText extends React.Component {
           </tspan>
         );
       }
-
       psRender = psRender2;
+    } else {
+      psRender = sequence;
+      rsRender = (new DNASeq(sequence)).complement().toString();
     }
 
     return (
