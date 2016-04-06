@@ -39,7 +39,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
       blocks: props.blocks,   //blocks data, an array of {name,color,start,length}
 
-      menuTitle: 'unknown',
+      menuTitle: '',
       sequence: props.sequence, //DNA sequence, in ACGT
 
       focus: true,
@@ -88,6 +88,8 @@ export class OnionForGenomeDesigner extends React.Component {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
       if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
+      else if (this.state.sequence) this.state.menuTitle = 'unknown';
+      else this.state.menuTitle = '';
       this.state.features = [];
     }
 
@@ -159,24 +161,27 @@ export class OnionForGenomeDesigner extends React.Component {
     let features;
     let blocks = this.state.blocks;
 
-    //test load a demo file if sequence and features doesn't exist
-    if (this.state && this.state.sequence) {
-      sequence = this.state.sequence ? this.state.sequence : onionFile.seq;
-    }
+    // //test load a demo file if sequence and features doesn't exist
+    // if (this.state && this.state.sequence) {
+    //   sequence = this.state.sequence ? this.state.sequence : onionFile.seq;
+    // }
+    //
+    // if (this.state && this.state.features) {
+    //   features = this.state.features ? this.state.features : onionFile.features;
+    // }
+    //
+    // if (!blocks) {
+    //   blocks = onionFile.blocks;
+    // }
+    //
+    // //blocks = this.convertBlocks(this.state.block);
+    // if (!sequence) {
+    //   sequence = onionFile.seq;
+    //   features = onionFile.features;
+    // }
 
-    if (this.state && this.state.features) {
-      features = this.state.features ? this.state.features : onionFile.features;
-    }
-
-    if (!blocks) {
-      blocks = onionFile.blocks;
-    }
-
-    //blocks = this.convertBlocks(this.state.block);
-    if (!sequence) {
-      sequence = onionFile.seq;
-      features = onionFile.features;
-    }
+    sequence = this.state.sequence;
+    features = this.state.features;
 
     //if sequence has been changed, cursor should be reset
     if (this.state && this.state.sequence
@@ -186,9 +191,15 @@ export class OnionForGenomeDesigner extends React.Component {
       this.state.startCursorPos = 0;
     }
 
-    const selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
-    const selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-    const selectedSeq = sequence.substr(selectionStart, selectionLength);
+    let selectionStart = 0;
+    let selectionLength = 0;
+    let selectedSeq = '';
+
+    if (sequence) {
+      selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
+      selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
+      selectedSeq = sequence.substr(selectionStart, selectionLength);
+    }
 
     const menuTitle = this.state.menuTitle;
 

@@ -34,7 +34,7 @@ export class SequenceEditor extends React.Component {
 
   };
   static defaultProps = {
-    sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
+    sequence: '', //debug sequence, it should be repalced by inputing
     theme: 'normal',
     showBlockBar: true, //show block bars in genome-designer
     style: {},
@@ -281,6 +281,9 @@ export class SequenceEditor extends React.Component {
   }
 
   findFeaturesInRow(start, len) {
+    if (!this.props.features) {
+      return [];
+    }
     //console.log("sss",start,len,this.props.features);
     const re = [];
     for (let i = 0; i < this.props.features.length; i++) {
@@ -655,6 +658,21 @@ export class SequenceEditor extends React.Component {
 
   render() {
     const { width, height, sequence, features, style } = this.props;
+    if (!sequence) {
+      return (<div
+        style={Object.assign({
+          width,
+          height,
+          overflowY: 'scroll',
+          overflowX: 'hidden',
+        }, style)}
+        onScroll={this.onScroll}
+        onClick={this.onClick}
+        onMouseMove={this.onMouseMove}
+        className="SequenceEditor"
+      >
+      </div>);
+    }
     this.colNum = Math.floor(width / this.unitWidth) - 10;
 
     this.sequence = new DNASeq(this.props.sequence);
