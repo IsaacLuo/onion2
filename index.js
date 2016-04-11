@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "4a55b2423fd2843c39ef"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "a16e1d6221322bbc724f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22674,7 +22674,8 @@
 	              paddingLeft: 8,
 	              paddingBottom: 8,
 	              color: '#8EC78D',
-	              fontSize: 20
+	              fontSize: 20,
+	              height: '43'
 	            }
 	          },
 	          title
@@ -22697,7 +22698,7 @@
 	  showAA: _react2.default.PropTypes.bool
 	};
 	MenuBar.defaultProps = {
-	  title: 'Block'
+	  title: 'block'
 	};
 
 /***/ },
@@ -22962,7 +22963,7 @@
 	      if (nextProps.sequence !== this.props.sequence) {
 	        //reset state sequence
 	        this.state.sequence = nextProps.sequence;
-	        if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;else if (this.state.sequence) this.state.menuTitle = 'unknown';else this.state.menuTitle = '';
+	        if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;else if (this.state.sequence) this.state.menuTitle = 'unknown';else this.state.menuTitle = ' ';
 	        this.state.features = [];
 	      }
 	

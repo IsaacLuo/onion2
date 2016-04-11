@@ -110,7 +110,7 @@ export class OnionForGenomeDesigner extends React.Component {
       this.state.sequence = nextProps.sequence;
       if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
       else if (this.state.sequence) this.state.menuTitle = 'unknown';
-      else this.state.menuTitle = '';
+      else this.state.menuTitle = ' ';
       this.state.features = [];
     }
 

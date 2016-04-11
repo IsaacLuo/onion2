@@ -20,7 +20,7 @@ export class MenuBar extends React.Component {
     showAA: React.PropTypes.bool,
   };
   static defaultProps = {
-    title: 'Block',
+    title: 'block',
   };
 
   constructor(props) {
@@ -127,6 +127,7 @@ export class MenuBar extends React.Component {
             paddingBottom: 8,
             color: '#8EC78D',
             fontSize: 20,
+            height: '43',
           }}
         >
           {title}
