@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "a16e1d6221322bbc724f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2a49c37d351bc4edcc08"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22945,10 +22945,9 @@
 	      console.log('OnionForGenomeDesigner mount');
 	      $(document).click(function (e) {
 	        if ($(e.target).closest('.onionPanel').length === 0) {
-	          console.log('not onion click');
-	          _this3.setState({ focus: false });
+	          if (_this3.state.focus !== false) _this3.setState({ focus: false, lastAction: 'loseFocus' });
 	        } else {
-	          _this3.setState({ focus: true });
+	          if (_this3.state.focus !== true) _this3.setState({ focus: true, lastAction: 'gainFocus' });
 	        }
 	      });
 	      $('.onionClipboard').focus(function () {
@@ -22993,12 +22992,12 @@
 	  }, {
 	    key: 'onInfoBarChange',
 	    value: function onInfoBarChange(startPos, endPos) {
-	      this.setState({ cursorPos: endPos, startCursorPos: startPos });
+	      this.setState({ cursorPos: endPos, startCursorPos: startPos, lastAction: 'infoBarChanged' });
 	    }
 	  }, {
 	    key: 'onBlockChanged',
 	    value: function onBlockChanged(block, e) {
-	      this.setState({ menuTitle: block[0].name });
+	      this.setState({ menuTitle: block[0].name, lastAction: 'blockChanged' });
 	    }
 	
 	    //while user fires a menu command
@@ -23015,11 +23014,13 @@
 	          dict.showFeatures = value;
 	          dict.showRuler = value;
 	          dict.showAA = value;
+	          dict.lastAction = 'showAll';
 	          this.setState(dict);
 	          break;
 	
 	        default:
 	          dict[command] = value;
+	          dict.lastAction = command;
 	          this.setState(dict);
 	          break;
 	      }
@@ -23027,6 +23028,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      // console.log("render ogd");
 	      //set a minimum size;
 	      var width = Math.max(this.props.width, 300);
 	      var height = Math.max(this.props.height, 100);
@@ -23281,7 +23283,8 @@
 	          selectStartPos: nextProps.selectStartPos,
 	          cursorPos: nextProps.cursorPos,
 	          showCursor: true,
-	          showSelection: nextProps.selectStartPos !== nextProps.cursorPos
+	          showSelection: nextProps.selectStartPos !== nextProps.cursorPos,
+	          lastEvent: 'newProp'
 	        });
 	      }
 	    }
@@ -23309,29 +23312,17 @@
 	        // }
 	      };
 	
-	      this.onMouseMove = function (e) {
-	        // if(e.buttons === 1) {
-	        //   const { clientX, clientY, target } = e;
-	        //   const editor = $(target).parents('.SequenceEditor');
-	        //   console.log("mousemove",clientX, clientY);
-	        //   if(clientY < 200) {
-	        //     console.log('scrollUp');
-	        //     editor.scrollTop(editor.scrollTop()-10);
-	        //   }
-	        //   else if (clientX > this.props.height-200) {
-	        //     console.log('scrollDown')
-	        //     editor.scrollTop(editor.scrollTop()+10);
-	        //   }
-	        // }
-	      };
+	      this.onMouseDown = function (e) {};
+	
+	      this.onMouseUp = function (e) {};
 	
 	      this.onSetCursor = function (cursorPos, rowNumber) {
-	        if (_this3.props.focus) {
-	          if (_this3.props.blocks) {
+	        if (_this.props.focus) {
+	          if (_this.props.blocks) {
 	            //shift if in emptyBlock
 	            var currentBlock = _this3.findBlockByIndex(cursorPos);
 	            if (currentBlock && currentBlock.realLength === 0) {
-	              _this3.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+	              _this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
 	              return; //prevent default
 	            }
 	          }
@@ -23340,19 +23331,20 @@
 	            cursorPos: cursorPos,
 	            showCursor: true,
 	            selectStartPos: cursorPos,
-	            showSelection: false
+	            showSelection: false,
+	            lastEvent: 'setCursor'
 	          });
-	          if (_this3.props.onSetCursor) {
-	            _this3.props.onSetCursor(cursorPos);
+	          if (_this.props.onSetCursor) {
+	            _this.props.onSetCursor(cursorPos);
 	          }
 	
-	          if (_this3.props.onBlockChanged) {
-	            var row = Math.floor(cursorPos / _this3.colNum);
-	            var x = cursorPos % _this3.colNum;
-	            var blocks = _this3.splitBlocks[row];
+	          if (_this.props.onBlockChanged) {
+	            var row = Math.floor(cursorPos / _this.colNum);
+	            var x = cursorPos % _this.colNum;
+	            var blocks = _this.splitBlocks[row];
 	            for (var i = 0; i < blocks.length; i++) {
 	              if (x >= blocks[i].start) {
-	                _this3.props.onBlockChanged([blocks[i]]);
+	                _this.props.onBlockChanged([blocks[i]]);
 	              }
 	            }
 	          }
@@ -23360,36 +23352,50 @@
 	      };
 	
 	      this.onSelect = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-	        if (_this3.props.focus) {
-	          if (_this3.props.blocks) {
-	            var currentBlock = _this3.findBlockByIndex(cursorPos);
+	
+	        if (_this.props.focus) {
+	          if (_this.props.blocks) {
+	            var currentBlock = _this.findBlockByIndex(cursorPos);
 	            if (currentBlock && currentBlock.realLength === 0) {
 	              //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
-	              if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	              if (cursorPosStart >= 0) {
+	                if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	              } else if (_this.state.selectStartPos < 0) {
+	                cursorPos = currentBlock.start + currentBlock.length;
+	                cursorPosStart = currentBlock.start;
+	              } else {
+	                if (cursorPos > _this.state.selectStartPos) {
+	                  cursorPos = currentBlock.start + currentBlock.length;
+	                } else {
+	                  cursorPos = currentBlock.start;
+	                }
+	              }
 	            }
 	          }
 	
-	          if (cursorPosStart) {
-	            _this3.setState({
+	          if (cursorPosStart >= 0) {
+	            _this.setState({
 	              cursorPos: cursorPos,
 	              showCursor: true,
 	              showSelection: true,
-	              selectStartPos: cursorPosStart
+	              selectStartPos: cursorPosStart,
+	              lastEvent: 'onSelectWithStart'
 	            });
 	          } else {
-	            _this3.setState({
+	            _this.setState({
 	              cursorPos: cursorPos,
 	              showCursor: true,
-	              showSelection: true
+	              showSelection: true,
+	              lastEvent: 'onSelectNoStart'
 	            });
 	          }
 	
-	          if (_this3.props.onSelect) {
-	            if (cursorPosStart) {
-	              console.log('full start', cursorPosStart, cursorPos);
-	              _this3.props.onSelect(cursorPos, cursorPosStart);
+	          if (_this.props.onSelect) {
+	            if (cursorPosStart >= 0) {
+	              //console.log('full start', cursorPosStart, cursorPos);
+	              _this.props.onSelect(cursorPos, cursorPosStart);
 	            } else {
-	              _this3.props.onSelect(cursorPos, _this3.state.selectStartPos);
+	              _this.props.onSelect(cursorPos, _this.state.selectStartPos);
 	            }
 	          }
 	        }
@@ -23397,9 +23403,19 @@
 	
 	      this.onSetHighLight = function (highLightStart, rowNumber, highLightEnd, rowNumberStart) {
 	        if (highLightStart === highLightEnd) {
-	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+	          _this3.setState({
+	            highLightStart: highLightStart,
+	            highLightEnd: highLightEnd,
+	            showHighLight: false,
+	            lastEvent: 'onSetHighLight'
+	          });
 	        } else {
-	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+	          _this3.setState({
+	            highLightStart: highLightStart,
+	            highLightEnd: highLightEnd,
+	            showHighLight: true,
+	            lastEvent: 'onSetHighLight'
+	          });
 	        }
 	      };
 	
@@ -23875,6 +23891,7 @@
 	      var sequence = _props2.sequence;
 	      var features = _props2.features;
 	      var style = _props2.style;
+	      // console.log('render editor', this.state);
 	
 	      if (!sequence) {
 	        return _react2.default.createElement('div', {
@@ -23886,7 +23903,6 @@
 	          }, style),
 	          onScroll: this.onScroll,
 	          onClick: this.onClick,
-	          onMouseMove: this.onMouseMove,
 	          className: 'SequenceEditor'
 	        });
 	      }
@@ -23924,7 +23940,8 @@
 	          }, style),
 	          onScroll: this.onScroll,
 	          onClick: this.onClick,
-	          onMouseMove: this.onMouseMove,
+	          onMouseDown: this.onMouseDown,
+	          onMouseUp: this.onMouseUp,
 	          className: 'SequenceEditor'
 	        },
 	        this.textRows

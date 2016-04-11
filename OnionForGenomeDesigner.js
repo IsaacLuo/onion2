@@ -91,10 +91,9 @@ export class OnionForGenomeDesigner extends React.Component {
     console.log('OnionForGenomeDesigner mount');
     $(document).click((e) => {
       if ($(e.target).closest('.onionPanel').length === 0) {
-        console.log('not onion click');
-        this.setState({ focus: false });
+        if (this.state.focus !== false) this.setState({ focus: false, lastAction: 'loseFocus' });
       } else {
-        this.setState({ focus: true });
+        if (this.state.focus !== true) this.setState({ focus: true, lastAction: 'gainFocus' });
       }
     });
     $('.onionClipboard').focus(()=>{
@@ -136,11 +135,11 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user changes the value of start and end numeric control on info bar
   onInfoBarChange(startPos, endPos) {
-    this.setState({ cursorPos: endPos, startCursorPos: startPos });
+    this.setState({ cursorPos: endPos, startCursorPos: startPos, lastAction: 'infoBarChanged' });
   }
 
   onBlockChanged(block, e) {
-    this.setState({ menuTitle: block[0].name });
+    this.setState({ menuTitle: block[0].name, lastAction: 'blockChanged' });
   }
 
   //while user fires a menu command
@@ -154,17 +153,20 @@ export class OnionForGenomeDesigner extends React.Component {
         dict.showFeatures = value;
         dict.showRuler = value;
         dict.showAA = value;
+        dict.lastAction = 'showAll';
         this.setState(dict);
         break;
 
       default:
         dict[command] = value;
+        dict.lastAction = command;
         this.setState(dict);
         break;
     }
   }
 
   render() {
+    // console.log("render ogd");
     //set a minimum size;
     const width = Math.max(this.props.width, 300);
     const height = Math.max(this.props.height, 100);

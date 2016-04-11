@@ -101,6 +101,7 @@ export class SequenceEditor extends React.Component {
         cursorPos: nextProps.cursorPos,
         showCursor: true,
         showSelection: (nextProps.selectStartPos !== nextProps.cursorPos),
+        lastEvent: 'newProp',
       });
     }
   }
@@ -124,29 +125,21 @@ export class SequenceEditor extends React.Component {
       // }
     };
 
-    this.onMouseMove = (e) => {
-        // if(e.buttons === 1) {
-        //   const { clientX, clientY, target } = e;
-        //   const editor = $(target).parents('.SequenceEditor');
-        //   console.log("mousemove",clientX, clientY);
-        //   if(clientY < 200) {
-        //     console.log('scrollUp');
-        //     editor.scrollTop(editor.scrollTop()-10);
-        //   }
-        //   else if (clientX > this.props.height-200) {
-        //     console.log('scrollDown')
-        //     editor.scrollTop(editor.scrollTop()+10);
-        //   }
-        // }
-    }
+    this.onMouseDown = (e) => {
+
+    };
+
+    this.onMouseUp = (e) => {
+
+    };
 
     this.onSetCursor = (cursorPos, rowNumber) => {
-      if (this.props.focus) {
-        if(this.props.blocks) {
+      if (_this.props.focus) {
+        if (_this.props.blocks) {
           //shift if in emptyBlock
           const currentBlock = this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
-            this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            _this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
             return; //prevent default
           }
         }
@@ -156,18 +149,19 @@ export class SequenceEditor extends React.Component {
           showCursor: true,
           selectStartPos: cursorPos,
           showSelection: false,
+          lastEvent: 'setCursor',
         });
-        if (this.props.onSetCursor) {
-          this.props.onSetCursor(cursorPos);
+        if (_this.props.onSetCursor) {
+          _this.props.onSetCursor(cursorPos);
         }
 
-        if (this.props.onBlockChanged) {
-          const row = Math.floor(cursorPos / this.colNum);
-          const x = cursorPos % this.colNum;
-          const blocks = this.splitBlocks[row];
+        if (_this.props.onBlockChanged) {
+          const row = Math.floor(cursorPos / _this.colNum);
+          const x = cursorPos % _this.colNum;
+          const blocks = _this.splitBlocks[row];
           for (let i = 0; i < blocks.length; i++) {
             if (x >= blocks[i].start) {
-              this.props.onBlockChanged([blocks[i]]);
+              _this.props.onBlockChanged([blocks[i]]);
             }
           }
         }
@@ -175,37 +169,51 @@ export class SequenceEditor extends React.Component {
     };
 
     this.onSelect = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
-      if (this.props.focus) {
-        if(this.props.blocks) {
-          const currentBlock = this.findBlockByIndex(cursorPos);
+
+      if (_this.props.focus) {
+        if(_this.props.blocks) {
+          const currentBlock = _this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
             //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
-            if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
-            else cursorPos = currentBlock.start;
+            if(cursorPosStart>=0) {
+              if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+              else cursorPos = currentBlock.start;
+            } else if (_this.state.selectStartPos < 0) {
+              cursorPos = currentBlock.start+currentBlock.length;
+              cursorPosStart = currentBlock.start;
+            } else {
+              if (cursorPos > _this.state.selectStartPos) {
+                cursorPos = currentBlock.start + currentBlock.length;
+              } else {
+                cursorPos = currentBlock.start;
+              }
+            }
           }
         }
 
-        if (cursorPosStart) {
-          this.setState({
+        if (cursorPosStart>=0) {
+          _this.setState({
             cursorPos,
             showCursor: true,
             showSelection: true,
             selectStartPos: cursorPosStart,
+            lastEvent: 'onSelectWithStart',
           });
         } else {
-          this.setState({
+          _this.setState({
             cursorPos,
             showCursor: true,
             showSelection: true,
+            lastEvent: 'onSelectNoStart',
           });
         }
 
-        if (this.props.onSelect) {
-          if (cursorPosStart) {
-            console.log('full start', cursorPosStart, cursorPos);
-            this.props.onSelect(cursorPos, cursorPosStart);
+        if (_this.props.onSelect) {
+          if (cursorPosStart>=0) {
+            //console.log('full start', cursorPosStart, cursorPos);
+            _this.props.onSelect(cursorPos, cursorPosStart);
           } else {
-            this.props.onSelect(cursorPos, this.state.selectStartPos);
+            _this.props.onSelect(cursorPos, _this.state.selectStartPos);
           }
         }
       }
@@ -213,9 +221,19 @@ export class SequenceEditor extends React.Component {
 
     this.onSetHighLight = (highLightStart, rowNumber, highLightEnd, rowNumberStart) => {
       if (highLightStart === highLightEnd) {
-        this.setState({ highLightStart, highLightEnd, showHighLight: false });
+        this.setState({
+          highLightStart,
+          highLightEnd,
+          showHighLight: false,
+          lastEvent: 'onSetHighLight',
+        });
       } else {
-        this.setState({ highLightStart, highLightEnd, showHighLight: true });
+        this.setState({
+          highLightStart,
+          highLightEnd,
+          showHighLight: true,
+          lastEvent: 'onSetHighLight',
+        });
       }
     };
 
@@ -658,6 +676,7 @@ export class SequenceEditor extends React.Component {
 
   render() {
     const { width, height, sequence, features, style } = this.props;
+    // console.log('render editor', this.state);
     if (!sequence) {
       return (<div
         style={Object.assign({
@@ -668,7 +687,6 @@ export class SequenceEditor extends React.Component {
         }, style)}
         onScroll={this.onScroll}
         onClick={this.onClick}
-        onMouseMove={this.onMouseMove}
         className="SequenceEditor"
       >
       </div>);
@@ -706,7 +724,8 @@ export class SequenceEditor extends React.Component {
         },style)}
         onScroll={this.onScroll}
         onClick={this.onClick}
-        onMouseMove={this.onMouseMove}
+        onMouseDown={this.onMouseDown}
+        onMouseUp={this.onMouseUp}
         className="SequenceEditor"
       >
         {this.textRows}
