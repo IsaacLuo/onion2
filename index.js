@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "113e38e917d8658bb89d"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "4a55b2423fd2843c39ef"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22892,7 +22892,6 @@
 	    _this.enzymeList = (0, _Enzyme.loadEnzymeList)('caiLab');
 	
 	    _this.onSetCursor = _this.onSetCursor.bind(_this);
-	    _this.onSelecting = _this.onSelecting.bind(_this);
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
 	    _this.onBlockChanged = _this.onBlockChanged.bind(_this);
 	    _this.menuCommand = _this.menuCommand.bind(_this);
@@ -22906,17 +22905,34 @@
 	    value: function initCallBack() {
 	      var _this2 = this;
 	
-	      this.onHotKey = function () {
-	        var pos1 = _this2.state.cursorPos;
-	        var pos2 = _this2.state.startCursorPos;
-	        if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
-	          var selectedStr = _this2.state.sequence.substring(pos1, pos2);
-	          console.log(selectedStr);
-	          //document.clipboardData.setData('text/plain', selectedStr);
-	          var dom = document.getElementById('onionPanel');
-	          document.addEventListener('copy', function (e) {
-	            console.log(e);
-	          });
+	      this.onHotKey = function (e) {
+	        if (e.keyCode === 17 || e.keyCode === 91) {
+	          //&& e.keyCode===67) {
+	          // console.log('hotkey', e);
+	          var pos1 = _this2.state.cursorPos;
+	          var pos2 = _this2.state.startCursorPos;
+	          console.log(pos1, pos2);
+	          if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
+	            var selectedStr = _this2.state.sequence.substring(pos1, pos2);
+	            $('.onionClipboard').val(selectedStr.replace(/X/g, ''));
+	            $('.onionClipboard').focus();
+	          }
+	        }
+	      };
+	
+	      this.onHotKeyClipboard = function (e) {
+	        if (e.ctrlKey && e.keyCode === 67) {
+	          console.log('copy', e.target.value);
+	        }
+	      };
+	
+	      this.onSelect = function (pos1, pos2) {
+	        if (_this2.state.focus) {
+	          if (pos1 >= 0 && pos2 >= 0) {
+	            _this2.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	          } else {
+	            console.error(pos1, pos2);
+	          }
 	        }
 	      };
 	    }
@@ -22934,6 +22950,11 @@
 	          _this3.setState({ focus: true });
 	        }
 	      });
+	      $('.onionClipboard').focus(function () {
+	
+	        $('.onionClipboard').select();
+	      });
+	      //$(document).keypress(this.onHotKey);
 	    }
 	  }, {
 	    key: 'componentWillReceiveProps',
@@ -22965,18 +22986,6 @@
 	    }
 	
 	    //while user drags on editor
-	
-	  }, {
-	    key: 'onSelecting',
-	    value: function onSelecting(pos1, pos2) {
-	      if (this.state.focus) {
-	        if (pos1 >= 0 && pos2 >= 0) {
-	          this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-	        } else {
-	          console.error(pos1, pos2);
-	        }
-	      }
-	    }
 	
 	    //while user changes the value of start and end numeric control on info bar
 	
@@ -23086,8 +23095,18 @@
 	          },
 	          className: 'noselect onionPanel',
 	          id: 'onionPanel',
-	          tabIndex: '0'
+	          tabIndex: '0',
+	          onKeyDown: this.onHotKey
 	        },
+	        _react2.default.createElement('input', {
+	          style: {
+	            position: 'absolute',
+	            left: '-1000',
+	            top: '-1000'
+	          },
+	          className: 'onionClipboard',
+	          onKeyDown: this.onHotKeyClipboard
+	        }),
 	        _react2.default.createElement(_MenuBar.MenuBar, {
 	          title: menuTitle,
 	          showEnzymes: showEnzymes,
@@ -23103,7 +23122,7 @@
 	          showComplement: true,
 	          features: features,
 	          onSetCursor: this.onSetCursor,
-	          onSelecting: this.onSelecting,
+	          onSelect: this.onSelect,
 	          enzymeList: this.enzymeList,
 	          width: width,
 	          height: height - 30 - 86,
@@ -23599,7 +23618,7 @@
 	      if (!this.props.showEnzymes) return re;
 	
 	      if (!this.enzymeSites || !this.enzymeSites.length) {
-	        console.warn('no enzymes');
+	        //console.warn('no enzymes');
 	        return re;
 	      }
 	

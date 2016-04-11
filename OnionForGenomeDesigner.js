@@ -48,7 +48,6 @@ export class OnionForGenomeDesigner extends React.Component {
     this.enzymeList = loadEnzymeList('caiLab');
 
     this.onSetCursor = this.onSetCursor.bind(this);
-    this.onSelecting = this.onSelecting.bind(this);
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
     this.onBlockChanged = this.onBlockChanged.bind(this);
     this.menuCommand = this.menuCommand.bind(this);
@@ -57,18 +56,35 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   initCallBack() {
-    this.onHotKey = () => {
-      const pos1 = this.state.cursorPos;
-      const pos2 = this.state.startCursorPos;
-      if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
-        let selectedStr = this.state.sequence.substring(pos1, pos2);
-        console.log(selectedStr);
-        //document.clipboardData.setData('text/plain', selectedStr);
-        let dom = document.getElementById('onionPanel')
-        document.addEventListener('copy', (e) => {console.log(e);});
-
+    this.onHotKey = (e) => {
+      if(e.keyCode===17 || e.keyCode === 91) {//&& e.keyCode===67) {
+        // console.log('hotkey', e);
+        const pos1 = this.state.cursorPos;
+        const pos2 = this.state.startCursorPos;
+        console.log(pos1,pos2);
+        if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
+          let selectedStr = this.state.sequence.substring(pos1, pos2);
+          $('.onionClipboard').val(selectedStr.replace(/X/g, ''));
+          $('.onionClipboard').focus();
+        }
       }
     };
+
+    this.onHotKeyClipboard = (e) => {
+      if(e.ctrlKey && e.keyCode===67) {
+        console.log('copy',e.target.value);
+      }
+    };
+
+    this.onSelect = (pos1, pos2) => {
+      if (this.state.focus) {
+        if (pos1 >= 0 && pos2 >= 0) {
+          this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+        } else {
+          console.error(pos1, pos2);
+        }
+      }
+    }
   }
 
   componentDidMount() {
@@ -81,6 +97,11 @@ export class OnionForGenomeDesigner extends React.Component {
         this.setState({ focus: true });
       }
     });
+    $('.onionClipboard').focus(()=>{
+
+      $('.onionClipboard').select();
+    });
+    //$(document).keypress(this.onHotKey);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,15 +132,7 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   //while user drags on editor
-  onSelecting(pos1, pos2) {
-    if (this.state.focus) {
-      if (pos1 >= 0 && pos2 >= 0) {
-        this.setState({ cursorPos: pos1, startCursorPos: pos2 });
-      } else {
-        console.error(pos1, pos2);
-      }
-    }
-  }
+
 
   //while user changes the value of start and end numeric control on info bar
   onInfoBarChange(startPos, endPos) {
@@ -216,7 +229,17 @@ export class OnionForGenomeDesigner extends React.Component {
         className="noselect onionPanel"
         id="onionPanel"
         tabIndex="0"
+        onKeyDown={this.onHotKey}
       >
+        <input
+          style={{
+            position: 'absolute',
+            left: '-1000',
+            top: '-1000',
+          }}
+          className = 'onionClipboard'
+          onKeyDown={this.onHotKeyClipboard}
+        />
         <MenuBar
           title={menuTitle}
           showEnzymes={showEnzymes}
@@ -234,7 +257,7 @@ export class OnionForGenomeDesigner extends React.Component {
           showComplement
           features={features}
           onSetCursor={this.onSetCursor}
-          onSelecting={this.onSelecting}
+          onSelect={this.onSelect}
           enzymeList={this.enzymeList}
           width={width}
           height={height - 30 - 86}

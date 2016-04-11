@@ -409,7 +409,7 @@ export class SequenceEditor extends React.Component {
     if (!this.props.showEnzymes) return re;
 
     if (!this.enzymeSites || !this.enzymeSites.length) {
-      console.warn('no enzymes');
+      //console.warn('no enzymes');
       return re;
     }
 
