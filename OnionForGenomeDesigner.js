@@ -61,7 +61,7 @@ export class OnionForGenomeDesigner extends React.Component {
         // console.log('hotkey', e);
         const pos1 = this.state.cursorPos;
         const pos2 = this.state.startCursorPos;
-        console.log(pos1,pos2);
+        // console.log(pos1,pos2);
         if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
           let selectedStr = this.state.sequence.substring(pos1, pos2);
           $('.onionClipboard').val(selectedStr.replace(/X/g, ''));
@@ -72,7 +72,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
     this.onHotKeyClipboard = (e) => {
       if(e.ctrlKey && e.keyCode===67) {
-        console.log('copy',e.target.value);
+        // console.log('copy',e.target.value);
       }
     };
 
@@ -88,7 +88,7 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   componentDidMount() {
-    console.log('OnionForGenomeDesigner mount');
+    // console.log('OnionForGenomeDesigner mount');
     $(document).click((e) => {
       if ($(e.target).closest('.onionPanel').length === 0) {
         if (this.state.focus !== false) this.setState({ focus: false, lastAction: 'loseFocus' });
@@ -144,7 +144,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user fires a menu command
   menuCommand(command, value) {
-    console.log('menuCommand', command, value);
+    // console.log('menuCommand', command, value);
     const dict = {};
     switch (command) {
       case 'showAll':

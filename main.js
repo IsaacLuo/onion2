@@ -45,16 +45,25 @@ class OnionBuilder {
     for (let i = 0; i < this.onionBlocks.length; i++) {
       const { md5, length } = this.onionBlocks[i];
       const originalBlock = this.originalBlocks[i];
-      if (!this.sequenceDict[md5]) {
+      if (!this.sequenceDict[md5] || this.sequenceDict[md5][0] === 'N') {
         completeFlag = false;
         if (originalBlock.getSequence) {
-          originalBlock.getSequence()
-            .then(sequence => {
-              this.sequenceDict[md5] = sequence;
-              this.onBlockUpdated(i);
-            });
+          //testing
+          //setTimeout(() => {
+
+            originalBlock.getSequence()
+              .then(sequence => {
+                this.sequenceDict[md5] = sequence;
+                this.onBlockUpdated(i);
+              });
+
+          //}, Math.random() * 3000 + 1000);
+          //test end
+
         } else {
-          console.warn(originalBlock);
+          //getSequenceDoesn't exist
+          // this.sequenceDict[md5] = 'N'.repeat(length);
+           this.onBlockUpdated(i);
         }
       }
 
@@ -76,7 +85,7 @@ class OnionBuilder {
         seq.push(this.sequenceDict[md5]);
       } else {
         completeFlag = false;
-        seq.push('.'.repeat(length));
+        seq.push('·'.repeat(length));
       }
     }
 
@@ -106,7 +115,7 @@ class OnionViewer extends React.Component {
     };
     this.onionBuilder = new OnionBuilder();
     this.onionBuilder.setEventBlockUpdated( () => {
-      console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
+      // console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
       const { seq, completeFlag } = this.onionBuilder.getSequence();
       if (completeFlag || this.allowToRefresh) {
         this.setState({
@@ -117,7 +126,7 @@ class OnionViewer extends React.Component {
     });
 
     window.gd.store.subscribe((state, lastAction) => {
-      console.log(`lastAction,`, lastAction);
+       //console.log(`lastAction,`, lastAction);
       let last = [];
       if (lastAction.type === 'FOCUS_BLOCKS') {
         let leafBlocks = [];
@@ -138,6 +147,9 @@ class OnionViewer extends React.Component {
         }
 
         this.onionBuilder.setBlocks(leafBlocks);
+      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
+        const blocks = window.gd.api.focus.focusGetBlocks();
+        this.onionBuilder.setBlocks(blocks);
       }
 
 
@@ -184,12 +196,12 @@ class OnionViewer extends React.Component {
   }
 
   componentWillMount() {
-    console.log('componentwillmount');
+    // console.log('componentwillmount');
     //this.updateDimensions();
   }
 
   componentDidMount() {
-    console.log('componentDidMount:');
+    // console.log('componentDidMount:');
 
     window.addEventListener('resize', this.updateDimensions.bind(this));
     //let target = $('.ProjectDetail-chrome').get(0);
@@ -213,7 +225,7 @@ class OnionViewer extends React.Component {
     let height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
     const width = Math.max(300, _width);
     const height = Math.max(100, _height);
-    console.log('updateDimensions:', container, width, height, height2);
+    // console.log('updateDimensions:', container, width, height, height2);
     this.setState({ width, height });
   }
 
@@ -235,7 +247,7 @@ class OnionViewer extends React.Component {
 function render(container, options) {
   container.className += ' onionContainer';
 
-  console.log(options.boundingBox);
+  // console.log(options.boundingBox);
   const { left, top, width, height } = options.boundingBox;
   ReactDOM.render(<OnionViewer
     container={container}

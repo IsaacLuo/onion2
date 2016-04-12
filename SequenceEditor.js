@@ -260,6 +260,31 @@ export class SequenceEditor extends React.Component {
     }
     return null;
   }
+  findBlockByIndexReal(index) {
+    const { blocks } = this.props;
+    for (const block of blocks) {
+      if (index >= block.realStart && index < block.realStart + block.realLength) {
+        return block;
+      }
+    }
+    return null;
+  }
+
+  uiPosToRealPos(index) {
+    const currentBlock = this.findBlockByIndex(index);
+    if (currentBlock.realLength === 0) {
+      return currentBlock.realStart;
+    } else {
+      const offset = index - currentBlock.start;
+      return currentBlock.realStart + offset;
+    }
+  }
+
+  realPosTouiPos(index) {
+    const currentBlock = this.findBlockByIndexReal(index);
+    const offset = index - currentBlock.realStart;
+    return currentBlock.start + offset;
+  }
 
   isOverlap(a1, b1, a2, b2) {
     const a3 = Math.max(a1, a2);

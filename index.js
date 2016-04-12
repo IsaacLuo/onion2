@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "2a49c37d351bc4edcc08"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "b1b63393ac0272986a92"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -14870,7 +14870,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·]/gi, '');
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -14884,7 +14884,11 @@
 	        for (var _iterator = this.seq[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var n = _step.value;
 	
-	          out.push(DNASeq.complementDict[n]);
+	          if (DNASeq.complementDict[n]) {
+	            out.push(DNASeq.complementDict[n]);
+	          } else {
+	            out.push(n);
+	          }
 	        }
 	      } catch (err) {
 	        _didIteratorError = true;
@@ -15033,7 +15037,7 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 	
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
+	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X', '·': '·' };
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -17306,6 +17310,8 @@
 	        }
 	      }
 	    }
+	
+	    // console.log('loaded enzyme list', re, re.length);
 	  } catch (err) {
 	    _didIteratorError = true;
 	    _iteratorError = err;
@@ -17321,7 +17327,6 @@
 	    }
 	  }
 	
-	  console.log('loaded enzyme list', re, re.length);
 	  return re;
 	}
 
@@ -22574,7 +22579,7 @@
 	      //const value = $target.data('val');
 	      var cmd = target.getAttribute('data-cmd');
 	      var value = target.getAttribute('data-val') === 'true';
-	      console.log(value);
+	      //console.log(value);
 	      onSelect(cmd, !value);
 	    }
 	  }, {
@@ -22912,7 +22917,7 @@
 	          // console.log('hotkey', e);
 	          var pos1 = _this2.state.cursorPos;
 	          var pos2 = _this2.state.startCursorPos;
-	          console.log(pos1, pos2);
+	          // console.log(pos1,pos2);
 	          if (pos1 !== pos2 && pos1 >= 0 && pos2 >= 0) {
 	            var selectedStr = _this2.state.sequence.substring(pos1, pos2);
 	            $('.onionClipboard').val(selectedStr.replace(/X/g, ''));
@@ -22923,7 +22928,7 @@
 	
 	      this.onHotKeyClipboard = function (e) {
 	        if (e.ctrlKey && e.keyCode === 67) {
-	          console.log('copy', e.target.value);
+	          // console.log('copy',e.target.value);
 	        }
 	      };
 	
@@ -22942,7 +22947,7 @@
 	    value: function componentDidMount() {
 	      var _this3 = this;
 	
-	      console.log('OnionForGenomeDesigner mount');
+	      // console.log('OnionForGenomeDesigner mount');
 	      $(document).click(function (e) {
 	        if ($(e.target).closest('.onionPanel').length === 0) {
 	          if (_this3.state.focus !== false) _this3.setState({ focus: false, lastAction: 'loseFocus' });
@@ -23005,7 +23010,7 @@
 	  }, {
 	    key: 'menuCommand',
 	    value: function menuCommand(command, value) {
-	      console.log('menuCommand', command, value);
+	      // console.log('menuCommand', command, value);
 	      var dict = {};
 	      switch (command) {
 	        case 'showAll':
@@ -23462,6 +23467,57 @@
 	      }
 	
 	      return null;
+	    }
+	  }, {
+	    key: 'findBlockByIndexReal',
+	    value: function findBlockByIndexReal(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion2 = true;
+	      var _didIteratorError2 = false;
+	      var _iteratorError2 = undefined;
+	
+	      try {
+	        for (var _iterator2 = blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	          var block = _step2.value;
+	
+	          if (index >= block.realStart && index < block.realStart + block.realLength) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	            _iterator2.return();
+	          }
+	        } finally {
+	          if (_didIteratorError2) {
+	            throw _iteratorError2;
+	          }
+	        }
+	      }
+	
+	      return null;
+	    }
+	  }, {
+	    key: 'uiPosToRealPos',
+	    value: function uiPosToRealPos(index) {
+	      var currentBlock = this.findBlockByIndex(index);
+	      if (currentBlock.realLength === 0) {
+	        return currentBlock.realStart;
+	      } else {
+	        var offset = index - currentBlock.start;
+	        return currentBlock.realStart + offset;
+	      }
+	    }
+	  }, {
+	    key: 'realPosTouiPos',
+	    value: function realPosTouiPos(index) {
+	      var currentBlock = this.findBlockByIndexReal(index);
+	      var offset = index - currentBlock.realStart;
+	      return currentBlock.start + offset;
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -25627,6 +25683,9 @@
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 	
 	
+	var translateIndexF = 0;
+	var translateIndexR = 0;
+	
 	var StrainText = exports.StrainText = function (_React$Component) {
 	  _inherits(StrainText, _React$Component);
 	
@@ -25642,6 +25701,33 @@
 	      var update = !(0, _reactHelper.compareProps)(this.props, nextProps, Object.keys(this.props));
 	
 	      return update;
+	    }
+	  }, {
+	    key: 'beginTranslateBps',
+	    value: function beginTranslateBps() {
+	      translateIndex = 0;
+	    }
+	  }, {
+	    key: 'translateNextXF',
+	    value: function translateNextXF(x) {
+	      if (x === 'X') {
+	        var re = StrainText.translateDictF[translateIndexF];
+	        translateIndexF = (translateIndexF + 1) % 13;
+	        return re;
+	      }
+	
+	      return x;
+	    }
+	  }, {
+	    key: 'translateNextXR',
+	    value: function translateNextXR(x) {
+	      if (x === 'X') {
+	        var re = StrainText.translateDictR[translateIndexR];
+	        translateIndexR = (translateIndexR + 1) % 13;
+	        return re;
+	      }
+	
+	      return x;
 	    }
 	  }, {
 	    key: 'generateRuler',
@@ -25668,26 +25754,22 @@
 	      var unitWidth = _props.unitWidth;
 	      var spanDef = _props.spanDef;
 	
-	      var psRender = undefined;
-	      var rsRender = undefined;
+	      var psRender = '';
+	      var rsRender = '';
 	      if (spanDef && spanDef.length > 0) {
-	        var rs = new _DNASeq.DNASeq(sequence);
-	        psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
-	        rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
-	        var psRender2 = [];
+	        var compSequence = new _DNASeq.DNASeq(sequence).complement().toString();
+	
+	        //replace full string
+	
 	        var _iteratorNormalCompletion = true;
 	        var _didIteratorError = false;
 	        var _iteratorError = undefined;
 	
 	        try {
-	          for (var _iterator = spanDef[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var span = _step.value;
+	          for (var _iterator = sequence[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var x = _step.value;
 	
-	            psRender2.push(_react2.default.createElement(
-	              'tspan',
-	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
-	              psRender.substr(span.start, span.length)
-	            ));
+	            psRender += this.translateNextXF(x);
 	          }
 	        } catch (err) {
 	          _didIteratorError = true;
@@ -25700,6 +25782,61 @@
 	          } finally {
 	            if (_didIteratorError) {
 	              throw _iteratorError;
+	            }
+	          }
+	        }
+	
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+	
+	        try {
+	          for (var _iterator2 = compSequence[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var x = _step2.value;
+	
+	            rsRender += this.translateNextXR(x);
+	          }
+	        } catch (err) {
+	          _didIteratorError2 = true;
+	          _iteratorError2 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	              _iterator2.return();
+	            }
+	          } finally {
+	            if (_didIteratorError2) {
+	              throw _iteratorError2;
+	            }
+	          }
+	        }
+	
+	        var psRender2 = [];
+	        var _iteratorNormalCompletion3 = true;
+	        var _didIteratorError3 = false;
+	        var _iteratorError3 = undefined;
+	
+	        try {
+	          for (var _iterator3 = spanDef[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	            var span = _step3.value;
+	
+	            psRender2.push(_react2.default.createElement(
+	              'tspan',
+	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
+	              psRender.substr(span.start, span.length)
+	            ));
+	          }
+	        } catch (err) {
+	          _didIteratorError3 = true;
+	          _iteratorError3 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	              _iterator3.return();
+	            }
+	          } finally {
+	            if (_didIteratorError3) {
+	              throw _iteratorError3;
 	            }
 	          }
 	        }
@@ -25756,6 +25893,8 @@
 	  unitWidth: _react2.default.PropTypes.number,
 	  spanDef: _react2.default.PropTypes.array
 	};
+	StrainText.translateDictF = ' empty block ';
+	StrainText.translateDictR = ' no sequence ';
 
 /***/ },
 /* 116 */
@@ -25864,16 +26003,24 @@
 	        var length = _onionBlocks$i.length;
 	
 	        var originalBlock = _this.originalBlocks[i];
-	        if (!_this.sequenceDict[md5]) {
+	        if (!_this.sequenceDict[md5] || _this.sequenceDict[md5][0] === 'N') {
 	          completeFlag = false;
 	          if (originalBlock.getSequence) {
+	            //testing
+	            //setTimeout(() => {
+	
 	            originalBlock.getSequence().then(function (sequence) {
 	              _this.sequenceDict[md5] = sequence;
 	              _this.onBlockUpdated(i);
 	            });
+	
+	            //}, Math.random() * 3000 + 1000);
+	            //test end
 	          } else {
-	            console.warn(originalBlock);
-	          }
+	              //getSequenceDoesn't exist
+	              // this.sequenceDict[md5] = 'N'.repeat(length);
+	              _this.onBlockUpdated(i);
+	            }
 	        }
 	      };
 	
@@ -25902,7 +26049,7 @@
 	          seq.push(this.sequenceDict[_md]);
 	        } else {
 	          completeFlag = false;
-	          seq.push('.'.repeat(length));
+	          seq.push('·'.repeat(length));
 	        }
 	      }
 	
@@ -25939,7 +26086,7 @@
 	    };
 	    _this2.onionBuilder = new OnionBuilder();
 	    _this2.onionBuilder.setEventBlockUpdated(function () {
-	      console.log('!!!!!!sequence loaded', _this2.onionBuilder.getSequence());
+	      // console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
 	
 	      var _this2$onionBuilder$g = _this2.onionBuilder.getSequence();
 	
@@ -25955,7 +26102,7 @@
 	    });
 	
 	    window.gd.store.subscribe(function (state, lastAction) {
-	      console.log('lastAction,', lastAction);
+	      //console.log(`lastAction,`, lastAction);
 	      var last = [];
 	      if (lastAction.type === 'FOCUS_BLOCKS') {
 	        var leafBlocks = [];
@@ -26018,6 +26165,9 @@
 	        }
 	
 	        _this2.onionBuilder.setBlocks(leafBlocks);
+	      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
+	        var blocks = window.gd.api.focus.focusGetBlocks();
+	        _this2.onionBuilder.setBlocks(blocks);
 	      }
 	
 	      // const current = state.ui.currentBlocks;
@@ -26066,13 +26216,13 @@
 	  _createClass(OnionViewer, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      console.log('componentwillmount');
+	      // console.log('componentwillmount');
 	      //this.updateDimensions();
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log('componentDidMount:');
+	      // console.log('componentDidMount:');
 	
 	      window.addEventListener('resize', this.updateDimensions.bind(this));
 	      //let target = $('.ProjectDetail-chrome').get(0);
@@ -26106,7 +26256,7 @@
 	      var height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
 	      var width = Math.max(300, _width);
 	      var height = Math.max(100, _height);
-	      console.log('updateDimensions:', container, width, height, height2);
+	      // console.log('updateDimensions:', container, width, height, height2);
 	      this.setState({ width: width, height: height });
 	    }
 	  }, {
@@ -26141,7 +26291,7 @@
 	function render(container, options) {
 	  container.className += ' onionContainer';
 	
-	  console.log(options.boundingBox);
+	  // console.log(options.boundingBox);
 	  var _options$boundingBox = options.boundingBox;
 	  var left = _options$boundingBox.left;
 	  var top = _options$boundingBox.top;

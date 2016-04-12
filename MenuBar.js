@@ -40,7 +40,7 @@ export class MenuBar extends React.Component {
     //const value = $target.data('val');
     const cmd = target.getAttribute('data-cmd');
     const value = target.getAttribute('data-val') === 'true';
-    console.log(value);
+    //console.log(value);
     onSelect(cmd, !value);
   }
 

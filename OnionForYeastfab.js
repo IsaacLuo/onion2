@@ -99,7 +99,7 @@ export class OnionForYeastfab extends React.Component {
 
   //while user fires a menu command
   menuCommand(command, value) {
-    console.log('menuCommand', command, value);
+    // console.log('menuCommand', command, value);
     const dict = {};
     switch (command) {
       case 'showAll':
