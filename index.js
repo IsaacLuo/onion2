@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b1b63393ac0272986a92"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2074f0c35193e40a6554"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23434,6 +23434,28 @@
 	      };
 	
 	      this.onClick = function (e) {};
+	
+	      this.uiPosToRealPos = function (index) {
+	        var currentBlock = _this3.findBlockByIndex(index);
+	        if (currentBlock) {
+	          if (currentBlock.realLength === 0) {
+	            return currentBlock.realStart;
+	          } else {
+	            var offset = index - currentBlock.start;
+	            return currentBlock.realStart + offset;
+	          }
+	        }
+	        return index;
+	      };
+	
+	      this.realPosTouiPos = function (index) {
+	        var currentBlock = _this3.findBlockByIndexReal(index);
+	        if (currentBlock) {
+	          var offset = index - currentBlock.realStart;
+	          return currentBlock.start + offset;
+	        }
+	        return index;
+	      };
 	    }
 	  }, {
 	    key: 'findBlockByIndex',
@@ -23500,24 +23522,6 @@
 	      }
 	
 	      return null;
-	    }
-	  }, {
-	    key: 'uiPosToRealPos',
-	    value: function uiPosToRealPos(index) {
-	      var currentBlock = this.findBlockByIndex(index);
-	      if (currentBlock.realLength === 0) {
-	        return currentBlock.realStart;
-	      } else {
-	        var offset = index - currentBlock.start;
-	        return currentBlock.realStart + offset;
-	      }
-	    }
-	  }, {
-	    key: 'realPosTouiPos',
-	    value: function realPosTouiPos(index) {
-	      var currentBlock = this.findBlockByIndexReal(index);
-	      var offset = index - currentBlock.realStart;
-	      return currentBlock.start + offset;
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -23846,10 +23850,11 @@
 	          rowShowCursor = true;
 	          rowShowSelection = false;
 	        }
-	
+	        var selectLeftPos = undefined;
+	        var selectRightPos = undefined;
 	        if (showSelection) {
-	          var selectLeftPos = Math.min(selectStartPos, cursorPos);
-	          var selectRightPos = Math.max(selectStartPos, cursorPos);
+	          selectLeftPos = Math.min(selectStartPos, cursorPos);
+	          selectRightPos = Math.max(selectStartPos, cursorPos);
 	          rowShowCursor = false;
 	          if (selectLeftPos >= i && selectLeftPos <= i + colNum) {
 	            rowSelectLeftPos = selectLeftPos - i;
@@ -23911,6 +23916,8 @@
 	          cursorStyle: cursorStyle,
 	          selectLeftPos: rowSelectLeftPos,
 	          selectRightPos: rowSelectRightPos,
+	          selectSpanNumbers: [this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)],
+	          uiPosToRealPos: this.uiPosToRealPos,
 	          showLeftCursor: rowShowLeftCursor,
 	          showRightCursor: rowShowRightCursor,
 	          showSelection: rowShowSelection,
@@ -25363,6 +25370,7 @@
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
 	      var cursorStyle = _props9.cursorStyle;
+	      var selectSpanNumbers = _props9.selectSpanNumbers;
 	
 	
 	      var sequenceRowWidth = sequence.length * unitWidth;
@@ -25537,7 +25545,7 @@
 	                    fill: cursorStyle.fill
 	                  }
 	                },
-	                selectLeftPos + idxStart + 1
+	                selectSpanNumbers[0] + 1
 	              )
 	            ),
 	            showRightCursor && _react2.default.createElement(
@@ -25560,7 +25568,7 @@
 	                    fill: cursorStyle.fill
 	                  }
 	                },
-	                selectRightPos + idxStart
+	                selectSpanNumbers[1]
 	              )
 	            ),
 	            showRuler && _react2.default.createElement(_RulerLocation.RulerLocation, {
@@ -25573,7 +25581,7 @@
 	              texts: function () {
 	                var re = [];
 	                for (var i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
-	                  re.push(i);
+	                  re.push(_this2.props.uiPosToRealPos(i));
 	                }
 	
 	                return re;
@@ -25626,7 +25634,8 @@
 	  onCalculatedHeight: _react2.default.PropTypes.func,
 	  selectionStyle: _react2.default.PropTypes.object,
 	  theme: _react2.default.PropTypes.string,
-	  cursorStyle: _react2.default.PropTypes.object
+	  cursorStyle: _react2.default.PropTypes.object,
+	  uiPosToRealPos: _react2.default.PropTypes.func
 	
 	};
 	SequenceRow.defaultProps = {

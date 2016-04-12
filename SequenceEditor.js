@@ -179,7 +179,7 @@ export class SequenceEditor extends React.Component {
               if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
               else cursorPos = currentBlock.start;
             } else if (_this.state.selectStartPos < 0) {
-              cursorPos = currentBlock.start+currentBlock.length;
+              cursorPos = currentBlock.start + currentBlock.length;
               cursorPosStart = currentBlock.start;
             } else {
               if (cursorPos > _this.state.selectStartPos) {
@@ -249,6 +249,28 @@ export class SequenceEditor extends React.Component {
     this.onClick = (e) => {
     }
 
+    this.uiPosToRealPos = (index) => {
+      const currentBlock = this.findBlockByIndex(index);
+      if(currentBlock) {
+        if (currentBlock.realLength === 0) {
+          return currentBlock.realStart;
+        } else {
+          const offset = index - currentBlock.start;
+          return currentBlock.realStart + offset;
+        }
+      }
+      return index;
+    }
+
+    this.realPosTouiPos = (index) => {
+      const currentBlock = this.findBlockByIndexReal(index);
+      if (currentBlock) {
+        const offset = index - currentBlock.realStart;
+        return currentBlock.start + offset;
+      }
+      return index;
+    }
+
   }
 
   findBlockByIndex(index) {
@@ -270,21 +292,7 @@ export class SequenceEditor extends React.Component {
     return null;
   }
 
-  uiPosToRealPos(index) {
-    const currentBlock = this.findBlockByIndex(index);
-    if (currentBlock.realLength === 0) {
-      return currentBlock.realStart;
-    } else {
-      const offset = index - currentBlock.start;
-      return currentBlock.realStart + offset;
-    }
-  }
 
-  realPosTouiPos(index) {
-    const currentBlock = this.findBlockByIndexReal(index);
-    const offset = index - currentBlock.realStart;
-    return currentBlock.start + offset;
-  }
 
   isOverlap(a1, b1, a2, b2) {
     const a3 = Math.max(a1, a2);
@@ -532,6 +540,8 @@ export class SequenceEditor extends React.Component {
       focus,
       } = this.props;
 
+
+
     this.textRows = [];
     let j = 0;
     if (showSelection) {
@@ -605,10 +615,11 @@ export class SequenceEditor extends React.Component {
         rowShowCursor = true;
         rowShowSelection = false;
       }
-
+      let selectLeftPos;
+      let selectRightPos;
       if (showSelection) {
-        const selectLeftPos = Math.min(selectStartPos, cursorPos);
-        const selectRightPos = Math.max(selectStartPos, cursorPos);
+        selectLeftPos = Math.min(selectStartPos, cursorPos);
+        selectRightPos = Math.max(selectStartPos, cursorPos);
         rowShowCursor = false;
         if (selectLeftPos >= i && selectLeftPos <= i + colNum) {
           rowSelectLeftPos = selectLeftPos - i;
@@ -655,6 +666,8 @@ export class SequenceEditor extends React.Component {
         cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
       }
 
+
+
       this.textRows.push(
         <SequenceRow
           sequence={subSequence}
@@ -671,6 +684,8 @@ export class SequenceEditor extends React.Component {
           cursorStyle={cursorStyle}
           selectLeftPos={rowSelectLeftPos}
           selectRightPos={rowSelectRightPos}
+          selectSpanNumbers={[this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)]}
+          uiPosToRealPos = {this.uiPosToRealPos}
           showLeftCursor={rowShowLeftCursor}
           showRightCursor={rowShowRightCursor}
           showSelection={rowShowSelection}

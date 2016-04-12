@@ -54,6 +54,7 @@ export class SequenceRow extends React.Component {
     selectionStyle: React.PropTypes.object,
     theme: React.PropTypes.string,
     cursorStyle: React.PropTypes.object,
+    uiPosToRealPos: React.PropTypes.func,
 
   };
   static defaultProps = {
@@ -437,6 +438,7 @@ export class SequenceRow extends React.Component {
       showFeatures,
       showRuler,
       cursorStyle,
+      selectSpanNumbers,
       } = this.props;
 
     const sequenceRowWidth = sequence.length * unitWidth;
@@ -625,7 +627,8 @@ export class SequenceRow extends React.Component {
                   fill: cursorStyle.fill,
                 }}
               >
-                {selectLeftPos + idxStart + 1}
+
+                {selectSpanNumbers[0] + 1}
               </text>
             </g>
             }
@@ -648,7 +651,7 @@ export class SequenceRow extends React.Component {
                   fill: cursorStyle.fill,
                 }}
               >
-                {selectRightPos + idxStart}
+                {selectSpanNumbers[1]}
               </text>
               }
             </g>
@@ -665,7 +668,7 @@ export class SequenceRow extends React.Component {
               texts={(() => {
                 const re = [];
                 for (let i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
-                  re.push(i);
+                  re.push(this.props.uiPosToRealPos(i));
                 }
 
                 return re;
