@@ -3,6 +3,7 @@ import { SequenceRow } from './SequenceEditor/SequenceRow';
 import 'jquery';
 import { DNASeq } from './Bio/DNASeq';
 import { compareProps } from './reactHelper';
+import { PositionCalculator } from './SequenceEditor/PositionCalculator';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
@@ -71,10 +72,10 @@ export class SequenceEditor extends React.Component {
     this.seqCompStyle = Object.assign({ ...this.seqMainStyle }, { fill: '#B7BBC2' });
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
-    this.sequence = new DNASeq(this.props.sequence);
-    this.enzymeSites = this.sequence.calcEnzymeSites(this.props.enzymeList);
+    this.sequence = new DNASeq(props.sequence);
+    this.enzymeSites = this.sequence.calcEnzymeSites(props.enzymeList);
 
-    this.aas = this.calcAAs(this.props.sequence, this.props.features);
+    this.aas = this.calcAAs(props.sequence, props.features);
 
     this.state = {
       cursorPos: 0,
@@ -83,10 +84,15 @@ export class SequenceEditor extends React.Component {
       showSelection: false,
     };
 
+    this.positionCalculator = new PositionCalculator(props.blocks);
+
+
     //initial operations
-    this.initialRowPos(this.props.sequence, this.props.width);
+    this.initialRowPos(props.sequence, props.width);
     this.initCallBack();
-    $('body').mouseup((e)=>{$('body').css('-webkit-user-select','text')});
+    $('body').mouseup((e)=>{$('body').css('-webkit-user-select', 'text')});
+
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -104,6 +110,8 @@ export class SequenceEditor extends React.Component {
         lastEvent: 'newProp',
       });
     }
+
+    this.positionCalculator.blocks = nextProps.blocks;
   }
 
   shouldComponentUpdate(np, ns) {
@@ -137,7 +145,7 @@ export class SequenceEditor extends React.Component {
       if (_this.props.focus) {
         if (_this.props.blocks) {
           //shift if in emptyBlock
-          const currentBlock = this.findBlockByIndex(cursorPos);
+          const currentBlock = this.positionCalculator.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
             _this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
             return; //prevent default
@@ -171,18 +179,24 @@ export class SequenceEditor extends React.Component {
     this.onSelect = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
 
       if (_this.props.focus) {
-        if(_this.props.blocks) {
+        if (_this.props.blocks) {
           const currentBlock = _this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
             //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
-            if(cursorPosStart>=0) {
-              if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;
+            if(cursorPosStart >= 0) {
+              if (cursorPosStart < cursorPos) {
+                if(cursorPos > currentBlock.start + currentBlock.length / 2) {
+                  cursorPos = currentBlock.start + currentBlock.length;
+                } else {
+                  cursorPos = currentBlock.start;
+                }
+              }
               else cursorPos = currentBlock.start;
             } else if (_this.state.selectStartPos < 0) {
               cursorPos = currentBlock.start + currentBlock.length;
               cursorPosStart = currentBlock.start;
             } else {
-              if (cursorPos > _this.state.selectStartPos) {
+              if(cursorPos > currentBlock.start + currentBlock.length / 2) {
                 cursorPos = currentBlock.start + currentBlock.length;
               } else {
                 cursorPos = currentBlock.start;
@@ -249,27 +263,21 @@ export class SequenceEditor extends React.Component {
     this.onClick = (e) => {
     }
 
-    this.uiPosToRealPos = (index) => {
-      const currentBlock = this.findBlockByIndex(index);
-      if(currentBlock) {
-        if (currentBlock.realLength === 0) {
-          return currentBlock.realStart;
-        } else {
-          const offset = index - currentBlock.start;
-          return currentBlock.realStart + offset;
-        }
-      }
-      return index;
-    }
+    // this.uiPosToRealPos = (index) => {
+    //   const currentBlock = this.findBlockByIndex(index);
+    //   if(currentBlock) {
+    //     if (currentBlock.realLength === 0) {
+    //       return currentBlock.realStart;
+    //     } else {
+    //       const offset = index - currentBlock.start;
+    //       return currentBlock.realStart + offset;
+    //     }
+    //   }
+    //   return index;
+    // }
+    this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
 
-    this.realPosTouiPos = (index) => {
-      const currentBlock = this.findBlockByIndexReal(index);
-      if (currentBlock) {
-        const offset = index - currentBlock.realStart;
-        return currentBlock.start + offset;
-      }
-      return index;
-    }
+    this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 
   }
 
@@ -666,7 +674,8 @@ export class SequenceEditor extends React.Component {
         cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
       }
 
-
+      const selectSpanNumbers = [this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)];
+      if (selectSpanNumbers[0] >= selectSpanNumbers[1]) selectSpanNumbers[0] = selectSpanNumbers[1]-1;
 
       this.textRows.push(
         <SequenceRow
@@ -684,7 +693,7 @@ export class SequenceEditor extends React.Component {
           cursorStyle={cursorStyle}
           selectLeftPos={rowSelectLeftPos}
           selectRightPos={rowSelectRightPos}
-          selectSpanNumbers={[this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)]}
+          selectSpanNumbers={selectSpanNumbers}
           uiPosToRealPos = {this.uiPosToRealPos}
           showLeftCursor={rowShowLeftCursor}
           showRightCursor={rowShowRightCursor}
