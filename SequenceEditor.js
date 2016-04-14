@@ -148,6 +148,9 @@ export class SequenceEditor extends React.Component {
           const currentBlock = this.positionCalculator.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
             _this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+            if (_this.props.onBlockChanged) {
+              _this.props.onBlockChanged([currentBlock]);
+            }
             return; //prevent default
           }
         }
