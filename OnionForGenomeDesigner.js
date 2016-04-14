@@ -7,6 +7,7 @@ import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
+import {PositionCalculator} from './SequenceEditor/PositionCalculator';
 
 const $ = require('jquery');
 window.$ = $;
@@ -45,7 +46,9 @@ export class OnionForGenomeDesigner extends React.Component {
       focus: true,
     };
 
+
     this.enzymeList = loadEnzymeList('caiLab');
+    this.positionCalculator = new PositionCalculator(this.state.blocks);
 
     this.onSetCursor = this.onSetCursor.bind(this);
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
@@ -76,10 +79,15 @@ export class OnionForGenomeDesigner extends React.Component {
       }
     };
 
-    this.onSelect = (pos1, pos2) => {
+    this.onSelect = (pos1, pos2, cursorPosReal = pos1, startCursorPosReal = pos2) => {
       if (this.state.focus) {
         if (pos1 >= 0 && pos2 >= 0) {
-          this.setState({ cursorPos: pos1, startCursorPos: pos2 });
+          this.setState({
+            cursorPos: pos1,
+            startCursorPos: pos2,
+            cursorPosReal,
+            startCursorPosReal,
+          });
         } else {
           console.error(pos1, pos2);
         }
@@ -114,19 +122,25 @@ export class OnionForGenomeDesigner extends React.Component {
     }
 
     this.state.blocks = nextProps.blocks;
+    this.positionCalculator.blocks = this.state.blocks;
   }
 
   //====================event response=====================
 
   //while user move cursor by clicking
-  onSetCursor(_pos) {
+  onSetCursor(_pos, _realPos = _pos) {
     if (this.state.focus && this.state.sequence) {
       let pos = _pos;
       const sequenceLen = this.state.sequence.length;
       if (pos < 0) pos = 0;
       else if (pos > sequenceLen) pos = sequenceLen;
 
-      this.setState({ cursorPos: pos, startCursorPos: pos });
+      this.setState({
+        cursorPos: pos,
+        startCursorPos: pos,
+        cursorPosReal: _realPos,
+        startCursorPosReal: _realPos
+      });
     }
   }
 
@@ -135,7 +149,15 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user changes the value of start and end numeric control on info bar
   onInfoBarChange(startPos, endPos) {
-    this.setState({ cursorPos: endPos, startCursorPos: startPos, lastAction: 'infoBarChanged' });
+    const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
+    const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
+    this.setState({
+      cursorPos,
+      startCursorPos,
+      cursorPosReal: endPos,
+      startCursorPosReal: startPos,
+      lastAction: 'infoBarChanged',
+    });
   }
 
   onBlockChanged(block, e) {
@@ -208,12 +230,17 @@ export class OnionForGenomeDesigner extends React.Component {
 
     let selectionStart = 0;
     let selectionLength = 0;
+    let selectionStartReal = 0;
+    let selectionLengthReal = 0;
     let selectedSeq = '';
 
     if (sequence) {
       selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
       selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
       selectedSeq = sequence.substr(selectionStart, selectionLength);
+      selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
+      selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
+
     }
 
     const menuTitle = this.state.menuTitle;
@@ -280,8 +307,8 @@ export class OnionForGenomeDesigner extends React.Component {
         <InfoBar
           width={width}
           height={30}
-          startPos={selectionLength > 0 ? selectionStart : -1}
-          endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
+          startPos={selectionLengthReal > 0 ? selectionStartReal : -1}
+          endPos={selectionLengthReal > 0 ? selectionStartReal + selectionLengthReal : -1}
           seq={selectedSeq}
           style={{
             textAlign: 'right',

@@ -225,9 +225,9 @@ export class SequenceEditor extends React.Component {
         if (_this.props.onSelect) {
           if (cursorPosStart>=0) {
             //console.log('full start', cursorPosStart, cursorPos);
-            _this.props.onSelect(cursorPos, cursorPosStart);
+            _this.props.onSelect(cursorPos, cursorPosStart, this.uiPosToRealPos(cursorPos), this.uiPosToRealPos(cursorPosStart));
           } else {
-            _this.props.onSelect(cursorPos, _this.state.selectStartPos);
+            _this.props.onSelect(cursorPos, _this.state.selectStartPos, this.uiPosToRealPos(cursorPos), this.uiPosToRealPos(cursorPosStart));
           }
         }
       }

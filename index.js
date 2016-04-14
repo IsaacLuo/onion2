@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "21d10991bdffb6031ea3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "19f462bd70878fcad1c3"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22845,6 +22845,8 @@
 	
 	var _MenuBar = __webpack_require__(103);
 	
+	var _PositionCalculator = __webpack_require__(111);
+	
 	__webpack_require__(191);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -22896,6 +22898,7 @@
 	    };
 	
 	    _this.enzymeList = (0, _Enzyme.loadEnzymeList)('caiLab');
+	    _this.positionCalculator = new _PositionCalculator.PositionCalculator(_this.state.blocks);
 	
 	    _this.onSetCursor = _this.onSetCursor.bind(_this);
 	    _this.onInfoBarChange = _this.onInfoBarChange.bind(_this);
@@ -22933,9 +22936,17 @@
 	      };
 	
 	      this.onSelect = function (pos1, pos2) {
+	        var cursorPosReal = arguments.length <= 2 || arguments[2] === undefined ? pos1 : arguments[2];
+	        var startCursorPosReal = arguments.length <= 3 || arguments[3] === undefined ? pos2 : arguments[3];
+	
 	        if (_this2.state.focus) {
 	          if (pos1 >= 0 && pos2 >= 0) {
-	            _this2.setState({ cursorPos: pos1, startCursorPos: pos2 });
+	            _this2.setState({
+	              cursorPos: pos1,
+	              startCursorPos: pos2,
+	              cursorPosReal: cursorPosReal,
+	              startCursorPosReal: startCursorPosReal
+	            });
 	          } else {
 	            console.error(pos1, pos2);
 	          }
@@ -22972,6 +22983,7 @@
 	      }
 	
 	      this.state.blocks = nextProps.blocks;
+	      this.positionCalculator.blocks = this.state.blocks;
 	    }
 	
 	    //====================event response=====================
@@ -22981,12 +22993,19 @@
 	  }, {
 	    key: 'onSetCursor',
 	    value: function onSetCursor(_pos) {
+	      var _realPos = arguments.length <= 1 || arguments[1] === undefined ? _pos : arguments[1];
+	
 	      if (this.state.focus && this.state.sequence) {
 	        var pos = _pos;
 	        var sequenceLen = this.state.sequence.length;
 	        if (pos < 0) pos = 0;else if (pos > sequenceLen) pos = sequenceLen;
 	
-	        this.setState({ cursorPos: pos, startCursorPos: pos });
+	        this.setState({
+	          cursorPos: pos,
+	          startCursorPos: pos,
+	          cursorPosReal: _realPos,
+	          startCursorPosReal: _realPos
+	        });
 	      }
 	    }
 	
@@ -22997,7 +23016,15 @@
 	  }, {
 	    key: 'onInfoBarChange',
 	    value: function onInfoBarChange(startPos, endPos) {
-	      this.setState({ cursorPos: endPos, startCursorPos: startPos, lastAction: 'infoBarChanged' });
+	      var cursorPos = this.positionCalculator.realPosTouiPos(endPos);
+	      var startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
+	      this.setState({
+	        cursorPos: cursorPos,
+	        startCursorPos: startCursorPos,
+	        cursorPosReal: endPos,
+	        startCursorPosReal: startPos,
+	        lastAction: 'infoBarChanged'
+	      });
 	    }
 	  }, {
 	    key: 'onBlockChanged',
@@ -23080,12 +23107,16 @@
 	
 	      var selectionStart = 0;
 	      var selectionLength = 0;
+	      var selectionStartReal = 0;
+	      var selectionLengthReal = 0;
 	      var selectedSeq = '';
 	
 	      if (sequence) {
 	        selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
 	        selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
 	        selectedSeq = sequence.substr(selectionStart, selectionLength);
+	        selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
+	        selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
 	      }
 	
 	      var menuTitle = this.state.menuTitle;
@@ -23150,8 +23181,8 @@
 	        _react2.default.createElement(_InfoBar.InfoBar, {
 	          width: width,
 	          height: 30,
-	          startPos: selectionLength > 0 ? selectionStart : -1,
-	          endPos: selectionLength > 0 ? selectionStart + selectionLength : -1,
+	          startPos: selectionLengthReal > 0 ? selectionStartReal : -1,
+	          endPos: selectionLengthReal > 0 ? selectionStartReal + selectionLengthReal : -1,
 	          seq: selectedSeq,
 	          style: {
 	            textAlign: 'right',
@@ -23411,9 +23442,9 @@
 	          if (_this.props.onSelect) {
 	            if (cursorPosStart >= 0) {
 	              //console.log('full start', cursorPosStart, cursorPos);
-	              _this.props.onSelect(cursorPos, cursorPosStart);
+	              _this.props.onSelect(cursorPos, cursorPosStart, _this3.uiPosToRealPos(cursorPos), _this3.uiPosToRealPos(cursorPosStart));
 	            } else {
-	              _this.props.onSelect(cursorPos, _this.state.selectStartPos);
+	              _this.props.onSelect(cursorPos, _this.state.selectStartPos, _this3.uiPosToRealPos(cursorPos), _this3.uiPosToRealPos(cursorPosStart));
 	            }
 	          }
 	        }
