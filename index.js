@@ -54,7 +54,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "19f462bd70878fcad1c3"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "8eb5207586108931063f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22201,9 +22201,19 @@
 	      var itemStyleWithNumeric = Object.assign(_extends({}, itemStyle), { marginTop: 5 });
 	
 	      var length = endPos - startPos;
-	      var dna = new _DNASeq.DNASeq(seq);
-	      var gc = dna.getGCPercentage();
-	      var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
+	
+	      var gcText = undefined;
+	      var tmText = undefined;
+	      if (length === seq.length) {
+	        var dna = new _DNASeq.DNASeq(seq);
+	        var gc = dna.getGCPercentage();
+	        var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
+	        gcText = (gc * 100).toFixed(1) + '%';
+	        tmText = '' + (length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-');
+	      } else {
+	        gcText = '-';
+	        tmText = '-';
+	      }
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -22266,8 +22276,7 @@
 	            style: itemStyle
 	          },
 	          'GC: ',
-	          (gc * 100).toFixed(1),
-	          '%'
+	          gcText
 	        ),
 	        showTM && _react2.default.createElement(
 	          'div',
@@ -22275,7 +22284,7 @@
 	            style: itemStyle
 	          },
 	          'TM: ',
-	          length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-'
+	          tmText
 	        )
 	      );
 	    }

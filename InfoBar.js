@@ -90,9 +90,20 @@ export class InfoBar extends React.Component {
     const itemStyleWithNumeric = Object.assign({ ...itemStyle }, { marginTop: 5 });
 
     const length = endPos - startPos;
-    const dna = new DNASeq(seq);
-    const gc = dna.getGCPercentage();
-    const tm = (length >= 10 && length <= 50) ? dna.getTM() : 0;
+
+
+    let gcText;
+    let tmText;
+    if (length === seq.length) {
+      const dna = new DNASeq(seq);
+      const gc = dna.getGCPercentage();
+      const tm = (length >= 10 && length <= 50) ? dna.getTM() : 0;
+      gcText = `${(gc * 100).toFixed(1)}%`;
+      tmText = `${length >= 10 && length <= 50 ? `${tm.toFixed(1)}°C` : '-'}`;
+    } else {
+      gcText = '-';
+      tmText = '-';
+    }
 
     return (
       <div
@@ -147,14 +158,14 @@ export class InfoBar extends React.Component {
         <div
           style={itemStyle}
         >
-          GC: {(gc * 100).toFixed(1)}%
+          GC: {gcText}
         </div>
         }
         {showTM &&
         <div
           style={itemStyle}
         >
-          TM: {length >= 10 && length <= 50 ? `${tm.toFixed(1)}°C` : '-'}
+          TM: {tmText}
         </div>
         }
 
