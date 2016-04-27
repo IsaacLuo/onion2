@@ -125,72 +125,35 @@ class OnionViewer extends React.Component {
       }
     });
 
-    window.gd.store.subscribe((state, lastAction) => {
-       //console.log(`lastAction,`, lastAction);
-      let last = [];
-      if (lastAction.type === 'FOCUS_BLOCKS') {
-        let leafBlocks = [];
-        const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
-        if (topSelectedBlocks && topSelectedBlocks.length) {
-          for (let block of topSelectedBlocks) {
-            const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
-            if (children && children.length === 0 ) {
-              leafBlocks.push(block);
-            } else {
-              for (let node of children) {
-                if (node.components && node.components.length === 0) {
-                  leafBlocks.push(node);
-                }
+    this.showBlockRange = () => {
+      let leafBlocks = [];
+      const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+      if (topSelectedBlocks && topSelectedBlocks.length) {
+        for (let block of topSelectedBlocks) {
+          const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+          if (children && children.length === 0 ) {
+            leafBlocks.push(block);
+          } else {
+            for (let node of children) {
+              if (node.components && node.components.length === 0) {
+                leafBlocks.push(node);
               }
             }
           }
         }
+      }
+      this.onionBuilder.setBlocks(leafBlocks);
+    };
 
-        this.onionBuilder.setBlocks(leafBlocks);
+    window.gd.store.subscribe((state, lastAction) => {
+      //console.log(`lastAction,`, lastAction);
+      //console.log(lastAction.type);
+      if (lastAction.type === 'FOCUS_BLOCKS') {
+        this.showBlockRange();
       } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
         const blocks = window.gd.api.focus.focusGetBlocks();
         this.onionBuilder.setBlocks(blocks);
       }
-
-
-      // const current = state.ui.currentBlocks;
-      // if (current &&
-      //   current.length &&
-      //   (current.length !== last.length
-      //     || !current.every((item, index) => item !== last[index])
-      //   )) {
-      //   const currentBlocks = current;
-      //   const readBlockCount = currentBlocks.length;
-      //   const onionBlocks = [];
-      //   let start = 0;
-      //   let totalSequence = '';
-      //
-      //   const readSequenceFromBlock = (i, count) => {
-      //     const block = state.blocks[currentBlocks[i]];
-      //     console.log('currentBlocks', currentBlocks,i,block);
-      //
-      //     block.getSequence().then(sequence => {
-      //       if (sequence) {
-      //         onionBlocks.push({
-      //           color: block.metadata.color,
-      //           start,
-      //           length: sequence.length,
-      //           name: block.metadata.name,
-      //         });
-      //         start += sequence.length;
-      //         totalSequence += sequence;
-      //         if (i === count - 1) {
-      //           this.setState({ blocks: onionBlocks, sequence: totalSequence });
-      //         } else {
-      //           readSequenceFromBlock(i + 1, count);
-      //         }
-      //       }
-      //     });
-      //   };
-      //
-      //   readSequenceFromBlock(0, readBlockCount);
-
-       // last = current;
     });
 
   }
@@ -198,10 +161,12 @@ class OnionViewer extends React.Component {
   componentWillMount() {
     // console.log('componentwillmount');
     //this.updateDimensions();
+    this.showBlockRange();
   }
 
   componentDidMount() {
     // console.log('componentDidMount:');
+
 
     window.addEventListener('resize', this.updateDimensions.bind(this));
     //let target = $('.ProjectDetail-chrome').get(0);

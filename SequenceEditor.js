@@ -4,6 +4,7 @@ import 'jquery';
 import { DNASeq } from './Bio/DNASeq';
 import { compareProps } from './reactHelper';
 import { PositionCalculator } from './SequenceEditor/PositionCalculator';
+import { StrainText } from './SequenceEditor/StrainText';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
@@ -569,6 +570,8 @@ export class SequenceEditor extends React.Component {
     for (let j = 0; j < sequence.length; j += colNum) {
       splitBlocks.push([]);
     }
+
+    StrainText.beginTranslateBps();
 
     if (blocks) {
       for (let i = 0; i < blocks.length; i++) {

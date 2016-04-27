@@ -31,8 +31,9 @@ export class StrainText extends React.Component {
   static translateDictF = ' empty block ';
   static translateDictR = ' no sequence ';
 
-  beginTranslateBps() {
-    translateIndex = 0;
+  static beginTranslateBps() {
+    translateIndexF = 0;
+    translateIndexR = 0;
   }
 
   translateNextXF(x) {
