@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "6b740f94b7d9b90f43e2"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "7295d2115bbbb9f95e84"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23008,7 +23008,7 @@
 	            {
 	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
 	            },
-	            'start:'
+	            'Start:'
 	          ),
 	          _react2.default.createElement(_NumericControl.NumericControl, {
 	            value: startPos + 1,
@@ -23028,7 +23028,7 @@
 	            {
 	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
 	            },
-	            'end:'
+	            'End:'
 	          ),
 	          _react2.default.createElement(_NumericControl.NumericControl, {
 	            value: endPos,
@@ -23044,9 +23044,9 @@
 	          {
 	            style: itemStyle
 	          },
-	          'length: ',
+	          'Length: ',
 	          length,
-	          'bp'
+	          ' BP'
 	        ),
 	        showGC && _react2.default.createElement(
 	          'div',
@@ -23061,7 +23061,7 @@
 	          {
 	            style: itemStyle
 	          },
-	          'TM: ',
+	          'Melting Temp: ',
 	          tmText
 	        )
 	      );
@@ -23417,7 +23417,7 @@
 	          'div',
 	          {
 	            style: {
-	              height: 43,
+	              height: 36,
 	              fontFamily: 'Helvetica, Arial, sans-serif',
 	              fontSize: 12,
 	              whiteSpace: 'nowrap',
@@ -23467,7 +23467,7 @@
 	              paddingBottom: 8,
 	              color: '#8EC78D',
 	              fontSize: 20,
-	              height: '43'
+	              height: 36
 	            }
 	          },
 	          title
@@ -23950,8 +23950,9 @@
 	          onSetCursor: this.onSetCursor,
 	          onSelect: this.onSelect,
 	          enzymeList: this.enzymeList,
-	          width: width,
-	          height: height - 30 - 86,
+	          width: width
+	          //height={height - 30 - 86}
+	          , height: height - 36 - 64,
 	          showEnzymes: showEnzymes,
 	          showLadder: showRuler || !showRuler && showRS,
 	          showRS: showRS,

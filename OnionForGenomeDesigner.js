@@ -289,7 +289,8 @@ export class OnionForGenomeDesigner extends React.Component {
           onSelect={this.onSelect}
           enzymeList={this.enzymeList}
           width={width}
-          height={height - 30 - 86}
+          //height={height - 30 - 86}
+          height={height - 36 - 64}
           showEnzymes={showEnzymes}
           showLadder={showRuler || !showRuler && showRS}
           showRS={showRS}

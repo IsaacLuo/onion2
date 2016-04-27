@@ -117,7 +117,7 @@ export class InfoBar extends React.Component {
           <div
             style={{ display: 'inline-block', marginTop: 4, marginRight: 0 }}
           >
-          start:
+          Start:
           </div>
           <NumericControl
             value={startPos + 1}
@@ -135,7 +135,7 @@ export class InfoBar extends React.Component {
           <div
             style={{ display: 'inline-block', marginTop: 4, marginRight: 0 }}
           >
-            end:
+            End:
           </div>
           <NumericControl
             value={endPos}
@@ -151,7 +151,7 @@ export class InfoBar extends React.Component {
         <div
           style={itemStyle}
         >
-          length: {length}bp
+          Length: {length} BP
         </div>
         }
         {showGC &&
@@ -165,7 +165,7 @@ export class InfoBar extends React.Component {
         <div
           style={itemStyle}
         >
-          TM: {tmText}
+          Melting Temp: {tmText}
         </div>
         }
 

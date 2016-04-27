@@ -81,7 +81,7 @@ export class MenuBar extends React.Component {
       <div>
         <div
           style={{
-            height: 43,
+            height: 36,
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: 12,
             whiteSpace: 'nowrap',
@@ -127,7 +127,7 @@ export class MenuBar extends React.Component {
             paddingBottom: 8,
             color: '#8EC78D',
             fontSize: 20,
-            height: '43',
+            height: 36,
           }}
         >
           {title}
