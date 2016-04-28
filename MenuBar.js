@@ -54,11 +54,13 @@ export class MenuBar extends React.Component {
       showBlockBar,
       showAA,
     } = this.props;
-    const layerMenuItem = (text, cmd, value, padding = '10px 10px') =>
+    const layerMenuItem = (text, cmd, value, padding = '0px 10px') =>
       (
         <div
           style={{
             display: 'inline-block',
+            lineHeight: '30px',
+            verticalAlign: 'top',
             padding,
           }}
         >
@@ -81,7 +83,7 @@ export class MenuBar extends React.Component {
       <div>
         <div
           style={{
-            height: 36,
+            height: 30,
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: 12,
             whiteSpace: 'nowrap',
@@ -95,6 +97,7 @@ export class MenuBar extends React.Component {
               height: '100%',
               borderStyle: 'none none solid none',
               borderWidth: '1',
+              borderColor: '#dadbdf',
               textAlign: 'right',
               verticalAlign: 'top',
             }}
@@ -112,7 +115,7 @@ export class MenuBar extends React.Component {
             ></div>
             {layerMenuItem(<EyeIcon
               stroke={showAll ? '#4c505f' : '#b3b3b3'}
-            />, 'showAll', showAll, '10px 0px 10px 10px')}
+            />, 'showAll', showAll, '0px 0px 0px 10px')}
             {layerMenuItem('Features', 'showFeatures', showFeatures)}
             {layerMenuItem('Reverse Strand', 'showRS', showRS)}
             {layerMenuItem('Enzymes', 'showEnzymes', showEnzymes)}

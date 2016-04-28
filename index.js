@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "7295d2115bbbb9f95e84"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "22db0ab4cdc54106c7d1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23384,12 +23384,14 @@
 	      var showAA = _props.showAA;
 	
 	      var layerMenuItem = function layerMenuItem(text, cmd, value) {
-	        var padding = arguments.length <= 3 || arguments[3] === undefined ? '10px 10px' : arguments[3];
+	        var padding = arguments.length <= 3 || arguments[3] === undefined ? '0px 10px' : arguments[3];
 	        return _react2.default.createElement(
 	          'div',
 	          {
 	            style: {
 	              display: 'inline-block',
+	              lineHeight: '30px',
+	              verticalAlign: 'top',
 	              padding: padding
 	            }
 	          },
@@ -23417,7 +23419,7 @@
 	          'div',
 	          {
 	            style: {
-	              height: 36,
+	              height: 30,
 	              fontFamily: 'Helvetica, Arial, sans-serif',
 	              fontSize: 12,
 	              whiteSpace: 'nowrap',
@@ -23433,6 +23435,7 @@
 	                height: '100%',
 	                borderStyle: 'none none solid none',
 	                borderWidth: '1',
+	                borderColor: '#dadbdf',
 	                textAlign: 'right',
 	                verticalAlign: 'top'
 	              }
@@ -23450,7 +23453,7 @@
 	            }),
 	            layerMenuItem(_react2.default.createElement(_EyeIcon.EyeIcon, {
 	              stroke: showAll ? '#4c505f' : '#b3b3b3'
-	            }), 'showAll', showAll, '10px 0px 10px 10px'),
+	            }), 'showAll', showAll, '0px 0px 0px 10px'),
 	            layerMenuItem('Features', 'showFeatures', showFeatures),
 	            layerMenuItem('Reverse Strand', 'showRS', showRS),
 	            layerMenuItem('Enzymes', 'showEnzymes', showEnzymes),
@@ -23680,6 +23683,7 @@
 	
 	      menuTitle: '',
 	      sequence: props.sequence, //DNA sequence, in ACGT
+	      features: props.features,
 	
 	      focus: true
 	    };
@@ -23771,6 +23775,7 @@
 	
 	      this.state.blocks = nextProps.blocks;
 	      this.positionCalculator.blocks = this.state.blocks;
+	      this.state.features = nextProps.features;
 	    }
 	
 	    //====================event response=====================
@@ -23908,6 +23913,9 @@
 	
 	      var menuTitle = this.state.menuTitle;
 	
+	      var enableFeatures = false;
+	      if (features && features.length > 0) enableFeatures = true;
+	
 	      //console.log(this.state);
 	
 	      return _react2.default.createElement(
@@ -23937,10 +23945,11 @@
 	          title: menuTitle,
 	          showEnzymes: showEnzymes,
 	          showRS: showRS,
-	          showFeatures: showFeatures,
+	          showFeatures: enableFeatures && showFeatures,
 	          showRuler: showRuler,
 	          showBlockBar: showBlockBar,
-	          showAA: showAA,
+	          showAA: enableFeatures && showAA,
+	          enableFeatures: enableFeatures,
 	          onSelect: this.menuCommand
 	        }),
 	        _react2.default.createElement(_SequenceEditor.SequenceEditor, {
@@ -23952,7 +23961,7 @@
 	          enzymeList: this.enzymeList,
 	          width: width
 	          //height={height - 30 - 86}
-	          , height: height - 36 - 64,
+	          , height: height - 30 - 64,
 	          showEnzymes: showEnzymes,
 	          showLadder: showRuler || !showRuler && showRS,
 	          showRS: showRS,
@@ -26530,6 +26539,7 @@
 	
 	    this.sequenceDict = {};
 	    this.onionBlocks = [];
+	    this.features = [];
 	  }
 	
 	  _createClass(OnionBuilder, [{
@@ -26537,6 +26547,8 @@
 	    value: function setBlocks(blocks) {
 	      this.originalBlocks = blocks;
 	      this.onionBlocks = [];
+	      this.features = [];
+	
 	      var start = 0;
 	      var realStart = 0;
 	      var _iteratorNormalCompletion = true;
@@ -26563,9 +26575,45 @@
 	            realStart: realStart,
 	            realLength: length
 	          });
+	
+	          var annotations = block.sequence.annotations;
+	          var _iteratorNormalCompletion2 = true;
+	          var _didIteratorError2 = false;
+	          var _iteratorError2 = undefined;
+	
+	          try {
+	            for (var _iterator2 = annotations[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	              var annotation = _step2.value;
+	
+	              this.features.push({
+	                start: annotation.start + start,
+	                end: annotation.end + start,
+	                realStart: annotation.start + realStart,
+	                realEnd: annotation.end + realStart,
+	                text: annotation.name,
+	                color: annotation.color ? annotation.color : '#A5A6A2'
+	              });
+	            }
+	          } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	          } finally {
+	            try {
+	              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	              }
+	            } finally {
+	              if (_didIteratorError2) {
+	                throw _iteratorError2;
+	              }
+	            }
+	          }
+	
 	          realStart += length;
 	          start += fakeLength;
 	        }
+	
+	        //this.generateFeatures();
 	      } catch (err) {
 	        _didIteratorError = true;
 	        _iteratorError = err;
@@ -26582,6 +26630,11 @@
 	      }
 	
 	      return this.updateSequence();
+	    }
+	  }, {
+	    key: 'getFeatures',
+	    value: function getFeatures() {
+	      return this.features;
 	    }
 	  }, {
 	    key: 'setEventBlockUpdated',
@@ -26606,7 +26659,6 @@
 	          if (originalBlock.getSequence) {
 	            //testing
 	            //setTimeout(() => {
-	
 	            originalBlock.getSequence().then(function (sequence) {
 	              _this.sequenceDict[md5] = sequence;
 	              _this.onBlockUpdated(i);
@@ -26703,57 +26755,57 @@
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
-	        var _iteratorNormalCompletion2 = true;
-	        var _didIteratorError2 = false;
-	        var _iteratorError2 = undefined;
+	        var _iteratorNormalCompletion3 = true;
+	        var _didIteratorError3 = false;
+	        var _iteratorError3 = undefined;
 	
 	        try {
-	          for (var _iterator2 = topSelectedBlocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	            var block = _step2.value;
+	          for (var _iterator3 = topSelectedBlocks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	            var block = _step3.value;
 	
 	            var children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
 	            if (children && children.length === 0) {
 	              leafBlocks.push(block);
 	            } else {
-	              var _iteratorNormalCompletion3 = true;
-	              var _didIteratorError3 = false;
-	              var _iteratorError3 = undefined;
+	              var _iteratorNormalCompletion4 = true;
+	              var _didIteratorError4 = false;
+	              var _iteratorError4 = undefined;
 	
 	              try {
-	                for (var _iterator3 = children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-	                  var node = _step3.value;
+	                for (var _iterator4 = children[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                  var node = _step4.value;
 	
 	                  if (node.components && node.components.length === 0) {
 	                    leafBlocks.push(node);
 	                  }
 	                }
 	              } catch (err) {
-	                _didIteratorError3 = true;
-	                _iteratorError3 = err;
+	                _didIteratorError4 = true;
+	                _iteratorError4 = err;
 	              } finally {
 	                try {
-	                  if (!_iteratorNormalCompletion3 && _iterator3.return) {
-	                    _iterator3.return();
+	                  if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                    _iterator4.return();
 	                  }
 	                } finally {
-	                  if (_didIteratorError3) {
-	                    throw _iteratorError3;
+	                  if (_didIteratorError4) {
+	                    throw _iteratorError4;
 	                  }
 	                }
 	              }
 	            }
 	          }
 	        } catch (err) {
-	          _didIteratorError2 = true;
-	          _iteratorError2 = err;
+	          _didIteratorError3 = true;
+	          _iteratorError3 = err;
 	        } finally {
 	          try {
-	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	              _iterator2.return();
+	            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	              _iterator3.return();
 	            }
 	          } finally {
-	            if (_didIteratorError2) {
-	              throw _iteratorError2;
+	            if (_didIteratorError3) {
+	              throw _iteratorError3;
 	            }
 	          }
 	        }
@@ -26835,7 +26887,7 @@
 	
 	      return _react2.default.createElement(_OnionForGenomeDesigner.OnionForGenomeDesigner, {
 	        sequence: sequence,
-	        features: features,
+	        features: this.onionBuilder.getFeatures(),
 	        width: width,
 	        height: height,
 	        blocks: blocks

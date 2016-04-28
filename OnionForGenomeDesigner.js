@@ -42,6 +42,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
       menuTitle: '',
       sequence: props.sequence, //DNA sequence, in ACGT
+      features: props.features,
 
       focus: true,
     };
@@ -123,6 +124,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
     this.state.blocks = nextProps.blocks;
     this.positionCalculator.blocks = this.state.blocks;
+    this.state.features = nextProps.features;
   }
 
   //====================event response=====================
@@ -245,6 +247,10 @@ export class OnionForGenomeDesigner extends React.Component {
 
     const menuTitle = this.state.menuTitle;
 
+    let enableFeatures = false;
+    if (features && features.length > 0)
+      enableFeatures = true;
+
     //console.log(this.state);
 
     return (
@@ -273,10 +279,11 @@ export class OnionForGenomeDesigner extends React.Component {
           title={menuTitle}
           showEnzymes={showEnzymes}
           showRS={showRS}
-          showFeatures={showFeatures}
+          showFeatures={enableFeatures && showFeatures}
           showRuler={showRuler}
           showBlockBar={showBlockBar}
-          showAA={showAA}
+          showAA={enableFeatures && showAA}
+          enableFeatures={enableFeatures}
           onSelect={this.menuCommand}
         />
 
@@ -290,7 +297,7 @@ export class OnionForGenomeDesigner extends React.Component {
           enzymeList={this.enzymeList}
           width={width}
           //height={height - 30 - 86}
-          height={height - 36 - 64}
+          height={height - 30 - 64}
           showEnzymes={showEnzymes}
           showLadder={showRuler || !showRuler && showRS}
           showRS={showRS}

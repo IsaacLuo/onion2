@@ -9,11 +9,14 @@ class OnionBuilder {
   constructor() {
     this.sequenceDict = {};
     this.onionBlocks = [];
+    this.features = [];
   }
 
   setBlocks(blocks) {
     this.originalBlocks = blocks;
     this.onionBlocks = [];
+    this.features = [];
+
     let start = 0;
     let realStart = 0;
     for (const block of blocks) {
@@ -29,11 +32,30 @@ class OnionBuilder {
         realStart,
         realLength: length,
       });
+
+      const { annotations } = block.sequence;
+      for (const annotation of annotations) {
+        this.features.push({
+          start: annotation.start + start,
+          end: annotation.end + start,
+          realStart: annotation.start + realStart,
+          realEnd: annotation.end + realStart,
+          text: annotation.name,
+          color: annotation.color ? annotation.color : '#A5A6A2',
+        });
+      }
+
       realStart += length;
       start += fakeLength;
     }
 
+    //this.generateFeatures();
+
     return this.updateSequence();
+  }
+
+  getFeatures() {
+    return this.features;
   }
 
   setEventBlockUpdated(fn) {
@@ -50,7 +72,6 @@ class OnionBuilder {
         if (originalBlock.getSequence) {
           //testing
           //setTimeout(() => {
-
             originalBlock.getSequence()
               .then(sequence => {
                 this.sequenceDict[md5] = sequence;
@@ -200,7 +221,7 @@ class OnionViewer extends React.Component {
     return (
       <OnionForGenomeDesigner
         sequence={sequence}
-        features={features}
+        features={this.onionBuilder.getFeatures()}
         width={width}
         height={height}
         blocks={blocks}
