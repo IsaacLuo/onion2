@@ -80,14 +80,12 @@ export class OnionForGenomeDesigner extends React.Component {
       }
     };
 
-    this.onSelect = (pos1, pos2, cursorPosReal = pos1, startCursorPosReal = pos2) => {
+    this.onSelect = (pos1, pos2) => {
       if (this.state.focus) {
         if (pos1 >= 0 && pos2 >= 0) {
           this.setState({
             cursorPos: pos1,
             startCursorPos: pos2,
-            cursorPosReal,
-            startCursorPosReal,
           });
         } else {
           console.error(pos1, pos2);
@@ -130,7 +128,7 @@ export class OnionForGenomeDesigner extends React.Component {
   //====================event response=====================
 
   //while user move cursor by clicking
-  onSetCursor(_pos, _realPos = _pos) {
+  onSetCursor(_pos) {
     if (this.state.focus && this.state.sequence) {
       let pos = _pos;
       const sequenceLen = this.state.sequence.length;
@@ -140,8 +138,6 @@ export class OnionForGenomeDesigner extends React.Component {
       this.setState({
         cursorPos: pos,
         startCursorPos: pos,
-        cursorPosReal: _realPos,
-        startCursorPosReal: _realPos
       });
     }
   }
@@ -151,13 +147,11 @@ export class OnionForGenomeDesigner extends React.Component {
 
   //while user changes the value of start and end numeric control on info bar
   onInfoBarChange(startPos, endPos) {
-    const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
-    const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
+    //const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
+    //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
     this.setState({
-      cursorPos,
-      startCursorPos,
-      cursorPosReal: endPos,
-      startCursorPosReal: startPos,
+      cursorPos : endPos,
+      startCursorPos : startPos,
       lastAction: 'infoBarChanged',
     });
   }
@@ -315,9 +309,10 @@ export class OnionForGenomeDesigner extends React.Component {
         <InfoBar
           width={width}
           height={30}
-          startPos={selectionLengthReal > 0 ? selectionStartReal : -1}
-          endPos={selectionLengthReal > 0 ? selectionStartReal + selectionLengthReal : -1}
+          startPos={selectionLength > 0 ? selectionStart : -1}
+          endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
           seq={selectedSeq}
+          blocks={blocks}
           style={{
             textAlign: 'right',
             width,

@@ -5,6 +5,7 @@ import React from 'react';
 //import ReactDOM from 'react-dom';
 import { DNASeq } from './Bio/DNASeq';
 import { NumericControl } from './InfoBar/NumericControl';
+import { NumericControlGD } from './InfoBar/NumericControlGD';
 
 //The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component {
@@ -20,6 +21,7 @@ export class InfoBar extends React.Component {
     seq: React.PropTypes.string,
     onChange: React.PropTypes.func,
     style: React.PropTypes.object,
+    blocks: React.PropTypes.array,
   };
   static defaultProps = {
     showPos: true,
@@ -40,7 +42,7 @@ export class InfoBar extends React.Component {
       this.showStartValue = true;
       if (this.props.onChange) {
         const { startPos, endPos } = this.props;
-        const vv = v - 1;
+        const vv = v;
         if (startPos === endPos) {		//cursorMode
           this.props.onChange(vv, vv);
         } else {
@@ -73,6 +75,7 @@ export class InfoBar extends React.Component {
       startPos,
       endPos,
       seq,
+      blocks,
       } = this.props;
     const itemStyle = {
       display: 'inline-block',
@@ -105,6 +108,8 @@ export class InfoBar extends React.Component {
       tmText = '-';
     }
 
+    let NC = blocks ? NumericControlGD : NumericControl;
+
     return (
       <div
         style={Object.assign({ ...this.props.style },
@@ -119,13 +124,17 @@ export class InfoBar extends React.Component {
           >
           Start:
           </div>
-          <NumericControl
-            value={startPos + 1}
+
+          <NC
+            value={startPos}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
             showValue={startPos >= 0}
             onChange={this.onChangeStart}
+            blocks={blocks}
+            offset={1}
           />
+
         </div>
         }
         {showPos &&
@@ -137,14 +146,18 @@ export class InfoBar extends React.Component {
           >
             End:
           </div>
-          <NumericControl
+
+          <NC
             value={endPos}
             showValue={startPos < endPos}
             minValue={startPos}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
             onChange={this.onChangeEnd}
+            blocks={blocks}
+            offset={0}
           />
+
         </div>
         }
         {showLength &&

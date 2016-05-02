@@ -1,6 +1,7 @@
 import React from 'react';
-
-export class NumericControl extends React.Component
+import { PositionCalculator } from '../SequenceEditor/PositionCalculator';
+//genome designer Numeric Control
+export class NumericControlGD extends React.Component
 {
   static propTypes = {
     value: React.PropTypes.number,
@@ -11,6 +12,7 @@ export class NumericControl extends React.Component
     showValue: React.PropTypes.bool,
     minValue: React.PropTypes.number,
     maxValue: React.PropTypes.number,
+    blocks: React.PropTypes.array.isRequired,
   };
 
   static defaultProps = {
@@ -36,6 +38,8 @@ export class NumericControl extends React.Component
       showValue: props.showValue,
     };
 
+    this.positionCalculator = new PositionCalculator(props.blocks);
+
     this.initCallBack();
   }
 
@@ -46,15 +50,20 @@ export class NumericControl extends React.Component
     if (this.state.showValue != np.showValue) {
       this.state.showValue = np.showValue;
     }
+    this.positionCalculator = new PositionCalculator(np.blocks);
 
   }
 
   initCallBack() {
+    let _this = this;
     this.onFocus = (e) => {
       e.target.select();
     }
     this.onChange = (e) => {
-      this.setState({ value: e.target.value, showValue: true });
+      this.setState({
+        value: this.positionCalculator.realPosTouiPos(e.target.value),
+        showValue: true
+      });
     };
 
     this.onBlur = (e) => {
@@ -82,7 +91,11 @@ export class NumericControl extends React.Component
     };
 
     this.onPlus = (e) => {
-      const newValue = this.state.value + 1;
+      let newValue = this.state.value + 1;
+      const block = _this.positionCalculator.findBlockByIndex(newValue);
+      if (block && block.realLength===0 && newValue > block.start) {
+        newValue = this.state.value+block.length;
+      }
       let update = true;
       if (this.props.onChange) {
         update = this.props.onChange(this, newValue, newValue);
@@ -94,7 +107,11 @@ export class NumericControl extends React.Component
     };
 
     this.onMinus = (e) => {
-      const newValue = this.state.value - 1;
+      let newValue = this.state.value - 1;
+      const block = _this.positionCalculator.findBlockByIndex(newValue);
+      if (block && block.realLength===0 && newValue > block.start) {
+        newValue = block.start;
+      }
       let update = true;
       if (this.props.onChange) {
         update = this.props.onChange(this, newValue, newValue);
@@ -116,7 +133,9 @@ export class NumericControl extends React.Component
       verticalAlign: 'middle',
     }, upDownStyle);
 
-    const value = showValue ? this.state.value + offset : '';
+    const realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
+
+    const value = showValue ? realValue + offset : '';
     return (
       <div
         style = {Object.assign({

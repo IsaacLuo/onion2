@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "22db0ab4cdc54106c7d1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "2cc5cd2bb80cc026eb5a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -22884,6 +22884,8 @@
 	
 	var _NumericControl = __webpack_require__(106);
 	
+	var _NumericControlGD = __webpack_require__(200);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -22923,7 +22925,7 @@
 	          var startPos = _props.startPos;
 	          var endPos = _props.endPos;
 	
-	          var vv = v - 1;
+	          var vv = v;
 	          if (startPos === endPos) {
 	            //cursorMode
 	            _this2.props.onChange(vv, vv);
@@ -22962,6 +22964,7 @@
 	      var startPos = _props3.startPos;
 	      var endPos = _props3.endPos;
 	      var seq = _props3.seq;
+	      var blocks = _props3.blocks;
 	
 	      var itemStyle = {
 	        display: 'inline-block',
@@ -22993,6 +22996,8 @@
 	        tmText = '-';
 	      }
 	
+	      var NC = blocks ? _NumericControlGD.NumericControlGD : _NumericControl.NumericControl;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -23010,12 +23015,14 @@
 	            },
 	            'Start:'
 	          ),
-	          _react2.default.createElement(_NumericControl.NumericControl, {
-	            value: startPos + 1,
+	          _react2.default.createElement(NC, {
+	            value: startPos,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
 	            showValue: startPos >= 0,
-	            onChange: this.onChangeStart
+	            onChange: this.onChangeStart,
+	            blocks: blocks,
+	            offset: 1
 	          })
 	        ),
 	        showPos && _react2.default.createElement(
@@ -23030,13 +23037,15 @@
 	            },
 	            'End:'
 	          ),
-	          _react2.default.createElement(_NumericControl.NumericControl, {
+	          _react2.default.createElement(NC, {
 	            value: endPos,
 	            showValue: startPos < endPos,
 	            minValue: startPos,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
-	            onChange: this.onChangeEnd
+	            onChange: this.onChangeEnd,
+	            blocks: blocks,
+	            offset: 0
 	          })
 	        ),
 	        showLength && _react2.default.createElement(
@@ -23082,7 +23091,8 @@
 	  endPos: _react2.default.PropTypes.number,
 	  seq: _react2.default.PropTypes.string,
 	  onChange: _react2.default.PropTypes.func,
-	  style: _react2.default.PropTypes.object
+	  style: _react2.default.PropTypes.object,
+	  blocks: _react2.default.PropTypes.array
 	};
 	InfoBar.defaultProps = {
 	  showPos: true,
@@ -23215,6 +23225,7 @@
 	      var _props2 = this.props;
 	      var style = _props2.style;
 	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var offset = _props2.offset;
 	      var showValue = this.state.showValue;
 	      var upDownStyle = this.props.upDownStyle;
 	
@@ -23224,7 +23235,7 @@
 	        verticalAlign: 'middle'
 	      }, upDownStyle);
 	
-	      var value = showValue ? this.state.value : '';
+	      var value = showValue ? this.state.value + offset : '';
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -23727,16 +23738,11 @@
 	      };
 	
 	      this.onSelect = function (pos1, pos2) {
-	        var cursorPosReal = arguments.length <= 2 || arguments[2] === undefined ? pos1 : arguments[2];
-	        var startCursorPosReal = arguments.length <= 3 || arguments[3] === undefined ? pos2 : arguments[3];
-	
 	        if (_this2.state.focus) {
 	          if (pos1 >= 0 && pos2 >= 0) {
 	            _this2.setState({
 	              cursorPos: pos1,
-	              startCursorPos: pos2,
-	              cursorPosReal: cursorPosReal,
-	              startCursorPosReal: startCursorPosReal
+	              startCursorPos: pos2
 	            });
 	          } else {
 	            console.error(pos1, pos2);
@@ -23785,8 +23791,6 @@
 	  }, {
 	    key: 'onSetCursor',
 	    value: function onSetCursor(_pos) {
-	      var _realPos = arguments.length <= 1 || arguments[1] === undefined ? _pos : arguments[1];
-	
 	      if (this.state.focus && this.state.sequence) {
 	        var pos = _pos;
 	        var sequenceLen = this.state.sequence.length;
@@ -23794,9 +23798,7 @@
 	
 	        this.setState({
 	          cursorPos: pos,
-	          startCursorPos: pos,
-	          cursorPosReal: _realPos,
-	          startCursorPosReal: _realPos
+	          startCursorPos: pos
 	        });
 	      }
 	    }
@@ -23808,13 +23810,11 @@
 	  }, {
 	    key: 'onInfoBarChange',
 	    value: function onInfoBarChange(startPos, endPos) {
-	      var cursorPos = this.positionCalculator.realPosTouiPos(endPos);
-	      var startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
+	      //const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
+	      //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
 	      this.setState({
-	        cursorPos: cursorPos,
-	        startCursorPos: startCursorPos,
-	        cursorPosReal: endPos,
-	        startCursorPosReal: startPos,
+	        cursorPos: endPos,
+	        startCursorPos: startPos,
 	        lastAction: 'infoBarChanged'
 	      });
 	    }
@@ -23978,9 +23978,10 @@
 	        _react2.default.createElement(_InfoBar.InfoBar, {
 	          width: width,
 	          height: 30,
-	          startPos: selectionLengthReal > 0 ? selectionStartReal : -1,
-	          endPos: selectionLengthReal > 0 ? selectionStartReal + selectionLengthReal : -1,
+	          startPos: selectionLength > 0 ? selectionStart : -1,
+	          endPos: selectionLength > 0 ? selectionStart + selectionLength : -1,
 	          seq: selectedSeq,
+	          blocks: blocks,
 	          style: {
 	            textAlign: 'right',
 	            width: width,
@@ -36674,6 +36675,235 @@
 	  }
 	};
 
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.NumericControlGD = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(6);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _PositionCalculator = __webpack_require__(60);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	//genome designer Numeric Control
+	
+	var NumericControlGD = exports.NumericControlGD = function (_React$Component) {
+	  _inherits(NumericControlGD, _React$Component);
+	
+	  function NumericControlGD(props) {
+	    _classCallCheck(this, NumericControlGD);
+	
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericControlGD).call(this, props));
+	
+	    _this2.state = {
+	      value: props.value,
+	      showValue: props.showValue
+	    };
+	
+	    _this2.positionCalculator = new _PositionCalculator.PositionCalculator(props.blocks);
+	
+	    _this2.initCallBack();
+	    return _this2;
+	  }
+	
+	  _createClass(NumericControlGD, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(np) {
+	      if (this.state.value != np.value) {
+	        this.state.value = np.value;
+	      }
+	      if (this.state.showValue != np.showValue) {
+	        this.state.showValue = np.showValue;
+	      }
+	      this.positionCalculator = new _PositionCalculator.PositionCalculator(np.blocks);
+	    }
+	  }, {
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this3 = this;
+	
+	      var _this = this;
+	      this.onFocus = function (e) {
+	        e.target.select();
+	      };
+	      this.onChange = function (e) {
+	        _this3.setState({
+	          value: _this3.positionCalculator.realPosTouiPos(e.target.value),
+	          showValue: true
+	        });
+	      };
+	
+	      this.onBlur = function (e) {
+	        if (_this3.props.onChange) {
+	          var _props = _this3.props;
+	          var value = _props.value;
+	          var minValue = _props.minValue;
+	          var maxValue = _props.maxValue;
+	
+	          var newValue = parseInt(e.target.value, 10);
+	          if (!newValue) {
+	            newValue = value;
+	          } else {
+	            if (newValue > maxValue) {
+	              newValue = maxValue;
+	            } else if (newValue < minValue) {
+	              newValue = minValue;
+	            }
+	          }
+	          _this3.props.onChange(_this3, newValue, e);
+	        }
+	      };
+	
+	      this.onKeyPress = function (e) {
+	        if (e.which === 13) {
+	          _this3.onBlur(e);
+	          e.target.select();
+	        }
+	      };
+	
+	      this.onPlus = function (e) {
+	        var newValue = _this3.state.value + 1;
+	        var block = _this.positionCalculator.findBlockByIndex(newValue);
+	        if (block && block.realLength === 0 && newValue > block.start) {
+	          newValue = _this3.state.value + block.length;
+	        }
+	        var update = true;
+	        if (_this3.props.onChange) {
+	          update = _this3.props.onChange(_this3, newValue, newValue);
+	        }
+	
+	        if (update) {
+	          _this3.setState({ value: newValue, showValue: true });
+	        }
+	      };
+	
+	      this.onMinus = function (e) {
+	        var newValue = _this3.state.value - 1;
+	        var block = _this.positionCalculator.findBlockByIndex(newValue);
+	        if (block && block.realLength === 0 && newValue > block.start) {
+	          newValue = block.start;
+	        }
+	        var update = true;
+	        if (_this3.props.onChange) {
+	          update = _this3.props.onChange(_this3, newValue, newValue);
+	        }
+	
+	        if (update) {
+	          _this3.setState({ value: newValue, showValue: true });
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var style = _props2.style;
+	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var offset = _props2.offset;
+	      var showValue = this.state.showValue;
+	      var upDownStyle = this.props.upDownStyle;
+	
+	      upDownStyle = Object.assign({
+	        display: 'inline-block',
+	        padding: 0,
+	        verticalAlign: 'middle'
+	      }, upDownStyle);
+	
+	      var realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
+	
+	      var value = showValue ? realValue + offset : '';
+	      return _react2.default.createElement(
+	        'div',
+	        {
+	          style: Object.assign({
+	            display: 'inline-block',
+	            verticalAlign: 'middle',
+	            whiteSpace: 'nowrap'
+	          }, style)
+	        },
+	        _react2.default.createElement('input', {
+	          type: 'text',
+	          style: Object.assign({
+	            display: 'inline-block'
+	          }, //color: showValue ? '#000000' : '#ffffff',
+	          valueBoxStyle), value: value, size: '5',
+	          onChange: this.onChange,
+	          onKeyPress: this.onKeyPress,
+	          onFocus: this.onFocus,
+	          onBlur: this.onBlur
+	        }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            style: upDownStyle
+	          },
+	          _react2.default.createElement(
+	            'svg',
+	            { width: '18', height: '20' },
+	            _react2.default.createElement(
+	              'g',
+	              { onClick: this.onPlus, className: 'cursorPointer' },
+	              _react2.default.createElement('path', { d: 'M 5 7 L 9 3 L 13 7', fill: 'none', stroke: '#757884' }),
+	              _react2.default.createElement('rect', { width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
+	            ),
+	            _react2.default.createElement(
+	              'g',
+	              { onClick: this.onMinus, className: 'cursorPointer' },
+	              _react2.default.createElement('path', { d: 'M 5 13 L 9 17 L 13 13', fill: 'none', stroke: '#757884' }),
+	              _react2.default.createElement('rect', { y: '10', width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return NumericControlGD;
+	}(_react2.default.Component);
+	
+	NumericControlGD.propTypes = {
+	  value: _react2.default.PropTypes.number,
+	  style: _react2.default.PropTypes.object,
+	  valueBoxStyle: _react2.default.PropTypes.object,
+	  upDownStyle: _react2.default.PropTypes.object,
+	  onChange: _react2.default.PropTypes.func,
+	  showValue: _react2.default.PropTypes.bool,
+	  minValue: _react2.default.PropTypes.number,
+	  maxValue: _react2.default.PropTypes.number,
+	  blocks: _react2.default.PropTypes.array.isRequired
+	};
+	NumericControlGD.defaultProps = {
+	  style: {},
+	  valueBoxStyle: {
+	    background: '#ffffff',
+	    color: '#3b3e4c',
+	    borderWidth: 0,
+	    textAlign: 'right'
+	  },
+	  upDownStyle: {
+	    height: 20
+	  },
+	  minValue: -Number.MAX_SAFE_INTEGER,
+	  maxValue: Number.MAX_SAFE_INTEGER
+	};
 
 /***/ }
 /******/ ]);
