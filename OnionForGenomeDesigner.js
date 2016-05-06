@@ -123,6 +123,11 @@ export class OnionForGenomeDesigner extends React.Component {
     this.state.blocks = nextProps.blocks;
     this.positionCalculator.blocks = this.state.blocks;
     this.state.features = nextProps.features;
+
+    this.setState({
+      cursorPos: 0,
+      startCursorPos: 0,
+    });
   }
 
   //====================event response=====================
