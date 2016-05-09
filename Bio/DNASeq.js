@@ -137,7 +137,6 @@ export class DNASeq extends Seq
     for (const e of enzymeList) {
       const rsxf = new RegExp(e.rf, 'gi');
       for (let r = rsxf.exec(this.seq); r; r = rsxf.exec(this.seq)) {
-        r = rsxf.exec(this.seq);
         if (!r) break;
         this.enzymeSites.push(new EnzymeSite(e, r.index, '+'));
       }

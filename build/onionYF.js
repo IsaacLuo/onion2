@@ -69,7 +69,12 @@
 
 	var $ = __webpack_require__(175);
 
-	global.renderOnion = function (container, sequence, features, width, height) {
+	global.renderOnion = function (container, param) {
+	  var sequence = param.sequence;
+	  var features = param.features;
+	  var width = param.width;
+	  var height = param.height;
+
 	  _reactDom2.default.render(_react2.default.createElement(_OnionForYeastfab.OnionForYeastfab, {
 	    sequence: sequence,
 	    features: features,
@@ -7847,6 +7852,10 @@
 	  }
 	};
 
+	function registerNullComponentID() {
+	  ReactEmptyComponentRegistry.registerNullComponentID(this._rootNodeID);
+	}
+
 	var ReactEmptyComponent = function (instantiate) {
 	  this._currentElement = null;
 	  this._rootNodeID = null;
@@ -7855,7 +7864,7 @@
 	assign(ReactEmptyComponent.prototype, {
 	  construct: function (element) {},
 	  mountComponent: function (rootID, transaction, context) {
-	    ReactEmptyComponentRegistry.registerNullComponentID(rootID);
+	    transaction.getReactMountReady().enqueue(registerNullComponentID, this);
 	    this._rootNodeID = rootID;
 	    return ReactReconciler.mountComponent(this._renderedComponent, rootID, transaction, context);
 	  },
@@ -18555,7 +18564,7 @@
 
 	'use strict';
 
-	module.exports = '0.14.7';
+	module.exports = '0.14.8';
 
 /***/ },
 /* 147 */
@@ -19815,6 +19824,8 @@
 	});
 	exports.SequenceEditor = undefined;
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _react = __webpack_require__(2);
@@ -19831,8 +19842,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -19847,15 +19856,15 @@
 	  function SequenceEditor(props) {
 	    _classCallCheck(this, SequenceEditor);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(SequenceEditor).call(this, props));
 
-	    _this.textRows = [];
+	    _this2.textRows = [];
 
 	    // style of sequence
-	    _this.myCSS = {
+	    _this2.myCSS = {
 	      seqFontFamily: 'Cousine,Monospace',
-	      seqFontSize: 16,
-	      seqFontUnitWidth: 10 };
+	      seqFontSize: 12,
+	      seqFontUnitWidth: 7.1943 };
 	    //Maybe I need to render a letter first, then calculate its size, it's necessary because
 	    // the letter width is little difference on different browser.
 	    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};
@@ -19864,39 +19873,38 @@
 	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
 	    //var width = document.getElementById('bp1').getBoundingClientRect().width;
 	    //9.609375,
-	    _this.seqMainStyle = {
+	    _this2.seqMainStyle = {
 	      //	display: "inline-block",
-	      fontFamily: _this.myCSS.seqFontFamily,
-	      fontSize: _this.myCSS.seqFontSize,
+	      fontFamily: _this2.myCSS.seqFontFamily,
+	      fontSize: _this2.myCSS.seqFontSize,
 	      fill: '#2C3543',
-	      letterSpacing: 10 - 9.609375,
+	      //letterSpacing: (10 - 9.609375),
+	      //letterSpacing: 0.8056146,
 	      alignmentBaseline: 'before-edge',
 	      WebkitUserSelect: 'none'
 	    };
-	    _this.seqCompStyle = Object.assign({ fill: '#B7BBC2' }, _this.seqMainStyle);
-	    _this.unitWidth = _this.myCSS.seqFontUnitWidth;
+	    _this2.seqCompStyle = Object.assign(_extends({}, _this2.seqMainStyle), { fill: '#B7BBC2' });
+	    _this2.unitWidth = _this2.myCSS.seqFontUnitWidth;
 
-	    _this.sequence = new _DNASeq.DNASeq(_this.props.sequence);
-	    _this.enzymeSites = _this.sequence.calcEnzymeSites(_this.props.enzymeList);
+	    _this2.sequence = new _DNASeq.DNASeq(_this2.props.sequence);
+	    _this2.enzymeSites = _this2.sequence.calcEnzymeSites(_this2.props.enzymeList);
 
-	    _this.aas = _this.calcAAs(_this.props.sequence, _this.props.features);
+	    _this2.aas = _this2.calcAAs(_this2.props.sequence, _this2.props.features);
 
-	    _this.state = {
+	    _this2.state = {
 	      cursorPos: 0,
 	      selectStartPos: 0,
-	      showCursor: false,
+	      showCursor: true,
 	      showSelection: false
 	    };
 
 	    //initial operations
-	    _this.initialRowPos(_this.props.sequence, _this.props.width);
-
-	    _this.onScroll = _this.onScroll.bind(_this);
-	    _this.onSetCursor = _this.onSetCursor.bind(_this);
-	    _this.onSelecting = _this.onSelecting.bind(_this);
-	    _this.onSetHighLight = _this.onSetHighLight.bind(_this);
-	    _this.onRowCalculatedHeight = _this.onRowCalculatedHeight.bind(_this);
-	    return _this;
+	    _this2.initialRowPos(_this2.props.sequence, _this2.props.width);
+	    _this2.initCallBack();
+	    $('body').mouseup(function (e) {
+	      $('body').css('-webkit-user-select', 'text');
+	    });
+	    return _this2;
 	  }
 
 	  _createClass(SequenceEditor, [{
@@ -19922,86 +19930,160 @@
 	      return update;
 	    }
 	  }, {
-	    key: 'onScroll',
-	    value: function onScroll(e) {
-	      var scrollPos = e.target.scrollTop;
-	      for (var i = 0; i < this.rowY.length; i++) {
-	        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-	          var block = this.splitBlocks[i];
-	          if (block.length > 0) this.props.onBlockChanged(block);
-	          break;
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this3 = this;
+
+	      var _this = this;
+
+	      this.onScroll = function (e) {
+	        // const scrollPos = e.target.scrollTop;
+	        // for (let i = 0; i < this.rowY.length; i++) {
+	        //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+	        //     const block = this.splitBlocks[i];
+	        //     if (block.length > 0) this.props.onBlockChanged(block);
+	        //     break;
+	        //   }
+	        // }
+	      };
+
+	      this.onMouseMove = function (e) {
+	        // if(e.buttons === 1) {
+	        //   const { clientX, clientY, target } = e;
+	        //   const editor = $(target).parents('.SequenceEditor');
+	        //   console.log("mousemove",clientX, clientY);
+	        //   if(clientY < 200) {
+	        //     console.log('scrollUp');
+	        //     editor.scrollTop(editor.scrollTop()-10);
+	        //   }
+	        //   else if (clientX > this.props.height-200) {
+	        //     console.log('scrollDown')
+	        //     editor.scrollTop(editor.scrollTop()+10);
+	        //   }
+	        // }
+	      };
+
+	      this.onSetCursor = function (cursorPos, rowNumber) {
+	        if (_this3.props.focus) {
+	          if (_this3.props.blocks) {
+	            //shift if in emptyBlock
+	            var currentBlock = _this3.findBlockByIndex(cursorPos);
+	            if (currentBlock && currentBlock.realLength === 0) {
+	              _this3.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+	              return; //prevent default
+	            }
+	          }
+
+	          _this3.setState({
+	            cursorPos: cursorPos,
+	            showCursor: true,
+	            selectStartPos: cursorPos,
+	            showSelection: false
+	          });
+	          if (_this3.props.onSetCursor) {
+	            _this3.props.onSetCursor(cursorPos);
+	          }
+
+	          if (_this3.props.onBlockChanged) {
+	            var row = Math.floor(cursorPos / _this3.colNum);
+	            var x = cursorPos % _this3.colNum;
+	            var blocks = _this3.splitBlocks[row];
+	            for (var i = 0; i < blocks.length; i++) {
+	              if (x >= blocks[i].start) {
+	                _this3.props.onBlockChanged([blocks[i]]);
+	              }
+	            }
+	          }
 	        }
-	      }
+	      };
+
+	      this.onSelect = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
+	        if (_this3.props.focus) {
+	          if (_this3.props.blocks) {
+	            var currentBlock = _this3.findBlockByIndex(cursorPos);
+	            if (currentBlock && currentBlock.realLength === 0) {
+	              //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
+	              if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	            }
+	          }
+
+	          if (cursorPosStart) {
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true,
+	              selectStartPos: cursorPosStart
+	            });
+	          } else {
+	            _this3.setState({
+	              cursorPos: cursorPos,
+	              showCursor: true,
+	              showSelection: true
+	            });
+	          }
+
+	          if (_this3.props.onSelect) {
+	            if (cursorPosStart) {
+	              console.log('full start', cursorPosStart, cursorPos);
+	              _this3.props.onSelect(cursorPos, cursorPosStart);
+	            } else {
+	              _this3.props.onSelect(cursorPos, _this3.state.selectStartPos);
+	            }
+	          }
+	        }
+	      };
+
+	      this.onSetHighLight = function (highLightStart, rowNumber, highLightEnd, rowNumberStart) {
+	        if (highLightStart === highLightEnd) {
+	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+	        } else {
+	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+	        }
+	      };
+
+	      this.onRowCalculatedHeight = function (row, height) {
+	        _this3.rowHeight[row] = height;
+	        if (row > 0) {
+	          _this3.rowY[row] = _this3.rowY[row - 1] + height;
+	        } else {
+	          _this3.rowY[0] = 0;
+	        }
+	      };
+
+	      this.onClick = function (e) {};
 	    }
 	  }, {
-	    key: 'onSetCursor',
-	    value: function onSetCursor(cursorPos, rowNumber) {
-	      this.setState({
-	        cursorPos: cursorPos,
-	        showCursor: true,
-	        selectStartPos: cursorPos,
-	        showSelection: false
-	      });
-	      if (this.props.onSetCursor) {
-	        this.props.onSetCursor(cursorPos);
-	      }
+	    key: 'findBlockByIndex',
+	    value: function findBlockByIndex(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
 
-	      if (this.props.onBlockChanged) {
-	        var row = Math.floor(cursorPos / this.colNum);
-	        var x = cursorPos % this.colNum;
-	        var blocks = this.splitBlocks[row];
-	        for (var i = 0; i < blocks.length; i++) {
-	          if (x >= blocks[i].start) {
-	            this.props.onBlockChanged([blocks[i]]);
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+
+	          if (index >= block.start && index < block.start + block.length) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
 	          }
 	        }
 	      }
-	    }
-	  }, {
-	    key: 'onSelecting',
-	    value: function onSelecting(cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-	      if (cursorPosStart) {
-	        this.setState({
-	          cursorPos: cursorPos,
-	          showCursor: true,
-	          showSelection: true,
-	          selectStartPos: cursorPosStart
-	        });
-	      } else {
-	        this.setState({
-	          cursorPos: cursorPos,
-	          showCursor: true,
-	          showSelection: true
-	        });
-	      }
 
-	      if (this.props.onSelecting) {
-	        if (cursorPosStart) {
-	          console.log('full start', cursorPosStart, cursorPos);
-	          this.props.onSelecting(cursorPos, cursorPosStart);
-	        } else {
-	          this.props.onSelecting(cursorPos, this.state.selectStartPos);
-	        }
-	      }
-	    }
-	  }, {
-	    key: 'onSetHighLight',
-	    value: function onSetHighLight(highLightStart, rowNumber, highLightEnd, rowNumberStart) {
-	      if (highLightStart === highLightEnd) {
-	        this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
-	      } else {
-	        this.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
-	      }
-	    }
-	  }, {
-	    key: 'onRowCalculatedHeight',
-	    value: function onRowCalculatedHeight(row, height) {
-	      this.rowHeight[row] = height;
-	      if (row > 0) {
-	        this.rowY[row] = this.rowY[row - 1] + height;
-	      } else {
-	        this.rowY[0] = 0;
-	      }
+	      return null;
 	    }
 	  }, {
 	    key: 'isOverlap',
@@ -20251,6 +20333,7 @@
 	      var showBlockBar = _props.showBlockBar;
 	      var blocks = _props.blocks;
 	      var showAA = _props.showAA;
+	      var focus = _props.focus;
 
 
 	      this.textRows = [];
@@ -20276,16 +20359,22 @@
 	          var len = blocks[i].length;
 	          var blockEnd = start + len;
 	          var blockRowIdx = Math.floor(start / colNum);
+	          var realStart = blocks[i].realStart;
+	          var realLength = blocks[i].realLength;
 
 	          for (var _j2 = blockRowIdx; _j2 < Math.ceil((start + len) / colNum); _j2++) {
 	            var _start = Math.max(blocks[i].start - _j2 * colNum, 0);
 	            var end = Math.min(blockEnd - _j2 * colNum, colNum);
+	            var _realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - _j2 * colNum, 0) : _start;
+	            var _realLength = blocks[i].realLength;
 	            if (splitBlocks[_j2]) {
 	              splitBlocks[_j2].push({
 	                color: blocks[i].color,
 	                name: blocks[i].name,
 	                start: _start,
-	                len: end - _start
+	                len: end - _start,
+	                realStart: _realStart,
+	                realLength: _realLength
 	              });
 	            }
 	          }
@@ -20360,6 +20449,16 @@
 
 	        var subSequence = sequence.substr(_i3, colNum);
 
+	        var selectionStyle = void 0;
+	        var cursorStyle = void 0;
+	        if (!focus) {
+	          selectionStyle = { fill: '#F2F2F2' };
+	          cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+	        } else {
+	          selectionStyle = { fill: '#EDF2F8' };
+	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+	        }
+
 	        this.textRows.push(_react2.default.createElement(_SequenceRow.SequenceRow, {
 	          sequence: subSequence,
 	          idxStart: _i3,
@@ -20368,15 +20467,17 @@
 	          features: featureFrags,
 	          unitWidth: this.unitWidth,
 	          onSetCursor: this.onSetCursor,
-	          onSetCursorMoving: this.onSelecting,
+	          onSetCursorMoving: this.onSelect,
 	          onSetHighLight: this.onSetHighLight,
 	          cursorPos: rowCursorPos,
 	          showCursor: rowShowCursor,
+	          cursorStyle: cursorStyle,
 	          selectLeftPos: rowSelectLeftPos,
 	          selectRightPos: rowSelectRightPos,
 	          showLeftCursor: rowShowLeftCursor,
 	          showRightCursor: rowShowRightCursor,
 	          showSelection: rowShowSelection,
+	          selectionStyle: selectionStyle,
 	          showStartPos: rowShowStartPos,
 	          seqMainStyle: this.seqMainStyle,
 	          seqCompStyle: this.seqCompStyle,
@@ -20408,6 +20509,7 @@
 	      var height = _props2.height;
 	      var sequence = _props2.sequence;
 	      var features = _props2.features;
+	      var style = _props2.style;
 
 	      this.colNum = Math.floor(width / this.unitWidth) - 10;
 
@@ -20435,12 +20537,16 @@
 	      return _react2.default.createElement(
 	        'div',
 	        {
-	          style: Object.assign.apply(Object, _toConsumableArray(this.props.style).concat([{
+	          style: Object.assign({
 	            width: width,
 	            height: height,
-	            overflowY: 'scroll'
-	          }])),
-	          onScroll: this.onScroll
+	            overflowY: 'scroll',
+	            overflowX: 'hidden'
+	          }, style),
+	          onScroll: this.onScroll,
+	          onClick: this.onClick,
+	          onMouseMove: this.onMouseMove,
+	          className: 'SequenceEditor'
 	        },
 	        this.textRows
 	      );
@@ -20471,16 +20577,18 @@
 	  style: _react2.default.PropTypes.object,
 	  onBlockChanged: _react2.default.PropTypes.func,
 	  onSetCursor: _react2.default.PropTypes.func,
-	  onSelecting: _react2.default.PropTypes.func,
+	  onSelect: _react2.default.PropTypes.func,
 	  onRowCalculatedHeight: _react2.default.PropTypes.func,
-	  showSelection: _react2.default.PropTypes.bool
+	  showSelection: _react2.default.PropTypes.bool,
+	  focus: _react2.default.PropTypes.bool
 
 	};
 	SequenceEditor.defaultProps = {
 	  sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
 	  theme: 'normal',
 	  showBlockBar: true, //show block bars in genome-designer
-	  style: {}
+	  style: {},
+	  focus: true
 	};
 
 /***/ },
@@ -20566,6 +20674,8 @@
 	      //console.log(cursorPos);
 	      //this.setState(cursorPos)
 	      this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+	      //e.preventDefault();
+	      $('body').css('-webkit-user-select', 'none');
 	    }
 	  }, {
 	    key: 'onMouseMove',
@@ -20800,6 +20910,45 @@
 	      return re;
 	    }
 	  }, {
+	    key: 'generateSpanDef',
+	    value: function generateSpanDef() {
+	      var blocks = this.props.blocks;
+
+	      var re = [];
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var block = _step.value;
+
+	          re.push({
+	            start: block.start,
+	            length: block.len,
+	            style: {
+	              fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543'
+	            }
+	          });
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+
+	      return re;
+	    }
+	  }, {
 	    key: 'calcCursorPos',
 	    value: function calcCursorPos(e) {
 	      var thisDOM = this.refs.SequenceRow;
@@ -20931,6 +21080,7 @@
 	      var showRS = _props9.showRS;
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
+	      var cursorStyle = _props9.cursorStyle;
 
 
 	      var sequenceRowWidth = sequence.length * unitWidth;
@@ -21051,7 +21201,7 @@
 	              y: ep.selectionY,
 	              width: cursorRight - cursorLeft,
 	              height: ep.selectionH,
-	              fill: this.props.selectionColor,
+	              style: this.props.selectionStyle,
 	              key: 'rectSelection'
 	            }),
 	            showHighLight && _react2.default.createElement('rect', {
@@ -21070,7 +21220,8 @@
 	              seqMainStyle: seqMainStyle,
 	              seqCompStyle: seqCompStyle,
 	              sequence: sequence,
-	              unitWidth: unitWidth
+	              unitWidth: unitWidth,
+	              spanDef: this.generateSpanDef()
 	            }),
 	            showAA && this.generateAABars(ep.aaY, ep.aaH),
 	            showFeatures && this.generateFeatures(ep.featureY),
@@ -21081,9 +21232,7 @@
 	              null,
 	              _react2.default.createElement('path', {
 	                d: 'M ' + cursorX + ' ' + ep.selectionY + ' L ' + cursorX + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              })
 	            ),
 	            showLeftCursor && _react2.default.createElement(
@@ -21091,21 +21240,19 @@
 	              null,
 	              _react2.default.createElement('path', {
 	                d: 'M ' + cursorLeft + ' ' + ep.selectionY + ' L ' + cursorLeft + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              _react2.default.createElement(
 	                'text',
 	                {
 	                  x: cursorLeft + unitWidth / 2,
 	                  y: ep.selectionYB,
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectLeftPos + idxStart + 1
@@ -21116,23 +21263,19 @@
 	              null,
 	              _react2.default.createElement('path', {
 	                d: 'M ' + cursorRight + ' ' + ep.selectionY + ' L ' + cursorRight + ' ' + ep.selectionYB,
-	                stroke: this.props.cursorColor,
-	                strokeWidth: '2',
-	                fill: this.props.cursorColor
+	                style: cursorStyle
 	              }),
 	              showRightCursorText && _react2.default.createElement(
 	                'text',
 	                {
 	                  x: cursorRight - unitWidth / 2,
 	                  y: ep.selectionYB,
-
-	                  fill: this.props.cursorColor,
 	                  style: {
 	                    WebkitUserSelect: 'none',
 	                    fontSize: 13,
 	                    alignmentBaseline: 'before-edge',
-	                    textAnchor: 'middle'
-
+	                    textAnchor: 'middle',
+	                    fill: cursorStyle.fill
 	                  }
 	                },
 	                selectRightPos + idxStart
@@ -21199,9 +21342,9 @@
 	  showFeatures: _react2.default.PropTypes.bool,
 	  showRuler: _react2.default.PropTypes.bool,
 	  onCalculatedHeight: _react2.default.PropTypes.func,
-	  selectionColor: _react2.default.PropTypes.string,
+	  selectionStyle: _react2.default.PropTypes.object,
 	  theme: _react2.default.PropTypes.string,
-	  cursorColor: _react2.default.PropTypes.string
+	  cursorStyle: _react2.default.PropTypes.object
 
 	};
 	SequenceRow.defaultProps = {
@@ -21217,8 +21360,8 @@
 	  showRuler2: true,
 	  showBlockBar: true,
 	  showAA: true,
-	  cursorColor: '#4E77BA',
-	  selectionColor: '#EDF2F8',
+	  cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
+	  selectionStyle: { fill: '#EDF2F8' },
 	  featureHeight: 18,
 	  ruler2d: 10,
 	  translateX: 10
@@ -21234,6 +21377,8 @@
 	  value: true
 	});
 	exports.StrainText = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -21295,8 +21440,50 @@
 	      var seqCompStyle = _props.seqCompStyle;
 	      var sequence = _props.sequence;
 	      var unitWidth = _props.unitWidth;
+	      var spanDef = _props.spanDef;
 
-	      var rs = new _DNASeq.DNASeq(sequence);
+	      var psRender = void 0;
+	      var rsRender = void 0;
+	      if (spanDef && spanDef.length > 0) {
+	        var rs = new _DNASeq.DNASeq(sequence);
+	        psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
+	        rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
+	        var psRender2 = [];
+	        var _iteratorNormalCompletion = true;
+	        var _didIteratorError = false;
+	        var _iteratorError = undefined;
+
+	        try {
+	          for (var _iterator = spanDef[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var span = _step.value;
+
+	            psRender2.push(_react2.default.createElement(
+	              'tspan',
+	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
+	              psRender.substr(span.start, span.length)
+	            ));
+	          }
+	        } catch (err) {
+	          _didIteratorError = true;
+	          _iteratorError = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion && _iterator.return) {
+	              _iterator.return();
+	            }
+	          } finally {
+	            if (_didIteratorError) {
+	              throw _iteratorError;
+	            }
+	          }
+	        }
+
+	        psRender = psRender2;
+	      } else {
+	        psRender = sequence;
+	        rsRender = new _DNASeq.DNASeq(sequence).complement().toString();
+	      }
+
 	      return _react2.default.createElement(
 	        'g',
 	        null,
@@ -21305,18 +21492,20 @@
 	          {
 	            style: seqMainStyle,
 	            x: '0',
-	            y: ep.seqY
+	            y: ep.seqY,
+	            xmlSpace: 'preserve'
 	          },
-	          sequence
+	          psRender
 	        ),
 	        showRS && _react2.default.createElement(
 	          'text',
 	          {
 	            style: seqCompStyle,
 	            x: '0',
-	            y: ep.compY
+	            y: ep.compY,
+	            xmlSpace: 'preserve'
 	          },
-	          rs.complement().toString()
+	          rsRender
 	        ),
 	        showLadder && _react2.default.createElement('path', {
 	          d: this.generateRuler(0, ep.rulerY, sequenceRowWidth, ep.rulerH, unitWidth),
@@ -21338,7 +21527,8 @@
 	  seqMainStyle: _react2.default.PropTypes.object,
 	  seqCompStyle: _react2.default.PropTypes.object,
 	  sequence: _react2.default.PropTypes.string,
-	  unitWidth: _react2.default.PropTypes.number
+	  unitWidth: _react2.default.PropTypes.number,
+	  spanDef: _react2.default.PropTypes.array
 	};
 
 /***/ },
@@ -21359,8 +21549,11 @@
 	 * Created by Isaac on 20/01/2016.
 	 */
 
-	function compareProps(props1, props2) {
-	  var list = arguments.length <= 2 || arguments[2] === undefined ? Object.keys(props1) : arguments[2];
+	function compareProps(props1, props2, list) {
+	  if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
+	    list = Object.keys(props1);
+	  }
+
 	  var _iteratorNormalCompletion = true;
 	  var _didIteratorError = false;
 	  var _iteratorError = undefined;
@@ -21483,7 +21676,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -21646,7 +21839,7 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c' };
+	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -22718,7 +22911,8 @@
 	            style: {
 	              textAnchor: 'middle',
 	              alignmentBaseline: 'central',
-	              WebkitUserSelect: 'none'
+	              WebkitUserSelect: 'none',
+	              fontSize: 12
 	            }
 	          },
 	          aa
@@ -22948,7 +23142,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.1
+	 * jQuery JavaScript Library v2.2.2
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -22958,7 +23152,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-02-22T19:11Z
+	 * Date: 2016-03-17T17:51Z
 	 */
 
 	(function( global, factory ) {
@@ -23014,7 +23208,7 @@
 
 
 	var
-		version = "2.2.1",
+		version = "2.2.2",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -23225,6 +23419,7 @@
 		},
 
 		isPlainObject: function( obj ) {
+			var key;
 
 			// Not plain objects:
 			// - Any object or value whose internal [[Class]] property is not "[object Object]"
@@ -23234,14 +23429,18 @@
 				return false;
 			}
 
+			// Not own constructor property must be Object
 			if ( obj.constructor &&
-					!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+					!hasOwn.call( obj, "constructor" ) &&
+					!hasOwn.call( obj.constructor.prototype || {}, "isPrototypeOf" ) ) {
 				return false;
 			}
 
-			// If the function hasn't returned already, we're confident that
-			// |obj| is a plain object, created by {} or constructed with new Object
-			return true;
+			// Own properties are enumerated firstly, so to speed up,
+			// if last one is own, then all properties are own
+			for ( key in obj ) {}
+
+			return key === undefined || hasOwn.call( obj, key );
 		},
 
 		isEmptyObject: function( obj ) {
@@ -30274,6 +30473,12 @@
 		}
 	} );
 
+	// Support: IE <=11 only
+	// Accessing the selectedIndex property
+	// forces the browser to respect setting selected
+	// on the option
+	// The getter ensures a default option is selected
+	// when in an optgroup
 	if ( !support.optSelected ) {
 		jQuery.propHooks.selected = {
 			get: function( elem ) {
@@ -30282,6 +30487,16 @@
 					parent.parentNode.selectedIndex;
 				}
 				return null;
+			},
+			set: function( elem ) {
+				var parent = elem.parentNode;
+				if ( parent ) {
+					parent.selectedIndex;
+
+					if ( parent.parentNode ) {
+						parent.parentNode.selectedIndex;
+					}
+				}
 			}
 		};
 	}
@@ -30476,7 +30691,8 @@
 
 
 
-	var rreturn = /\r/g;
+	var rreturn = /\r/g,
+		rspaces = /[\x20\t\r\n\f]+/g;
 
 	jQuery.fn.extend( {
 		val: function( value ) {
@@ -30552,9 +30768,15 @@
 			option: {
 				get: function( elem ) {
 
-					// Support: IE<11
-					// option.value not trimmed (#14858)
-					return jQuery.trim( elem.value );
+					var val = jQuery.find.attr( elem, "value" );
+					return val != null ?
+						val :
+
+						// Support: IE10-11+
+						// option.text throws exceptions (#14686, #14858)
+						// Strip and collapse whitespace
+						// https://html.spec.whatwg.org/#strip-and-collapse-whitespace
+						jQuery.trim( jQuery.text( elem ) ).replace( rspaces, " " );
 				}
 			},
 			select: {
@@ -30607,7 +30829,7 @@
 					while ( i-- ) {
 						option = options[ i ];
 						if ( option.selected =
-								jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
+							jQuery.inArray( jQuery.valHooks.option.get( option ), values ) > -1
 						) {
 							optionSet = true;
 						}
@@ -32302,18 +32524,6 @@
 
 
 
-	// Support: Safari 8+
-	// In Safari 8 documents created via document.implementation.createHTMLDocument
-	// collapse sibling forms: the second one becomes a child of the first one.
-	// Because of that, this security measure has to be disabled in Safari 8.
-	// https://bugs.webkit.org/show_bug.cgi?id=137337
-	support.createHTMLDocument = ( function() {
-		var body = document.implementation.createHTMLDocument( "" ).body;
-		body.innerHTML = "<form></form><form></form>";
-		return body.childNodes.length === 2;
-	} )();
-
-
 	// Argument "data" should be string of html
 	// context (optional): If specified, the fragment will be created in this context,
 	// defaults to document
@@ -32326,12 +32536,7 @@
 			keepScripts = context;
 			context = false;
 		}
-
-		// Stop scripts or inline event handlers from being executed immediately
-		// by using document.implementation
-		context = context || ( support.createHTMLDocument ?
-			document.implementation.createHTMLDocument( "" ) :
-			document );
+		context = context || document;
 
 		var parsed = rsingleTag.exec( data ),
 			scripts = !keepScripts && [];
@@ -32796,8 +33001,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./Onion.css", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./Onion.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js!./Onion.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js!./Onion.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -32815,7 +33020,7 @@
 
 
 	// module
-	exports.push([module.id, ".noselect {\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n\r\n", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.cursorDefault\r\n{\r\n    cursor: default;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
 
 	// exports
 
@@ -33093,7 +33298,6 @@
 	function applyToTag(styleElement, obj) {
 		var css = obj.css;
 		var media = obj.media;
-		var sourceMap = obj.sourceMap;
 
 		if(media) {
 			styleElement.setAttribute("media", media)
@@ -33111,7 +33315,6 @@
 
 	function updateLink(linkElement, obj) {
 		var css = obj.css;
-		var media = obj.media;
 		var sourceMap = obj.sourceMap;
 
 		if(sourceMap) {
@@ -33142,7 +33345,9 @@
 	// some data for testing
 	var onionFile = exports.onionFile = {
 	  name: 'pIB2-SEC13-mEGFP',
-	  features: [{ start: 1, end: 211, strand: '-', color: '#8EC78D', text: 'test', textColor: 'black', type: 'CDS' }, { start: 186, end: 673, strand: '+', color: '#C5C4C1', text: 'GAP promoter', textColor: 'black', type: 'promoter' }, { start: 690, end: 1632, strand: '+', color: '#D28482', text: 'SEC13', textColor: 'yellow', type: 'CDS' }, { start: 1652, end: 2372, strand: '+', color: '#8EC78D', text: 'mEGFP', textColor: 'black', type: 'CDS' }, { start: 2758, end: 3348, strand: '-', color: '#C5C4C1', text: 'ori', textColor: 'black', type: 'rep_origin' }, { start: 2481, end: 2697, strand: '.', color: '#EFAC7E', text: 'AOX1 Terminator', textColor: 'black', type: 'terminator' }, { start: 3517, end: 4378, strand: '-', color: '#8EC78D', text: 'AmpR', textColor: 'black', type: 'CDS' }, { start: 4477, end: 7012, strand: '+', color: '#EFAC7E', text: 'PpHIS4', textColor: 'black', type: 'CDS' }],
+	  features: [
+	  //{ start: 1, end: 211, strand: '-', color: '#8EC78D', text: 'test', textColor: 'black', type: 'CDS' },
+	  { start: 186, end: 673, strand: '+', color: '#C5C4C1', text: 'GAP promoter', textColor: 'black', type: 'promoter' }, { start: 690, end: 1632, strand: '+', color: '#D28482', text: 'SEC13', textColor: 'yellow', type: 'unknown' }, { start: 1652, end: 2372, strand: '+', color: '#8EC78D', text: 'mEGFP', textColor: 'black', type: 'CDS' }, { start: 2758, end: 3348, strand: '-', color: '#C5C4C1', text: 'ori', textColor: 'black', type: 'rep_origin' }, { start: 2481, end: 2697, strand: '.', color: '#EFAC7E', text: 'AOX1 Terminator', textColor: 'black', type: 'terminator' }, { start: 3517, end: 4378, strand: '-', color: '#8EC78D', text: 'AmpR', textColor: 'black', type: 'unknown' }, { start: 4477, end: 7012, strand: '+', color: '#EFAC7E', text: 'PpHIS4', textColor: 'black', type: 'CDS' }],
 	  enzymes: [],
 	  primers: [],
 	  blocks: [{ start: 0, length: 10, color: '#ABC7C7', name: 'block1' }, { start: 10, length: 200, color: '#C7CDCD', name: 'block2' }, { start: 200, length: 5235, color: '#CDABCC', name: 'block3' }],
@@ -33161,6 +33366,8 @@
 	  value: true
 	});
 	exports.InfoBar = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -33195,46 +33402,49 @@
 
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfoBar).call(this, props));
 
-	    _this.onChangeStart = _this.onChangeStart.bind(_this);
-	    _this.onChangeEnd = _this.onChangeEnd.bind(_this);
+	    _this.initCallBack();
 	    return _this;
 	  }
 
 	  _createClass(InfoBar, [{
-	    key: 'onChangeStart',
-	    value: function onChangeStart(o, v, e) {
-	      if (this.props.onChange) {
-	        var _props = this.props;
-	        var startPos = _props.startPos;
-	        var endPos = _props.endPos;
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
 
-	        var vv = v - 1;
-	        if (startPos === endPos) {
-	          //cursorMode
-	          this.props.onChange(vv, vv);
-	        } else {
-	          this.props.onChange(vv, Math.max(endPos, vv));
+	      this.onChangeStart = function (o, v, e) {
+	        _this2.showStartValue = true;
+	        if (_this2.props.onChange) {
+	          var _props = _this2.props;
+	          var startPos = _props.startPos;
+	          var endPos = _props.endPos;
+
+	          var vv = v - 1;
+	          if (startPos === endPos) {
+	            //cursorMode
+	            _this2.props.onChange(vv, vv);
+	          } else {
+	            _this2.props.onChange(vv, Math.max(endPos, vv));
+	          }
 	        }
-	      }
 
-	      return false;
-	    }
-	  }, {
-	    key: 'onChangeEnd',
-	    value: function onChangeEnd(o, v, e) {
-	      if (this.props.onChange) {
-	        var _props2 = this.props;
-	        var startPos = _props2.startPos;
-	        var endPos = _props2.endPos;
+	        return false;
+	      };
 
-	        var vv = v;
-	        if (startPos === endPos && vv < startPos) {
-	          //cursorMode
-	          this.props.onChange(vv, vv);
-	        } else {
-	          this.props.onChange(Math.min(startPos, vv), vv);
+	      this.onChangeEnd = function (o, v, e) {
+	        if (_this2.props.onChange) {
+	          var _props2 = _this2.props;
+	          var startPos = _props2.startPos;
+	          var endPos = _props2.endPos;
+
+	          var vv = v;
+	          if (startPos === endPos && vv < startPos) {
+	            //cursorMode
+	            _this2.props.onChange(vv, vv);
+	          } else {
+	            _this2.props.onChange(Math.min(startPos, vv), vv);
+	          }
 	        }
-	      }
+	      };
 	    }
 	  }, {
 	    key: 'render',
@@ -33250,15 +33460,18 @@
 
 	      var itemStyle = {
 	        display: 'inline-block',
+	        marginTop: 9,
 	        marginLeft: 10,
 	        marginRight: 10,
-	        marginTop: 10,
-	        marginBottom: 10,
-	        color: 'A5A6A2',
+	        color: '#757884',
 	        verticalAlign: 'top',
 	        minWidth: 90,
-	        whiteSpace: 'nowrap'
+	        whiteSpace: 'nowrap',
+	        fontFamily: 'Helvetica, Arial, sans-serif',
+	        fontSize: 12
 	      };
+
+	      var itemStyleWithNumeric = Object.assign(_extends({}, itemStyle), { marginTop: 5 });
 
 	      var length = endPos - startPos;
 	      var dna = new _DNASeq.DNASeq(seq);
@@ -33268,37 +33481,46 @@
 	      return _react2.default.createElement(
 	        'div',
 	        {
-	          style: this.props.style
+	          style: Object.assign(_extends({}, this.props.style), { whiteSpace: 'nowrap', overflow: 'hidden' })
 	        },
 	        showPos && _react2.default.createElement(
 	          'div',
 	          {
-	            style: itemStyle
+	            style: itemStyleWithNumeric
 	          },
 	          _react2.default.createElement(
-	            'span',
-	            { className: 'noselect' },
-	            ' start:'
+	            'div',
+	            {
+	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
+	            },
+	            'start:'
 	          ),
 	          _react2.default.createElement(_NumericControl.NumericControl, {
 	            value: startPos + 1,
-	            style: { marginLeft: 10 },
+	            style: { marginLeft: 8 },
+	            valueBoxStyle: { height: 20 },
+	            showValue: startPos >= 0,
 	            onChange: this.onChangeStart
 	          })
 	        ),
 	        showPos && _react2.default.createElement(
 	          'div',
 	          {
-	            style: itemStyle
+	            style: itemStyleWithNumeric
 	          },
 	          _react2.default.createElement(
-	            'span',
-	            { className: 'noselect' },
-	            ' end:'
+	            'div',
+	            {
+	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
+	            },
+	            'end:'
 	          ),
 	          _react2.default.createElement(_NumericControl.NumericControl, {
 	            value: endPos,
-	            style: { marginLeft: 0, color: startPos < endPos ? 'black' : 'rgba(127,127,127,0)' },
+	            showValue: startPos < endPos,
+	            minValue: startPos,
+	            style: { marginLeft: 8 },
+	            valueBoxStyle: { height: 20 },
 	            onChange: this.onChangeEnd
 	          })
 	        ),
@@ -33391,64 +33613,95 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericControl).call(this, props));
 
 	    _this.state = {
-	      value: props.value
+	      value: props.value,
+	      showValue: props.showValue
 	    };
-	    _this.onPlus = _this.onPlus.bind(_this);
-	    _this.onMinus = _this.onMinus.bind(_this);
-	    _this.onChange = _this.onChange.bind(_this);
+
+	    _this.initCallBack();
 	    return _this;
 	  }
 
 	  _createClass(NumericControl, [{
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(np) {
-	      this.state = {
-	        value: np.value
+	      if (this.state.value != np.value) {
+	        this.state.value = np.value;
+	      }
+	      if (this.state.showValue != np.showValue) {
+	        this.state.showValue = np.showValue;
+	      }
+	    }
+	  }, {
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
+
+	      this.onFocus = function (e) {
+	        e.target.select();
 	      };
-	    }
-	  }, {
-	    key: 'onChange',
-	    value: function onChange(e) {
-	      var newValue = parseInt(e.target.value, 10);
-	      var update = true;
-	      if (this.props.onChange) {
-	        update = this.props.onChange(this, newValue, e);
-	      }
+	      this.onChange = function (e) {
+	        _this2.setState({ value: e.target.value, showValue: true });
+	      };
 
-	      if (update) {
-	        this.setState({ value: newValue });
-	      }
-	    }
-	  }, {
-	    key: 'onPlus',
-	    value: function onPlus() {
-	      var n = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
-	      var e = arguments[1];
+	      this.onBlur = function (e) {
+	        if (_this2.props.onChange) {
+	          var _props = _this2.props;
+	          var value = _props.value;
+	          var minValue = _props.minValue;
+	          var maxValue = _props.maxValue;
 
-	      var newValue = this.state.value + n;
-	      var update = true;
-	      if (this.props.onChange) {
-	        update = this.props.onChange(this, newValue, newValue);
-	      }
+	          var newValue = parseInt(e.target.value, 10);
+	          if (!newValue) {
+	            newValue = value;
+	          } else {
+	            if (newValue > maxValue) {
+	              newValue = maxValue;
+	            } else if (newValue < minValue) {
+	              newValue = minValue;
+	            }
+	          }
+	          _this2.props.onChange(_this2, newValue, e);
+	        }
+	      };
 
-	      if (update) {
-	        this.setState({ value: newValue });
-	      }
-	    }
-	  }, {
-	    key: 'onMinus',
-	    value: function onMinus() {
-	      var n = arguments.length <= 0 || arguments[0] === undefined ? -1 : arguments[0];
-	      var e = arguments[1];
+	      this.onKeyPress = function (e) {
+	        if (e.which === 13) {
+	          _this2.onBlur(e);
+	          e.target.select();
+	        }
+	      };
 
-	      this.onPlus(n, e);
+	      this.onPlus = function (e) {
+	        var newValue = _this2.state.value + 1;
+	        var update = true;
+	        if (_this2.props.onChange) {
+	          update = _this2.props.onChange(_this2, newValue, newValue);
+	        }
+
+	        if (update) {
+	          _this2.setState({ value: newValue, showValue: true });
+	        }
+	      };
+
+	      this.onMinus = function (e) {
+	        var newValue = _this2.state.value - 1;
+	        var update = true;
+	        if (_this2.props.onChange) {
+	          update = _this2.props.onChange(_this2, newValue, newValue);
+	        }
+
+	        if (update) {
+	          _this2.setState({ value: newValue, showValue: true });
+	        }
+	      };
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var style = _props.style;
-	      var valueBoxStyle = _props.valueBoxStyle;
+	      var _props2 = this.props;
+	      var style = _props2.style;
+	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var showValue = this.state.showValue;
 	      var upDownStyle = this.props.upDownStyle;
 
 	      upDownStyle = Object.assign({
@@ -33457,7 +33710,7 @@
 	        verticalAlign: 'middle'
 	      }, upDownStyle);
 
-	      var value = this.state.value;
+	      var value = showValue ? this.state.value : '';
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -33471,8 +33724,12 @@
 	          type: 'text',
 	          style: Object.assign({
 	            display: 'inline-block'
-	          }, valueBoxStyle), value: value, size: '5',
-	          onChange: this.onChange
+	          }, //color: showValue ? '#000000' : '#ffffff',
+	          valueBoxStyle), value: value, size: '5',
+	          onChange: this.onChange,
+	          onKeyPress: this.onKeyPress,
+	          onFocus: this.onFocus,
+	          onBlur: this.onBlur
 	        }),
 	        _react2.default.createElement(
 	          'div',
@@ -33484,13 +33741,13 @@
 	            { width: '18', height: '20' },
 	            _react2.default.createElement(
 	              'g',
-	              { onClick: this.onPlus },
+	              { onClick: this.onPlus, className: 'cursorPointer' },
 	              _react2.default.createElement('path', { d: 'M 5 7 L 9 3 L 13 7', fill: 'none', stroke: '#757884' }),
 	              _react2.default.createElement('rect', { width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
 	            ),
 	            _react2.default.createElement(
 	              'g',
-	              { onClick: this.onMinus },
+	              { onClick: this.onMinus, className: 'cursorPointer' },
 	              _react2.default.createElement('path', { d: 'M 5 13 L 9 17 L 13 13', fill: 'none', stroke: '#757884' }),
 	              _react2.default.createElement('rect', { y: '10', width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
 	            )
@@ -33508,19 +33765,24 @@
 	  style: _react2.default.PropTypes.object,
 	  valueBoxStyle: _react2.default.PropTypes.object,
 	  upDownStyle: _react2.default.PropTypes.object,
-	  onChange: _react2.default.PropTypes.func
-
+	  onChange: _react2.default.PropTypes.func,
+	  showValue: _react2.default.PropTypes.bool,
+	  minValue: _react2.default.PropTypes.number,
+	  maxValue: _react2.default.PropTypes.number
 	};
 	NumericControl.defaultProps = {
 	  style: {},
 	  valueBoxStyle: {
 	    background: '#ffffff',
+	    color: '#3b3e4c',
 	    borderWidth: 0,
 	    textAlign: 'right'
 	  },
 	  upDownStyle: {
 	    height: 20
-	  }
+	  },
+	  minValue: -Number.MAX_SAFE_INTEGER,
+	  maxValue: Number.MAX_SAFE_INTEGER
 	};
 
 /***/ },
@@ -33580,15 +33842,16 @@
 	    value: function onSelect(e) {
 	      var onSelect = this.props.onSelect;
 
-	      var $target = $(e.target);
-	      if ($target.prop('nodeName') !== 'a') {
-	        $target = $target.parents('a');
+
+	      var target = e.target;
+	      while (target.nodeName.toUpperCase() !== 'A') {
+	        target = target.parentNode;
 	      }
 
-	      var cmd = $target.data('cmd');
 	      //I don't know why $.data() always returns true;
 	      //const value = $target.data('val');
-	      var value = $target.attr('data-val') === 'true';
+	      var cmd = target.getAttribute('data-cmd');
+	      var value = target.getAttribute('data-val') === 'true';
 	      console.log(value);
 	      onSelect(cmd, !value);
 	    }
@@ -33641,7 +33904,10 @@
 	          {
 	            style: {
 	              height: 43,
-	              fontSize: 16
+	              fontFamily: 'Helvetica, Arial, sans-serif',
+	              fontSize: 12,
+	              whiteSpace: 'nowrap',
+	              overflow: 'hidden'
 	            }
 	          },
 	          _react2.default.createElement(
@@ -33859,15 +34125,19 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(PlasmidViewer).call(this, props));
 
 	    _this.state = {};
-	    _this.onWheel = _this.onWheel.bind(_this);
+	    _this.initCallBack();
 	    return _this;
 	  }
 
 	  _createClass(PlasmidViewer, [{
-	    key: 'onWheel',
-	    value: function onWheel(e) {
-	      this.props.onWheel(e);
-	      e.preventDefault();
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
+
+	      this.onWheel = function (e) {
+	        _this2.props.onWheel(e);
+	        e.preventDefault();
+	      };
 	    }
 	  }, {
 	    key: 'calcEnzymeRoot',
@@ -33911,6 +34181,8 @@
 	      var selectionStart = _props3.selectionStart;
 	      var selectionLength = _props3.selectionLength;
 	      var showViewAngle = _props3.showViewAngle;
+	      var style = _props3.style;
+	      var showCursor = _props3.showCursor;
 	      var _props4 = this.props;
 	      var rotateAngle = _props4.rotateAngle;
 	      var enzymeR = _props4.enzymeR;
@@ -34199,7 +34471,9 @@
 	        console.log(plasmidR, seqLength);
 	        plasmid = _react2.default.createElement(
 	          'div',
-	          null,
+	          {
+	            style: style
+	          },
 	          _react2.default.createElement(
 	            'svg',
 	            {
@@ -34224,9 +34498,10 @@
 	                seqLength: this.props.seqLength,
 	                selectedFeature: selectedFeature,
 	                globalRotateAngle: rotateAngle,
-	                theme: theme
+	                theme: theme,
+	                onSelect: this.props.onSelect
 	              }),
-	              _react2.default.createElement(
+	              this.props.showCursor && _react2.default.createElement(
 	                'g',
 	                { className: 'cursor' },
 	                _react2.default.createElement(_PlasmidViewerCursor.PlasmidViewerCursorGeneral, {
@@ -34253,7 +34528,8 @@
 	                  x: 0,
 	                  y: 0,
 	                  fontSize: 16,
-	                  style: { dominantBaseline: 'text-after-edge', textAnchor: 'middle' }
+	                  style: { dominantBaseline: 'text-after-edge', textAnchor: 'middle' },
+	                  className: 'noselect cursorDefault'
 	                },
 	                name
 	              ),
@@ -34263,7 +34539,8 @@
 	                  x: 0,
 	                  y: 0,
 	                  fontSize: 10,
-	                  style: { dominantBaseline: 'text-before-edge', textAnchor: 'middle' }
+	                  style: { dominantBaseline: 'text-before-edge', textAnchor: 'middle' },
+	                  className: 'noselect cursorDefault'
 	                },
 	                seqLength + ' bp'
 	              )
@@ -34290,7 +34567,7 @@
 
 	PlasmidViewer.propTypes = {
 	  rotateAngle: _react2.default.PropTypes.number,
-	  seqLength: _react2.default.PropTypes.number,
+	  seqLength: _react2.default.PropTypes.number.isRequired,
 	  width: _react2.default.PropTypes.number,
 	  height: _react2.default.PropTypes.number,
 	  mode: _react2.default.PropTypes.string,
@@ -34303,8 +34580,13 @@
 	  cursorPos: _react2.default.PropTypes.number,
 	  selectionStart: _react2.default.PropTypes.number,
 	  selectionLength: _react2.default.PropTypes.number,
+
 	  showViewAngle: _react2.default.PropTypes.bool,
-	  onWheel: _react2.default.PropTypes.func
+	  showCursor: _react2.default.PropTypes.bool,
+
+	  onWheel: _react2.default.PropTypes.func,
+	  onSelect: _react2.default.PropTypes.func
+
 	};
 	PlasmidViewer.defaultProps = {
 	  width: 500,
@@ -34316,7 +34598,9 @@
 	  selectionStart: 0,
 	  selectionLength: 0,
 	  mode: 'normal',
-	  enzymes: []
+	  enzymes: [],
+	  plasmidR: 240,
+	  showCursor: false
 	};
 
 /***/ },
@@ -34404,7 +34688,11 @@
 
 	              fontSize: '12',
 	              textAnchor: 'start',
-	              style: { alignmentBaseline: 'text-before-edge' }
+	              style: {
+	                alignmentBaseline: 'text-before-edge',
+	                cursor: 'default'
+	              },
+	              className: 'noselect'
 	            },
 	            _react2.default.createElement(
 	              'textPath',
@@ -44250,18 +44538,26 @@
 	  function FeatureGroup(props) {
 	    _classCallCheck(this, FeatureGroup);
 
-	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FeatureGroup).call(this, props));
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(FeatureGroup).call(this, props));
 
-	    _this.state = { selectedFeature: props.selectedFeature };
-	    _this.onClick = _this.onClick.bind(_this);
-	    return _this;
+	    _this2.state = { selectedFeature: props.selectedFeature };
+	    _this2.initCallBack();
+	    return _this2;
 	  }
 
 	  _createClass(FeatureGroup, [{
-	    key: 'onClick',
-	    value: function onClick(e) {
-	      var id = $(e.target).closest('.featureArrowG').data('featureid');
-	      this.setState({ selectedFeature: id });
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this = this;
+	      this.onClick = function (e) {
+	        var id = $(e.target).closest('.featureArrowG').data('featureid');
+	        //console.log('id',id);
+	        _this.setState({ selectedFeature: id });
+	        if (_this.props.onSelect) {
+	          var feature = _this.props.features[id];
+	          _this.props.onSelect(feature.end, feature.start);
+	        }
+	      };
 	    }
 	  }, {
 	    key: 'calcFeaturePos',
@@ -44271,7 +44567,7 @@
 	      var features = _props.features;
 
 	      var featureArrows = [];
-	      console.log(features);
+	      // console.log(features);
 	      this.la = new _LA.LA(this.props.seqLength, angleSpan[0], angleSpan[1]);
 	      for (var i in features) {
 	        var feature = features[i];
@@ -44332,7 +44628,8 @@
 	  features: _react2.default.PropTypes.array,
 	  radius: _react2.default.PropTypes.number,
 	  globalRotateAngle: _react2.default.PropTypes.number,
-	  theme: _react2.default.PropTypes.string
+	  theme: _react2.default.PropTypes.string,
+	  onSelect: _react2.default.PropTypes.func
 	};
 	FeatureGroup.defaultProps = {
 	  angleSpan: [0, 360],
@@ -44616,7 +44913,7 @@
 	        var r = color.slice(1, 3);
 	        var g = color.slice(3, 5);
 	        var b = color.slice(5, 7);
-	        console.log('rgb', r, g, b);
+	        //console.log('rgb',r,g,b);
 	        return [parseInt(r, 16), parseInt(g, 16), parseInt(b, 16)];
 	      } else if (color.slice(0, 4) == 'rgb(') {
 	        return color.slice(3).split(/\s/);
@@ -44638,7 +44935,7 @@
 	      if (g > t) g = t;
 	      if (b > t) b = t;
 	      var re = '#' + r.toString(16) + g.toString(16) + b.toString(16);
-	      console.log(re);
+	      // console.log(re);
 	      return re;
 	    }
 	  }, {
@@ -44727,7 +45024,7 @@
 	  globalRotateAngle: _react2.default.PropTypes.number,
 	  theme: _react2.default.PropTypes.string,
 	  highLight: _react2.default.PropTypes.bool,
-	  featureID: _react2.default.PropTypes.string
+	  featureID: _react2.default.PropTypes.number
 	};
 
 /***/ },
@@ -45110,7 +45407,14 @@
 
 	      var cursorH = 20;
 
-	      var d = "M 0 " + (-r - cursorH) + "     L 0 " + (-r + cursorH) + "     M -5 " + (-r - cursorH) + "     L 5 " + (-r - cursorH) + "     M -5 " + (-r + cursorH) + "     L 5 " + (-r + cursorH);
+	      //const d = `M 0 ${-r - cursorH} \
+	      //L 0 ${-r + cursorH} \
+	      //M -5 ${-r - cursorH} \
+	      //L 5 ${-r - cursorH} \
+	      //M -5 ${-r + cursorH} \
+	      //L 5 ${-r + cursorH}`;
+
+	      var d = "M 0 " + (-r - cursorH) + " L 0 " + (-r + cursorH);
 
 	      return _react2.default.createElement(
 	        "g",
@@ -45120,8 +45424,8 @@
 	        _react2.default.createElement("path", {
 	          d: d,
 	          fill: "none",
-	          strokeWidth: 3,
-	          stroke: "red"
+	          strokeWidth: 2,
+	          stroke: "#4E77BA"
 	        })
 	      );
 	    }
@@ -45375,8 +45679,8 @@
 	if(false) {
 		// When the styles change, update the <style> tags
 		if(!content.locals) {
-			module.hot.accept("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./GoogleFonts.css", function() {
-				var newContent = require("!!./../node_modules/css-loader/index.js!./../node_modules/postcss-loader/index.js!./GoogleFonts.css");
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js!./GoogleFonts.css", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/postcss-loader/index.js!./GoogleFonts.css");
 				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 				update(newContent);
 			});
@@ -45394,7 +45698,7 @@
 
 
 	// module
-	exports.push([module.id, "/* cyrillic-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/Bt5Lz7Saa5a5RtsafP9xmfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;\r\n}\r\n/* cyrillic */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/IYQIfrNvkAhlEkaWqzgTm_Y6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;\r\n}\r\n/* greek-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/lfgTWrEOPagIoG2Tgg2AXfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+1F00-1FFF;\r\n}\r\n/* greek */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/dYO0SlZiJtMqauQ_6lVTEPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0370-03FF;\r\n}\r\n/* hebrew */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/ZMV5xQas5U2c0thu55bfTPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0590-05FF, U+20AA, U+25CC, U+FB1D-FB4F;\r\n}\r\n/* vietnamese */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/Agmcdf2ywA3Gyt-PvigAYPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0102-0103, U+1EA0-1EF1, U+20AB;\r\n}\r\n/* latin-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/qjsoqLzZoDyy_opKVvy-uvY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;\r\n}\r\n/* latin */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(http://fonts.gstatic.com/s/cousine/v10/0IpceuvDvCegpU9Mz8MQ_g.woff2) format('woff2');\r\n    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;\r\n}", ""]);
+	exports.push([module.id, "/* cyrillic-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Bt5Lz7Saa5a5RtsafP9xmfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;\r\n}\r\n/* cyrillic */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/IYQIfrNvkAhlEkaWqzgTm_Y6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;\r\n}\r\n/* greek-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/lfgTWrEOPagIoG2Tgg2AXfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+1F00-1FFF;\r\n}\r\n/* greek */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/dYO0SlZiJtMqauQ_6lVTEPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0370-03FF;\r\n}\r\n/* hebrew */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/ZMV5xQas5U2c0thu55bfTPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0590-05FF, U+20AA, U+25CC, U+FB1D-FB4F;\r\n}\r\n/* vietnamese */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Agmcdf2ywA3Gyt-PvigAYPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0102-0103, U+1EA0-1EF1, U+20AB;\r\n}\r\n/* latin-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/qjsoqLzZoDyy_opKVvy-uvY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;\r\n}\r\n/* latin */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/0IpceuvDvCegpU9Mz8MQ_g.woff2) format('woff2');\r\n    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;\r\n}", ""]);
 
 	// exports
 
@@ -45404,11 +45708,11 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"name": "onion2",
+		"name": "SequenceDetail",
 		"version": "2.0.1",
 		"description": "Onion Extensions",
 		"region": "sequenceDetail",
-		"readable": "onion2",
+		"readable": "Sequence Detail",
 		"scripts": {
 			"build": "npm install && webpack -d main.js index.js"
 		},
