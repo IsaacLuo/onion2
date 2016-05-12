@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b6949cb619bd8c1a238f"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "13cb14a362d7bfbd74df"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -23708,10 +23708,14 @@
 	              paddingTop: 8,
 	              paddingLeft: 8,
 	              paddingBottom: 8,
+	              paddingRight: 8,
 	              //color: '#8EC78D',
 	              color: titleColor,
 	              fontSize: 20,
-	              height: 36
+	              height: 36,
+	              whiteSpace: 'nowrap',
+	              overflow: 'hidden',
+	              textOverflow: 'ellipsis'
 	            }
 	          },
 	          title

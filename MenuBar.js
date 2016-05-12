@@ -128,13 +128,14 @@ export class MenuBar extends React.Component {
         </div>
         <div
           style={{
-            paddingTop: 8,
-            paddingLeft: 8,
-            paddingBottom: 8,
+            padding:8,
             //color: '#8EC78D',
             color: titleColor,
             fontSize: 20,
             height: 36,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}
         >
           {title}
