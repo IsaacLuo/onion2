@@ -18,9 +18,11 @@ export class MenuBar extends React.Component {
     showBlockBar: React.PropTypes.bool,
     onSelect: React.PropTypes.func,
     showAA: React.PropTypes.bool,
+    titleColor: React.PropTypes.string,
   };
   static defaultProps = {
     title: 'block',
+    titleColor: '#000000',
   };
 
   constructor(props) {
@@ -53,6 +55,7 @@ export class MenuBar extends React.Component {
       showRuler,
       showBlockBar,
       showAA,
+      titleColor,
     } = this.props;
     const layerMenuItem = (text, cmd, value, padding = '0px 10px') =>
       (
@@ -128,7 +131,8 @@ export class MenuBar extends React.Component {
             paddingTop: 8,
             paddingLeft: 8,
             paddingBottom: 8,
-            color: '#8EC78D',
+            //color: '#8EC78D',
+            color: titleColor,
             fontSize: 20,
             height: 36,
           }}

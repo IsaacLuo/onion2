@@ -43,6 +43,7 @@ export class OnionForGenomeDesigner extends React.Component {
       menuTitle: '',
       sequence: props.sequence, //DNA sequence, in ACGT
       features: props.features,
+      titleColor: '#000000',
 
       focus: true,
     };
@@ -124,9 +125,13 @@ export class OnionForGenomeDesigner extends React.Component {
     this.positionCalculator.blocks = this.state.blocks;
     this.state.features = nextProps.features;
 
+    let block = this.positionCalculator.findBlockByIndex(0);
+    let titleColor = block ? block.color : "#000000";
+
     this.setState({
       cursorPos: 0,
       startCursorPos: 0,
+      titleColor,
     });
   }
 
@@ -140,9 +145,15 @@ export class OnionForGenomeDesigner extends React.Component {
       if (pos < 0) pos = 0;
       else if (pos > sequenceLen) pos = sequenceLen;
 
+      //get new block Color
+      let block = this.positionCalculator.findBlockByIndex(pos);
+      let titleColor = block ? block.color : "#000000";
+
+
       this.setState({
         cursorPos: pos,
         startCursorPos: pos,
+        titleColor,
       });
     }
   }
@@ -154,10 +165,13 @@ export class OnionForGenomeDesigner extends React.Component {
   onInfoBarChange(startPos, endPos) {
     //const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
     //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
+    let block = this.positionCalculator.findBlockByIndex(startPos);
+    let titleColor = block ? block.color : "#000000";
     this.setState({
       cursorPos : endPos,
       startCursorPos : startPos,
       lastAction: 'infoBarChanged',
+      titleColor,
     });
   }
 
@@ -194,7 +208,7 @@ export class OnionForGenomeDesigner extends React.Component {
     const width = Math.max(this.props.width, 300);
     const height = Math.max(this.props.height, 100);
 
-    const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
+    const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA, titleColor } = this.state;
     let sequence;
     let features;
     let blocks = this.state.blocks;
@@ -274,6 +288,7 @@ export class OnionForGenomeDesigner extends React.Component {
           className = 'onionClipboard'
           onKeyDown={this.onHotKeyClipboard}
         />
+        
         <MenuBar
           title={menuTitle}
           showEnzymes={showEnzymes}
@@ -284,6 +299,7 @@ export class OnionForGenomeDesigner extends React.Component {
           showAA={enableFeatures && showAA}
           enableFeatures={enableFeatures}
           onSelect={this.menuCommand}
+          titleColor={titleColor}
         />
 
 

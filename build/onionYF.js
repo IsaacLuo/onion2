@@ -65,22 +65,18 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var manifest = __webpack_require__(200);
+	var manifest = __webpack_require__(202);
 
 	var $ = __webpack_require__(175);
 
-	global.renderOnion = function (container, param) {
-	  var sequence = param.sequence;
-	  var features = param.features;
-	  var width = param.width;
-	  var height = param.height;
+	global.renderOnion = function (container, props) {
 
-	  _reactDom2.default.render(_react2.default.createElement(_OnionForYeastfab.OnionForYeastfab, {
-	    sequence: sequence,
-	    features: features,
+	  var myProps = Object.assign({
 	    width: 800,
 	    height: 800
-	  }), container);
+	  }, props);
+
+	  _reactDom2.default.render(_react2.default.createElement(_OnionForYeastfab.OnionForYeastfab, props), container);
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -19548,19 +19544,19 @@
 
 	var _SequenceEditor = __webpack_require__(160);
 
-	var _OnionFile = __webpack_require__(180);
+	var _OnionFile = __webpack_require__(181);
 
-	var _InfoBar = __webpack_require__(181);
+	var _InfoBar = __webpack_require__(182);
 
 	var _Enzyme = __webpack_require__(166);
 
-	var _MenuBar = __webpack_require__(183);
+	var _MenuBar = __webpack_require__(185);
 
-	var _PlasmidViewer = __webpack_require__(185);
+	var _PlasmidViewer = __webpack_require__(187);
 
 	var _DNASeq = __webpack_require__(164);
 
-	__webpack_require__(198);
+	__webpack_require__(200);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19676,7 +19672,7 @@
 	  }, {
 	    key: 'menuCommand',
 	    value: function menuCommand(command, value) {
-	      console.log('menuCommand', command, value);
+	      // console.log('menuCommand', command, value);
 	      var dict = {};
 	      switch (command) {
 	        case 'showAll':
@@ -19741,26 +19737,11 @@
 
 	      var selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
 	      var selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-	      var selectedSeq = sequence.substr(selectionStart, selectionLength);
-
-	      var menuTitle = this.state.menuTitle;
-
-	      var editorHeight = height - 42 - 86;
-
-	      var sequenceEditorWidth = void 0;
-	      var plasmidViewerWidth = void 0;
-	      if (width >= 1024) {
-	        sequenceEditorWidth = width * 0.618;
-	        plasmidViewerWidth = width - sequenceEditorWidth;
-	      } else {
-	        sequenceEditorWidth = width;
-	        plasmidViewerWidth = width;
-	      }
 
 	      var seqObj = new _DNASeq.DNASeq(sequence);
 	      var enzymes = seqObj.calcEnzymeSites(this.enzymeList);
 
-	      var plasmidR = Math.min(plasmidViewerWidth / 2 - 100, editorHeight / 2 - 100);
+	      var plasmidR = Math.min(width / 2 - 100, height / 2 - 100);
 	      var enzymeR = plasmidR + 20;
 
 	      return _react2.default.createElement(
@@ -19790,8 +19771,8 @@
 	            showViewAngle: false,
 	            selectedFeature: -1,
 	            onWheel: function onWheel() {},
-	            width: plasmidViewerWidth,
-	            height: editorHeight,
+	            width: width,
+	            height: height,
 	            cursorPos: this.state.cursorPos,
 	            selectionStart: selectionStart,
 	            selectionLength: selectionLength
@@ -19840,6 +19821,10 @@
 
 	var _reactHelper = __webpack_require__(163);
 
+	var _PositionCalculator = __webpack_require__(180);
+
+	var _StrainText = __webpack_require__(162);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19886,10 +19871,10 @@
 	    _this2.seqCompStyle = Object.assign(_extends({}, _this2.seqMainStyle), { fill: '#B7BBC2' });
 	    _this2.unitWidth = _this2.myCSS.seqFontUnitWidth;
 
-	    _this2.sequence = new _DNASeq.DNASeq(_this2.props.sequence);
-	    _this2.enzymeSites = _this2.sequence.calcEnzymeSites(_this2.props.enzymeList);
+	    _this2.sequence = new _DNASeq.DNASeq(props.sequence);
+	    _this2.enzymeSites = _this2.sequence.calcEnzymeSites(props.enzymeList);
 
-	    _this2.aas = _this2.calcAAs(_this2.props.sequence, _this2.props.features);
+	    _this2.aas = _this2.calcAAs(props.sequence, props.features);
 
 	    _this2.state = {
 	      cursorPos: 0,
@@ -19898,12 +19883,15 @@
 	      showSelection: false
 	    };
 
+	    _this2.positionCalculator = new _PositionCalculator.PositionCalculator(props.blocks);
+
 	    //initial operations
-	    _this2.initialRowPos(_this2.props.sequence, _this2.props.width);
+	    _this2.initialRowPos(props.sequence, props.width);
 	    _this2.initCallBack();
 	    $('body').mouseup(function (e) {
 	      $('body').css('-webkit-user-select', 'text');
 	    });
+
 	    return _this2;
 	  }
 
@@ -19919,9 +19907,12 @@
 	          selectStartPos: nextProps.selectStartPos,
 	          cursorPos: nextProps.cursorPos,
 	          showCursor: true,
-	          showSelection: nextProps.selectStartPos !== nextProps.cursorPos
+	          showSelection: nextProps.selectStartPos !== nextProps.cursorPos,
+	          lastEvent: 'newProp'
 	        });
 	      }
+
+	      this.positionCalculator.blocks = nextProps.blocks;
 	    }
 	  }, {
 	    key: 'shouldComponentUpdate',
@@ -19947,29 +19938,20 @@
 	        // }
 	      };
 
-	      this.onMouseMove = function (e) {
-	        // if(e.buttons === 1) {
-	        //   const { clientX, clientY, target } = e;
-	        //   const editor = $(target).parents('.SequenceEditor');
-	        //   console.log("mousemove",clientX, clientY);
-	        //   if(clientY < 200) {
-	        //     console.log('scrollUp');
-	        //     editor.scrollTop(editor.scrollTop()-10);
-	        //   }
-	        //   else if (clientX > this.props.height-200) {
-	        //     console.log('scrollDown')
-	        //     editor.scrollTop(editor.scrollTop()+10);
-	        //   }
-	        // }
-	      };
+	      this.onMouseDown = function (e) {};
+
+	      this.onMouseUp = function (e) {};
 
 	      this.onSetCursor = function (cursorPos, rowNumber) {
-	        if (_this3.props.focus) {
-	          if (_this3.props.blocks) {
+	        if (_this.props.focus) {
+	          if (_this.props.blocks) {
 	            //shift if in emptyBlock
-	            var currentBlock = _this3.findBlockByIndex(cursorPos);
+	            var currentBlock = _this3.positionCalculator.findBlockByIndex(cursorPos);
 	            if (currentBlock && currentBlock.realLength === 0) {
-	              _this3.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+	              _this.onSelect(currentBlock.start + currentBlock.length, rowNumber, currentBlock.start);
+	              if (_this.props.onBlockChanged) {
+	                _this.props.onBlockChanged([currentBlock]);
+	              }
 	              return; //prevent default
 	            }
 	          }
@@ -19978,19 +19960,20 @@
 	            cursorPos: cursorPos,
 	            showCursor: true,
 	            selectStartPos: cursorPos,
-	            showSelection: false
+	            showSelection: false,
+	            lastEvent: 'setCursor'
 	          });
-	          if (_this3.props.onSetCursor) {
-	            _this3.props.onSetCursor(cursorPos);
+	          if (_this.props.onSetCursor) {
+	            _this.props.onSetCursor(cursorPos);
 	          }
 
-	          if (_this3.props.onBlockChanged) {
-	            var row = Math.floor(cursorPos / _this3.colNum);
-	            var x = cursorPos % _this3.colNum;
-	            var blocks = _this3.splitBlocks[row];
+	          if (_this.props.onBlockChanged) {
+	            var row = Math.floor(cursorPos / _this.colNum);
+	            var x = cursorPos % _this.colNum;
+	            var blocks = _this.splitBlocks[row];
 	            for (var i = 0; i < blocks.length; i++) {
 	              if (x >= blocks[i].start) {
-	                _this3.props.onBlockChanged([blocks[i]]);
+	                _this.props.onBlockChanged([blocks[i]]);
 	              }
 	            }
 	          }
@@ -19998,36 +19981,56 @@
 	      };
 
 	      this.onSelect = function (cursorPos, rowNumber, cursorPosStart, rowNumberStart) {
-	        if (_this3.props.focus) {
-	          if (_this3.props.blocks) {
-	            var currentBlock = _this3.findBlockByIndex(cursorPos);
+
+	        if (_this.props.focus) {
+	          if (_this.props.blocks) {
+	            var currentBlock = _this.findBlockByIndex(cursorPos);
 	            if (currentBlock && currentBlock.realLength === 0) {
 	              //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
-	              if (cursorPosStart < cursorPos) cursorPos = currentBlock.start + currentBlock.length;else cursorPos = currentBlock.start;
+	              if (cursorPosStart >= 0) {
+	                if (cursorPosStart < cursorPos) {
+	                  if (cursorPos > currentBlock.start + currentBlock.length / 2) {
+	                    cursorPos = currentBlock.start + currentBlock.length;
+	                  } else {
+	                    cursorPos = currentBlock.start;
+	                  }
+	                } else cursorPos = currentBlock.start;
+	              } else if (_this.state.selectStartPos < 0) {
+	                cursorPos = currentBlock.start + currentBlock.length;
+	                cursorPosStart = currentBlock.start;
+	              } else {
+	                if (cursorPos > currentBlock.start + currentBlock.length / 2) {
+	                  cursorPos = currentBlock.start + currentBlock.length;
+	                } else {
+	                  cursorPos = currentBlock.start;
+	                }
+	              }
 	            }
 	          }
 
-	          if (cursorPosStart) {
-	            _this3.setState({
+	          if (cursorPosStart >= 0) {
+	            _this.setState({
 	              cursorPos: cursorPos,
 	              showCursor: true,
 	              showSelection: true,
-	              selectStartPos: cursorPosStart
+	              selectStartPos: cursorPosStart,
+	              lastEvent: 'onSelectWithStart'
 	            });
 	          } else {
-	            _this3.setState({
+	            _this.setState({
 	              cursorPos: cursorPos,
 	              showCursor: true,
-	              showSelection: true
+	              showSelection: true,
+	              lastEvent: 'onSelectNoStart'
 	            });
 	          }
 
-	          if (_this3.props.onSelect) {
-	            if (cursorPosStart) {
-	              console.log('full start', cursorPosStart, cursorPos);
-	              _this3.props.onSelect(cursorPos, cursorPosStart);
+	          if (_this.props.onSelect) {
+	            if (cursorPosStart >= 0) {
+	              //console.log('full start', cursorPosStart, cursorPos);
+	              _this.props.onSelect(cursorPos, cursorPosStart, _this3.uiPosToRealPos(cursorPos), _this3.uiPosToRealPos(cursorPosStart));
 	            } else {
-	              _this3.props.onSelect(cursorPos, _this3.state.selectStartPos);
+	              _this.props.onSelect(cursorPos, _this.state.selectStartPos, _this3.uiPosToRealPos(cursorPos), _this3.uiPosToRealPos(cursorPosStart));
 	            }
 	          }
 	        }
@@ -20035,9 +20038,19 @@
 
 	      this.onSetHighLight = function (highLightStart, rowNumber, highLightEnd, rowNumberStart) {
 	        if (highLightStart === highLightEnd) {
-	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: false });
+	          _this3.setState({
+	            highLightStart: highLightStart,
+	            highLightEnd: highLightEnd,
+	            showHighLight: false,
+	            lastEvent: 'onSetHighLight'
+	          });
 	        } else {
-	          _this3.setState({ highLightStart: highLightStart, highLightEnd: highLightEnd, showHighLight: true });
+	          _this3.setState({
+	            highLightStart: highLightStart,
+	            highLightEnd: highLightEnd,
+	            showHighLight: true,
+	            lastEvent: 'onSetHighLight'
+	          });
 	        }
 	      };
 
@@ -20051,6 +20064,22 @@
 	      };
 
 	      this.onClick = function (e) {};
+
+	      // this.uiPosToRealPos = (index) => {
+	      //   const currentBlock = this.findBlockByIndex(index);
+	      //   if(currentBlock) {
+	      //     if (currentBlock.realLength === 0) {
+	      //       return currentBlock.realStart;
+	      //     } else {
+	      //       const offset = index - currentBlock.start;
+	      //       return currentBlock.realStart + offset;
+	      //     }
+	      //   }
+	      //   return index;
+	      // }
+	      this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
+
+	      this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 	    }
 	  }, {
 	    key: 'findBlockByIndex',
@@ -20079,6 +20108,39 @@
 	        } finally {
 	          if (_didIteratorError) {
 	            throw _iteratorError;
+	          }
+	        }
+	      }
+
+	      return null;
+	    }
+	  }, {
+	    key: 'findBlockByIndexReal',
+	    value: function findBlockByIndexReal(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion2 = true;
+	      var _didIteratorError2 = false;
+	      var _iteratorError2 = undefined;
+
+	      try {
+	        for (var _iterator2 = blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	          var block = _step2.value;
+
+	          if (index >= block.realStart && index < block.realStart + block.realLength) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError2 = true;
+	        _iteratorError2 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	            _iterator2.return();
+	          }
+	        } finally {
+	          if (_didIteratorError2) {
+	            throw _iteratorError2;
 	          }
 	        }
 	      }
@@ -20127,6 +20189,9 @@
 	  }, {
 	    key: 'findFeaturesInRow',
 	    value: function findFeaturesInRow(start, len) {
+	      if (!this.props.features) {
+	        return [];
+	      }
 	      //console.log("sss",start,len,this.props.features);
 	      var re = [];
 	      for (var i = 0; i < this.props.features.length; i++) {
@@ -20254,7 +20319,7 @@
 	      if (!this.props.showEnzymes) return re;
 
 	      if (!this.enzymeSites || !this.enzymeSites.length) {
-	        console.warn('no enzymes');
+	        //console.warn('no enzymes');
 	        return re;
 	      }
 
@@ -20353,6 +20418,8 @@
 	        splitBlocks.push([]);
 	      }
 
+	      _StrainText.StrainText.beginTranslateBps();
+
 	      if (blocks) {
 	        for (var i = 0; i < blocks.length; i++) {
 	          var start = blocks[i].start;
@@ -20409,10 +20476,11 @@
 	          rowShowCursor = true;
 	          rowShowSelection = false;
 	        }
-
+	        var selectLeftPos = void 0;
+	        var selectRightPos = void 0;
 	        if (showSelection) {
-	          var selectLeftPos = Math.min(selectStartPos, cursorPos);
-	          var selectRightPos = Math.max(selectStartPos, cursorPos);
+	          selectLeftPos = Math.min(selectStartPos, cursorPos);
+	          selectRightPos = Math.max(selectStartPos, cursorPos);
 	          rowShowCursor = false;
 	          if (selectLeftPos >= _i3 && selectLeftPos <= _i3 + colNum) {
 	            rowSelectLeftPos = selectLeftPos - _i3;
@@ -20459,6 +20527,9 @@
 	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
 	        }
 
+	        var selectSpanNumbers = [this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)];
+	        if (selectSpanNumbers[0] >= selectSpanNumbers[1]) selectSpanNumbers[0] = selectSpanNumbers[1] - 1;
+
 	        this.textRows.push(_react2.default.createElement(_SequenceRow.SequenceRow, {
 	          sequence: subSequence,
 	          idxStart: _i3,
@@ -20474,6 +20545,8 @@
 	          cursorStyle: cursorStyle,
 	          selectLeftPos: rowSelectLeftPos,
 	          selectRightPos: rowSelectRightPos,
+	          selectSpanNumbers: selectSpanNumbers,
+	          uiPosToRealPos: this.uiPosToRealPos,
 	          showLeftCursor: rowShowLeftCursor,
 	          showRightCursor: rowShowRightCursor,
 	          showSelection: rowShowSelection,
@@ -20510,7 +20583,21 @@
 	      var sequence = _props2.sequence;
 	      var features = _props2.features;
 	      var style = _props2.style;
+	      // console.log('render editor', this.state);
 
+	      if (!sequence) {
+	        return _react2.default.createElement('div', {
+	          style: Object.assign({
+	            width: width,
+	            height: height,
+	            overflowY: 'scroll',
+	            overflowX: 'hidden'
+	          }, style),
+	          onScroll: this.onScroll,
+	          onClick: this.onClick,
+	          className: 'SequenceEditor'
+	        });
+	      }
 	      this.colNum = Math.floor(width / this.unitWidth) - 10;
 
 	      this.sequence = new _DNASeq.DNASeq(this.props.sequence);
@@ -20545,7 +20632,8 @@
 	          }, style),
 	          onScroll: this.onScroll,
 	          onClick: this.onClick,
-	          onMouseMove: this.onMouseMove,
+	          onMouseDown: this.onMouseDown,
+	          onMouseUp: this.onMouseUp,
 	          className: 'SequenceEditor'
 	        },
 	        this.textRows
@@ -20584,7 +20672,7 @@
 
 	};
 	SequenceEditor.defaultProps = {
-	  sequence: 'NO SEQUENCE', //debug sequence, it should be repalced by inputing
+	  sequence: '', //debug sequence, it should be repalced by inputing
 	  theme: 'normal',
 	  showBlockBar: true, //show block bars in genome-designer
 	  style: {},
@@ -20927,7 +21015,7 @@
 	            start: block.start,
 	            length: block.len,
 	            style: {
-	              fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543'
+	              fill: block.realLength === 0 || block.lowFocus ? '#B7BBC2' : '#2C3543'
 	            }
 	          });
 	        }
@@ -21081,6 +21169,7 @@
 	      var showFeatures = _props9.showFeatures;
 	      var showRuler = _props9.showRuler;
 	      var cursorStyle = _props9.cursorStyle;
+	      var selectSpanNumbers = _props9.selectSpanNumbers;
 
 
 	      var sequenceRowWidth = sequence.length * unitWidth;
@@ -21255,7 +21344,7 @@
 	                    fill: cursorStyle.fill
 	                  }
 	                },
-	                selectLeftPos + idxStart + 1
+	                selectSpanNumbers[0] + 1
 	              )
 	            ),
 	            showRightCursor && _react2.default.createElement(
@@ -21278,7 +21367,7 @@
 	                    fill: cursorStyle.fill
 	                  }
 	                },
-	                selectRightPos + idxStart
+	                selectSpanNumbers[1]
 	              )
 	            ),
 	            showRuler && _react2.default.createElement(_RulerLocation.RulerLocation, {
@@ -21291,7 +21380,7 @@
 	              texts: function () {
 	                var re = [];
 	                for (var i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
-	                  re.push(i);
+	                  re.push(_this2.props.uiPosToRealPos(i));
 	                }
 
 	                return re;
@@ -21344,7 +21433,8 @@
 	  onCalculatedHeight: _react2.default.PropTypes.func,
 	  selectionStyle: _react2.default.PropTypes.object,
 	  theme: _react2.default.PropTypes.string,
-	  cursorStyle: _react2.default.PropTypes.object
+	  cursorStyle: _react2.default.PropTypes.object,
+	  uiPosToRealPos: _react2.default.PropTypes.func
 
 	};
 	SequenceRow.defaultProps = {
@@ -21401,6 +21491,9 @@
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
 
+	var translateIndexF = 0;
+	var translateIndexR = 0;
+
 	var StrainText = exports.StrainText = function (_React$Component) {
 	  _inherits(StrainText, _React$Component);
 
@@ -21416,6 +21509,28 @@
 	      var update = !(0, _reactHelper.compareProps)(this.props, nextProps, Object.keys(this.props));
 
 	      return update;
+	    }
+	  }, {
+	    key: 'translateNextXF',
+	    value: function translateNextXF(x) {
+	      if (x === 'X') {
+	        var re = StrainText.translateDictF[translateIndexF];
+	        translateIndexF = (translateIndexF + 1) % 13;
+	        return re;
+	      }
+
+	      return x;
+	    }
+	  }, {
+	    key: 'translateNextXR',
+	    value: function translateNextXR(x) {
+	      if (x === 'X') {
+	        var re = StrainText.translateDictR[translateIndexR];
+	        translateIndexR = (translateIndexR + 1) % 13;
+	        return re;
+	      }
+
+	      return x;
 	    }
 	  }, {
 	    key: 'generateRuler',
@@ -21442,26 +21557,22 @@
 	      var unitWidth = _props.unitWidth;
 	      var spanDef = _props.spanDef;
 
-	      var psRender = void 0;
-	      var rsRender = void 0;
+	      var psRender = '';
+	      var rsRender = '';
 	      if (spanDef && spanDef.length > 0) {
-	        var rs = new _DNASeq.DNASeq(sequence);
-	        psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
-	        rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
-	        var psRender2 = [];
+	        var compSequence = new _DNASeq.DNASeq(sequence).complement().toString();
+
+	        //replace full string
+
 	        var _iteratorNormalCompletion = true;
 	        var _didIteratorError = false;
 	        var _iteratorError = undefined;
 
 	        try {
-	          for (var _iterator = spanDef[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	            var span = _step.value;
+	          for (var _iterator = sequence[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	            var x = _step.value;
 
-	            psRender2.push(_react2.default.createElement(
-	              'tspan',
-	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
-	              psRender.substr(span.start, span.length)
-	            ));
+	            psRender += this.translateNextXF(x);
 	          }
 	        } catch (err) {
 	          _didIteratorError = true;
@@ -21474,6 +21585,61 @@
 	          } finally {
 	            if (_didIteratorError) {
 	              throw _iteratorError;
+	            }
+	          }
+	        }
+
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+
+	        try {
+	          for (var _iterator2 = compSequence[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var _x = _step2.value;
+
+	            rsRender += this.translateNextXR(_x);
+	          }
+	        } catch (err) {
+	          _didIteratorError2 = true;
+	          _iteratorError2 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	              _iterator2.return();
+	            }
+	          } finally {
+	            if (_didIteratorError2) {
+	              throw _iteratorError2;
+	            }
+	          }
+	        }
+
+	        var psRender2 = [];
+	        var _iteratorNormalCompletion3 = true;
+	        var _didIteratorError3 = false;
+	        var _iteratorError3 = undefined;
+
+	        try {
+	          for (var _iterator3 = spanDef[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	            var span = _step3.value;
+
+	            psRender2.push(_react2.default.createElement(
+	              'tspan',
+	              { style: _extends({}, seqMainStyle, span.style), key: span.start },
+	              psRender.substr(span.start, span.length)
+	            ));
+	          }
+	        } catch (err) {
+	          _didIteratorError3 = true;
+	          _iteratorError3 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	              _iterator3.return();
+	            }
+	          } finally {
+	            if (_didIteratorError3) {
+	              throw _iteratorError3;
 	            }
 	          }
 	        }
@@ -21514,6 +21680,12 @@
 	        })
 	      );
 	    }
+	  }], [{
+	    key: 'beginTranslateBps',
+	    value: function beginTranslateBps() {
+	      translateIndexF = 0;
+	      translateIndexR = 0;
+	    }
 	  }]);
 
 	  return StrainText;
@@ -21530,6 +21702,8 @@
 	  unitWidth: _react2.default.PropTypes.number,
 	  spanDef: _react2.default.PropTypes.array
 	};
+	StrainText.translateDictF = ' empty block ';
+	StrainText.translateDictR = ' no sequence ';
 
 /***/ },
 /* 163 */
@@ -21676,7 +21850,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·]/gi, '');
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -21690,7 +21864,11 @@
 	        for (var _iterator = this.seq[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var n = _step.value;
 
-	          out.push(DNASeq.complementDict[n]);
+	          if (DNASeq.complementDict[n]) {
+	            out.push(DNASeq.complementDict[n]);
+	          } else {
+	            out.push(n);
+	          }
 	        }
 	      } catch (err) {
 	        _didIteratorError = true;
@@ -21788,7 +21966,6 @@
 
 	          var rsxf = new RegExp(e.rf, 'gi');
 	          for (var r = rsxf.exec(this.seq); r; r = rsxf.exec(this.seq)) {
-	            r = rsxf.exec(this.seq);
 	            if (!r) break;
 	            this.enzymeSites.push(new _Enzyme.EnzymeSite(e, r.index, '+'));
 	          }
@@ -21839,7 +22016,7 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
+	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X', '·': '·' };
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -22087,6 +22264,8 @@
 	        }
 	      }
 	    }
+
+	    // console.log('loaded enzyme list', re, re.length);
 	  } catch (err) {
 	    _didIteratorError = true;
 	    _iteratorError = err;
@@ -22102,7 +22281,6 @@
 	    }
 	  }
 
-	  console.log('loaded enzyme list', re, re.length);
 	  return re;
 	}
 
@@ -23142,7 +23320,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-	 * jQuery JavaScript Library v2.2.2
+	 * jQuery JavaScript Library v2.2.3
 	 * http://jquery.com/
 	 *
 	 * Includes Sizzle.js
@@ -23152,7 +23330,7 @@
 	 * Released under the MIT license
 	 * http://jquery.org/license
 	 *
-	 * Date: 2016-03-17T17:51Z
+	 * Date: 2016-04-05T19:26Z
 	 */
 
 	(function( global, factory ) {
@@ -23208,7 +23386,7 @@
 
 
 	var
-		version = "2.2.2",
+		version = "2.2.3",
 
 		// Define a local copy of jQuery
 		jQuery = function( selector, context ) {
@@ -32618,7 +32796,7 @@
 			// If it fails, this function gets "jqXHR", "status", "error"
 			} ).always( callback && function( jqXHR, status ) {
 				self.each( function() {
-					callback.apply( self, response || [ jqXHR.responseText, status, jqXHR ] );
+					callback.apply( this, response || [ jqXHR.responseText, status, jqXHR ] );
 				} );
 			} );
 		}
@@ -33020,7 +33198,7 @@
 
 
 	// module
-	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.cursorDefault\r\n{\r\n    cursor: default;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n.cursorDefault\r\n{\r\n    cursor: default;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
 
 	// exports
 
@@ -33337,6 +33515,136 @@
 /* 180 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Created by luoyi on 13/04/2016.
+	 */
+
+	var PositionCalculator = exports.PositionCalculator = function () {
+	  function PositionCalculator(blocks) {
+	    _classCallCheck(this, PositionCalculator);
+
+	    this.blocks = blocks;
+	  }
+
+	  _createClass(PositionCalculator, [{
+	    key: "findBlockByIndex",
+	    value: function findBlockByIndex(index) {
+	      if (this.blocks && this.blocks.length) {
+	        var lastBlock = this.blocks[this.blocks.length - 1];
+	        if (index === lastBlock.start + lastBlock.length) {
+	          return lastBlock;
+	        } else {
+	          var _iteratorNormalCompletion = true;
+	          var _didIteratorError = false;
+	          var _iteratorError = undefined;
+
+	          try {
+	            for (var _iterator = this.blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	              var block = _step.value;
+
+	              if (index >= block.start && index < block.start + block.length) {
+	                return block;
+	              }
+	            }
+	          } catch (err) {
+	            _didIteratorError = true;
+	            _iteratorError = err;
+	          } finally {
+	            try {
+	              if (!_iteratorNormalCompletion && _iterator.return) {
+	                _iterator.return();
+	              }
+	            } finally {
+	              if (_didIteratorError) {
+	                throw _iteratorError;
+	              }
+	            }
+	          }
+	        }
+	      }
+	      return null;
+	    }
+	  }, {
+	    key: "findBlockByIndexReal",
+	    value: function findBlockByIndexReal(index) {
+	      if (this.blocks && this.blocks.length) {
+	        var lastBlock = this.blocks[this.blocks.length - 1];
+	        if (index === lastBlock.realStart + lastBlock.realLength) {
+	          return lastBlock;
+	        } else {
+	          var _iteratorNormalCompletion2 = true;
+	          var _didIteratorError2 = false;
+	          var _iteratorError2 = undefined;
+
+	          try {
+	            for (var _iterator2 = this.blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	              var block = _step2.value;
+
+	              if (index >= block.realStart && index < block.realStart + block.realLength) {
+	                return block;
+	              }
+	            }
+	          } catch (err) {
+	            _didIteratorError2 = true;
+	            _iteratorError2 = err;
+	          } finally {
+	            try {
+	              if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	                _iterator2.return();
+	              }
+	            } finally {
+	              if (_didIteratorError2) {
+	                throw _iteratorError2;
+	              }
+	            }
+	          }
+	        }
+	      }
+	      return null;
+	    }
+	  }, {
+	    key: "uiPosToRealPos",
+	    value: function uiPosToRealPos(index) {
+	      var currentBlock = this.findBlockByIndex(index);
+	      if (currentBlock) {
+	        if (currentBlock.realLength === 0) {
+	          return currentBlock.realStart;
+	        } else {
+	          var offset = index - currentBlock.start;
+	          return currentBlock.realStart + offset;
+	        }
+	      }
+	      return index;
+	    }
+	  }, {
+	    key: "realPosTouiPos",
+	    value: function realPosTouiPos(index) {
+	      var currentBlock = this.findBlockByIndexReal(index);
+	      if (currentBlock) {
+	        var offset = index - currentBlock.realStart;
+	        return currentBlock.start + offset;
+	      }
+	      return index;
+	    }
+	  }]);
+
+	  return PositionCalculator;
+	}();
+
+/***/ },
+/* 181 */
+/***/ function(module, exports) {
+
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
@@ -33357,7 +33665,7 @@
 	exports.onionFile = onionFile;
 
 /***/ },
-/* 181 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33377,7 +33685,9 @@
 
 	var _DNASeq = __webpack_require__(164);
 
-	var _NumericControl = __webpack_require__(182);
+	var _NumericControl = __webpack_require__(183);
+
+	var _NumericControlGD = __webpack_require__(184);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33418,7 +33728,7 @@
 	          var startPos = _props.startPos;
 	          var endPos = _props.endPos;
 
-	          var vv = v - 1;
+	          var vv = v;
 	          if (startPos === endPos) {
 	            //cursorMode
 	            _this2.props.onChange(vv, vv);
@@ -33457,6 +33767,7 @@
 	      var startPos = _props3.startPos;
 	      var endPos = _props3.endPos;
 	      var seq = _props3.seq;
+	      var blocks = _props3.blocks;
 
 	      var itemStyle = {
 	        display: 'inline-block',
@@ -33474,9 +33785,21 @@
 	      var itemStyleWithNumeric = Object.assign(_extends({}, itemStyle), { marginTop: 5 });
 
 	      var length = endPos - startPos;
-	      var dna = new _DNASeq.DNASeq(seq);
-	      var gc = dna.getGCPercentage();
-	      var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
+
+	      var gcText = void 0;
+	      var tmText = void 0;
+	      if (length === seq.length) {
+	        var dna = new _DNASeq.DNASeq(seq);
+	        var gc = dna.getGCPercentage();
+	        var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
+	        gcText = (gc * 100).toFixed(1) + '%';
+	        tmText = '' + (length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-');
+	      } else {
+	        gcText = '-';
+	        tmText = '-';
+	      }
+
+	      var NC = blocks ? _NumericControlGD.NumericControlGD : _NumericControl.NumericControl;
 
 	      return _react2.default.createElement(
 	        'div',
@@ -33493,14 +33816,16 @@
 	            {
 	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
 	            },
-	            'start:'
+	            'Start:'
 	          ),
-	          _react2.default.createElement(_NumericControl.NumericControl, {
-	            value: startPos + 1,
+	          _react2.default.createElement(NC, {
+	            value: startPos,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
 	            showValue: startPos >= 0,
-	            onChange: this.onChangeStart
+	            onChange: this.onChangeStart,
+	            blocks: blocks,
+	            offset: 1
 	          })
 	        ),
 	        showPos && _react2.default.createElement(
@@ -33513,15 +33838,17 @@
 	            {
 	              style: { display: 'inline-block', marginTop: 4, marginRight: 0 }
 	            },
-	            'end:'
+	            'End:'
 	          ),
-	          _react2.default.createElement(_NumericControl.NumericControl, {
+	          _react2.default.createElement(NC, {
 	            value: endPos,
 	            showValue: startPos < endPos,
 	            minValue: startPos,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
-	            onChange: this.onChangeEnd
+	            onChange: this.onChangeEnd,
+	            blocks: blocks,
+	            offset: 0
 	          })
 	        ),
 	        showLength && _react2.default.createElement(
@@ -33529,9 +33856,9 @@
 	          {
 	            style: itemStyle
 	          },
-	          'length: ',
+	          'Length: ',
 	          length,
-	          'bp'
+	          ' BP'
 	        ),
 	        showGC && _react2.default.createElement(
 	          'div',
@@ -33539,16 +33866,15 @@
 	            style: itemStyle
 	          },
 	          'GC: ',
-	          (gc * 100).toFixed(1),
-	          '%'
+	          gcText
 	        ),
 	        showTM && _react2.default.createElement(
 	          'div',
 	          {
 	            style: itemStyle
 	          },
-	          'TM: ',
-	          length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-'
+	          'Melting Temp: ',
+	          tmText
 	        )
 	      );
 	    }
@@ -33568,7 +33894,8 @@
 	  endPos: _react2.default.PropTypes.number,
 	  seq: _react2.default.PropTypes.string,
 	  onChange: _react2.default.PropTypes.func,
-	  style: _react2.default.PropTypes.object
+	  style: _react2.default.PropTypes.object,
+	  blocks: _react2.default.PropTypes.array
 	};
 	InfoBar.defaultProps = {
 	  showPos: true,
@@ -33580,7 +33907,7 @@
 	};
 
 /***/ },
-/* 182 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33701,6 +34028,7 @@
 	      var _props2 = this.props;
 	      var style = _props2.style;
 	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var offset = _props2.offset;
 	      var showValue = this.state.showValue;
 	      var upDownStyle = this.props.upDownStyle;
 
@@ -33710,7 +34038,7 @@
 	        verticalAlign: 'middle'
 	      }, upDownStyle);
 
-	      var value = showValue ? this.state.value : '';
+	      var value = showValue ? this.state.value + offset : '';
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -33786,7 +34114,236 @@
 	};
 
 /***/ },
-/* 183 */
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.NumericControlGD = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _PositionCalculator = __webpack_require__(180);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	//genome designer Numeric Control
+
+	var NumericControlGD = exports.NumericControlGD = function (_React$Component) {
+	  _inherits(NumericControlGD, _React$Component);
+
+	  function NumericControlGD(props) {
+	    _classCallCheck(this, NumericControlGD);
+
+	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(NumericControlGD).call(this, props));
+
+	    _this2.state = {
+	      value: props.value,
+	      showValue: props.showValue
+	    };
+
+	    _this2.positionCalculator = new _PositionCalculator.PositionCalculator(props.blocks);
+
+	    _this2.initCallBack();
+	    return _this2;
+	  }
+
+	  _createClass(NumericControlGD, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(np) {
+	      if (this.state.value != np.value) {
+	        this.state.value = np.value;
+	      }
+	      if (this.state.showValue != np.showValue) {
+	        this.state.showValue = np.showValue;
+	      }
+	      this.positionCalculator = new _PositionCalculator.PositionCalculator(np.blocks);
+	    }
+	  }, {
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this3 = this;
+
+	      var _this = this;
+	      this.onFocus = function (e) {
+	        e.target.select();
+	      };
+	      this.onChange = function (e) {
+	        _this3.setState({
+	          value: _this3.positionCalculator.realPosTouiPos(e.target.value),
+	          showValue: true
+	        });
+	      };
+
+	      this.onBlur = function (e) {
+	        if (_this3.props.onChange) {
+	          var _props = _this3.props;
+	          var value = _props.value;
+	          var minValue = _props.minValue;
+	          var maxValue = _props.maxValue;
+
+	          var newValue = parseInt(e.target.value, 10);
+	          if (!newValue) {
+	            newValue = value;
+	          } else {
+	            if (newValue > maxValue) {
+	              newValue = maxValue;
+	            } else if (newValue < minValue) {
+	              newValue = minValue;
+	            }
+	          }
+	          _this3.props.onChange(_this3, newValue, e);
+	        }
+	      };
+
+	      this.onKeyPress = function (e) {
+	        if (e.which === 13) {
+	          _this3.onBlur(e);
+	          e.target.select();
+	        }
+	      };
+
+	      this.onPlus = function (e) {
+	        var newValue = _this3.state.value + 1;
+	        var block = _this.positionCalculator.findBlockByIndex(newValue);
+	        if (block && block.realLength === 0 && newValue > block.start) {
+	          newValue = _this3.state.value + block.length;
+	        }
+	        var update = true;
+	        if (_this3.props.onChange) {
+	          update = _this3.props.onChange(_this3, newValue, newValue);
+	        }
+
+	        if (update) {
+	          _this3.setState({ value: newValue, showValue: true });
+	        }
+	      };
+
+	      this.onMinus = function (e) {
+	        var newValue = _this3.state.value - 1;
+	        var block = _this.positionCalculator.findBlockByIndex(newValue);
+	        if (block && block.realLength === 0 && newValue > block.start) {
+	          newValue = block.start;
+	        }
+	        var update = true;
+	        if (_this3.props.onChange) {
+	          update = _this3.props.onChange(_this3, newValue, newValue);
+	        }
+
+	        if (update) {
+	          _this3.setState({ value: newValue, showValue: true });
+	        }
+	      };
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props2 = this.props;
+	      var style = _props2.style;
+	      var valueBoxStyle = _props2.valueBoxStyle;
+	      var offset = _props2.offset;
+	      var showValue = this.state.showValue;
+	      var upDownStyle = this.props.upDownStyle;
+
+	      upDownStyle = Object.assign({
+	        display: 'inline-block',
+	        padding: 0,
+	        verticalAlign: 'middle'
+	      }, upDownStyle);
+
+	      var realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
+
+	      var value = showValue ? realValue + offset : '';
+	      return _react2.default.createElement(
+	        'div',
+	        {
+	          style: Object.assign({
+	            display: 'inline-block',
+	            verticalAlign: 'middle',
+	            whiteSpace: 'nowrap'
+	          }, style)
+	        },
+	        _react2.default.createElement('input', {
+	          type: 'text',
+	          style: Object.assign({
+	            display: 'inline-block'
+	          }, //color: showValue ? '#000000' : '#ffffff',
+	          valueBoxStyle), value: value, size: '5',
+	          onChange: this.onChange,
+	          onKeyPress: this.onKeyPress,
+	          onFocus: this.onFocus,
+	          onBlur: this.onBlur
+	        }),
+	        _react2.default.createElement(
+	          'div',
+	          {
+	            style: upDownStyle
+	          },
+	          _react2.default.createElement(
+	            'svg',
+	            { width: '18', height: '20' },
+	            _react2.default.createElement(
+	              'g',
+	              { onClick: this.onPlus, className: 'cursorPointer' },
+	              _react2.default.createElement('path', { d: 'M 5 7 L 9 3 L 13 7', fill: 'none', stroke: '#757884' }),
+	              _react2.default.createElement('rect', { width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
+	            ),
+	            _react2.default.createElement(
+	              'g',
+	              { onClick: this.onMinus, className: 'cursorPointer' },
+	              _react2.default.createElement('path', { d: 'M 5 13 L 9 17 L 13 13', fill: 'none', stroke: '#757884' }),
+	              _react2.default.createElement('rect', { y: '10', width: '18', height: '10', strokeWidth: '0', fill: 'rgba(127,127,127,0.001)' })
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return NumericControlGD;
+	}(_react2.default.Component);
+
+	NumericControlGD.propTypes = {
+	  value: _react2.default.PropTypes.number,
+	  style: _react2.default.PropTypes.object,
+	  valueBoxStyle: _react2.default.PropTypes.object,
+	  upDownStyle: _react2.default.PropTypes.object,
+	  onChange: _react2.default.PropTypes.func,
+	  showValue: _react2.default.PropTypes.bool,
+	  minValue: _react2.default.PropTypes.number,
+	  maxValue: _react2.default.PropTypes.number,
+	  blocks: _react2.default.PropTypes.array.isRequired
+	};
+	NumericControlGD.defaultProps = {
+	  style: {},
+	  valueBoxStyle: {
+	    background: '#ffffff',
+	    color: '#3b3e4c',
+	    borderWidth: 0,
+	    textAlign: 'right'
+	  },
+	  upDownStyle: {
+	    height: 20
+	  },
+	  minValue: -Number.MAX_SAFE_INTEGER,
+	  maxValue: Number.MAX_SAFE_INTEGER
+	};
+
+/***/ },
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -33802,7 +34359,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _EyeIcon = __webpack_require__(184);
+	var _EyeIcon = __webpack_require__(186);
 
 	__webpack_require__(176);
 
@@ -33852,7 +34409,7 @@
 	      //const value = $target.data('val');
 	      var cmd = target.getAttribute('data-cmd');
 	      var value = target.getAttribute('data-val') === 'true';
-	      console.log(value);
+	      //console.log(value);
 	      onSelect(cmd, !value);
 	    }
 	  }, {
@@ -33870,12 +34427,14 @@
 	      var showAA = _props.showAA;
 
 	      var layerMenuItem = function layerMenuItem(text, cmd, value) {
-	        var padding = arguments.length <= 3 || arguments[3] === undefined ? '10px 10px' : arguments[3];
+	        var padding = arguments.length <= 3 || arguments[3] === undefined ? '0px 10px' : arguments[3];
 	        return _react2.default.createElement(
 	          'div',
 	          {
 	            style: {
 	              display: 'inline-block',
+	              lineHeight: '30px',
+	              verticalAlign: 'top',
 	              padding: padding
 	            }
 	          },
@@ -33903,7 +34462,7 @@
 	          'div',
 	          {
 	            style: {
-	              height: 43,
+	              height: 30,
 	              fontFamily: 'Helvetica, Arial, sans-serif',
 	              fontSize: 12,
 	              whiteSpace: 'nowrap',
@@ -33919,6 +34478,7 @@
 	                height: '100%',
 	                borderStyle: 'none none solid none',
 	                borderWidth: '1',
+	                borderColor: '#dadbdf',
 	                textAlign: 'right',
 	                verticalAlign: 'top'
 	              }
@@ -33936,7 +34496,7 @@
 	            }),
 	            layerMenuItem(_react2.default.createElement(_EyeIcon.EyeIcon, {
 	              stroke: showAll ? '#4c505f' : '#b3b3b3'
-	            }), 'showAll', showAll, '10px 0px 10px 10px'),
+	            }), 'showAll', showAll, '0px 0px 0px 10px'),
 	            layerMenuItem('Features', 'showFeatures', showFeatures),
 	            layerMenuItem('Reverse Strand', 'showRS', showRS),
 	            layerMenuItem('Enzymes', 'showEnzymes', showEnzymes),
@@ -33952,7 +34512,8 @@
 	              paddingLeft: 8,
 	              paddingBottom: 8,
 	              color: '#8EC78D',
-	              fontSize: 20
+	              fontSize: 20,
+	              height: 36
 	            }
 	          },
 	          title
@@ -33975,11 +34536,11 @@
 	  showAA: _react2.default.PropTypes.bool
 	};
 	MenuBar.defaultProps = {
-	  title: 'Block'
+	  title: 'block'
 	};
 
 /***/ },
-/* 184 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34068,7 +34629,7 @@
 	};
 
 /***/ },
-/* 185 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34084,27 +34645,27 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _PlasmidBone = __webpack_require__(186);
+	var _PlasmidBone = __webpack_require__(188);
 
-	var _PlasmidBoneC = __webpack_require__(189);
+	var _PlasmidBoneC = __webpack_require__(191);
 
-	var _PlasmidBoneNAL = __webpack_require__(190);
+	var _PlasmidBoneNAL = __webpack_require__(192);
 
-	var _FeatureGroup = __webpack_require__(191);
+	var _FeatureGroup = __webpack_require__(193);
 
 	var _FeatureGroup2 = _interopRequireDefault(_FeatureGroup);
 
-	var _EnzymeLabelContainer = __webpack_require__(193);
+	var _EnzymeLabelContainer = __webpack_require__(195);
 
 	var _EnzymeLabelContainer2 = _interopRequireDefault(_EnzymeLabelContainer);
 
-	var _LA = __webpack_require__(187);
+	var _LA = __webpack_require__(189);
 
-	var _PlasmidViewerCursor = __webpack_require__(195);
+	var _PlasmidViewerCursor = __webpack_require__(197);
 
-	var _PlasmidViewerSelection = __webpack_require__(196);
+	var _PlasmidViewerSelection = __webpack_require__(198);
 
-	var _PlasmidViewerVisibleArea = __webpack_require__(197);
+	var _PlasmidViewerVisibleArea = __webpack_require__(199);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34468,7 +35029,7 @@
 	          )
 	        );
 	      } else {
-	        console.log(plasmidR, seqLength);
+	        // console.log(plasmidR,seqLength);
 	        plasmid = _react2.default.createElement(
 	          'div',
 	          {
@@ -34604,7 +35165,7 @@
 	};
 
 /***/ },
-/* 186 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34620,7 +35181,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LA = __webpack_require__(187);
+	var _LA = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34744,7 +35305,7 @@
 	};
 
 /***/ },
-/* 187 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -34756,7 +35317,7 @@
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _d = __webpack_require__(188);
+	var _d = __webpack_require__(190);
 
 	var _d2 = _interopRequireDefault(_d);
 
@@ -34798,7 +35359,7 @@
 	}();
 
 /***/ },
-/* 188 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;!function() {
@@ -44357,7 +44918,7 @@
 	}();
 
 /***/ },
-/* 189 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -44421,7 +44982,7 @@
 	};
 
 /***/ },
-/* 190 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44437,7 +44998,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LA = __webpack_require__(187);
+	var _LA = __webpack_require__(189);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44500,7 +45061,7 @@
 	};
 
 /***/ },
-/* 191 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44516,9 +45077,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _LA = __webpack_require__(187);
+	var _LA = __webpack_require__(189);
 
-	var _Feature = __webpack_require__(192);
+	var _Feature = __webpack_require__(194);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -44639,7 +45200,7 @@
 	module.exports = FeatureGroup;
 
 /***/ },
-/* 192 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -44931,9 +45492,10 @@
 	      var b = _rgb[2];
 
 	      var t = 230;
-	      if (r > t) r = t;
-	      if (g > t) g = t;
-	      if (b > t) b = t;
+	      var m = 40;
+	      if (r > t) r = t;else if (r < m) r = t;
+	      if (g > t) g = t;else if (g < m) g = t;
+	      if (b > t) b = t;else if (b < m) b = t;
 	      var re = '#' + r.toString(16) + g.toString(16) + b.toString(16);
 	      // console.log(re);
 	      return re;
@@ -45028,7 +45590,7 @@
 	};
 
 /***/ },
-/* 193 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45044,7 +45606,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _EnzymeLabel = __webpack_require__(194);
+	var _EnzymeLabel = __webpack_require__(196);
 
 	var _EnzymeLabel2 = _interopRequireDefault(_EnzymeLabel);
 
@@ -45188,7 +45750,7 @@
 	module.exports = EnzymeLabelContainer;
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -45292,7 +45854,7 @@
 	module.exports = EnzymeLabel;
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45478,7 +46040,7 @@
 	}(PlasmidViewerCursor);
 
 /***/ },
-/* 196 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45580,7 +46142,7 @@
 	}(PlasmidViewerSelection);
 
 /***/ },
-/* 197 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -45664,13 +46226,13 @@
 	};
 
 /***/ },
-/* 198 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(199);
+	var content = __webpack_require__(201);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(179)(content, {});
@@ -45690,7 +46252,7 @@
 	}
 
 /***/ },
-/* 199 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(178)();
@@ -45704,7 +46266,7 @@
 
 
 /***/ },
-/* 200 */
+/* 202 */
 /***/ function(module, exports) {
 
 	module.exports = {
