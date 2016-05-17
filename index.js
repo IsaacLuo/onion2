@@ -26109,9 +26109,9 @@
 	    };
 
 	    window.gd.store.subscribe(function (state, lastAction) {
-	      console.log('lastAction,', lastAction);
+	      //console.log(`lastAction,`, lastAction);
 	      //console.log(lastAction.type);
-	      if (lastAction.type === 'FOCUS_BLOCKS' || lastAction.type === 'BLOCK_SET_COLOR') {
+	      if (lastAction.type === 'FOCUS_BLOCKS' || lastAction.type === 'BLOCK_SET_COLOR' || lastAction.type === 'BLOCK_RENAME') {
 	        _this2.showBlockRange();
 	      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
 	        var blocks = window.gd.api.focus.focusGetBlocks();
