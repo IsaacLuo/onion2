@@ -25927,6 +25927,11 @@
 	      return this.features;
 	    }
 	  }, {
+	    key: 'removeBlock',
+	    value: function removeBlock(md5) {
+	      if (this.sequenceDict[md5]) delete this.sequenceDict[md5];
+	    }
+	  }, {
 	    key: 'setEventBlockUpdated',
 	    value: function setEventBlockUpdated(fn) {
 	      this.onBlockUpdated = fn;
@@ -26104,13 +26109,17 @@
 	    };
 
 	    window.gd.store.subscribe(function (state, lastAction) {
-	      //console.log(`lastAction,`, lastAction);
+	      console.log('lastAction,', lastAction);
 	      //console.log(lastAction.type);
-	      if (lastAction.type === 'FOCUS_BLOCKS') {
+	      if (lastAction.type === 'FOCUS_BLOCKS' || lastAction.type === 'BLOCK_SET_COLOR') {
 	        _this2.showBlockRange();
 	      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
 	        var blocks = window.gd.api.focus.focusGetBlocks();
 	        _this2.onionBuilder.setBlocks(blocks);
+	      } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
+	        var block = lastAction.block;
+	        _this2.onionBuilder.removeBlock(block.sequence.md5);
+	        _this2.showBlockRange();
 	      }
 	    });
 

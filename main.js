@@ -58,6 +58,11 @@ class OnionBuilder {
     return this.features;
   }
 
+  removeBlock(md5) {
+    if(this.sequenceDict[md5])
+      delete this.sequenceDict[md5];
+  }
+
   setEventBlockUpdated(fn) {
     this.onBlockUpdated = fn;
   }
@@ -167,13 +172,19 @@ class OnionViewer extends React.Component {
     };
 
     window.gd.store.subscribe((state, lastAction) => {
-      //console.log(`lastAction,`, lastAction);
+      console.log(`lastAction,`, lastAction);
       //console.log(lastAction.type);
-      if (lastAction.type === 'FOCUS_BLOCKS') {
+      if (lastAction.type === 'FOCUS_BLOCKS'
+        || lastAction.type === 'BLOCK_SET_COLOR'
+      ) {
         this.showBlockRange();
       } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
         const blocks = window.gd.api.focus.focusGetBlocks();
         this.onionBuilder.setBlocks(blocks);
+      } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
+        const block = lastAction.block;
+        this.onionBuilder.removeBlock(block.sequence.md5);
+        this.showBlockRange();
       }
     });
 
