@@ -14623,7 +14623,8 @@
 
 	  _createClass(PositionCalculator, [{
 	    key: "findBlockByIndex",
-	    value: function findBlockByIndex(index) {
+	    value: function findBlockByIndex(_index) {
+	      var index = _index < 0 ? 0 : _index;
 	      if (this.blocks && this.blocks.length) {
 	        var lastBlock = this.blocks[this.blocks.length - 1];
 	        if (index === lastBlock.start + lastBlock.length) {
@@ -14661,7 +14662,8 @@
 	    }
 	  }, {
 	    key: "findBlockByIndexReal",
-	    value: function findBlockByIndexReal(index) {
+	    value: function findBlockByIndexReal(_index) {
+	      var index = _index < 0 ? 0 : _index;
 	      if (this.blocks && this.blocks.length) {
 	        var lastBlock = this.blocks[this.blocks.length - 1];
 	        if (index === lastBlock.realStart + lastBlock.realLength) {
@@ -22517,7 +22519,8 @@
 	          onChange: this.onChange,
 	          onKeyPress: this.onKeyPress,
 	          onFocus: this.onFocus,
-	          onBlur: this.onBlur
+	          onBlur: this.onBlur,
+	          tabIndex: '-1'
 	        }),
 	        _react2.default.createElement(
 	          'div',
@@ -23055,12 +23058,13 @@
 
 	      var block = this.positionCalculator.findBlockByIndex(0);
 	      var titleColor = block ? block.color : "#000000";
+	      var menuTitle = block ? block.name : '';
 
 	      this.setState({
 	        cursorPos: 0,
 	        startCursorPos: 0,
 	        titleColor: titleColor,
-	        menuTitle: block.name
+	        menuTitle: menuTitle
 	      });
 	    }
 
@@ -23080,11 +23084,13 @@
 	        var block = this.positionCalculator.findBlockByIndex(pos);
 	        var titleColor = block ? block.color : "#000000";
 
+	        var menuTitle = block ? block.name : '';
+
 	        this.setState({
 	          cursorPos: pos,
 	          startCursorPos: pos,
 	          titleColor: titleColor,
-	          menuTitle: block.name
+	          menuTitle: menuTitle
 	        });
 	      }
 	    }
@@ -23100,12 +23106,13 @@
 	      //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
 	      var block = this.positionCalculator.findBlockByIndex(startPos);
 	      var titleColor = block ? block.color : "#000000";
+	      var menuTitle = block ? block.name : '';
 	      this.setState({
 	        cursorPos: endPos,
 	        startCursorPos: startPos,
 	        lastAction: 'infoBarChanged',
 	        titleColor: titleColor,
-	        menuTitle: block.name
+	        menuTitle: menuTitle
 	      });
 	    }
 	  }, {
@@ -23229,6 +23236,7 @@
 	            left: '-1000',
 	            top: '-1000'
 	          },
+	          tabIndex: '-1',
 	          className: 'onionClipboard',
 	          onKeyDown: this.onHotKeyClipboard
 	        }),
@@ -24945,7 +24953,7 @@
 	      var text = _props.text;
 
 	      var width = unitWidth * len;
-	      var fontFamily = 'Cousine';
+	      var fontFamily = 'Helvetica, Arial, sans-serif';
 	      var fontSize = 12;
 	      var titleOpacity = void 0;
 	      var textAnchor = void 0;

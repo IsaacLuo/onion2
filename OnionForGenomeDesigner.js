@@ -127,12 +127,13 @@ export class OnionForGenomeDesigner extends React.Component {
 
     let block = this.positionCalculator.findBlockByIndex(0);
     let titleColor = block ? block.color : "#000000";
+    const menuTitle = block ? block.name : '';
 
     this.setState({
       cursorPos: 0,
       startCursorPos: 0,
       titleColor,
-      menuTitle: block.name,
+      menuTitle,
     });
   }
 
@@ -150,12 +151,13 @@ export class OnionForGenomeDesigner extends React.Component {
       let block = this.positionCalculator.findBlockByIndex(pos);
       let titleColor = block ? block.color : "#000000";
 
+      const menuTitle = block ? block.name : '';
 
       this.setState({
         cursorPos: pos,
         startCursorPos: pos,
         titleColor,
-        menuTitle: block.name,
+        menuTitle,
       });
     }
   }
@@ -169,12 +171,13 @@ export class OnionForGenomeDesigner extends React.Component {
     //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
     let block = this.positionCalculator.findBlockByIndex(startPos);
     let titleColor = block ? block.color : "#000000";
+    const menuTitle = block ? block.name : '';
     this.setState({
       cursorPos : endPos,
       startCursorPos : startPos,
       lastAction: 'infoBarChanged',
       titleColor,
-      menuTitle: block.name,
+      menuTitle,
     });
   }
 
@@ -289,6 +292,7 @@ export class OnionForGenomeDesigner extends React.Component {
             left: '-1000',
             top: '-1000',
           }}
+          tabIndex="-1"
           className = 'onionClipboard'
           onKeyDown={this.onHotKeyClipboard}
         />

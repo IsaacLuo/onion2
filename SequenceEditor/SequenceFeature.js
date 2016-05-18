@@ -41,7 +41,7 @@ export class SequenceFeatureArrow extends React.Component {
   render() {
     const { unitWidth, height, len, start, color, text } = this.props;
     const width = unitWidth * len;
-    const fontFamily = 'Cousine';
+    const fontFamily = 'Helvetica, Arial, sans-serif';
     const fontSize = 12;
     let titleOpacity;
     let textAnchor;

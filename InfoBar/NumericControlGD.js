@@ -154,6 +154,7 @@ export class NumericControlGD extends React.Component
           onKeyPress={this.onKeyPress}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          tabIndex="-1"
         />
         <div
           style = {upDownStyle}

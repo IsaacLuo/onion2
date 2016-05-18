@@ -8,7 +8,8 @@ export class PositionCalculator
     this.blocks = blocks;
   }
 
-  findBlockByIndex(index) {
+  findBlockByIndex(_index) {
+    const index = _index<0 ? 0 : _index;
     if (this.blocks && this.blocks.length) {
       const lastBlock = this.blocks[this.blocks.length - 1];
       if (index === lastBlock.start + lastBlock.length) {
@@ -24,7 +25,8 @@ export class PositionCalculator
     return null;
   }
 
-  findBlockByIndexReal(index) {
+  findBlockByIndexReal(_index) {
+    const index = _index<0 ? 0 : _index;
     if (this.blocks && this.blocks.length) {
       const lastBlock = this.blocks[this.blocks.length - 1];
       if (index === lastBlock.realStart + lastBlock.realLength) {
