@@ -132,6 +132,7 @@ export class OnionForGenomeDesigner extends React.Component {
       cursorPos: 0,
       startCursorPos: 0,
       titleColor,
+      menuTitle: block.name,
     });
   }
 
@@ -154,6 +155,7 @@ export class OnionForGenomeDesigner extends React.Component {
         cursorPos: pos,
         startCursorPos: pos,
         titleColor,
+        menuTitle: block.name,
       });
     }
   }
@@ -172,6 +174,7 @@ export class OnionForGenomeDesigner extends React.Component {
       startCursorPos : startPos,
       lastAction: 'infoBarChanged',
       titleColor,
+      menuTitle: block.name,
     });
   }
 
@@ -265,6 +268,7 @@ export class OnionForGenomeDesigner extends React.Component {
       enableFeatures = true;
 
     //console.log(this.state);
+
 
     return (
       <div

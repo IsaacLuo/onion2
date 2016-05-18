@@ -23059,7 +23059,8 @@
 	      this.setState({
 	        cursorPos: 0,
 	        startCursorPos: 0,
-	        titleColor: titleColor
+	        titleColor: titleColor,
+	        menuTitle: block.name
 	      });
 	    }
 
@@ -23082,7 +23083,8 @@
 	        this.setState({
 	          cursorPos: pos,
 	          startCursorPos: pos,
-	          titleColor: titleColor
+	          titleColor: titleColor,
+	          menuTitle: block.name
 	        });
 	      }
 	    }
@@ -23102,7 +23104,8 @@
 	        cursorPos: endPos,
 	        startCursorPos: startPos,
 	        lastAction: 'infoBarChanged',
-	        titleColor: titleColor
+	        titleColor: titleColor,
+	        menuTitle: block.name
 	      });
 	    }
 	  }, {
@@ -26115,7 +26118,7 @@
 	        _this2.showBlockRange();
 	      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
 	        var blocks = window.gd.api.focus.focusGetBlocks();
-	        _this2.onionBuilder.setBlocks(blocks);
+	        _this2.showBlockRange();
 	      } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
 	        var block = lastAction.block;
 	        _this2.onionBuilder.removeBlock(block.sequence.md5);

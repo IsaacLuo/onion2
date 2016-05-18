@@ -179,9 +179,10 @@ class OnionViewer extends React.Component {
         || lastAction.type === 'BLOCK_RENAME'
       ) {
         this.showBlockRange();
-      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
+      } 
+      else if (lastAction.type === 'FOCUS_FORCE_BLOCKS'){
         const blocks = window.gd.api.focus.focusGetBlocks();
-        this.onionBuilder.setBlocks(blocks);
+        this.showBlockRange();
       } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
         const block = lastAction.block;
         this.onionBuilder.removeBlock(block.sequence.md5);
