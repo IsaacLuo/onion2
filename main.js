@@ -151,12 +151,18 @@ class OnionViewer extends React.Component {
       }
     });
 
+    this.getChildrenRecursive = (id) => {
+      gd.api.blocks.blockFlattenConstructAndLists(id)
+    };
+
     this.showBlockRange = () => {
       let leafBlocks = [];
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
       if (topSelectedBlocks && topSelectedBlocks.length) {
         for (let block of topSelectedBlocks) {
-          const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+          //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+          const children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
+
           if (children && children.length === 0 ) {
             leafBlocks.push(block);
           } else {

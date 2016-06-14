@@ -26057,6 +26057,10 @@
 	      }
 	    });
 
+	    _this2.getChildrenRecursive = function (id) {
+	      gd.api.blocks.blockFlattenConstructAndLists(id);
+	    };
+
 	    _this2.showBlockRange = function () {
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
@@ -26069,7 +26073,9 @@
 	          for (var _iterator3 = topSelectedBlocks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
 	            var block = _step3.value;
 
-	            var children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+	            //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
+	            var children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
+
 	            if (children && children.length === 0) {
 	              leafBlocks.push(block);
 	            } else {
