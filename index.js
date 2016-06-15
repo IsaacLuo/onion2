@@ -14362,7 +14362,8 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
+	      //return src;
 	    }
 	  }, {
 	    key: 'reverseComplement',
@@ -14528,7 +14529,41 @@
 	  return DNASeq;
 	}(_Seq2.Seq);
 
-	DNASeq.complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X', '·': '·' };
+	DNASeq.complementDict = {
+	  A: 'T',
+	  T: 'A',
+	  C: 'G',
+	  G: 'C',
+	  N: 'N',
+	  W: 'W',
+	  S: 'S',
+	  M: 'K',
+	  K: 'M',
+	  R: 'Y',
+	  Y: 'R',
+	  B: 'A',
+	  D: 'C',
+	  H: 'G',
+	  U: 'A',
+	  V: 'T',
+	  a: 't',
+	  t: 'a',
+	  c: 'g',
+	  g: 'c',
+	  u: 'a',
+	  n: 'n',
+	  w: 'w',
+	  s: 's',
+	  m: 'k',
+	  k: 'm',
+	  r: 'y',
+	  y: 'r',
+	  b: 'a',
+	  d: 'c',
+	  h: 'g',
+	  X: 'X',
+	  '·': '·'
+	};
 	DNASeq.codonDict = {
 	  TTT: 'F',
 	  TTC: 'F',
@@ -23445,14 +23480,23 @@
 	      var _this = this;
 
 	      this.onScroll = function (e) {
-	        // const scrollPos = e.target.scrollTop;
-	        // for (let i = 0; i < this.rowY.length; i++) {
-	        //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-	        //     const block = this.splitBlocks[i];
-	        //     if (block.length > 0) this.props.onBlockChanged(block);
-	        //     break;
-	        //   }
-	        // }
+	        var scrollPos = e.target.scrollTop;
+	        var height = e.target.offsetHeight;
+	        var scrollPosEnd = scrollPos + height;
+	        // find the first block and the last block
+	        for (var i = 0; i < _this3.rowY.length; i++) {
+	          if (scrollPos <= _this3.rowY[i] + _this3.rowHeight[i]) {
+	            var blockStart = _this3.splitBlocks[i].originalBlock;
+	            console.log(_this3.splitBlocks[i], i);
+	            for (var j = i; j < _this3.rowY.length; j++) {
+	              if (scrollPosEnd <= _this3.rowY[j] + _this3.rowHeight[j]) {
+	                var blockEnd = _this3.splitBlocks[j].originalBlock;
+	                console.log(blockStart, blockEnd);
+	                break;
+	              }
+	            }
+	          }
+	        }
 	      };
 
 	      this.onMouseDown = function (e) {};
@@ -23958,7 +24002,8 @@
 	                start: _start,
 	                len: end - _start,
 	                realStart: _realStart,
-	                realLength: _realLength
+	                realLength: _realLength,
+	                originalBlock: blocks[i]
 	              });
 	            }
 	          }

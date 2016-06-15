@@ -124,14 +124,23 @@ export class SequenceEditor extends React.Component {
     const _this = this;
 
     this.onScroll = (e) => {
-      // const scrollPos = e.target.scrollTop;
-      // for (let i = 0; i < this.rowY.length; i++) {
-      //   if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-      //     const block = this.splitBlocks[i];
-      //     if (block.length > 0) this.props.onBlockChanged(block);
-      //     break;
-      //   }
-      // }
+      const scrollPos = e.target.scrollTop;
+      const height = e.target.offsetHeight;
+      const scrollPosEnd = scrollPos + height;
+      // find the first block and the last block
+      for (let i = 0; i < this.rowY.length; i++) {
+        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
+          const blockStart = this.splitBlocks[i].originalBlock;
+          console.log(this.splitBlocks[i],i);
+          for (let j = i; j < this.rowY.length; j++) {
+             if (scrollPosEnd <= this.rowY[j] + this.rowHeight[j]) {
+               const blockEnd = this.splitBlocks[j].originalBlock;
+               console.log(blockStart,blockEnd);
+               break;
+             }
+           }
+        }
+      }
     };
 
     this.onMouseDown = (e) => {
@@ -595,6 +604,7 @@ export class SequenceEditor extends React.Component {
               len: end - start,
               realStart,
               realLength,
+              originalBlock: blocks[i],
             });
           }
         }

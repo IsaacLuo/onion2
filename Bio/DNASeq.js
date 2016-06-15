@@ -4,7 +4,41 @@ import { AASeq } from './AASeq';
 
 export class DNASeq extends Seq
 {
-  static complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X', '·': '·' };
+  static complementDict = {
+    A: 'T',
+    T: 'A',
+    C: 'G',
+    G: 'C',
+    N: 'N',
+    W: 'W',
+    S: 'S',
+    M: 'K',
+    K: 'M',
+    R: 'Y',
+    Y: 'R',
+    B: 'A',
+    D: 'C',
+    H: 'G',
+    U: 'A',
+    V: 'T',
+    a: 't',
+    t: 'a',
+    c: 'g',
+    g: 'c',
+    u: 'a',
+    n: 'n',
+    w: 'w',
+    s: 's',
+    m: 'k',
+    k: 'm',
+    r: 'y',
+    y: 'r',
+    b: 'a',
+    d: 'c',
+    h: 'g',
+    X: 'X',
+    '·': '·'
+  };
 
   static codonDict = {
     TTT: 'F',
@@ -78,7 +112,8 @@ export class DNASeq extends Seq
   }
 
   removeInvalidLetter(src) {
-    return src.replace(/[^A|^G|^T|^C|^X|^N|^·]/gi, '');
+    return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
+    //return src;
   }
 
   reverseComplement() {
