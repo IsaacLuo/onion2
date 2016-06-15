@@ -151,7 +151,8 @@ export class OnionForGenomeDesigner extends React.Component {
       let block = this.positionCalculator.findBlockByIndex(pos);
       let titleColor = block ? block.color : "#000000";
 
-      const menuTitle = block ? block.name : '';
+      //const menuTitle = block ? block.name : '';
+      const menuTitle = this.props.menuTitle;
 
       this.setState({
         cursorPos: pos,
@@ -264,7 +265,8 @@ export class OnionForGenomeDesigner extends React.Component {
 
     }
 
-    const menuTitle = this.state.menuTitle;
+    //const menuTitle = this.state.menuTitle;
+    const menuTitle = this.props.menuTitle;
 
     let enableFeatures = false;
     if (features && features.length > 0)

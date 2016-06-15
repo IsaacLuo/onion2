@@ -23119,7 +23119,8 @@
 	        var block = this.positionCalculator.findBlockByIndex(pos);
 	        var titleColor = block ? block.color : "#000000";
 
-	        var menuTitle = block ? block.name : '';
+	        //const menuTitle = block ? block.name : '';
+	        var menuTitle = this.props.menuTitle;
 
 	        this.setState({
 	          cursorPos: pos,
@@ -23244,7 +23245,8 @@
 	        selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
 	      }
 
-	      var menuTitle = this.state.menuTitle;
+	      //const menuTitle = this.state.menuTitle;
+	      var menuTitle = this.props.menuTitle;
 
 	      var enableFeatures = false;
 	      if (features && features.length > 0) enableFeatures = true;
@@ -25038,7 +25040,7 @@
 	              fontFamily: fontFamily,
 	              fontSize: fontSize,
 	              fill: 'black',
-	              alignmentBaseline: 'middle',
+	              alignmentBaseline: 'central',
 	              WebkitUserSelect: 'none',
 	              textAnchor: textAnchor,
 	              opacity: titleOpacity
@@ -25299,13 +25301,24 @@
 
 	      for (var i = 0; i < blocks.length; i++) {
 	        var b = blocks[i];
-	        re.push(_react2.default.createElement('rect', {
-	          x: b.start * unitWidth,
+	        // re.push(
+	        //   <rect
+	        //     x={b.start * unitWidth}
+	        //     y={y0}
+	        //     width={b.len * unitWidth}
+	        //     height={9}
+	        //     fill={b.color}
+	        //     key={`blocks${i}`}
+	        //   />
+	        // );
+	        re.push(_react2.default.createElement(_SequenceFeature.SequenceFeatureArrow, {
+	          start: b.start,
+	          len: b.len,
+	          unitWidth: unitWidth,
+	          height: 18,
 	          y: y0,
-	          width: b.len * unitWidth,
-	          height: 9,
-	          fill: b.color,
-	          key: 'blocks' + i
+	          color: b.color,
+	          text: b.name
 	        }));
 	      }
 
@@ -25612,7 +25625,7 @@
 	        y += 5;
 	        if (showBlockBar) {
 	          re.blockBarY = y;
-	          y += 9;
+	          y += 18;
 	          y += 5;
 	        }
 
@@ -26083,7 +26096,8 @@
 	      width: props.width,
 	      height: props.height,
 	      block: null,
-	      rendered: Date.now()
+	      rendered: Date.now(),
+	      title: '...'
 	    };
 	    _this2.onionBuilder = new OnionBuilder();
 	    _this2.onionBuilder.setEventBlockUpdated(function () {
@@ -26110,6 +26124,7 @@
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
+	        _this2.setState({ title: topSelectedBlocks[0].metadata.name }); // =
 	        var _iteratorNormalCompletion3 = true;
 	        var _didIteratorError3 = false;
 	        var _iteratorError3 = undefined;
@@ -26240,6 +26255,7 @@
 	    value: function render() {
 	      var _state = this.state;
 	      var sequence = _state.sequence;
+	      var title = _state.title;
 	      var features = _state.features;
 	      var blocks = _state.blocks;
 	      var width = _state.width;
@@ -26251,7 +26267,9 @@
 	        features: this.onionBuilder.getFeatures(),
 	        width: width,
 	        height: height,
-	        blocks: blocks
+	        blocks: blocks,
+	        menuTitle: title,
+	        test: '123'
 	      });
 	    }
 	  }]);

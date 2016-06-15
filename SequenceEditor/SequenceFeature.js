@@ -78,7 +78,7 @@ export class SequenceFeatureArrow extends React.Component {
             fontFamily,
             fontSize,
             fill: 'black',
-            alignmentBaseline: 'middle',
+            alignmentBaseline: 'central',
             WebkitUserSelect: 'none',
             textAnchor,
             opacity: titleOpacity,

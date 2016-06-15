@@ -218,16 +218,27 @@ export class SequenceRow extends React.Component {
 
     for (let i = 0; i < blocks.length; i++) {
       const b = blocks[i];
+      // re.push(
+      //   <rect
+      //     x={b.start * unitWidth}
+      //     y={y0}
+      //     width={b.len * unitWidth}
+      //     height={9}
+      //     fill={b.color}
+      //     key={`blocks${i}`}
+      //   />
+      // );
       re.push(
-        <rect
-          x={b.start * unitWidth}
+        <SequenceFeatureArrow
+          start={b.start}
+          len={b.len}
+          unitWidth={unitWidth}
+          height={18}
           y={y0}
-          width={b.len * unitWidth}
-          height={9}
-          fill={b.color}
-          key={`blocks${i}`}
+          color={b.color}
+          text={b.name}
         />
-      );
+      )
     }
 
     return re;
@@ -489,7 +500,7 @@ export class SequenceRow extends React.Component {
       y += 5;
       if (showBlockBar) {
         re.blockBarY = y;
-        y += 9;
+        y += 18;
         y += 5;
       }
 
