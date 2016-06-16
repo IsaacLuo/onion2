@@ -23489,11 +23489,11 @@
 	        for (var i = 0; i < _this3.rowY.length; i++) {
 	          if (scrollPos <= _this3.rowY[i] + _this3.rowHeight[i]) {
 	            var blockStart = _this3.splitBlocks[i].originalBlock;
-	            console.log(_this3.splitBlocks[i], i);
 	            for (var j = i; j < _this3.rowY.length; j++) {
 	              if (scrollPosEnd <= _this3.rowY[j] + _this3.rowHeight[j]) {
 	                var blockEnd = _this3.splitBlocks[j].originalBlock;
-	                console.log(blockStart, blockEnd);
+
+	                _this3.updateBlocks(blockStart, blockEnd);
 	                break;
 	              }
 	            }
@@ -23645,9 +23645,13 @@
 	      this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 	    }
 	  }, {
-	    key: 'findBlockByIndex',
-	    value: function findBlockByIndex(index) {
+	    key: 'updateBlocks',
+	    value: function updateBlocks(blockStart, blockEnd) {
 	      var blocks = this.props.blocks;
+
+
+	      var updateList = [];
+	      var s = 0;
 	      var _iteratorNormalCompletion = true;
 	      var _didIteratorError = false;
 	      var _iteratorError = undefined;
@@ -23656,8 +23660,17 @@
 	        for (var _iterator = blocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	          var block = _step.value;
 
-	          if (index >= block.start && index < block.start + block.length) {
-	            return block;
+	          if (block === blockStart) {
+	            s++;
+	          }
+
+	          if (s === 1) {
+	            //updateBlock
+	            updateList.push(block);
+	          }
+
+	          if (block === blockEnd) {
+	            s++;
 	          }
 	        }
 	      } catch (err) {
@@ -23674,12 +23687,10 @@
 	          }
 	        }
 	      }
-
-	      return null;
 	    }
 	  }, {
-	    key: 'findBlockByIndexReal',
-	    value: function findBlockByIndexReal(index) {
+	    key: 'findBlockByIndex',
+	    value: function findBlockByIndex(index) {
 	      var blocks = this.props.blocks;
 	      var _iteratorNormalCompletion2 = true;
 	      var _didIteratorError2 = false;
@@ -23689,7 +23700,7 @@
 	        for (var _iterator2 = blocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
 	          var block = _step2.value;
 
-	          if (index >= block.realStart && index < block.realStart + block.realLength) {
+	          if (index >= block.start && index < block.start + block.length) {
 	            return block;
 	          }
 	        }
@@ -23704,6 +23715,39 @@
 	        } finally {
 	          if (_didIteratorError2) {
 	            throw _iteratorError2;
+	          }
+	        }
+	      }
+
+	      return null;
+	    }
+	  }, {
+	    key: 'findBlockByIndexReal',
+	    value: function findBlockByIndexReal(index) {
+	      var blocks = this.props.blocks;
+	      var _iteratorNormalCompletion3 = true;
+	      var _didIteratorError3 = false;
+	      var _iteratorError3 = undefined;
+
+	      try {
+	        for (var _iterator3 = blocks[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	          var block = _step3.value;
+
+	          if (index >= block.realStart && index < block.realStart + block.realLength) {
+	            return block;
+	          }
+	        }
+	      } catch (err) {
+	        _didIteratorError3 = true;
+	        _iteratorError3 = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	            _iterator3.return();
+	          }
+	        } finally {
+	          if (_didIteratorError3) {
+	            throw _iteratorError3;
 	          }
 	        }
 	      }
@@ -26031,8 +26075,6 @@
 	            //}, Math.random() * 3000 + 1000);
 	            //test end
 	          } else {
-	              //getSequenceDoesn't exist
-	              // this.sequenceDict[md5] = 'N'.repeat(length);
 	              _this.onBlockUpdated(i);
 	            }
 	        }
@@ -26046,8 +26088,8 @@
 	      }
 	    }
 	  }, {
-	    key: 'getSequence',
-	    value: function getSequence() {
+	    key: 'getAllSequence',
+	    value: function getAllSequence() {
 	      var seq = [];
 	      var completeFlag = true;
 	      for (var i = 0; i < this.onionBlocks.length; i++) {
@@ -26069,6 +26111,9 @@
 
 	      return { seq: seq.join(''), completeFlag: completeFlag };
 	    }
+	  }, {
+	    key: 'getSequence',
+	    value: function getSequence() {}
 	  }, {
 	    key: 'getBlocks',
 	    value: function getBlocks() {

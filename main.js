@@ -87,8 +87,6 @@ class OnionBuilder {
           //test end
 
         } else {
-          //getSequenceDoesn't exist
-          // this.sequenceDict[md5] = 'N'.repeat(length);
            this.onBlockUpdated(i);
         }
       }
@@ -99,7 +97,7 @@ class OnionBuilder {
     }
   }
 
-  getSequence() {
+  getAllSequence() {
     let seq = [];
     let completeFlag = true;
     for (let i = 0; i < this.onionBlocks.length; i++) {
@@ -116,6 +114,10 @@ class OnionBuilder {
     }
 
     return { seq: seq.join(''), completeFlag };
+  }
+
+  getSequence() {
+
   }
 
   getBlocks() {

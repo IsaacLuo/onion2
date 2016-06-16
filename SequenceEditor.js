@@ -131,11 +131,11 @@ export class SequenceEditor extends React.Component {
       for (let i = 0; i < this.rowY.length; i++) {
         if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
           const blockStart = this.splitBlocks[i].originalBlock;
-          console.log(this.splitBlocks[i],i);
           for (let j = i; j < this.rowY.length; j++) {
              if (scrollPosEnd <= this.rowY[j] + this.rowHeight[j]) {
                const blockEnd = this.splitBlocks[j].originalBlock;
-               console.log(blockStart,blockEnd);
+
+               this.updateBlocks(blockStart,blockEnd);
                break;
              }
            }
@@ -292,6 +292,29 @@ export class SequenceEditor extends React.Component {
 
     this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 
+  }
+
+  updateBlocks(blockStart, blockEnd) {
+    const { blocks } = this.props;
+
+    const updateList = [];
+    let s = 0;
+    for (const block of blocks) {
+      if (block === blockStart) {
+        s++;
+      }
+
+      if (s===1) {
+        //updateBlock
+        updateList.push(block);
+      }
+
+      if (block === blockEnd) {
+        s++;
+      }
+    }
+    
+    
   }
 
   findBlockByIndex(index) {
