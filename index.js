@@ -23310,7 +23310,8 @@
 	          cursorPos: this.state.cursorPos,
 	          selectStartPos: this.state.startCursorPos,
 	          onBlockChanged: this.onBlockChanged,
-	          focus: this.state.focus
+	          focus: this.state.focus,
+	          onQueryNewBlocks: this.props.onQueryNewBlocks
 	        }),
 	        _react2.default.createElement(_InfoBar.InfoBar, {
 	          width: width,
@@ -23344,7 +23345,8 @@
 	  blocks: _react2.default.PropTypes.array,
 	  sequence: _react2.default.PropTypes.string,
 	  width: _react2.default.PropTypes.number,
-	  height: _react2.default.PropTypes.number
+	  height: _react2.default.PropTypes.number,
+	  onQueryNewBlocks: _react2.default.PropTypes.func
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
@@ -24276,7 +24278,8 @@
 	  onSelect: _react2.default.PropTypes.func,
 	  onRowCalculatedHeight: _react2.default.PropTypes.func,
 	  showSelection: _react2.default.PropTypes.bool,
-	  focus: _react2.default.PropTypes.bool
+	  focus: _react2.default.PropTypes.bool,
+	  onQueryNewBlocks: _react2.default.PropTypes.func
 
 	};
 	SequenceEditor.defaultProps = {
@@ -26017,6 +26020,8 @@
 	        }
 
 	        //this.generateFeatures();
+
+	        //return this.updateSequence();
 	      } catch (err) {
 	        _didIteratorError = true;
 	        _iteratorError = err;
@@ -26031,8 +26036,6 @@
 	          }
 	        }
 	      }
-
-	      return this.updateSequence();
 	    }
 	  }, {
 	    key: 'getFeatures',
@@ -26050,8 +26053,8 @@
 	      this.onBlockUpdated = fn;
 	    }
 	  }, {
-	    key: 'updateSequence',
-	    value: function updateSequence() {
+	    key: 'updateAllSequence',
+	    value: function updateAllSequence() {
 	      var _this = this;
 
 	      var completeFlag = true;
@@ -26088,15 +26091,48 @@
 	      }
 	    }
 	  }, {
-	    key: 'getAllSequence',
-	    value: function getAllSequence() {
+	    key: 'updateSequence',
+	    value: function updateSequence(md5List) {
+	      var _this2 = this;
+
+	      var completeFlag = true;
+
+	      var _loop2 = function _loop2(i) {
+	        var _onionBlocks$i2 = _this2.onionBlocks[i];
+	        var md5 = _onionBlocks$i2.md5;
+	        var length = _onionBlocks$i2.length;
+
+	        if (md5List.indexOf(md5) >= 0 && (!_this2.sequenceDict[md5] || _this2.sequenceDict[md5][0] === 'N')) {
+	          (function () {
+	            var originalBlock = _this2.originalBlocks[i];
+	            if (originalBlock.getSequence) {
+	              //testing
+	              setTimeout(function () {
+	                originalBlock.getSequence().then(function (sequence) {
+	                  _this2.sequenceDict[md5] = sequence;
+	                  _this2.onBlockUpdated(i);
+	                });
+	              }, Math.random() * 3000 + 1000);
+	              //test end
+	            }
+	          })();
+	        }
+	      };
+
+	      for (var i = 0; i < this.onionBlocks.length; i++) {
+	        _loop2(i);
+	      }
+	    }
+	  }, {
+	    key: 'getSequence',
+	    value: function getSequence() {
 	      var seq = [];
 	      var completeFlag = true;
 	      for (var i = 0; i < this.onionBlocks.length; i++) {
-	        var _onionBlocks$i2 = this.onionBlocks[i];
-	        var _md = _onionBlocks$i2.md5;
-	        var length = _onionBlocks$i2.length;
-	        var realLength = _onionBlocks$i2.realLength;
+	        var _onionBlocks$i3 = this.onionBlocks[i];
+	        var _md = _onionBlocks$i3.md5;
+	        var length = _onionBlocks$i3.length;
+	        var realLength = _onionBlocks$i3.realLength;
 
 	        if (realLength === 0) {
 	          //empty block
@@ -26111,9 +26147,6 @@
 
 	      return { seq: seq.join(''), completeFlag: completeFlag };
 	    }
-	  }, {
-	    key: 'getSequence',
-	    value: function getSequence() {}
 	  }, {
 	    key: 'getBlocks',
 	    value: function getBlocks() {
@@ -26133,43 +26166,45 @@
 	  function OnionViewer(props) {
 	    _classCallCheck(this, OnionViewer);
 
-	    var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
+	    var _this3 = _possibleConstructorReturn(this, Object.getPrototypeOf(OnionViewer).call(this, props));
 
 	    var container = props.container;
 
-	    _this2.state = {
+	    _this3.state = {
 	      width: props.width,
 	      height: props.height,
 	      block: null,
 	      rendered: Date.now(),
 	      title: '...'
 	    };
-	    _this2.onionBuilder = new OnionBuilder();
-	    _this2.onionBuilder.setEventBlockUpdated(function () {
+	    _this3.onionBuilder = new OnionBuilder();
+	    _this3.onionBuilder.setEventBlockUpdated(function () {
 	      // console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
 
-	      var _this2$onionBuilder$g = _this2.onionBuilder.getSequence();
+	      var _this3$onionBuilder$g = _this3.onionBuilder.getSequence();
 
-	      var seq = _this2$onionBuilder$g.seq;
-	      var completeFlag = _this2$onionBuilder$g.completeFlag;
+	      var seq = _this3$onionBuilder$g.seq;
+	      var completeFlag = _this3$onionBuilder$g.completeFlag;
 
-	      if (completeFlag || _this2.allowToRefresh) {
-	        _this2.setState({
+	      if (completeFlag || _this3.allowToRefresh) {
+	        _this3.setState({
 	          sequence: seq,
-	          blocks: _this2.onionBuilder.getBlocks()
+	          blocks: _this3.onionBuilder.getBlocks()
 	        });
 	      }
 	    });
 
-	    _this2.getChildrenRecursive = function (id) {
+	    _this3.onQueryNewBlocks = _this3.onionBuilder.updateSequence.bind(_this3.onionBuilder);
+
+	    _this3.getChildrenRecursive = function (id) {
 	      gd.api.blocks.blockFlattenConstructAndLists(id);
 	    };
 
-	    _this2.showBlockRange = function () {
+	    _this3.showBlockRange = function () {
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
-	        _this2.setState({ title: topSelectedBlocks[0].metadata.name }); // =
+	        _this3.setState({ title: topSelectedBlocks[0].metadata.name }); // =
 	        var _iteratorNormalCompletion3 = true;
 	        var _didIteratorError3 = false;
 	        var _iteratorError3 = undefined;
@@ -26227,25 +26262,25 @@
 	          }
 	        }
 	      }
-	      _this2.onionBuilder.setBlocks(leafBlocks);
+	      _this3.onionBuilder.setBlocks(leafBlocks);
 	    };
 
 	    window.gd.store.subscribe(function (state, lastAction) {
 	      //console.log(`lastAction,`, lastAction);
 	      //console.log(lastAction.type);
 	      if (lastAction.type === 'FOCUS_BLOCKS' || lastAction.type === 'BLOCK_SET_COLOR' || lastAction.type === 'BLOCK_RENAME') {
-	        _this2.showBlockRange();
+	        _this3.showBlockRange();
 	      } else if (lastAction.type === 'FOCUS_FORCE_BLOCKS') {
 	        var blocks = window.gd.api.focus.focusGetBlocks();
-	        _this2.showBlockRange();
+	        _this3.showBlockRange();
 	      } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
 	        var block = lastAction.block;
-	        _this2.onionBuilder.removeBlock(block.sequence.md5);
-	        _this2.showBlockRange();
+	        _this3.onionBuilder.removeBlock(block.sequence.md5);
+	        _this3.showBlockRange();
 	      }
 	    });
 
-	    return _this2;
+	    return _this3;
 	  }
 
 	  _createClass(OnionViewer, [{
@@ -26273,10 +26308,10 @@
 	  }, {
 	    key: 'componentDidUpdate',
 	    value: function componentDidUpdate() {
-	      var _this3 = this;
+	      var _this4 = this;
 
 	      setTimeout(function () {
-	        _this3.allowToRefresh = true;
+	        _this4.allowToRefresh = true;
 	      }, 1000);
 	    }
 
@@ -26314,7 +26349,7 @@
 	        height: height,
 	        blocks: blocks,
 	        menuTitle: title,
-	        test: '123'
+	        onQueryNewBlocks: this.onQueryNewBlocks
 	      });
 	    }
 	  }]);

@@ -22,6 +22,7 @@ export class OnionForGenomeDesigner extends React.Component {
     sequence: React.PropTypes.string,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+    onQueryNewBlocks: React.PropTypes.func,
   };
   constructor(props) {
     super(props);
@@ -335,6 +336,7 @@ export class OnionForGenomeDesigner extends React.Component {
           selectStartPos={this.state.startCursorPos}
           onBlockChanged={this.onBlockChanged}
           focus={this.state.focus}
+          onQueryNewBlocks = {this.props.onQueryNewBlocks}
         />
 
         <InfoBar

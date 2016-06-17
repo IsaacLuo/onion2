@@ -51,7 +51,7 @@ class OnionBuilder {
 
     //this.generateFeatures();
 
-    return this.updateSequence();
+    //return this.updateSequence();
   }
 
   getFeatures() {
@@ -67,7 +67,7 @@ class OnionBuilder {
     this.onBlockUpdated = fn;
   }
 
-  updateSequence() {
+  updateAllSequence() {
     let completeFlag = true;
     for (let i = 0; i < this.onionBlocks.length; i++) {
       const { md5, length } = this.onionBlocks[i];
@@ -97,7 +97,29 @@ class OnionBuilder {
     }
   }
 
-  getAllSequence() {
+  updateSequence(md5List) {
+    let completeFlag = true;
+    for (let i = 0; i < this.onionBlocks.length; i++) {
+      const { md5, length } = this.onionBlocks[i];
+      if (md5List.indexOf(md5) >= 0
+        && (!this.sequenceDict[md5] || this.sequenceDict[md5][0] === 'N')) {
+          const originalBlock = this.originalBlocks[i];
+          if (originalBlock.getSequence) {
+            //testing
+           setTimeout(() => {
+            originalBlock.getSequence()
+              .then(sequence => {
+                this.sequenceDict[md5] = sequence;
+                this.onBlockUpdated(i);
+              });
+            }, Math.random() * 3000 + 1000);
+            //test end
+          }
+        }
+    }
+  }
+
+  getSequence() {
     let seq = [];
     let completeFlag = true;
     for (let i = 0; i < this.onionBlocks.length; i++) {
@@ -114,10 +136,6 @@ class OnionBuilder {
     }
 
     return { seq: seq.join(''), completeFlag };
-  }
-
-  getSequence() {
-
   }
 
   getBlocks() {
@@ -153,6 +171,8 @@ class OnionViewer extends React.Component {
         });
       }
     });
+
+    this.onQueryNewBlocks = this.onionBuilder.updateSequence.bind(this.onionBuilder);
 
     this.getChildrenRecursive = (id) => {
       gd.api.blocks.blockFlattenConstructAndLists(id)
@@ -249,7 +269,7 @@ class OnionViewer extends React.Component {
         height={height}
         blocks={blocks}
         menuTitle={title}
-        test="123"
+        onQueryNewBlocks={this.onQueryNewBlocks}
       />
     );
   }

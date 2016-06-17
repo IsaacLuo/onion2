@@ -33,6 +33,7 @@ export class SequenceEditor extends React.Component {
     onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
     focus: React.PropTypes.bool,
+    onQueryNewBlocks: React.PropTypes.func,
 
   };
   static defaultProps = {
