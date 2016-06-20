@@ -51,7 +51,8 @@ class OnionBuilder {
 
     //this.generateFeatures();
 
-    //return this.updateSequence();
+    //return this.getSequence();
+    this.onBlockUpdated(0);
   }
 
   getFeatures() {
@@ -77,6 +78,7 @@ class OnionBuilder {
         if (originalBlock.getSequence) {
           //testing
           //setTimeout(() => {
+          console.log('getting',originalBlock.metadata.name);
             originalBlock.getSequence()
               .then(sequence => {
                 this.sequenceDict[md5] = sequence;
@@ -105,14 +107,17 @@ class OnionBuilder {
         && (!this.sequenceDict[md5] || this.sequenceDict[md5][0] === 'N')) {
           const originalBlock = this.originalBlocks[i];
           if (originalBlock.getSequence) {
+            //set sequenceDict to prevent multiple times getSequence
+            this.sequenceDict[md5] = '~~~';
             //testing
-           setTimeout(() => {
+           //setTimeout(() => {
+            //console.log('getSequence', md5List);
             originalBlock.getSequence()
               .then(sequence => {
                 this.sequenceDict[md5] = sequence;
                 this.onBlockUpdated(i);
               });
-            }, Math.random() * 3000 + 1000);
+            //}, Math.random() * 3000 + 1000);
             //test end
           }
         }
@@ -207,6 +212,7 @@ class OnionViewer extends React.Component {
       if (lastAction.type === 'FOCUS_BLOCKS'
         || lastAction.type === 'BLOCK_SET_COLOR'
         || lastAction.type === 'BLOCK_RENAME'
+          || lastAction.type ==='FOCUS_BLOCK_OPTION'
       ) {
         this.showBlockRange();
       } 
@@ -220,12 +226,14 @@ class OnionViewer extends React.Component {
       }
     });
 
+
+
   }
 
   componentWillMount() {
     // console.log('componentwillmount');
     //this.updateDimensions();
-    this.showBlockRange();
+
   }
 
   componentDidMount() {
@@ -236,6 +244,7 @@ class OnionViewer extends React.Component {
     //let target = $('.ProjectDetail-chrome').get(0);
     //target.addEventListener('resize', this.updateDimensions.bind(this));
     this.allowToRefresh = true;
+    this.showBlockRange();
   }
 
   componentWillUnmount() {

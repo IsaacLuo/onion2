@@ -98,8 +98,10 @@ export class SequenceEditor extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.sequence !== this.props.sequence || nextProps.width !== this.props.width) {
-      this.initialRowPos(nextProps.sequence, nextProps.width);
+    if(nextProps.sequence) {
+      if (nextProps.sequence.length !== this.props.sequence.length || nextProps.width !== this.props.width) {
+        this.initialRowPos(nextProps.sequence, nextProps.width);
+      }
     }
 
     if (this.props.cursorPos !== nextProps.cursorPos
@@ -118,30 +120,18 @@ export class SequenceEditor extends React.Component {
 
   shouldComponentUpdate(np, ns) {
     const update = !compareProps(this.props, np) || !compareProps(this.state, ns);
+    //return true;
     return update;
+
   }
+
 
   initCallBack() {
     const _this = this;
 
     this.onScroll = (e) => {
-      const scrollPos = e.target.scrollTop;
-      const height = e.target.offsetHeight;
-      const scrollPosEnd = scrollPos + height;
-      // find the first block and the last block
-      for (let i = 0; i < this.rowY.length; i++) {
-        if (scrollPos <= this.rowY[i] + this.rowHeight[i]) {
-          const blockStart = this.splitBlocks[i].originalBlock;
-          for (let j = i; j < this.rowY.length; j++) {
-             if (scrollPosEnd <= this.rowY[j] + this.rowHeight[j]) {
-               const blockEnd = this.splitBlocks[j].originalBlock;
-
-               this.updateBlocks(blockStart,blockEnd);
-               break;
-             }
-           }
-        }
-      }
+     // console.log('scrolling');
+      _this.updateSequenceInWindow();
     };
 
     this.onMouseDown = (e) => {
@@ -266,12 +256,16 @@ export class SequenceEditor extends React.Component {
     };
 
     this.onRowCalculatedHeight = (row, height) => {
-      this.rowHeight[row] = height;
+      _this.rowHeight[row] = height;
       if (row > 0) {
-        this.rowY[row] = this.rowY[row - 1] + height;
+        _this.rowY[row] = _this.rowY[row - 1] + height;
       } else {
-        this.rowY[0] = 0;
+        _this.rowY[0] = 0;
       }
+
+      //test if it in window, if yes, updateSequence
+
+
     };
 
     this.onClick = (e) => {
@@ -293,29 +287,6 @@ export class SequenceEditor extends React.Component {
 
     this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 
-  }
-
-  updateBlocks(blockStart, blockEnd) {
-    const { blocks } = this.props;
-
-    const updateList = [];
-    let s = 0;
-    for (const block of blocks) {
-      if (block === blockStart) {
-        s++;
-      }
-
-      if (s===1) {
-        //updateBlock
-        updateList.push(block);
-      }
-
-      if (block === blockEnd) {
-        s++;
-      }
-    }
-    
-    
   }
 
   findBlockByIndex(index) {
@@ -757,10 +728,44 @@ export class SequenceEditor extends React.Component {
           aas={aaFrags}
           enzymes={enzymeFrags}
           onCalculatedHeight={this.onRowCalculatedHeight}
+          onRendered={this.onRowRendered}
         />);
 
       j++;
     }
+  }
+
+
+  updateSequenceInWindow(){
+    const dom = document.getElementsByClassName('SequenceEditor')[0];
+    const scrollPos = dom.scrollTop;
+    const height = dom.offsetHeight;
+    const scrollPosEnd = scrollPos + height;
+    const scrollHeight = dom.scrollHeight;
+    // find the first block and the last block
+    const seqLength = this.props.sequence.length;
+    const updateList = [];
+    const debugList = [];
+    const littleMore = height/2;
+    for(const block of this.props.blocks) {
+      const blockStartPos  = (block.start)*scrollHeight/seqLength;
+      const blockEndPos = (block.start+block.length)*scrollHeight/seqLength;
+      if(
+          blockEndPos >= scrollPos-littleMore && blockEndPos <= scrollPosEnd+littleMore
+          ||
+          blockStartPos >= scrollPos-littleMore && blockStartPos <= scrollPosEnd+littleMore
+          ||
+          blockStartPos <=scrollPos && blockEndPos >=scrollPosEnd
+
+      )
+      {
+        updateList.push(block.md5);
+       // debugList.push(block.name);
+
+      }
+    }
+    //console.log(debugList);
+    this.props.onQueryNewBlocks(updateList);
   }
 
   render() {
@@ -803,6 +808,7 @@ export class SequenceEditor extends React.Component {
     }
 
     this.splitRows(this.colNum);
+    this.updateSequenceInWindow();
     return (
       <div
         style={Object.assign({

@@ -5,7 +5,6 @@ var webpackBase = require('./webpack.config.base');
 module.exports = Object.assign({}, webpackBase, {
 	    devtool: 'source-map',
 	    entry  : [
-		    'webpack-hot-middleware/client',
 		    './main.js'
 	],
 	    output : {
@@ -13,7 +12,6 @@ module.exports = Object.assign({}, webpackBase, {
 	},
 	    plugins: [
 		    new webpack.optimize.OccurenceOrderPlugin(),
-		    //new webpack.HotModuleReplacementPlugin(),
 		    new webpack.NoErrorsPlugin(),
 		    new webpack.DefinePlugin({
 			    'process.env': {
