@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d090af6b-e67a-466d-bc74-bb387cbcd1e5" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SequenceEditor.js" afterPath="$PROJECT_DIR$/SequenceEditor.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OnionForGenomeDesigner.js" afterPath="$PROJECT_DIR$/OnionForGenomeDesigner.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.js" afterPath="$PROJECT_DIR$/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.js" afterPath="$PROJECT_DIR$/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webpack.config.debug.js" afterPath="$PROJECT_DIR$/webpack.config.debug.js" />
     </list>
     <ignored path="onion2.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="116" column="50" selection-start-line="116" selection-start-column="50" selection-end-line="116" selection-end-column="50" />
+            <state relative-caret-position="1051">
+              <caret line="326" column="0" selection-start-line="326" selection-start-column="0" selection-end-line="326" selection-end-column="0" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -66,8 +64,8 @@
       <file leaf-file-name="OnionForGenomeDesigner.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OnionForGenomeDesigner.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9">
-              <caret line="323" column="23" selection-start-line="323" selection-start-column="23" selection-end-line="323" selection-end-column="23" />
+            <state relative-caret-position="420">
+              <caret line="46" column="55" selection-start-line="46" selection-start-column="55" selection-end-line="46" selection-end-column="55" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -75,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SequenceEditor.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SequenceEditor.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SequenceEditor.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15">
-              <caret line="747" column="9" selection-start-line="747" selection-start-column="9" selection-end-line="747" selection-end-column="9" />
+            <state relative-caret-position="525">
+              <caret line="781" column="32" selection-start-line="781" selection-start-column="32" selection-end-line="781" selection-end-column="32" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
                 <element signature="n#!!block;n#splitAAs#0;n#SequenceEditor#0" expanded="false" />
@@ -109,8 +107,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/main.js" />
         <option value="$PROJECT_DIR$/SequenceEditor.js" />
+        <option value="$PROJECT_DIR$/OnionForGenomeDesigner.js" />
+        <option value="$PROJECT_DIR$/main.js" />
       </list>
     </option>
   </component>
@@ -123,8 +122,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="77" />
-    <option name="y" value="69" />
+    <option name="x" value="350" />
+    <option name="y" value="105" />
     <option name="width" value="1400" />
     <option name="height" value="1265" />
   </component>
@@ -311,16 +310,16 @@
       <option name="presentableId" value="Default" />
       <updated>1466433492196</updated>
       <workItem from="1466433493770" duration="1427000" />
-      <workItem from="1466435834416" duration="7086000" />
+      <workItem from="1466435834416" duration="11114000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8513000" />
+    <option name="totallyTimeSpent" value="12541000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="77" y="69" width="1400" height="1265" extended-state="0" />
-    <editor active="true" />
+    <frame x="350" y="105" width="1400" height="1265" extended-state="1" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -389,16 +388,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/OnionForGenomeDesigner.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="323" column="23" selection-start-line="323" selection-start-column="23" selection-end-line="323" selection-end-column="23" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/OnionForYeastfab.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -419,24 +408,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="116" column="50" selection-start-line="116" selection-start-column="50" selection-end-line="116" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SequenceEditor.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="747" column="9" selection-start-line="747" selection-start-column="9" selection-end-line="747" selection-end-column="9" />
+        <state relative-caret-position="525">
+          <caret line="781" column="32" selection-start-line="781" selection-start-column="32" selection-end-line="781" selection-end-column="32" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
             <element signature="n#!!block;n#splitAAs#0;n#SequenceEditor#0" expanded="false" />
             <element signature="n#!!block;n#splitEnzymes#0;n#SequenceEditor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OnionForGenomeDesigner.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="46" column="55" selection-start-line="46" selection-start-column="55" selection-end-line="46" selection-end-column="55" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1051">
+          <caret line="326" column="0" selection-start-line="326" selection-start-column="0" selection-end-line="326" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>

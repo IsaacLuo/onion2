@@ -22924,7 +22924,7 @@
 	      menuTitle: '',
 	      sequence: props.sequence, //DNA sequence, in ACGT
 	      features: props.features,
-	      titleColor: '#000000',
+	      titleColor: props.titleColor ? props.titleColor : '#000000',
 	
 	      focus: true
 	    };
@@ -26124,7 +26124,10 @@
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
-	        _this3.setState({ title: topSelectedBlocks[0].metadata.name }); // =
+	        _this3.setState({
+	          title: topSelectedBlocks[0].metadata.name,
+	          titleColor: topSelectedBlocks[0].metadata.color
+	        }); // =
 	        var _iteratorNormalCompletion3 = true;
 	        var _didIteratorError3 = false;
 	        var _iteratorError3 = undefined;
@@ -26257,6 +26260,7 @@
 	      var _state = this.state;
 	      var sequence = _state.sequence;
 	      var title = _state.title;
+	      var titleColor = _state.titleColor;
 	      var features = _state.features;
 	      var blocks = _state.blocks;
 	      var width = _state.width;
@@ -26270,6 +26274,7 @@
 	        height: height,
 	        blocks: blocks,
 	        menuTitle: title,
+	        menuColor: titleColor,
 	        onQueryNewBlocks: this.onQueryNewBlocks
 	      });
 	    }

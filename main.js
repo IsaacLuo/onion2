@@ -187,7 +187,10 @@ class OnionViewer extends React.Component {
       let leafBlocks = [];
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
       if (topSelectedBlocks && topSelectedBlocks.length) {
-        this.setState({ title: topSelectedBlocks[0].metadata.name });// =
+        this.setState({
+          title: topSelectedBlocks[0].metadata.name,
+          titleColor: topSelectedBlocks[0].metadata.color,
+        });// =
         for (let block of topSelectedBlocks) {
           //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
           const children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
@@ -268,7 +271,7 @@ class OnionViewer extends React.Component {
   }
 
   render() {
-    const { sequence, title, features, blocks, width, height } = this.state;
+    const { sequence, title, titleColor, features, blocks, width, height } = this.state;
     //console.log('render dimensions', width, height);
     return (
       <OnionForGenomeDesigner
@@ -278,6 +281,7 @@ class OnionViewer extends React.Component {
         height={height}
         blocks={blocks}
         menuTitle={title}
+        menuColor={titleColor}
         onQueryNewBlocks={this.onQueryNewBlocks}
       />
     );

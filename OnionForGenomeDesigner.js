@@ -44,7 +44,7 @@ export class OnionForGenomeDesigner extends React.Component {
       menuTitle: '',
       sequence: props.sequence, //DNA sequence, in ACGT
       features: props.features,
-      titleColor: '#000000',
+      titleColor: props.titleColor ? props.titleColor : '#000000',
 
       focus: true,
     };
