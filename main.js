@@ -281,7 +281,7 @@ class OnionViewer extends React.Component {
         height={height}
         blocks={blocks}
         menuTitle={title}
-        menuColor={titleColor}
+        titleColor={titleColor}
         onQueryNewBlocks={this.onQueryNewBlocks}
       />
     );

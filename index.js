@@ -21975,20 +21975,15 @@
 
 	      var itemStyleWithNumeric = Object.assign(_extends({}, itemStyle), { marginTop: 5 });
 
-	      var length = endPos - startPos;
+	      var length = seq.length;
 
 	      var gcText = void 0;
 	      var tmText = void 0;
-	      if (length === seq.length) {
-	        var dna = new _DNASeq.DNASeq(seq);
-	        var gc = dna.getGCPercentage();
-	        var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
-	        gcText = (gc * 100).toFixed(1) + '%';
-	        tmText = '' + (length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-');
-	      } else {
-	        gcText = '-';
-	        tmText = '-';
-	      }
+	      var dna = new _DNASeq.DNASeq(seq);
+	      var gc = dna.getGCPercentage();
+	      var tm = length >= 10 && length <= 50 ? dna.getTM() : 0;
+	      gcText = (gc * 100).toFixed(1) + '%';
+	      tmText = '' + (length >= 10 && length <= 50 ? tm.toFixed(1) + '°C' : '-');
 
 	      var NC = blocks ? _NumericControlGD.NumericControlGD : _NumericControl.NumericControl;
 
@@ -23119,7 +23114,7 @@
 	      var showRuler = _state.showRuler;
 	      var showBlockBar = _state.showBlockBar;
 	      var showAA = _state.showAA;
-	      var titleColor = _state.titleColor;
+	      var titleColor = this.props.titleColor;
 
 	      var sequence = void 0;
 	      var features = void 0;
@@ -23162,11 +23157,14 @@
 	      if (sequence) {
 	        selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
 	        selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-	        selectedSeq = sequence.substr(selectionStart, selectionLength);
+	        if (selectionLength > 0) {
+	          selectedSeq = sequence.substr(selectionStart, selectionLength);
+	        } else {
+	          selectedSeq = sequence;
+	        }
 	        selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
 	        selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
 	      }
-
 	      //const menuTitle = this.state.menuTitle;
 	      var menuTitle = this.props.menuTitle;
 
@@ -23242,6 +23240,7 @@
 	          endPos: selectionLength > 0 ? selectionStart + selectionLength : -1,
 	          seq: selectedSeq,
 	          blocks: blocks,
+	          showTM: false,
 	          style: {
 	            textAlign: 'right',
 	            width: width,
@@ -26274,7 +26273,7 @@
 	        height: height,
 	        blocks: blocks,
 	        menuTitle: title,
-	        menuColor: titleColor,
+	        titleColor: titleColor,
 	        onQueryNewBlocks: this.onQueryNewBlocks
 	      });
 	    }

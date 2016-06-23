@@ -216,7 +216,8 @@ export class OnionForGenomeDesigner extends React.Component {
     const width = Math.max(this.props.width, 300);
     const height = Math.max(this.props.height, 100);
 
-    const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA, titleColor } = this.state;
+    const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
+    const {titleColor} = this.props;
     let sequence;
     let features;
     let blocks = this.state.blocks;
@@ -260,12 +261,15 @@ export class OnionForGenomeDesigner extends React.Component {
     if (sequence) {
       selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
       selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-      selectedSeq = sequence.substr(selectionStart, selectionLength);
+      if(selectionLength>0) {
+        selectedSeq = sequence.substr(selectionStart, selectionLength);
+      } else {
+        selectedSeq = sequence;
+      }
       selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
       selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
 
     }
-
     //const menuTitle = this.state.menuTitle;
     const menuTitle = this.props.menuTitle;
 
@@ -346,6 +350,7 @@ export class OnionForGenomeDesigner extends React.Component {
           endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
           seq={selectedSeq}
           blocks={blocks}
+          showTM={false}
           style={{
             textAlign: 'right',
             width,

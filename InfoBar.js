@@ -92,21 +92,17 @@ export class InfoBar extends React.Component {
 
     const itemStyleWithNumeric = Object.assign({ ...itemStyle }, { marginTop: 5 });
 
-    const length = endPos - startPos;
+    const length = seq.length;
 
 
     let gcText;
     let tmText;
-    if (length === seq.length) {
       const dna = new DNASeq(seq);
       const gc = dna.getGCPercentage();
       const tm = (length >= 10 && length <= 50) ? dna.getTM() : 0;
       gcText = `${(gc * 100).toFixed(1)}%`;
       tmText = `${length >= 10 && length <= 50 ? `${tm.toFixed(1)}°C` : '-'}`;
-    } else {
-      gcText = '-';
-      tmText = '-';
-    }
+
 
     let NC = blocks ? NumericControlGD : NumericControl;
 
