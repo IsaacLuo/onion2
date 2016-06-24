@@ -121,6 +121,9 @@ class OnionBuilder {
             //test end
           }
         }
+      // else if (this.sequenceDict[md5]) {
+      //   delete this.sequenceDict[md5];
+      // }
     }
   }
 

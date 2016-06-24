@@ -22643,6 +22643,7 @@
 	      };
 
 	      var showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
+	      //{layerMenuItem('Enzymes', 'showEnzymes', showEnzymes)}
 	      return _react2.default.createElement(
 	        'div',
 	        null,
@@ -22687,7 +22688,6 @@
 	            }), 'showAll', showAll, '0px 0px 0px 10px'),
 	            layerMenuItem('Features', 'showFeatures', showFeatures),
 	            layerMenuItem('Reverse Strand', 'showRS', showRS),
-	            layerMenuItem('Enzymes', 'showEnzymes', showEnzymes),
 	            layerMenuItem('Amino Acids', 'showAA', showAA),
 	            layerMenuItem('Ruler', 'showRuler', showRuler)
 	          )
@@ -24031,7 +24031,7 @@
 	          showStartPos: rowShowStartPos,
 	          seqMainStyle: this.seqMainStyle,
 	          seqCompStyle: this.seqCompStyle,
-	          showEnzymes: showEnzymes,
+	          showEnzymes: false && showEnzymes,
 	          showLadder: showLadder,
 	          showRS: showRS,
 	          showFeatures: showFeatures,
@@ -24077,10 +24077,9 @@
 	          var blockEndPos = (block.start + block.length) * scrollHeight / seqLength;
 	          if (blockEndPos >= scrollPos - littleMore && blockEndPos <= scrollPosEnd + littleMore || blockStartPos >= scrollPos - littleMore && blockStartPos <= scrollPosEnd + littleMore || blockStartPos <= scrollPos && blockEndPos >= scrollPosEnd) {
 	            updateList.push(block.md5);
-	            // debugList.push(block.name);
+	            debugList.push(block.name);
 	          }
 	        }
-	        //console.log(debugList);
 	      } catch (err) {
 	        _didIteratorError3 = true;
 	        _iteratorError3 = err;
@@ -24096,6 +24095,7 @@
 	        }
 	      }
 
+	      console.log(debugList);
 	      this.props.onQueryNewBlocks(updateList);
 	    }
 	  }, {
@@ -26036,6 +26036,9 @@
 	            //test end
 	          }
 	        }
+	        // else if (this.sequenceDict[md5]) {
+	        //   delete this.sequenceDict[md5];
+	        // }
 	      };
 
 	      for (var i = 0; i < this.onionBlocks.length; i++) {

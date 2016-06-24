@@ -713,7 +713,7 @@ export class SequenceEditor extends React.Component {
           showStartPos={rowShowStartPos}
           seqMainStyle={this.seqMainStyle}
           seqCompStyle={this.seqCompStyle}
-          showEnzymes={showEnzymes}
+          showEnzymes={false && showEnzymes}
           showLadder={showLadder}
           showRS={showRS}
           showFeatures={showFeatures}
@@ -760,11 +760,11 @@ export class SequenceEditor extends React.Component {
       )
       {
         updateList.push(block.md5);
-       // debugList.push(block.name);
+        debugList.push(block.name);
 
       }
     }
-    //console.log(debugList);
+    console.log(debugList);
     this.props.onQueryNewBlocks(updateList);
   }
 
