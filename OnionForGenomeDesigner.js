@@ -8,6 +8,7 @@ import { InfoBar } from './InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
 import {PositionCalculator} from './SequenceEditor/PositionCalculator';
+import { SequenceEditorFilter} from './SequenceEditorFilter/SequenceEditorFilter'
 
 const $ = require('jquery');
 window.$ = $;
@@ -32,8 +33,8 @@ export class OnionForGenomeDesigner extends React.Component {
 
       //layers switch
       showEnzymes: true,
-      showLadder: true,
-      showRS: true,
+      showLadder: false,
+      showRS: false,
       showFeatures: true,
       showRuler: true,
       showBlockBar: true,
@@ -318,7 +319,7 @@ export class OnionForGenomeDesigner extends React.Component {
         />
 
 
-        <SequenceEditor
+        <SequenceEditorFilter
           sequence={sequence}
           showComplement
           features={features}

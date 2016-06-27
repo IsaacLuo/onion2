@@ -13,24 +13,29 @@ class OnionBuilder {
   }
 
   setBlocks(blocks) {
+    //
     this.originalBlocks = blocks;
     this.onionBlocks = [];
     this.features = [];
+    this.sequenceDict = {};
 
     let start = 0;
     let realStart = 0;
-    for (const block of blocks) {
+    for (let block of blocks) {
       const { length, md5 } = block.sequence;
       const { name, color } = block.metadata;
       let fakeLength = length === 0 ? 13 : length;
+      const hash = md5 ? md5 : Math.random().toString(36).substr(2);
       this.onionBlocks.push({
         md5,
+        hash,
         length: fakeLength,
         name,
         color,
         start,
         realStart,
         realLength: length,
+        gdBlock: block,
       });
 
       const { annotations } = block.sequence;
@@ -99,26 +104,20 @@ class OnionBuilder {
     }
   }
 
-  updateSequence(md5List) {
-    let completeFlag = true;
-    for (let i = 0; i < this.onionBlocks.length; i++) {
-      const { md5, length } = this.onionBlocks[i];
-      if (md5List.indexOf(md5) >= 0
-        && (!this.sequenceDict[md5] || this.sequenceDict[md5][0] === 'N')) {
-          const originalBlock = this.originalBlocks[i];
+  updateSequence(blockList) {
+    for ( const block of blockList) {
+      const { hash } = block;
+        if (!this.sequenceDict[hash] ) {
+          const originalBlock = block.gdBlock;
           if (originalBlock.getSequence) {
             //set sequenceDict to prevent multiple times getSequence
-            this.sequenceDict[md5] = '~~~';
-            //testing
-           //setTimeout(() => {
+            this.sequenceDict[hash] = '~~~';
             //console.log('getSequence', md5List);
             originalBlock.getSequence()
               .then(sequence => {
-                this.sequenceDict[md5] = sequence;
-                this.onBlockUpdated(i);
+                this.sequenceDict[hash] = sequence;
+                this.onBlockUpdated();
               });
-            //}, Math.random() * 3000 + 1000);
-            //test end
           }
         }
       // else if (this.sequenceDict[md5]) {
@@ -167,6 +166,7 @@ class OnionViewer extends React.Component {
       block: null,
       rendered: Date.now(),
       title: '...',
+      sequence: '',
     };
     this.onionBuilder = new OnionBuilder();
     this.onionBuilder.setEventBlockUpdated( () => {

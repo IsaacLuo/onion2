@@ -35,6 +35,9 @@ export class SequenceEditor extends React.Component {
     focus: React.PropTypes.bool,
     onQueryNewBlocks: React.PropTypes.func,
 
+    startRow: React.PropTypes.number,
+    endRow: React.PropTypes.number,
+
   };
   static defaultProps = {
     sequence: '', //debug sequence, it should be repalced by inputing
@@ -75,7 +78,9 @@ export class SequenceEditor extends React.Component {
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(props.sequence);
-    this.enzymeSites = this.sequence.calcEnzymeSites(props.enzymeList);
+    if(props.enzymeList) {
+      this.enzymeSites = this.sequence.calcEnzymeSites(props.enzymeList);
+    }
 
     this.aas = this.calcAAs(props.sequence, props.features);
 
@@ -99,7 +104,8 @@ export class SequenceEditor extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if(nextProps.sequence) {
-      if (nextProps.sequence.length !== this.props.sequence.length || nextProps.width !== this.props.width) {
+      if (nextProps.sequence !== this.props.sequence || nextProps.width !== this.props.width) {
+        this.sequence = new DNASeq(nextProps.sequence);
         this.initialRowPos(nextProps.sequence, nextProps.width);
       }
     }
@@ -131,7 +137,13 @@ export class SequenceEditor extends React.Component {
 
     this.onScroll = (e) => {
      // console.log('scrolling');
-      _this.updateSequenceInWindow();
+      //_this.updateSequenceInWindow();
+      if (this.props.onScroll) {
+        this.props.onScroll(e);
+      }
+      if (this.props.disableScroll){
+        e.preventDefault();
+      }
     };
 
     this.onMouseDown = (e) => {
@@ -606,7 +618,11 @@ export class SequenceEditor extends React.Component {
       }
     }
 
-    for (let i = 0, rowCount = 0; i < sequence.length; i += colNum, rowCount++) {
+    let { startRow, endRow } = this.props;
+    if (!startRow) startRow = 0;
+    if (!endRow || endRow> Math.ceil(sequence.length/colNum)) endRow = Math.ceil(sequence.length/colNum);
+
+    for (let i = startRow*colNum, rowCount = startRow; rowCount<endRow; i += colNum, rowCount++) {
       const featureFrags = this.findFeaturesInRow(i, colNum);
       //let aaFrags = this.findAAInRow(i,colNum);
 
@@ -737,35 +753,62 @@ export class SequenceEditor extends React.Component {
 
 
   updateSequenceInWindow(){
-    const dom = document.getElementsByClassName('SequenceEditor')[0];
-    const scrollPos = dom.scrollTop;
-    const height = dom.offsetHeight;
-    const scrollPosEnd = scrollPos + height;
-    const scrollHeight = dom.scrollHeight;
-    // find the first block and the last block
-    const seqLength = this.props.sequence.length;
-    const updateList = [];
-    const debugList = [];
-    const littleMore = height/2;
-    for(const block of this.props.blocks) {
-      const blockStartPos  = (block.start)*scrollHeight/seqLength;
-      const blockEndPos = (block.start+block.length)*scrollHeight/seqLength;
-      if(
-          blockEndPos >= scrollPos-littleMore && blockEndPos <= scrollPosEnd+littleMore
-          ||
-          blockStartPos >= scrollPos-littleMore && blockStartPos <= scrollPosEnd+littleMore
-          ||
-          blockStartPos <=scrollPos && blockEndPos >=scrollPosEnd
+    // const dom = document.getElementsByClassName('SequenceEditor')[0];
+    // const scrollPos = dom.scrollTop;
+    // const height = dom.offsetHeight;
+    // const scrollPosEnd = scrollPos + height;
+    // const scrollHeight = dom.scrollHeight;
+    // // find the first block and the last block
+    // const seqLength = this.props.sequence.length;
+    // const updateList = [];
+    // const debugList = [];
+    // const littleMore = height/2;
+    // for(const block of this.props.blocks) {
+    //   const blockStartPos  = (block.start)*scrollHeight/seqLength;
+    //   const blockEndPos = (block.start+block.length)*scrollHeight/seqLength;
+    //   if(
+    //       blockEndPos >= scrollPos-littleMore && blockEndPos <= scrollPosEnd+littleMore
+    //       ||
+    //       blockStartPos >= scrollPos-littleMore && blockStartPos <= scrollPosEnd+littleMore
+    //       ||
+    //       blockStartPos <=scrollPos && blockEndPos >=scrollPosEnd
+    //
+    //   )
+    //   {
+    //     updateList.push(block.md5);
+    //     debugList.push(block.name);
+    //
+    //   }
+    // }
+    // console.log(debugList);
+    // this.props.onQueryNewBlocks(updateList);
+    let { startRow, endRow, sequence } = this.props;
 
-      )
-      {
-        updateList.push(block.md5);
-        debugList.push(block.name);
+    if (!startRow) startRow = 0;
+    if (!endRow || endRow> Math.ceil(sequence.length/this.colNum)) endRow = Math.ceil(sequence.length/this.colNum);
 
-      }
+    let updateSet = new Set();
+    for(let i = startRow; i<endRow; i++){
+      for( let j = 0; j< this.splitBlocks[i].length; j++)
+      updateSet.add(this.splitBlocks[i][j].originalBlock);
     }
-    console.log(debugList);
+
+    let count = updateSet.size;
+    //console.log('updateSet ',count)
+
+    const updateList = [];
+    for(const block of updateSet){
+      // block.getSequence()
+      //   .then(sequence => {
+      //     //updateSet[block] = sequence;
+      //     //this.sequence = this.state.sequence.substr(0,block.start).toString() + sequence + this.state.sequence + this.state.sequence.substr(block.start+block.length, this.state.sequence.length).toString();
+      //     this.sequence = this.sequence.setSegment(block.start,block.length,sequence);
+      //     this.setState({sequence})
+      //   });
+      updateList.push(block);
+    }
     this.props.onQueryNewBlocks(updateList);
+
   }
 
   render() {
@@ -779,7 +822,7 @@ export class SequenceEditor extends React.Component {
           overflowY: 'scroll',
           overflowX: 'hidden',
         }, style)}
-        onScroll={this.onScroll}
+        onWheel={this.onScroll}
         onClick={this.onClick}
         className="SequenceEditor"
       >
@@ -809,12 +852,13 @@ export class SequenceEditor extends React.Component {
 
     this.splitRows(this.colNum);
     this.updateSequenceInWindow();
+    const overflowY = this.props.disableScroll ? 'hidden' : 'scroll';
     return (
       <div
         style={Object.assign({
           width,
           height,
-          overflowY: 'scroll',
+          overflowY: {overflowY},
           overflowX: 'hidden',
         },style)}
         onScroll={this.onScroll}
