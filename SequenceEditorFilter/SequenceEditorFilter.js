@@ -94,15 +94,27 @@ export class SequenceEditorFilter extends React.Component {
   }
 
   render() {
-    const {sequence, width, height} =  this.props;
+    const {sequence, width, height, showLadder, showReverse, showRuler } =  this.props;
     const {topRow} = this.state;
-    let startPos = topRow * this.colNum;
-    let endPos = (topRow + 3) * this.colNum;
+
+    let rowHeight = 61.5;
+    if (showRuler){
+      rowHeight+=25;
+    }
+    if (showReverse) {
+      rowHeight+=14;
+    }
+    if (showRuler || showReverse)
+    {
+      rowHeight+=7;
+    }
+
+    const rowsToShow = Math.ceil(height/rowHeight);
 
     let newProp = {
       ...this.props,
       startRow: topRow,
-      endRow: topRow + 10,
+      endRow: topRow + rowsToShow,
       disableScroll: true,
 
     };

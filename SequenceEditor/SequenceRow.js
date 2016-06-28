@@ -237,6 +237,7 @@ export class SequenceRow extends React.Component {
           y={y0}
           color={b.color}
           text={b.name}
+          key={i}
         />
       )
     }

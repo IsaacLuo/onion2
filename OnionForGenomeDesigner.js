@@ -56,7 +56,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
     this.onSetCursor = this.onSetCursor.bind(this);
     this.onInfoBarChange = this.onInfoBarChange.bind(this);
-    this.onBlockChanged = this.onBlockChanged.bind(this);
+    //this.onBlockChanged = this.onBlockChanged.bind(this);
     this.menuCommand = this.menuCommand.bind(this);
     this.initCallBack();
 
@@ -114,6 +114,7 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log('np',this.props, nextProps);
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
@@ -184,9 +185,9 @@ export class OnionForGenomeDesigner extends React.Component {
     });
   }
 
-  onBlockChanged(block, e) {
-    this.setState({ menuTitle: block[0].name, lastAction: 'blockChanged' });
-  }
+  // onBlockChanged(block, e) {
+  //   this.setState({ menuTitle: block[0].name, lastAction: 'blockChanged' });
+  // }
 
   //while user fires a menu command
   menuCommand(command, value) {
@@ -212,7 +213,7 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   render() {
-    // console.log("render ogd");
+    //console.log("render ogd", this.props, this.state);
     //set a minimum size;
     const width = Math.max(this.props.width, 300);
     const height = Math.max(this.props.height, 100);
@@ -222,25 +223,6 @@ export class OnionForGenomeDesigner extends React.Component {
     let sequence;
     let features;
     let blocks = this.state.blocks;
-
-    // //test load a demo file if sequence and features doesn't exist
-    // if (this.state && this.state.sequence) {
-    //   sequence = this.state.sequence ? this.state.sequence : onionFile.seq;
-    // }
-    //
-    // if (this.state && this.state.features) {
-    //   features = this.state.features ? this.state.features : onionFile.features;
-    // }
-    //
-    // if (!blocks) {
-    //   blocks = onionFile.blocks;
-    // }
-    //
-    // //blocks = this.convertBlocks(this.state.block);
-    // if (!sequence) {
-    //   sequence = onionFile.seq;
-    //   features = onionFile.features;
-    // }
 
     sequence = this.state.sequence;
     features = this.state.features;
@@ -339,7 +321,6 @@ export class OnionForGenomeDesigner extends React.Component {
           blocks={blocks}
           cursorPos={this.state.cursorPos}
           selectStartPos={this.state.startCursorPos}
-          onBlockChanged={this.onBlockChanged}
           focus={this.state.focus}
           onQueryNewBlocks = {this.props.onQueryNewBlocks}
         />
