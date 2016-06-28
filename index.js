@@ -14334,7 +14334,7 @@
 	  _createClass(DNASeq, [{
 	    key: 'removeInvalidLetter',
 	    value: function removeInvalidLetter(src) {
-	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
+	      return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^~|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
 	      //return src;
 	    }
 	  }, {
@@ -14534,7 +14534,8 @@
 	  d: 'c',
 	  h: 'g',
 	  X: 'X',
-	  '·': '·'
+	  '·': '·',
+	  '~': '~'
 	};
 	DNASeq.codonDict = {
 	  TTT: 'F',
@@ -22900,10 +22901,9 @@
 	          var _block$sequence = block.sequence;
 	          var length = _block$sequence.length;
 	          var md5 = _block$sequence.md5;
-	          var _block$metadata = block.metadata;
-	          var name = _block$metadata.name;
-	          var color = _block$metadata.color;
+	          var color = block.metadata.color;
 
+	          var name = block.getName();
 	          var fakeLength = length === 0 ? 13 : length;
 	          var hash = md5 ? md5 : Math.random().toString(36).substr(2);
 	          this.onionBlocks.push({
@@ -23036,12 +23036,10 @@
 	          var block = _step3.value;
 	          var hash = block.hash;
 
-	          if (!_this.sequenceDict[hash]) {
+	          if (block.realLength !== 0 && !_this.sequenceDict[hash]) {
 	            var originalBlock = block.gdBlock;
 	            if (originalBlock.getSequence) {
-	              //set sequenceDict to prevent multiple times getSequence
-	              //this.sequenceDict[hash] = '~~~';
-	              //console.log('getSequence', md5List);
+	              _this.sequenceDict[hash] = '~'.repeat(block.length);
 	              originalBlock.getSequence().then(function (sequence) {
 	                _this.sequenceDict[hash] = sequence;
 	                _this.onBlockUpdated();
@@ -24249,7 +24247,7 @@
 	  }, {
 	    key: 'componentWillReceiveProps',
 	    value: function componentWillReceiveProps(nextProps) {
-	      console.log('np', this.props, nextProps);
+	      //console.log('np',this.props, nextProps);
 	      if (nextProps.sequence !== this.props.sequence) {
 	        //reset state sequence
 	        this.state.sequence = nextProps.sequence;
@@ -26438,7 +26436,7 @@
 	    };
 	    _this2.onionBuilder = new _OnionBuilder.OnionBuilder();
 	    _this2.onionBuilder.setEventBlockUpdated(function () {
-	      console.log('!!!!!!sequence loaded', _this2.onionBuilder.getSequence());
+	      //console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
 
 	      var _this2$onionBuilder$g = _this2.onionBuilder.getSequence();
 
@@ -26464,7 +26462,7 @@
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
 	        _this2.setState({
-	          title: topSelectedBlocks[0].metadata.name,
+	          title: topSelectedBlocks[0].getName(),
 	          titleColor: topSelectedBlocks[0].metadata.color
 	        }); // =
 	        var _iteratorNormalCompletion = true;

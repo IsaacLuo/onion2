@@ -27,7 +27,7 @@ class OnionViewer extends React.Component {
     };
     this.onionBuilder = new OnionBuilder();
     this.onionBuilder.setEventBlockUpdated( () => {
-      console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
+      //console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
       const { seq, completeFlag } = this.onionBuilder.getSequence();
       if (completeFlag || this.allowToRefresh) {
         this.setState({
@@ -48,7 +48,7 @@ class OnionViewer extends React.Component {
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
       if (topSelectedBlocks && topSelectedBlocks.length) {
         this.setState({
-          title: topSelectedBlocks[0].metadata.name,
+          title: topSelectedBlocks[0].getName(),
           titleColor: topSelectedBlocks[0].metadata.color,
         });// =
         for (let block of topSelectedBlocks) {

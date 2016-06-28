@@ -114,7 +114,7 @@ export class OnionForGenomeDesigner extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('np',this.props, nextProps);
+    //console.log('np',this.props, nextProps);
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;

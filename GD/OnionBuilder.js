@@ -16,7 +16,8 @@ export class OnionBuilder {
     let realStart = 0;
     for (let block of blocks) {
       const { length, md5 } = block.sequence;
-      const { name, color } = block.metadata;
+      const { color } = block.metadata;
+      const name = block.getName();
       let fakeLength = length === 0 ? 13 : length;
       const hash = md5 ? md5 : Math.random().toString(36).substr(2);
       this.onionBlocks.push({
@@ -100,12 +101,10 @@ export class OnionBuilder {
   updateSequence(blockList) {
     for ( const block of blockList) {
       const { hash } = block;
-      if (!this.sequenceDict[hash] ) {
+      if (block.realLength !== 0 && !this.sequenceDict[hash] ) {
         const originalBlock = block.gdBlock;
         if (originalBlock.getSequence) {
-          //set sequenceDict to prevent multiple times getSequence
-          //this.sequenceDict[hash] = '~~~';
-          //console.log('getSequence', md5List);
+          this.sequenceDict[hash] = '~'.repeat(block.length);
           originalBlock.getSequence()
             .then(sequence => {
               this.sequenceDict[hash] = sequence;

@@ -37,7 +37,8 @@ export class DNASeq extends Seq
     d: 'c',
     h: 'g',
     X: 'X',
-    '·': '·'
+    '·': '·',
+    '~': '~',
   };
 
   static codonDict = {
@@ -112,7 +113,7 @@ export class DNASeq extends Seq
   }
 
   removeInvalidLetter(src) {
-    return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
+    return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^~|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
     //return src;
   }
 
