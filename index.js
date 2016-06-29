@@ -12416,45 +12416,56 @@
 	 */
 
 	function compareProps(props1, props2, list) {
-	  if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
-	    list = Object.keys(props1);
-	  }
-
-	  var _iteratorNormalCompletion = true;
-	  var _didIteratorError = false;
-	  var _iteratorError = undefined;
+	  if (props1 == null && props2 == null) {
+	    return true; //if two elements both null return yes
+	  } else if (props1 == null || props2 == null) {
+	      return false;
+	    }
 
 	  try {
-	    for (var _iterator = list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-	      var item = _step.value;
+	    if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
+	      list = Object.keys(props1);
+	    }
 
-	      if (!props2) {
-	        return false;
-	      }
+	    var _iteratorNormalCompletion = true;
+	    var _didIteratorError = false;
+	    var _iteratorError = undefined;
 
-	      if (_typeof(props1[item]) === 'object') {
-	        var subre = compareProps(props1[item], props2[item]);
-	        if (!subre) return subre;
-	      } else if (typeof props1[item] !== 'function') {
-	        if (props1[item] !== props2[item]) {
-	          //console.warn("different", item,props1[item],props2[item],props1,props2)
+	    try {
+	      for (var _iterator = list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	        var item = _step.value;
+
+	        if (!props2) {
 	          return false;
+	        }
+
+	        if (_typeof(props1[item]) === 'object') {
+	          var subre = compareProps(props1[item], props2[item]);
+	          if (!subre) return subre;
+	        } else if (typeof props1[item] !== 'function') {
+	          if (props1[item] !== props2[item]) {
+	            //console.warn("different", item,props1[item],props2[item],props1,props2)
+	            return false;
+	          }
+	        }
+	      }
+	    } catch (err) {
+	      _didIteratorError = true;
+	      _iteratorError = err;
+	    } finally {
+	      try {
+	        if (!_iteratorNormalCompletion && _iterator.return) {
+	          _iterator.return();
+	        }
+	      } finally {
+	        if (_didIteratorError) {
+	          throw _iteratorError;
 	        }
 	      }
 	    }
 	  } catch (err) {
-	    _didIteratorError = true;
-	    _iteratorError = err;
-	  } finally {
-	    try {
-	      if (!_iteratorNormalCompletion && _iterator.return) {
-	        _iterator.return();
-	      }
-	    } finally {
-	      if (_didIteratorError) {
-	        throw _iteratorError;
-	      }
-	    }
+	    console.error(err, props1, props2, list);
+	    return false;
 	  }
 
 	  return true;
@@ -27363,7 +27374,7 @@
 
 	module.exports = {
 		"name": "SequenceDetail",
-		"version": "2.0.1",
+		"version": "2.1.0",
 		"description": "Onion Extensions",
 		"region": "sequenceDetail",
 		"readable": "Sequence Detail",
