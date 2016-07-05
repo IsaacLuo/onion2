@@ -17,6 +17,7 @@ export class SequenceFeatureArrow extends React.Component {
     height: 20,
     width: 0,
     y: 0,
+    color: "#A5A6A2",
   };
 
   constructor(props) {
@@ -58,6 +59,8 @@ export class SequenceFeatureArrow extends React.Component {
     const stroke = this.state.hovering ? 'red' : 'black';
     //const finalTextColor = this.state.hovering ? 'red' : textColor;
 
+    const fillColor = color ? color : '#A5A6A2';
+
     return (
       <g
         onMouseOver={this.onMouseOver}
@@ -71,7 +74,7 @@ export class SequenceFeatureArrow extends React.Component {
           height={height}
           stroke={stroke}
           strokeWidth="0"
-          fill={color}
+          fill={fillColor}
         />
         {<text
           style={{

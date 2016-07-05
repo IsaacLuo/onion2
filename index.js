@@ -12419,8 +12419,8 @@
 	  if (props1 == null && props2 == null) {
 	    return true; //if two elements both null return yes
 	  } else if (props1 == null || props2 == null) {
-	      return false;
-	    }
+	    return false;
+	  }
 
 	  try {
 	    if (!list && (typeof props1 === 'undefined' ? 'undefined' : _typeof(props1)) === 'object') {
@@ -17066,7 +17066,6 @@
 	    // letterSpacing:0;position:absolute;left:0px;top:-100px`;
 	    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
 	    //var width = document.getElementById('bp1').getBoundingClientRect().width;
-	    //9.609375,
 	    _this2.seqMainStyle = {
 	      //	display: "inline-block",
 	      fontFamily: _this2.myCSS.seqFontFamily,
@@ -17578,16 +17577,16 @@
 	              re[rowU].cs.push({ style: 'N', pos: [colU, colD], id: _i2 }); //normal │, ┌┘,└┐
 	            }
 	          } else if (rowU < rowD) {
-	              if (re[rowU] && re[rowD]) {
-	                re[rowU].cs.push({ style: 'UR', pos: [colU, colNum], id: _i2 }); //up right  └
-	                re[rowD].cs.push({ style: 'DL', pos: [0, colD], id: _i2 }); //down left ┐
-	              }
-	            } else {
-	                if (re[rowU] && re[rowD]) {
-	                  re[rowU].cs.push({ style: 'UL', pos: [0, colU], id: _i2 }); //up left  ┘
-	                  re[rowD].cs.push({ style: 'DR', pos: [colD, colNum], id: _i2 }); //down right ┌
-	                }
-	              }
+	            if (re[rowU] && re[rowD]) {
+	              re[rowU].cs.push({ style: 'UR', pos: [colU, colNum], id: _i2 }); //up right  └
+	              re[rowD].cs.push({ style: 'DL', pos: [0, colD], id: _i2 }); //down left ┐
+	            }
+	          } else {
+	            if (re[rowU] && re[rowD]) {
+	              re[rowU].cs.push({ style: 'UL', pos: [0, colU], id: _i2 }); //up left  ┘
+	              re[rowD].cs.push({ style: 'DR', pos: [colD, colNum], id: _i2 }); //down right ┌
+	            }
+	          }
 	        }
 	      }
 
@@ -23497,8 +23496,7 @@
 	          type: 'text',
 	          style: Object.assign({
 	            display: 'inline-block'
-	          }, //color: showValue ? '#000000' : '#ffffff',
-	          valueBoxStyle), value: value, size: '5',
+	          }, valueBoxStyle), value: value, size: '5',
 	          onChange: this.onChange,
 	          onKeyPress: this.onKeyPress,
 	          onFocus: this.onFocus,
@@ -23725,8 +23723,7 @@
 	          type: 'text',
 	          style: Object.assign({
 	            display: 'inline-block'
-	          }, //color: showValue ? '#000000' : '#ffffff',
-	          valueBoxStyle), value: value, size: '5',
+	          }, valueBoxStyle), value: value, size: '5',
 	          onChange: this.onChange,
 	          onKeyPress: this.onKeyPress,
 	          onFocus: this.onFocus,
@@ -25286,6 +25283,8 @@
 	      var stroke = this.state.hovering ? 'red' : 'black';
 	      //const finalTextColor = this.state.hovering ? 'red' : textColor;
 
+	      var fillColor = color ? color : '#A5A6A2';
+
 	      return _react2.default.createElement(
 	        'g',
 	        {
@@ -25300,7 +25299,7 @@
 	          height: height,
 	          stroke: stroke,
 	          strokeWidth: '0',
-	          fill: color
+	          fill: fillColor
 	        }),
 	        _react2.default.createElement(
 	          'text',
@@ -25339,7 +25338,8 @@
 	SequenceFeatureArrow.defaultProps = {
 	  height: 20,
 	  width: 0,
-	  y: 0
+	  y: 0,
+	  color: "#A5A6A2"
 	};
 
 /***/ },
@@ -26684,7 +26684,7 @@
 
 
 	// module
-	exports.push([module.id, "/* cyrillic-ext */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Bt5Lz7Saa5a5RtsafP9xmfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;\n}\n/* cyrillic */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/IYQIfrNvkAhlEkaWqzgTm_Y6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;\n}\n/* greek-ext */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/lfgTWrEOPagIoG2Tgg2AXfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+1F00-1FFF;\n}\n/* greek */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/dYO0SlZiJtMqauQ_6lVTEPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0370-03FF;\n}\n/* hebrew */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/ZMV5xQas5U2c0thu55bfTPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0590-05FF, U+20AA, U+25CC, U+FB1D-FB4F;\n}\n/* vietnamese */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Agmcdf2ywA3Gyt-PvigAYPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0102-0103, U+1EA0-1EF1, U+20AB;\n}\n/* latin-ext */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/qjsoqLzZoDyy_opKVvy-uvY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\n    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;\n}\n/* latin */\n@font-face {\n    font-family: 'Cousine';\n    font-style: normal;\n    font-weight: 400;\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/0IpceuvDvCegpU9Mz8MQ_g.woff2) format('woff2');\n    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;\n}", ""]);
+	exports.push([module.id, "/* cyrillic-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Bt5Lz7Saa5a5RtsafP9xmfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;\r\n}\r\n/* cyrillic */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/IYQIfrNvkAhlEkaWqzgTm_Y6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;\r\n}\r\n/* greek-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/lfgTWrEOPagIoG2Tgg2AXfY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+1F00-1FFF;\r\n}\r\n/* greek */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/dYO0SlZiJtMqauQ_6lVTEPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0370-03FF;\r\n}\r\n/* hebrew */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/ZMV5xQas5U2c0thu55bfTPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0590-05FF, U+20AA, U+25CC, U+FB1D-FB4F;\r\n}\r\n/* vietnamese */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/Agmcdf2ywA3Gyt-PvigAYPY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0102-0103, U+1EA0-1EF1, U+20AB;\r\n}\r\n/* latin-ext */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/qjsoqLzZoDyy_opKVvy-uvY6323mHUZFJMgTvxaG2iE.woff2) format('woff2');\r\n    unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;\r\n}\r\n/* latin */\r\n@font-face {\r\n    font-family: 'Cousine';\r\n    font-style: normal;\r\n    font-weight: 400;\r\n    src: local('Cousine'), url(//fonts.gstatic.com/s/cousine/v10/0IpceuvDvCegpU9Mz8MQ_g.woff2) format('woff2');\r\n    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;\r\n}", ""]);
 
 	// exports
 
@@ -26698,7 +26698,7 @@
 
 
 	// module
-	exports.push([module.id, ".noselect\n{\n    -webkit-touch-callout: none; /* iOS Safari */\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\n    -moz-user-select: none;      /* Firefox */\n    -ms-user-select: none;       /* IE/Edge */\n    user-select: none;           /* non-prefixed version, currently\n                                  not supported by any browser */\n}\n\n.cursorPointer\n{\n    cursor: pointer;\n}\n\n.cursorDefault\n{\n    cursor: default;\n}\n\n.menuItemCheckedRed\n{\n    color:#ff0000 !important;\n}\n\n.onionPanel\n{\n\n}\n\n.onionPanel:focus\n{\n    outline-width: 0px;\n}", ""]);
+	exports.push([module.id, ".noselect\r\n{\r\n    -webkit-touch-callout: none; /* iOS Safari */\r\n    -webkit-user-select: none;   /* Chrome/Safari/Opera */    /* Konqueror */\r\n    -moz-user-select: none;      /* Firefox */\r\n    -ms-user-select: none;       /* IE/Edge */\r\n    user-select: none;           /* non-prefixed version, currently\r\n                                  not supported by any browser */\r\n}\r\n\r\n.cursorPointer\r\n{\r\n    cursor: pointer;\r\n}\r\n\r\n.cursorDefault\r\n{\r\n    cursor: default;\r\n}\r\n\r\n.menuItemCheckedRed\r\n{\r\n    color:#ff0000 !important;\r\n}\r\n\r\n.onionPanel\r\n{\r\n\r\n}\r\n\r\n.onionPanel:focus\r\n{\r\n    outline-width: 0px;\r\n}", ""]);
 
 	// exports
 
