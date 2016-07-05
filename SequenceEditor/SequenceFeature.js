@@ -12,12 +12,16 @@ export class SequenceFeatureArrow extends React.Component {
     y: React.PropTypes.number,
     color: React.PropTypes.string,
     text: React.PropTypes.string,
+    strand: React.PropTypes.string,
+    arrowStyle: React.PropTypes.string,
   };
   static defaultProps = {
     height: 20,
     width: 0,
     y: 0,
-    color: "#A5A6A2",
+    color: '#A5A6A2',
+    strand: 'none',
+    arrowStyle: 'none'
   };
 
   constructor(props) {
@@ -40,7 +44,7 @@ export class SequenceFeatureArrow extends React.Component {
   }
 
   render() {
-    const { unitWidth, height, len, start, color, text } = this.props;
+    const { unitWidth, height, len, start, color, text, strand, arrowStyle } = this.props;
     const width = unitWidth * len;
     const fontFamily = 'Helvetica, Arial, sans-serif';
     const fontSize = 12;
@@ -61,13 +65,10 @@ export class SequenceFeatureArrow extends React.Component {
 
     const fillColor = color ? color : '#A5A6A2';
 
-    return (
-      <g
-        onMouseOver={this.onMouseOver}
-        onMouseOut={this.onMouseOut}
-        transform={`translate(0,${this.props.y})`}
-      >
-        <rect
+    let arrow;
+
+    if(arrowStyle === 'none' || strand === '.'){
+      arrow = <rect
           x={unitWidth * start}
           y={0}
           width={width}
@@ -75,7 +76,83 @@ export class SequenceFeatureArrow extends React.Component {
           stroke={stroke}
           strokeWidth="0"
           fill={fillColor}
+      />;
+    } else if (arrowStyle === 'ext' && strand === '+') {
+
+      const rx = unitWidth * start + width + 2;
+      const rxm = rx+unitWidth + 2;
+
+      arrow = <g>
+        <rect
+            x={unitWidth * start}
+            y={0}
+            width={width}
+            height={height}
+            stroke={stroke}
+            strokeWidth="0"
+            fill={fillColor}
         />
+        <path
+          d={`M ${rx} 0 L ${rxm} ${height/2} L ${rx} ${height}`}
+          stroke="#A5A6A2"
+          fill="none"
+          strokeWidth="1"
+        />
+      </g>
+    } else if (arrowStyle === 'ext' && strand === '-') {
+      const rx = -2;
+      const rxm = -unitWidth - 2;
+      arrow = <g>
+        <rect
+            x={unitWidth * start}
+            y={0}
+            width={width}
+            height={height}
+            stroke={stroke}
+            strokeWidth="0"
+            fill={fillColor}
+        />
+        <path
+            d={`M ${rx} 0 L ${rxm} ${height/2} L ${rx} ${height}`}
+            stroke="#A5A6A2"
+            fill="none"
+            strokeWidth="1"
+        />
+      </g>
+    } else if (arrowStyle === 'end' && strand === '+') {
+      const lx = unitWidth * start;
+      const rx = lx + width - unitWidth;
+      const rxm = rx + unitWidth;
+      arrow =
+        <path
+            d={`M ${lx} 0 L ${rx} 0 L ${rxm} ${height/2} L ${rx} ${height} L ${lx} ${height} Z`}
+            stroke={stroke}
+            strokeWidth="0"
+            fill={fillColor}
+        />
+    } else if (arrowStyle === 'end' && strand === '-') {
+      const lxm = unitWidth * start;
+      const lx = lxm + unitWidth;
+      const rx = lxm + width;
+      arrow =
+          <path
+              d={`M ${lx} 0 L ${rx} 0 L ${rx} ${height} L ${lx} ${height} L ${lxm} ${height/2} Z`}
+              stroke={stroke}
+              strokeWidth="0"
+              fill={fillColor}
+          />
+    }
+
+
+
+
+    return (
+      <g
+        onMouseOver={this.onMouseOver}
+        onMouseOut={this.onMouseOut}
+        transform={`translate(0,${this.props.y})`}
+      >
+        {arrow}
         {<text
           style={{
             fontFamily,

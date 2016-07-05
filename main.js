@@ -46,11 +46,11 @@ class OnionViewer extends React.Component {
     this.showBlockRange = () => {
       let leafBlocks = [];
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+      let features = [];
+
       if (topSelectedBlocks && topSelectedBlocks.length) {
-        this.setState({
-          title: topSelectedBlocks[0].getName(),
-          titleColor: topSelectedBlocks[0].metadata.color,
-        });// =
+
+
         for (let block of topSelectedBlocks) {
           //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
           const children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
@@ -65,7 +65,44 @@ class OnionViewer extends React.Component {
             }
           }
         }
+
+        //set annotations
+        for(const topBlock of topSelectedBlocks){
+          for (const annotation of topBlock.sequence.annotations) {
+            let realStart = annotation.start;
+            let realEnd = annotation.end;
+            let offset = 0;
+            for (const block of leafBlocks){
+              if(block.realStart > annotation.start)
+                  break;
+              if(block.realLength === 0) {
+                offset+=13;
+              }
+            }
+
+            let fakeStart = realStart + offset;
+            let fakeEnd = realEnd + offset;
+
+            features.push({
+              start: fakeStart,
+              end: fakeEnd,
+              realStart: realStart,
+              realEnd: realEnd,
+              text: annotation.name,
+              strand: annotation.isForward ? '+' : '-',
+              color: annotation.color ? annotation.color : '#A5A6A2',
+            });
+          }
+        }
+
+        this.setState({
+          title: topSelectedBlocks[0].getName(),
+          titleColor: topSelectedBlocks[0].metadata.color,
+          features,
+        });// =
+
       }
+
       this.onionBuilder.setBlocks(leafBlocks);
     };
 
@@ -137,7 +174,7 @@ class OnionViewer extends React.Component {
     return (
       <OnionForGenomeDesigner
         sequence={sequence}
-        features={this.onionBuilder.getFeatures()}
+        features={features}
         width={width}
         height={height}
         blocks={blocks}

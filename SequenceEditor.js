@@ -368,7 +368,15 @@ export class SequenceEditor extends React.Component {
     for (let i = 0; i < this.props.features.length; i++) {
       const f = this.props.features[i];
       const overlap = this.isOverlap(start, start + len, f.start, f.end);
+      let arrowStyle = 'none';
       if (overlap) {
+        if(f.strand === '+' && f.end === overlap.end){
+          arrowStyle = 'end';
+        } else if (f.strand === '-' && f.start === overlap.start) {
+          arrowStyle = 'end';
+        } else if (f.strand === '+' || f.strand === '-') {
+          arrowStyle = 'ext';
+        }
         re.push({
           start: overlap.start,
           len: overlap.end - overlap.start,
@@ -377,6 +385,8 @@ export class SequenceEditor extends React.Component {
           textColor: f.textColor,
           type: f.type,
           row: 0,
+          strand: f.strand,
+          arrowStyle,
         });
       }
     }

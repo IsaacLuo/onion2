@@ -155,6 +155,7 @@ export class SequenceRow extends React.Component {
           key={`features${i}`}
           y={y0 + this.featureRow[i] * (featureHeight + 5)}
           height={featureHeight}
+          arrowStyle={feature.arrowStyle}
         />
       );
     }

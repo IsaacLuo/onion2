@@ -17413,7 +17413,15 @@
 	      for (var i = 0; i < this.props.features.length; i++) {
 	        var f = this.props.features[i];
 	        var overlap = this.isOverlap(start, start + len, f.start, f.end);
+	        var arrowStyle = 'none';
 	        if (overlap) {
+	          if (f.strand === '+' && f.end === overlap.end) {
+	            arrowStyle = 'end';
+	          } else if (f.strand === '-' && f.start === overlap.start) {
+	            arrowStyle = 'end';
+	          } else if (f.strand === '+' || f.strand === '-') {
+	            arrowStyle = 'ext';
+	          }
 	          re.push({
 	            start: overlap.start,
 	            len: overlap.end - overlap.start,
@@ -17421,7 +17429,9 @@
 	            text: f.text,
 	            textColor: f.textColor,
 	            type: f.type,
-	            row: 0
+	            row: 0,
+	            strand: f.strand,
+	            arrowStyle: arrowStyle
 	          });
 	        }
 	      }
@@ -25264,6 +25274,8 @@
 	      var start = _props.start;
 	      var color = _props.color;
 	      var text = _props.text;
+	      var strand = _props.strand;
+	      var arrowStyle = _props.arrowStyle;
 
 	      var width = unitWidth * len;
 	      var fontFamily = 'Helvetica, Arial, sans-serif';
@@ -25285,14 +25297,10 @@
 
 	      var fillColor = color ? color : '#A5A6A2';
 
-	      return _react2.default.createElement(
-	        'g',
-	        {
-	          onMouseOver: this.onMouseOver,
-	          onMouseOut: this.onMouseOut,
-	          transform: 'translate(0,' + this.props.y + ')'
-	        },
-	        _react2.default.createElement('rect', {
+	      var arrow = void 0;
+
+	      if (arrowStyle === 'none' || strand === '.') {
+	        arrow = _react2.default.createElement('rect', {
 	          x: unitWidth * start,
 	          y: 0,
 	          width: width,
@@ -25300,7 +25308,83 @@
 	          stroke: stroke,
 	          strokeWidth: '0',
 	          fill: fillColor
-	        }),
+	        });
+	      } else if (arrowStyle === 'ext' && strand === '+') {
+
+	        var rx = unitWidth * start + width + 2;
+	        var rxm = rx + unitWidth + 2;
+
+	        arrow = _react2.default.createElement(
+	          'g',
+	          null,
+	          _react2.default.createElement('rect', {
+	            x: unitWidth * start,
+	            y: 0,
+	            width: width,
+	            height: height,
+	            stroke: stroke,
+	            strokeWidth: '0',
+	            fill: fillColor
+	          }),
+	          _react2.default.createElement('path', {
+	            d: 'M ' + rx + ' 0 L ' + rxm + ' ' + height / 2 + ' L ' + rx + ' ' + height,
+	            stroke: '#A5A6A2',
+	            fill: 'none',
+	            strokeWidth: '1'
+	          })
+	        );
+	      } else if (arrowStyle === 'ext' && strand === '-') {
+	        var _rx = -2;
+	        var _rxm = -unitWidth - 2;
+	        arrow = _react2.default.createElement(
+	          'g',
+	          null,
+	          _react2.default.createElement('rect', {
+	            x: unitWidth * start,
+	            y: 0,
+	            width: width,
+	            height: height,
+	            stroke: stroke,
+	            strokeWidth: '0',
+	            fill: fillColor
+	          }),
+	          _react2.default.createElement('path', {
+	            d: 'M ' + _rx + ' 0 L ' + _rxm + ' ' + height / 2 + ' L ' + _rx + ' ' + height,
+	            stroke: '#A5A6A2',
+	            fill: 'none',
+	            strokeWidth: '1'
+	          })
+	        );
+	      } else if (arrowStyle === 'end' && strand === '+') {
+	        var lx = unitWidth * start;
+	        var _rx2 = lx + width - unitWidth;
+	        var _rxm2 = _rx2 + unitWidth;
+	        arrow = _react2.default.createElement('path', {
+	          d: 'M ' + lx + ' 0 L ' + _rx2 + ' 0 L ' + _rxm2 + ' ' + height / 2 + ' L ' + _rx2 + ' ' + height + ' L ' + lx + ' ' + height + ' Z',
+	          stroke: stroke,
+	          strokeWidth: '0',
+	          fill: fillColor
+	        });
+	      } else if (arrowStyle === 'end' && strand === '-') {
+	        var lxm = unitWidth * start;
+	        var _lx = lxm + unitWidth;
+	        var _rx3 = lxm + width;
+	        arrow = _react2.default.createElement('path', {
+	          d: 'M ' + _lx + ' 0 L ' + _rx3 + ' 0 L ' + _rx3 + ' ' + height + ' L ' + _lx + ' ' + height + ' L ' + lxm + ' ' + height / 2 + ' Z',
+	          stroke: stroke,
+	          strokeWidth: '0',
+	          fill: fillColor
+	        });
+	      }
+
+	      return _react2.default.createElement(
+	        'g',
+	        {
+	          onMouseOver: this.onMouseOver,
+	          onMouseOut: this.onMouseOut,
+	          transform: 'translate(0,' + this.props.y + ')'
+	        },
+	        arrow,
 	        _react2.default.createElement(
 	          'text',
 	          {
@@ -25333,13 +25417,17 @@
 	  height: _react2.default.PropTypes.number,
 	  y: _react2.default.PropTypes.number,
 	  color: _react2.default.PropTypes.string,
-	  text: _react2.default.PropTypes.string
+	  text: _react2.default.PropTypes.string,
+	  strand: _react2.default.PropTypes.string,
+	  arrowStyle: _react2.default.PropTypes.string
 	};
 	SequenceFeatureArrow.defaultProps = {
 	  height: 20,
 	  width: 0,
 	  y: 0,
-	  color: "#A5A6A2"
+	  color: '#A5A6A2',
+	  strand: 'none',
+	  arrowStyle: 'none'
 	};
 
 /***/ },
@@ -25500,7 +25588,8 @@
 	          textColor: feature.textColor,
 	          key: 'features' + i,
 	          y: y0 + this.featureRow[i] * (featureHeight + 5),
-	          height: featureHeight
+	          height: featureHeight,
+	          arrowStyle: feature.arrowStyle
 	        }));
 	      }
 
@@ -26471,16 +26560,15 @@
 	    _this2.showBlockRange = function () {
 	      var leafBlocks = [];
 	      var topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+	      var features = [];
+
 	      if (topSelectedBlocks && topSelectedBlocks.length) {
-	        _this2.setState({
-	          title: topSelectedBlocks[0].getName(),
-	          titleColor: topSelectedBlocks[0].metadata.color
-	        }); // =
 	        var _iteratorNormalCompletion = true;
 	        var _didIteratorError = false;
 	        var _iteratorError = undefined;
 
 	        try {
+
 	          for (var _iterator = topSelectedBlocks[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	            var block = _step.value;
 
@@ -26490,34 +26578,36 @@
 	            if (children && children.length === 0) {
 	              leafBlocks.push(block);
 	            } else {
-	              var _iteratorNormalCompletion2 = true;
-	              var _didIteratorError2 = false;
-	              var _iteratorError2 = undefined;
+	              var _iteratorNormalCompletion3 = true;
+	              var _didIteratorError3 = false;
+	              var _iteratorError3 = undefined;
 
 	              try {
-	                for (var _iterator2 = children[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-	                  var node = _step2.value;
+	                for (var _iterator3 = children[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+	                  var node = _step3.value;
 
 	                  if (node.components && node.components.length === 0) {
 	                    leafBlocks.push(node);
 	                  }
 	                }
 	              } catch (err) {
-	                _didIteratorError2 = true;
-	                _iteratorError2 = err;
+	                _didIteratorError3 = true;
+	                _iteratorError3 = err;
 	              } finally {
 	                try {
-	                  if (!_iteratorNormalCompletion2 && _iterator2.return) {
-	                    _iterator2.return();
+	                  if (!_iteratorNormalCompletion3 && _iterator3.return) {
+	                    _iterator3.return();
 	                  }
 	                } finally {
-	                  if (_didIteratorError2) {
-	                    throw _iteratorError2;
+	                  if (_didIteratorError3) {
+	                    throw _iteratorError3;
 	                  }
 	                }
 	              }
 	            }
 	          }
+
+	          //set annotations
 	        } catch (err) {
 	          _didIteratorError = true;
 	          _iteratorError = err;
@@ -26532,7 +26622,103 @@
 	            }
 	          }
 	        }
+
+	        var _iteratorNormalCompletion2 = true;
+	        var _didIteratorError2 = false;
+	        var _iteratorError2 = undefined;
+
+	        try {
+	          for (var _iterator2 = topSelectedBlocks[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+	            var topBlock = _step2.value;
+	            var _iteratorNormalCompletion4 = true;
+	            var _didIteratorError4 = false;
+	            var _iteratorError4 = undefined;
+
+	            try {
+	              for (var _iterator4 = topBlock.sequence.annotations[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+	                var annotation = _step4.value;
+
+	                var realStart = annotation.start;
+	                var realEnd = annotation.end;
+	                var offset = 0;
+	                var _iteratorNormalCompletion5 = true;
+	                var _didIteratorError5 = false;
+	                var _iteratorError5 = undefined;
+
+	                try {
+	                  for (var _iterator5 = leafBlocks[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+	                    var _block = _step5.value;
+
+	                    if (_block.realStart > annotation.start) break;
+	                    if (_block.realLength === 0) {
+	                      offset += 13;
+	                    }
+	                  }
+	                } catch (err) {
+	                  _didIteratorError5 = true;
+	                  _iteratorError5 = err;
+	                } finally {
+	                  try {
+	                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
+	                      _iterator5.return();
+	                    }
+	                  } finally {
+	                    if (_didIteratorError5) {
+	                      throw _iteratorError5;
+	                    }
+	                  }
+	                }
+
+	                var fakeStart = realStart + offset;
+	                var fakeEnd = realEnd + offset;
+
+	                features.push({
+	                  start: fakeStart,
+	                  end: fakeEnd,
+	                  realStart: realStart,
+	                  realEnd: realEnd,
+	                  text: annotation.name,
+	                  strand: annotation.isForward ? '+' : '-',
+	                  color: annotation.color ? annotation.color : '#A5A6A2'
+	                });
+	              }
+	            } catch (err) {
+	              _didIteratorError4 = true;
+	              _iteratorError4 = err;
+	            } finally {
+	              try {
+	                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+	                  _iterator4.return();
+	                }
+	              } finally {
+	                if (_didIteratorError4) {
+	                  throw _iteratorError4;
+	                }
+	              }
+	            }
+	          }
+	        } catch (err) {
+	          _didIteratorError2 = true;
+	          _iteratorError2 = err;
+	        } finally {
+	          try {
+	            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+	              _iterator2.return();
+	            }
+	          } finally {
+	            if (_didIteratorError2) {
+	              throw _iteratorError2;
+	            }
+	          }
+	        }
+
+	        _this2.setState({
+	          title: topSelectedBlocks[0].getName(),
+	          titleColor: topSelectedBlocks[0].metadata.color,
+	          features: features
+	        }); // =
 	      }
+
 	      _this2.onionBuilder.setBlocks(leafBlocks);
 	    };
 
@@ -26616,7 +26802,7 @@
 
 	      return _react2.default.createElement(_OnionForGenomeDesigner.OnionForGenomeDesigner, {
 	        sequence: sequence,
-	        features: this.onionBuilder.getFeatures(),
+	        features: features,
 	        width: width,
 	        height: height,
 	        blocks: blocks,
