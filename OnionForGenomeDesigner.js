@@ -97,6 +97,28 @@ export class OnionForGenomeDesigner extends React.Component {
     }
   }
 
+  componentWillMount() {
+    const rulerString = ' !"#$^&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+    const textRuler = [];
+    $('body').append('<div class="textRuler"></div>');
+
+    for(const letter of rulerString) {
+      $('.textRuler').append(
+          `<div
+              class="rulerLetter"
+              data-id="${letter}"
+              style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; display: inline-block"
+          >
+            ${letter}
+          </div>`);
+    }
+  }
+
+  componentWillUnmount(){
+    $('.textRuler').remove();
+  }
+
+
   componentDidMount() {
     // console.log('OnionForGenomeDesigner mount');
     $(document).mousedown((e) => {
@@ -261,6 +283,8 @@ export class OnionForGenomeDesigner extends React.Component {
       enableFeatures = true;
 
     //console.log(this.state);
+
+
 
 
     return (

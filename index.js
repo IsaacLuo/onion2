@@ -24244,6 +24244,43 @@
 	      };
 	    }
 	  }, {
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var rulerString = ' !"#$^&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
+	      var textRuler = [];
+	      $('body').append('<div class="textRuler"></div>');
+
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = rulerString[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var letter = _step.value;
+
+	          $('.textRuler').append('<div\n              class="rulerLetter"\n              data-id="' + letter + '"\n              style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; display: inline-block"\n          >\n            ' + letter + '\n          </div>');
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      $('.textRuler').remove();
+	    }
+	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
 	      var _this3 = this;
@@ -25265,6 +25302,64 @@
 	      this.setState({ hovering: false, showTitle: false });
 	    }
 	  }, {
+	    key: 'calcStringWidth',
+	    value: function calcStringWidth(string) {
+	      var w = 0;
+	      var _iteratorNormalCompletion = true;
+	      var _didIteratorError = false;
+	      var _iteratorError = undefined;
+
+	      try {
+	        for (var _iterator = string[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	          var s = _step.value;
+
+	          w += $('.rulerLetter[data-id="' + s + '"]').get(0).offsetWidth;
+	        }
+	      } catch (err) {
+	        _didIteratorError = true;
+	        _iteratorError = err;
+	      } finally {
+	        try {
+	          if (!_iteratorNormalCompletion && _iterator.return) {
+	            _iterator.return();
+	          }
+	        } finally {
+	          if (_didIteratorError) {
+	            throw _iteratorError;
+	          }
+	        }
+	      }
+
+	      console.log(string, w);
+	      return w;
+	    }
+	  }, {
+	    key: 'filterCorrectString',
+	    value: function filterCorrectString(oriString, width) {
+	      if (this.calcStringWidth('...') >= width) return oriString[0];
+	      var ss = '...' + oriString;
+	      var len = Math.ceil(width / this.props.unitWidth);
+
+	      var plusCount = 0;
+	      var direction = -1;
+	      var currentWidth = this.calcStringWidth(ss.substr(0, len));
+	      while (currentWidth > width) {
+	        len--;
+	        currentWidth -= $('.rulerLetter[data-id="' + ss.substr(len - 1, 1) + '"]').get(0).offsetWidth;
+	      }
+	      while (currentWidth < width) {
+	        len++;
+	        currentWidth += $('.rulerLetter[data-id="' + ss.substr(len - 1, 1) + '"]').get(0).offsetWidth;
+	      }
+	      while (currentWidth > width) {
+	        len--;
+	        currentWidth -= $('.rulerLetter[data-id="' + ss.substr(len - 1, 1) + '"]').get(0).offsetWidth;
+	      }
+
+	      var s = oriString.substr(0, len - 3) + '...';
+	      return s;
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _props = this.props;
@@ -25278,16 +25373,24 @@
 	      var arrowStyle = _props.arrowStyle;
 
 	      var width = unitWidth * len;
+	      //let rectWidth = arrowStyle==='end' && strand !== '.' ? width-unitWidth/2 : width;
+	      var rectWidth = width;
 	      var fontFamily = 'Helvetica, Arial, sans-serif';
 	      var fontSize = 12;
 	      var titleOpacity = void 0;
 	      var textAnchor = void 0;
-	      if (len > text.length) {
+	      var filteredText = text;
+	      var textOffset = width / 2;
+	      var textLength = this.calcStringWidth(text) + unitWidth;
+	      if (rectWidth >= textLength) {
 	        titleOpacity = 1;
 	        textAnchor = 'middle';
 	        this.textOverflow = false;
 	      } else {
-	        titleOpacity = this.state.showTitle === true ? 1 : 0;
+	        textOffset = 0;
+	        //titleOpacity = (this.state.showTitle === true ? 1 : 0);
+	        filteredText = this.filterCorrectString(text, width);
+	        titleOpacity = 1;
 	        textAnchor = 'start';
 	        this.textOverflow = true;
 	      }
@@ -25397,10 +25500,10 @@
 	              textAnchor: textAnchor,
 	              opacity: titleOpacity
 	            },
-	            x: unitWidth * start + width / 2,
+	            x: unitWidth * start + textOffset,
 	            y: height / 2
 	          },
-	          text
+	          filteredText
 	        )
 	      );
 	    }

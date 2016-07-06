@@ -43,19 +43,62 @@ export class SequenceFeatureArrow extends React.Component {
     this.setState({ hovering: false, showTitle: false });
   }
 
+  calcStringWidth(string) {
+    let w = 0;
+    for(const s of string) {
+      w+=$(`.rulerLetter[data-id="${s}"]`).get(0).offsetWidth;
+    }
+    console.log(string, w);
+    return w;
+  }
+
+  filterCorrectString(oriString, width) {
+    if(this.calcStringWidth('...') >= width)
+        return oriString[0];
+    let ss = '...' + oriString;
+    let len = Math.ceil(width/this.props.unitWidth);
+
+    let plusCount = 0;
+    let direction = -1;
+    let currentWidth = this.calcStringWidth(ss.substr(0,len));
+    while(currentWidth>width) {
+      len--;
+      currentWidth-=$(`.rulerLetter[data-id="${ss.substr(len-1,1)}"]`).get(0).offsetWidth;
+    }
+    while(currentWidth<width) {
+      len++
+      currentWidth+=$(`.rulerLetter[data-id="${ss.substr(len-1,1)}"]`).get(0).offsetWidth;
+    }
+    while(currentWidth>width) {
+      len--;
+      currentWidth-=$(`.rulerLetter[data-id="${ss.substr(len-1,1)}"]`).get(0).offsetWidth;
+    }
+
+    let s = oriString.substr(0,len-3)+'...'
+    return s;
+  }
+
   render() {
     const { unitWidth, height, len, start, color, text, strand, arrowStyle } = this.props;
     const width = unitWidth * len;
+    //let rectWidth = arrowStyle==='end' && strand !== '.' ? width-unitWidth/2 : width;
+    const rectWidth = width;
     const fontFamily = 'Helvetica, Arial, sans-serif';
     const fontSize = 12;
     let titleOpacity;
     let textAnchor;
-    if (len > text.length) {
+    let filteredText = text;
+    let textOffset = width / 2;
+    const textLength = this.calcStringWidth(text) + unitWidth;
+    if (rectWidth >= textLength) {
       titleOpacity = 1;
       textAnchor = 'middle';
       this.textOverflow = false;
     } else {
-      titleOpacity = (this.state.showTitle === true ? 1 : 0);
+      textOffset = 0;
+      //titleOpacity = (this.state.showTitle === true ? 1 : 0);
+      filteredText = this.filterCorrectString(text,width);
+      titleOpacity = 1;
       textAnchor = 'start';
       this.textOverflow = true;
     }
@@ -163,10 +206,10 @@ export class SequenceFeatureArrow extends React.Component {
             textAnchor,
             opacity: titleOpacity,
           }}
-          x={unitWidth * start + width / 2}
+          x={unitWidth * start + textOffset}
           y={height / 2}
         >
-          {text}
+          {filteredText}
         </text>}
       </g>
 );
