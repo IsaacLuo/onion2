@@ -68,25 +68,33 @@ export class SequenceEditorFilter extends React.Component {
 
 
   initCallBack() {
+    this.deltaY = 0;
+
     this.onWheel = (e) => {
       let {topRow, totalRows} = this.state;
       if (!e || !e.deltaY) {
-      }
-      else if (e.deltaY > 0) {
-        topRow++;
-        if (topRow >= totalRows) {
-          topRow = totalRows - 1;
-        }
-        if (topRow < 0) {
-          topRow = 0
-        }
-        this.setState({topRow});
       } else {
-        topRow--;
-        if (topRow < 0) {
-          topRow = 0
+        console.log(e.deltaY,this.deltaY);
+        this.deltaY += e.deltaY;
+
+        if (this.deltaY>=100) {
+          topRow++;
+          if (topRow >= totalRows) {
+            topRow = totalRows - 1;
+          }
+          if (topRow < 0) {
+            topRow = 0
+          }
+          this.deltaY = 0;
+          this.setState({topRow});
+        } else if(e.deltaY<-100) {
+          topRow--;
+          if (topRow < 0) {
+            topRow = 0
+          }
+          this.deltaY = 0;
+          this.setState({topRow});
         }
-        this.setState({topRow});
       }
       e.preventDefault();
     }
