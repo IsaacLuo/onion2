@@ -17911,7 +17911,7 @@
 	          style: Object.assign({
 	            width: width,
 	            height: height,
-	            overflowY: 'scroll',
+	            overflowY: 'hidden',
 	            overflowX: 'hidden'
 	          }, style),
 	          onWheel: this.onScroll,
@@ -17943,7 +17943,7 @@
 
 	      this.splitRows(this.colNum);
 	      this.updateSequenceInWindow();
-	      var overflowY = this.props.disableScroll ? 'hidden' : 'scroll';
+	      var overflowY = this.props.disableScroll ? 'hidden' : 'hidden';
 	      return _react2.default.createElement(
 	        'div',
 	        {
@@ -25315,6 +25315,7 @@
 
 	          w += $('.rulerLetter[data-id="' + s + '"]').get(0).offsetWidth;
 	        }
+	        //console.log(string, w);
 	      } catch (err) {
 	        _didIteratorError = true;
 	        _iteratorError = err;
@@ -25330,7 +25331,6 @@
 	        }
 	      }
 
-	      console.log(string, w);
 	      return w;
 	    }
 	  }, {

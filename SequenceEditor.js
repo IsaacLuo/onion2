@@ -829,7 +829,7 @@ export class SequenceEditor extends React.Component {
         style={Object.assign({
           width,
           height,
-          overflowY: 'scroll',
+          overflowY: 'hidden',
           overflowX: 'hidden',
         }, style)}
         onWheel={this.onScroll}
@@ -862,7 +862,7 @@ export class SequenceEditor extends React.Component {
 
     this.splitRows(this.colNum);
     this.updateSequenceInWindow();
-    const overflowY = this.props.disableScroll ? 'hidden' : 'scroll';
+    const overflowY = this.props.disableScroll ? 'hidden' : 'hidden';
     return (
       <div
         style={Object.assign({

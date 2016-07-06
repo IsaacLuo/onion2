@@ -48,7 +48,7 @@ export class SequenceFeatureArrow extends React.Component {
     for(const s of string) {
       w+=$(`.rulerLetter[data-id="${s}"]`).get(0).offsetWidth;
     }
-    console.log(string, w);
+    //console.log(string, w);
     return w;
   }
 
