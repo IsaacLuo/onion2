@@ -26494,7 +26494,7 @@
 	        var totalRows = _state.totalRows;
 
 	        if (!e || !e.deltaY) {} else {
-	          console.log(e.deltaY, _this2.deltaY);
+
 	          _this2.deltaY += e.deltaY;
 
 	          if (_this2.deltaY >= 100) {

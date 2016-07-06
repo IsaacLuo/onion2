@@ -74,7 +74,7 @@ export class SequenceEditorFilter extends React.Component {
       let {topRow, totalRows} = this.state;
       if (!e || !e.deltaY) {
       } else {
-        console.log(e.deltaY,this.deltaY);
+        
         this.deltaY += e.deltaY;
 
         if (this.deltaY>=100) {
