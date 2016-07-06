@@ -24249,7 +24249,7 @@
 	      var _this3 = this;
 
 	      // console.log('OnionForGenomeDesigner mount');
-	      $(document).click(function (e) {
+	      $(document).mousedown(function (e) {
 	        if ($(e.target).closest('.onionPanel').length === 0) {
 	          if (_this3.state.focus !== false) _this3.setState({ focus: false, lastAction: 'loseFocus' });
 	        } else {

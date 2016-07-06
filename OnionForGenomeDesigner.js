@@ -99,7 +99,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
   componentDidMount() {
     // console.log('OnionForGenomeDesigner mount');
-    $(document).click((e) => {
+    $(document).mousedown((e) => {
       if ($(e.target).closest('.onionPanel').length === 0) {
         if (this.state.focus !== false) this.setState({ focus: false, lastAction: 'loseFocus' });
       } else {
