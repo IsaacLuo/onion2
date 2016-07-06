@@ -26507,7 +26507,7 @@
 	            }
 	            _this2.deltaY = 0;
 	            _this2.setState({ topRow: topRow });
-	          } else if (e.deltaY < -100) {
+	          } else if (_this2.deltaY < -100) {
 	            topRow--;
 	            if (topRow < 0) {
 	              topRow = 0;

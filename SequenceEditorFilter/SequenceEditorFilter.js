@@ -87,7 +87,7 @@ export class SequenceEditorFilter extends React.Component {
           }
           this.deltaY = 0;
           this.setState({topRow});
-        } else if(e.deltaY<-100) {
+        } else if(this.deltaY<-100) {
           topRow--;
           if (topRow < 0) {
             topRow = 0
