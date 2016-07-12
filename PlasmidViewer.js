@@ -344,7 +344,7 @@ export class PlasmidViewer extends React.Component {
         </div>
       );
     } else {
-      console.log(plasmidR,seqLength);
+      // console.log(plasmidR,seqLength);
       plasmid = (
         <div
         style = {style}

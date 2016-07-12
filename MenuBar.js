@@ -18,9 +18,11 @@ export class MenuBar extends React.Component {
     showBlockBar: React.PropTypes.bool,
     onSelect: React.PropTypes.func,
     showAA: React.PropTypes.bool,
+    titleColor: React.PropTypes.string,
   };
   static defaultProps = {
-    title: 'Block',
+    title: 'block',
+    titleColor: '#000000',
   };
 
   constructor(props) {
@@ -40,7 +42,7 @@ export class MenuBar extends React.Component {
     //const value = $target.data('val');
     const cmd = target.getAttribute('data-cmd');
     const value = target.getAttribute('data-val') === 'true';
-    console.log(value);
+    //console.log(value);
     onSelect(cmd, !value);
   }
 
@@ -53,12 +55,15 @@ export class MenuBar extends React.Component {
       showRuler,
       showBlockBar,
       showAA,
+      titleColor,
     } = this.props;
-    const layerMenuItem = (text, cmd, value, padding = '10px 10px') =>
+    const layerMenuItem = (text, cmd, value, padding = '0px 10px') =>
       (
         <div
           style={{
             display: 'inline-block',
+            lineHeight: '30px',
+            verticalAlign: 'top',
             padding,
           }}
         >
@@ -77,11 +82,12 @@ export class MenuBar extends React.Component {
       );
 
     const showAll = showEnzymes && showRS && showFeatures && showRuler && showBlockBar && showAA;
+    //{layerMenuItem('Enzymes', 'showEnzymes', showEnzymes)}
     return (
       <div>
         <div
           style={{
-            height: 43,
+            height: 30,
             fontFamily: 'Helvetica, Arial, sans-serif',
             fontSize: 12,
             whiteSpace: 'nowrap',
@@ -95,6 +101,7 @@ export class MenuBar extends React.Component {
               height: '100%',
               borderStyle: 'none none solid none',
               borderWidth: '1',
+              borderColor: '#dadbdf',
               textAlign: 'right',
               verticalAlign: 'top',
             }}
@@ -112,21 +119,24 @@ export class MenuBar extends React.Component {
             ></div>
             {layerMenuItem(<EyeIcon
               stroke={showAll ? '#4c505f' : '#b3b3b3'}
-            />, 'showAll', showAll, '10px 0px 10px 10px')}
+            />, 'showAll', showAll, '0px 0px 0px 10px')}
             {layerMenuItem('Features', 'showFeatures', showFeatures)}
             {layerMenuItem('Reverse Strand', 'showRS', showRS)}
-            {layerMenuItem('Enzymes', 'showEnzymes', showEnzymes)}
+
             {layerMenuItem('Amino Acids', 'showAA', showAA)}
             {layerMenuItem('Ruler', 'showRuler', showRuler)}
           </div>
         </div>
         <div
           style={{
-            paddingTop: 8,
-            paddingLeft: 8,
-            paddingBottom: 8,
-            color: '#8EC78D',
+            padding:8,
+            //color: '#8EC78D',
+            color: titleColor,
             fontSize: 20,
+            height: 36,
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
           }}
         >
           {title}

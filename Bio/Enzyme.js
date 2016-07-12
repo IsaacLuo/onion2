@@ -80,6 +80,6 @@ export function loadEnzymeList(filterName = 'All Commercial') {
     }
   }
 
-  console.log('loaded enzyme list', re, re.length);
+  // console.log('loaded enzyme list', re, re.length);
   return re;
 }

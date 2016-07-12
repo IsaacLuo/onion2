@@ -235,9 +235,13 @@ export class Feature extends React.Component {
     let rgb = this.splitColor(color);
     let [r,g,b] = rgb;
     let t = 230;
+    let m = 40;
     if(r>t) r=t;
+    else if(r<m) r=t;
     if(g>t) g=t;
+    else if(g<m) g=t;
     if(b>t) b=t;
+    else if(b<m) b=t;
     let re = `#${r.toString(16)}${g.toString(16)}${b.toString(16)}`;
    // console.log(re);
     return re;

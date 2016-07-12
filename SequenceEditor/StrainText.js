@@ -5,6 +5,9 @@ import React from 'react';
 import { compareProps } from './../reactHelper';
 import { DNASeq } from './../Bio/DNASeq';
 
+let translateIndexF = 0;
+let translateIndexR = 0;
+
 export class StrainText extends React.Component {
   static propTypes = {
     showRS: React.PropTypes.bool,
@@ -18,10 +21,38 @@ export class StrainText extends React.Component {
     spanDef: React.PropTypes.array,
   };
 
+
   shouldComponentUpdate(nextProps) {
     const update = !compareProps(this.props, nextProps, Object.keys(this.props));
 
     return update;
+  }
+
+  static translateDictF = ' empty block ';
+  static translateDictR = ' no sequence ';
+
+  static beginTranslateBps() {
+    translateIndexF = 0;
+    translateIndexR = 0;
+  }
+
+  translateNextXF(x) {
+    if (x === 'X') {
+      const re = StrainText.translateDictF[translateIndexF];
+      translateIndexF = (translateIndexF + 1) % 13;
+      return re;
+    }
+
+    return x;
+  }
+  translateNextXR(x) {
+    if (x === 'X') {
+      const re = StrainText.translateDictR[translateIndexR];
+      translateIndexR = (translateIndexR + 1) % 13;
+      return re;
+    }
+
+    return x;
   }
 
   generateRuler(x, y, w, h, unitWidth) {
@@ -46,12 +77,21 @@ export class StrainText extends React.Component {
       unitWidth,
       spanDef,
       } = this.props;
-    let psRender;
-    let rsRender;
+    let psRender = '';
+    let rsRender = '';
     if (spanDef && spanDef.length > 0) {
-      const rs = new DNASeq(sequence);
-      psRender = sequence.replace(/XXXXXXXXXXXXX/, ' empty block ');
-      rsRender = rs.complement().toString().replace(/XXXXXXXXXXXXX/, ' no sequence ');
+      const compSequence = new DNASeq(sequence).complement().toString();
+
+      //replace full string
+
+      for (const x of sequence) {
+        psRender += this.translateNextXF(x);
+      }
+
+      for (const x of compSequence) {
+        rsRender += this.translateNextXR(x);
+      }
+
       const psRender2 = [];
       for (const span of spanDef) {
         psRender2.push(

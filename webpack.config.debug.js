@@ -3,14 +3,16 @@ var webpack = require('webpack');
 var webpackBase = require('./webpack.config.base');
 
 module.exports = Object.assign({}, webpackBase, {
-  //devtool: 'source-map',
+	    devtool: 'source-map',
 	    entry  : [
-		    './mainYeastfab.js'
+		    './main.js'
 	],
 	    output : {
-		    filename  : './build/onionYF.js',
+		    filename  : 'index.js',
 	},
 	    plugins: [
+		    new webpack.optimize.OccurenceOrderPlugin(),
+		    new webpack.NoErrorsPlugin(),
 		    new webpack.DefinePlugin({
 			    'process.env': {
 				    'NODE_ENV': JSON.stringify('dev')
