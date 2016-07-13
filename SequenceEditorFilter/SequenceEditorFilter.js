@@ -102,8 +102,8 @@ export class SequenceEditorFilter extends React.Component {
   }
 
   render() {
-    const {sequence, width, height, showLadder, showReverse, showRuler } =  this.props;
-    const {topRow} = this.state;
+    const {sequence, width, height, showLadder, showReverse, showRuler, blocks } =  this.props;
+    const {topRow, totalRows} = this.state;
 
     let rowHeight = 61.5;
     if (showRuler){
@@ -124,17 +124,44 @@ export class SequenceEditorFilter extends React.Component {
       startRow: topRow,
       endRow: topRow + rowsToShow,
       disableScroll: true,
-
+      width: width-10,
     };
+
+
     return (
       <div
         onWheel={this.onWheel}
       >
+        <div
+          style={{
+            width: width-15,
+            display: 'inline-block',
+            verticalAlign: 'top',
+          }}
+        >
           <SequenceEditor
             {...newProp}
           />
+        </div>
+        <div
+          style={{
+            width: 15,
+            display: 'inline-block',
+            verticalAlign: 'top',
+          }}
+        >
+          <BlockScrollBar
+            topRow = {topRow}
+            rows = {rowsToShow}
+            totalRows={totalRows}
+            blocks={blocks}
+            width={15}
+            height={height}
+            style={{}}
+          />
+        </div>
       </div>
-    );
+  );
   }
 
 }

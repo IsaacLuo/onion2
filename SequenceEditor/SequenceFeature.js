@@ -54,7 +54,10 @@ export class SequenceFeatureArrow extends React.Component {
 
   filterCorrectString(oriString, width) {
     if(this.calcStringWidth('...') >= width)
+      if($(`.rulerLetter[data-id="${oriString[0]}"]`).get(0).offsetWidth < width)
         return oriString[0];
+      else
+        return '';
     let ss = '...' + oriString;
     let len = Math.ceil(width/this.props.unitWidth);
 
@@ -110,11 +113,13 @@ export class SequenceFeatureArrow extends React.Component {
 
     let arrow;
 
+    const span = 1;
+
     if(arrowStyle === 'none' || strand === '.'){
       arrow = <rect
           x={unitWidth * start}
           y={0}
-          width={width}
+          width={width-span}
           height={height}
           stroke={stroke}
           strokeWidth="0"
@@ -122,14 +127,14 @@ export class SequenceFeatureArrow extends React.Component {
       />;
     } else if (arrowStyle === 'ext' && strand === '+') {
 
-      const rx = unitWidth * start + width + 2;
+      const rx = unitWidth * start + width + 2 - span;
       const rxm = rx+unitWidth + 2;
 
       arrow = <g>
         <rect
             x={unitWidth * start}
             y={0}
-            width={width}
+            width={width-span}
             height={height}
             stroke={stroke}
             strokeWidth="0"
@@ -149,7 +154,7 @@ export class SequenceFeatureArrow extends React.Component {
         <rect
             x={unitWidth * start}
             y={0}
-            width={width}
+            width={width-span}
             height={height}
             stroke={stroke}
             strokeWidth="0"
@@ -163,7 +168,7 @@ export class SequenceFeatureArrow extends React.Component {
         />
       </g>
     } else if (arrowStyle === 'end' && strand === '+') {
-      const lx = unitWidth * start;
+      const lx = unitWidth * start - span;
       const rx = lx + width - unitWidth;
       const rxm = rx + unitWidth;
       arrow =
@@ -174,7 +179,7 @@ export class SequenceFeatureArrow extends React.Component {
             fill={fillColor}
         />
     } else if (arrowStyle === 'end' && strand === '-') {
-      const lxm = unitWidth * start;
+      const lxm = unitWidth * start -span;
       const lx = lxm + unitWidth;
       const rx = lxm + width;
       arrow =
