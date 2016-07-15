@@ -709,10 +709,10 @@ export class SequenceEditor extends React.Component {
       let cursorStyle;
       if (!focus) {
         selectionStyle = { fill: '#F2F2F2' };
-        cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+        cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2, pointerEvents:'none' };
       } else {
         selectionStyle = { fill: '#EDF2F8' };
-        cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+        cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2, pointerEvents:'none' };
       }
 
       const selectSpanNumbers = [this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)];

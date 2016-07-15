@@ -36,8 +36,13 @@ export class SequenceFeatureArrow extends React.Component {
   }
 
   initCallBack() {
+    this.onClick = (e) => {
+
+    };
+
     this.onDoubleClick = (e) => {
       if(this.props.onDoubleClick){
+        console.log('dbclick');
         this.props.onDoubleClick(e, this.props.blockID);
       }
     };
@@ -104,6 +109,8 @@ export class SequenceFeatureArrow extends React.Component {
     let textAnchor;
     let filteredText = text;
     let textOffset = width / 2;
+    const span = 1;
+
     const textLength = this.calcStringWidth(text) + unitWidth;
     if (rectWidth >= textLength) {
       titleOpacity = 1;
@@ -112,7 +119,7 @@ export class SequenceFeatureArrow extends React.Component {
     } else {
       textOffset = 0;
       //titleOpacity = (this.state.showTitle === true ? 1 : 0);
-      filteredText = this.filterCorrectString(text,width);
+      filteredText = this.filterCorrectString(text,width-span);
       titleOpacity = 1;
       textAnchor = 'start';
       this.textOverflow = true;
@@ -125,7 +132,7 @@ export class SequenceFeatureArrow extends React.Component {
 
     let arrow;
 
-    const span = 1;
+
 
     if(arrowStyle === 'none' || strand === '.'){
       arrow = <rect
@@ -211,7 +218,7 @@ export class SequenceFeatureArrow extends React.Component {
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         transform={`translate(0,${this.props.y})`}
-        onClick={this.onDoubleClick}
+        onClick={this.onClick}
         onDoubleClick={this.onDoubleClick}
         blockID={this.props.blockID}
       >

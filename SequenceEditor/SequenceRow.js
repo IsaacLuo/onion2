@@ -72,7 +72,7 @@ export class SequenceRow extends React.Component {
     showRuler2: true,
     showBlockBar: true,
     showAA: true,
-    cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
+    cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2, pointerEvents:'none' },
     selectionStyle: { fill: '#EDF2F8' },
     featureHeight: 18,
     ruler2d: 10,

@@ -17759,10 +17759,10 @@
 	        var cursorStyle = void 0;
 	        if (!focus) {
 	          selectionStyle = { fill: '#F2F2F2' };
-	          cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2 };
+	          cursorStyle = { stroke: '#777777', fill: '#777777', strokeWidth: 2, pointerEvents: 'none' };
 	        } else {
 	          selectionStyle = { fill: '#EDF2F8' };
-	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2 };
+	          cursorStyle = { stroke: '#4E77BA', fill: '#4E77BA', strokeWidth: 2, pointerEvents: 'none' };
 	        }
 	
 	        var selectSpanNumbers = [this.uiPosToRealPos(selectLeftPos), this.uiPosToRealPos(selectRightPos)];
@@ -25297,8 +25297,11 @@
 	    value: function initCallBack() {
 	      var _this2 = this;
 	
+	      this.onClick = function (e) {};
+	
 	      this.onDoubleClick = function (e) {
 	        if (_this2.props.onDoubleClick) {
+	          console.log('dbclick');
 	          _this2.props.onDoubleClick(e, _this2.props.blockID);
 	        }
 	      };
@@ -25398,6 +25401,8 @@
 	      var textAnchor = void 0;
 	      var filteredText = text;
 	      var textOffset = width / 2;
+	      var span = 1;
+	
 	      var textLength = this.calcStringWidth(text) + unitWidth;
 	      if (rectWidth >= textLength) {
 	        titleOpacity = 1;
@@ -25406,7 +25411,7 @@
 	      } else {
 	        textOffset = 0;
 	        //titleOpacity = (this.state.showTitle === true ? 1 : 0);
-	        filteredText = this.filterCorrectString(text, width);
+	        filteredText = this.filterCorrectString(text, width - span);
 	        titleOpacity = 1;
 	        textAnchor = 'start';
 	        this.textOverflow = true;
@@ -25418,8 +25423,6 @@
 	      var fillColor = color ? color : '#A5A6A2';
 	
 	      var arrow = void 0;
-	
-	      var span = 1;
 	
 	      if (arrowStyle === 'none' || strand === '.') {
 	        arrow = _react2.default.createElement('rect', {
@@ -25505,7 +25508,7 @@
 	          onMouseOver: this.onMouseOver,
 	          onMouseOut: this.onMouseOut,
 	          transform: 'translate(0,' + this.props.y + ')',
-	          onClick: this.onDoubleClick,
+	          onClick: this.onClick,
 	          onDoubleClick: this.onDoubleClick,
 	          blockID: this.props.blockID
 	        },
@@ -26362,7 +26365,7 @@
 	  showRuler2: true,
 	  showBlockBar: true,
 	  showAA: true,
-	  cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
+	  cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2, pointerEvents: 'none' },
 	  selectionStyle: { fill: '#EDF2F8' },
 	  featureHeight: 18,
 	  ruler2d: 10,
