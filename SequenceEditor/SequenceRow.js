@@ -56,6 +56,8 @@ export class SequenceRow extends React.Component {
     cursorStyle: React.PropTypes.object,
     uiPosToRealPos: React.PropTypes.func,
 
+    onDoubleClickBlock: React.PropTypes.func,
+
   };
   static defaultProps = {
     sequence: 'NOTHING',
@@ -89,6 +91,19 @@ export class SequenceRow extends React.Component {
     this.hideEnzyme = this.hideEnzyme.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
+
+    this.initCallBack();
+
+  }
+
+  initCallBack() {
+    this.onDoubleClickBlock = (e,id) => {
+      if(id != undefined && this.props.blocks && this.props.blocks[id]) {
+        console.log(id, this.props.blocks[id]);
+        const block = this.props.blocks[id].originalBlock;
+        this.props.onDoubleClickBlock(block,block.start,block.length);
+      }
+    }
   }
 
   shouldComponentUpdate(np, nextState) {
@@ -239,6 +254,8 @@ export class SequenceRow extends React.Component {
           color={b.color}
           text={b.name}
           key={i}
+          blockID={i}
+          onDoubleClick={this.onDoubleClickBlock}
         />
       )
     }

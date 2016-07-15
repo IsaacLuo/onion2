@@ -14,6 +14,9 @@ export class SequenceFeatureArrow extends React.Component {
     text: React.PropTypes.string,
     strand: React.PropTypes.string,
     arrowStyle: React.PropTypes.string,
+    blockID: React.PropTypes.number,
+
+    onDoubleClick: React.PropTypes.func,
   };
   static defaultProps = {
     height: 20,
@@ -29,6 +32,15 @@ export class SequenceFeatureArrow extends React.Component {
     this.state = { showTitle: false };
     this.onMouseOver = this.onMouseOver.bind(this);
     this.onMouseOut = this.onMouseOut.bind(this);
+    this.initCallBack();
+  }
+
+  initCallBack() {
+    this.onDoubleClick = (e) => {
+      if(this.props.onDoubleClick){
+        this.props.onDoubleClick(e, this.props.blockID);
+      }
+    };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -199,6 +211,9 @@ export class SequenceFeatureArrow extends React.Component {
         onMouseOver={this.onMouseOver}
         onMouseOut={this.onMouseOut}
         transform={`translate(0,${this.props.y})`}
+        onClick={this.onDoubleClick}
+        onDoubleClick={this.onDoubleClick}
+        blockID={this.props.blockID}
       >
         {arrow}
         {<text

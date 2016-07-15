@@ -283,6 +283,10 @@ export class SequenceEditor extends React.Component {
     this.onClick = (e) => {
     }
 
+    this.onDoubleClickBlock = (block,start,length) => {
+      this.onSelect(start+length,null,start);
+    }
+
     // this.uiPosToRealPos = (index) => {
     //   const currentBlock = this.findBlockByIndex(index);
     //   if(currentBlock) {
@@ -754,6 +758,7 @@ export class SequenceEditor extends React.Component {
           aas={aaFrags}
           enzymes={enzymeFrags}
           onCalculatedHeight={this.onRowCalculatedHeight}
+          onDoubleClickBlock={this.onDoubleClickBlock}
           onRendered={this.onRowRendered}
         />);
 

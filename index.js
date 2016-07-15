@@ -17281,6 +17281,10 @@
 	
 	      this.onClick = function (e) {};
 	
+	      this.onDoubleClickBlock = function (block, start, length) {
+	        _this3.onSelect(start + length, null, start);
+	      };
+	
 	      // this.uiPosToRealPos = (index) => {
 	      //   const currentBlock = this.findBlockByIndex(index);
 	      //   if(currentBlock) {
@@ -17803,6 +17807,7 @@
 	          aas: aaFrags,
 	          enzymes: enzymeFrags,
 	          onCalculatedHeight: this.onRowCalculatedHeight,
+	          onDoubleClickBlock: this.onDoubleClickBlock,
 	          onRendered: this.onRowRendered
 	        }));
 	
@@ -25283,10 +25288,22 @@
 	    _this.state = { showTitle: false };
 	    _this.onMouseOver = _this.onMouseOver.bind(_this);
 	    _this.onMouseOut = _this.onMouseOut.bind(_this);
+	    _this.initCallBack();
 	    return _this;
 	  }
 	
 	  _createClass(SequenceFeatureArrow, [{
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
+	
+	      this.onDoubleClick = function (e) {
+	        if (_this2.props.onDoubleClick) {
+	          _this2.props.onDoubleClick(e, _this2.props.blockID);
+	        }
+	      };
+	    }
+	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(nextProps, nextState) {
 	      return !(0, _reactHelper.compareProps)(this.props, nextProps, Object.keys(this.props));
@@ -25487,7 +25504,10 @@
 	        {
 	          onMouseOver: this.onMouseOver,
 	          onMouseOut: this.onMouseOut,
-	          transform: 'translate(0,' + this.props.y + ')'
+	          transform: 'translate(0,' + this.props.y + ')',
+	          onClick: this.onDoubleClick,
+	          onDoubleClick: this.onDoubleClick,
+	          blockID: this.props.blockID
 	        },
 	        arrow,
 	        _react2.default.createElement(
@@ -25524,7 +25544,10 @@
 	  color: _react2.default.PropTypes.string,
 	  text: _react2.default.PropTypes.string,
 	  strand: _react2.default.PropTypes.string,
-	  arrowStyle: _react2.default.PropTypes.string
+	  arrowStyle: _react2.default.PropTypes.string,
+	  blockID: _react2.default.PropTypes.number,
+	
+	  onDoubleClick: _react2.default.PropTypes.func
 	};
 	SequenceFeatureArrow.defaultProps = {
 	  height: 20,
@@ -25602,10 +25625,26 @@
 	    _this.hideEnzyme = _this.hideEnzyme.bind(_this);
 	    _this.onMouseDown = _this.onMouseDown.bind(_this);
 	    _this.onMouseMove = _this.onMouseMove.bind(_this);
+	
+	    _this.initCallBack();
+	
 	    return _this;
 	  }
 	
 	  _createClass(SequenceRow, [{
+	    key: 'initCallBack',
+	    value: function initCallBack() {
+	      var _this2 = this;
+	
+	      this.onDoubleClickBlock = function (e, id) {
+	        if (id != undefined && _this2.props.blocks && _this2.props.blocks[id]) {
+	          console.log(id, _this2.props.blocks[id]);
+	          var block = _this2.props.blocks[id].originalBlock;
+	          _this2.props.onDoubleClickBlock(block, block.start, block.length);
+	        }
+	      };
+	    }
+	  }, {
 	    key: 'shouldComponentUpdate',
 	    value: function shouldComponentUpdate(np, nextState) {
 	      var update = !(0, _reactHelper.compareProps)(this.props, np);
@@ -25782,7 +25821,9 @@
 	          y: y0,
 	          color: b.color,
 	          text: b.name,
-	          key: i
+	          key: i,
+	          blockID: i,
+	          onDoubleClick: this.onDoubleClickBlock
 	        }));
 	      }
 	
@@ -26011,7 +26052,7 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      var _props9 = this.props;
 	      var sequence = _props9.sequence;
@@ -26061,7 +26102,7 @@
 	        var y = 0;
 	
 	        if (showEnzymes) {
-	          re.enzymeH = _this2.calcEnzymeHeight();
+	          re.enzymeH = _this3.calcEnzymeHeight();
 	          y += re.enzymeH;
 	          re.enzymeY = y;
 	        }
@@ -26093,7 +26134,7 @@
 	          y += 5;
 	        }
 	
-	        if (showAA && _this2.props.aas && _this2.props.aas.length > 0) {
+	        if (showAA && _this3.props.aas && _this3.props.aas.length > 0) {
 	          re.aaY = y;
 	          re.aaH = 18;
 	          y += 23;
@@ -26101,7 +26142,7 @@
 	
 	        if (showFeatures) {
 	          re.featureY = y;
-	          re.featureH = _this2.calcFeatureHeight();
+	          re.featureH = _this3.calcFeatureHeight();
 	          y += re.featureH;
 	          y += 10;
 	        }
@@ -26116,7 +26157,7 @@
 	        }
 	
 	        re.totalH = y;
-	        _this2.props.onCalculatedHeight(_this2.props.rowNumber, re.totalH);
+	        _this3.props.onCalculatedHeight(_this3.props.rowNumber, re.totalH);
 	        return re;
 	      };
 	
@@ -26249,7 +26290,7 @@
 	              texts: function () {
 	                var re = [];
 	                for (var i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
-	                  re.push(_this2.props.uiPosToRealPos(i));
+	                  re.push(_this3.props.uiPosToRealPos(i));
 	                }
 	
 	                return re;
@@ -26303,7 +26344,9 @@
 	  selectionStyle: _react2.default.PropTypes.object,
 	  theme: _react2.default.PropTypes.string,
 	  cursorStyle: _react2.default.PropTypes.object,
-	  uiPosToRealPos: _react2.default.PropTypes.func
+	  uiPosToRealPos: _react2.default.PropTypes.func,
+	
+	  onDoubleClickBlock: _react2.default.PropTypes.func
 	
 	};
 	SequenceRow.defaultProps = {
