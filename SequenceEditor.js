@@ -287,18 +287,6 @@ export class SequenceEditor extends React.Component {
       this.onSelect(start+length,null,start);
     }
 
-    // this.uiPosToRealPos = (index) => {
-    //   const currentBlock = this.findBlockByIndex(index);
-    //   if(currentBlock) {
-    //     if (currentBlock.realLength === 0) {
-    //       return currentBlock.realStart;
-    //     } else {
-    //       const offset = index - currentBlock.start;
-    //       return currentBlock.realStart + offset;
-    //     }
-    //   }
-    //   return index;
-    // }
     this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
 
     this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
