@@ -17285,18 +17285,6 @@
 	        _this3.onSelect(start + length, null, start);
 	      };
 	
-	      // this.uiPosToRealPos = (index) => {
-	      //   const currentBlock = this.findBlockByIndex(index);
-	      //   if(currentBlock) {
-	      //     if (currentBlock.realLength === 0) {
-	      //       return currentBlock.realStart;
-	      //     } else {
-	      //       const offset = index - currentBlock.start;
-	      //       return currentBlock.realStart + offset;
-	      //     }
-	      //   }
-	      //   return index;
-	      // }
 	      this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
 	
 	      this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
@@ -23176,62 +23164,85 @@
 	
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(InfoBar).call(this, props));
 	
+	    _this.state = {
+	      startPos: props.startPos,
+	      endPos: props.endPos,
+	      showStart: false,
+	      showEnd: false
+	    };
 	    _this.initCallBack();
 	    return _this;
 	  }
 	
 	  _createClass(InfoBar, [{
+	    key: 'onPropertyChange',
+	    value: function onPropertyChange(props) {
+	      var show = props.startPos > 0 && props.endPos > props.startPos;
+	      this.setState({
+	        startPos: props.startPos,
+	        endPos: props.endPos,
+	        showStart: show,
+	        showEnd: show
+	      });
+	    }
+	
+	    //this.props.onChange(vv, Math.max(endPos, vv));
+	
+	  }, {
 	    key: 'initCallBack',
 	    value: function initCallBack() {
 	      var _this2 = this;
 	
-	      this.onChangeStart = function (o, v, e) {
-	        _this2.showStartValue = true;
-	        if (_this2.props.onChange) {
-	          var _props = _this2.props;
-	          var startPos = _props.startPos;
-	          var endPos = _props.endPos;
-	
-	          var vv = v;
-	          if (startPos === endPos) {
-	            //cursorMode
-	            _this2.props.onChange(vv, vv);
-	          } else {
-	            _this2.props.onChange(vv, Math.max(endPos, vv));
-	          }
-	        }
-	
-	        return false;
+	      this.onChangeStart = function (o, value, e) {
+	        _this2.setState({
+	          startPos: value,
+	          showStart: true
+	        });
+	        _this2.refreshParent();
 	      };
 	
-	      this.onChangeEnd = function (o, v, e) {
-	        if (_this2.props.onChange) {
-	          var _props2 = _this2.props;
-	          var startPos = _props2.startPos;
-	          var endPos = _props2.endPos;
-	
-	          var vv = v;
-	          if (startPos === endPos && vv < startPos) {
-	            //cursorMode
-	            _this2.props.onChange(vv, vv);
-	          } else {
-	            _this2.props.onChange(Math.min(startPos, vv), vv);
-	          }
-	        }
+	      this.onChangeEnd = function (o, value, e) {
+	        _this2.setState({
+	          endPos: value,
+	          showEnd: true
+	        });
+	        _this2.refreshParent();
 	      };
+	    }
+	  }, {
+	    key: 'refreshParent',
+	    value: function refreshParent() {
+	      var _state = this.state;
+	      var startPos = _state.startPos;
+	      var endPos = _state.endPos;
+	      var showStart = _state.showStart;
+	      var showEnd = _state.showEnd;
+	
+	
+	      if (this.props.onChange && showStart && showEnd && startPos > 0) {
+	        if (endPos > startPos) {
+	          this.props.onChange(startPos, endPos);
+	        } else if (endPos < startPos) {
+	          this.props.onChange(endPos, startPos);
+	        }
+	      }
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props3 = this.props;
-	      var showPos = _props3.showPos;
-	      var showLength = _props3.showLength;
-	      var showGC = _props3.showGC;
-	      var showTM = _props3.showTM;
-	      var startPos = _props3.startPos;
-	      var endPos = _props3.endPos;
-	      var seq = _props3.seq;
-	      var blocks = _props3.blocks;
+	      var _props = this.props;
+	      var showPos = _props.showPos;
+	      var showLength = _props.showLength;
+	      var showGC = _props.showGC;
+	      var showTM = _props.showTM;
+	      var seq = _props.seq;
+	      var blocks = _props.blocks;
+	      var _state2 = this.state;
+	      var startPos = _state2.startPos;
+	      var endPos = _state2.endPos;
+	      var showStart = _state2.showStart;
+	      var showEnd = _state2.showEnd;
+	
 	
 	      var itemStyle = {
 	        display: 'inline-block',
@@ -23278,10 +23289,10 @@
 	            'Start:'
 	          ),
 	          _react2.default.createElement(NC, {
-	            value: startPos,
+	            value: showStart ? startPos : '',
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
-	            showValue: startPos >= 0,
+	            showValue: showStart,
 	            onChange: this.onChangeStart,
 	            blocks: blocks,
 	            offset: 1
@@ -23300,8 +23311,8 @@
 	            'End:'
 	          ),
 	          _react2.default.createElement(NC, {
-	            value: endPos,
-	            showValue: startPos < endPos,
+	            value: showEnd ? endPos : '',
+	            showValue: showEnd,
 	            minValue: startPos,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },

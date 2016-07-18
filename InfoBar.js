@@ -34,37 +34,64 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      startPos: props.startPos,
+      endPos: props.endPos,
+      showStart: false,
+      showEnd: false,
+    };
     this.initCallBack();
   }
 
-  initCallBack() {
-    this.onChangeStart = (o, v, e) => {
-      this.showStartValue = true;
-      if (this.props.onChange) {
-        const { startPos, endPos } = this.props;
-        const vv = v;
-        if (startPos === endPos) {		//cursorMode
-          this.props.onChange(vv, vv);
-        } else {
-          this.props.onChange(vv, Math.max(endPos, vv));
-        }
-      }
+  onPropertyChange(props) {
+    const show =props.startPos>0 && props.endPos>props.startPos;
+    this.setState({
+      startPos: props.startPos,
+      endPos: props.endPos,
+      showStart: show,
+      showEnd: show,
+    });
+  }
 
-      return false;
+  //this.props.onChange(vv, Math.max(endPos, vv));
+
+  initCallBack() {
+    this.onChangeStart = (o, value, e) => {
+      this.setState({
+        startPos: value,
+        showStart: true,
+      });
+      this.refreshParent();
     };
 
-    this.onChangeEnd = (o, v, e) => {
-      if (this.props.onChange) {
-        const { startPos, endPos } = this.props;
-        const vv = v;
-        if (startPos === endPos && vv < startPos) {		//cursorMode
-          this.props.onChange(vv, vv);
-        } else {
-          this.props.onChange(Math.min(startPos, vv), vv);
-        }
-      }
+    this.onChangeEnd = (o, value, e) => {
+      this.setState({
+        endPos: value,
+        showEnd: true,
+      });
+      this.refreshParent();
     };
   }
+
+  refreshParent() {
+    const {
+      startPos,
+      endPos,
+      showStart,
+      showEnd,
+    } = this.state;
+
+    if(this.props.onChange && showStart && showEnd && startPos>0) {
+      if(endPos>startPos) {
+        this.props.onChange(startPos, endPos);
+      }
+      else if(endPos<startPos){
+        this.props.onChange(endPos,startPos);
+      }
+    }
+  }
+
+
 
   render() {
     const {
@@ -72,11 +99,16 @@ export class InfoBar extends React.Component {
       showLength,
       showGC,
       showTM,
-      startPos,
-      endPos,
       seq,
       blocks,
       } = this.props;
+    const {
+      startPos,
+      endPos,
+      showStart,
+      showEnd,
+    } = this.state;
+
     const itemStyle = {
       display: 'inline-block',
       marginTop: 9,
@@ -122,10 +154,10 @@ export class InfoBar extends React.Component {
           </div>
 
           <NC
-            value={startPos}
+            value={showStart?startPos:''}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
-            showValue={startPos >= 0}
+            showValue={showStart}
             onChange={this.onChangeStart}
             blocks={blocks}
             offset={1}
@@ -144,8 +176,8 @@ export class InfoBar extends React.Component {
           </div>
 
           <NC
-            value={endPos}
-            showValue={startPos < endPos}
+            value={showEnd?endPos:''}
+            showValue={showEnd}
             minValue={startPos}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
