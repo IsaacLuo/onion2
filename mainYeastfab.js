@@ -5,7 +5,8 @@ const manifest = require('json!./package.json');
 
 const $ = require('jquery');
 
-global.renderOnion = (container, sequence, features, width, height) => {
+global.renderOnion = (container, param) => {
+  const { sequence, features, width, height} = param;
   ReactDOM.render(<OnionForYeastfab
     sequence={sequence}
     features={features}
