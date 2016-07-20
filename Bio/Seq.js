@@ -22,4 +22,8 @@ export class Seq
   substr(start, len) {
     return new Seq(this.seq.substr(start, len));
   }
+
+  setSegment(start, len, newStr = '') {
+    return new Seq(this.seq.substr(0,start) + newStr + this.seq.substr(start+len,this.seq.length-start-len));
+  }
 }

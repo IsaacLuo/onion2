@@ -4,7 +4,42 @@ import { AASeq } from './AASeq';
 
 export class DNASeq extends Seq
 {
-  static complementDict = { A: 'T', T: 'A', C: 'G', G: 'C', a: 't', t: 'a', c: 'g', g: 'c', X: 'X' };
+  static complementDict = {
+    A: 'T',
+    T: 'A',
+    C: 'G',
+    G: 'C',
+    N: 'N',
+    W: 'W',
+    S: 'S',
+    M: 'K',
+    K: 'M',
+    R: 'Y',
+    Y: 'R',
+    B: 'A',
+    D: 'C',
+    H: 'G',
+    U: 'A',
+    V: 'T',
+    a: 't',
+    t: 'a',
+    c: 'g',
+    g: 'c',
+    u: 'a',
+    n: 'n',
+    w: 'w',
+    s: 's',
+    m: 'k',
+    k: 'm',
+    r: 'y',
+    y: 'r',
+    b: 'a',
+    d: 'c',
+    h: 'g',
+    X: 'X',
+    '·': '·',
+    '~': '~',
+  };
 
   static codonDict = {
     TTT: 'F',
@@ -78,13 +113,18 @@ export class DNASeq extends Seq
   }
 
   removeInvalidLetter(src) {
-    return src.replace(/[^A|^G|^T|^C|^X]/gi, '');
+    return src.replace(/[^A|^G|^T|^C|^X|^N|^·|^~|^W|^U|^S|^M|^K|^R|^Y|^B|^D|^H|^V]/gi, '');
+    //return src;
   }
 
   reverseComplement() {
     const out = [];
     for (const n of this.seq) {
-      out.push(DNASeq.complementDict[n]);
+      if (DNASeq.complementDict[n]) {
+        out.push(DNASeq.complementDict[n]);
+      } else {
+        out.push(n);
+      }
     }
 
     return new DNASeq(out.reverse().join(''));
@@ -133,7 +173,6 @@ export class DNASeq extends Seq
     for (const e of enzymeList) {
       const rsxf = new RegExp(e.rf, 'gi');
       for (let r = rsxf.exec(this.seq); r; r = rsxf.exec(this.seq)) {
-        r = rsxf.exec(this.seq);
         if (!r) break;
         this.enzymeSites.push(new EnzymeSite(e, r.index, '+'));
       }

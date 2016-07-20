@@ -54,6 +54,9 @@ export class SequenceRow extends React.Component {
     selectionStyle: React.PropTypes.object,
     theme: React.PropTypes.string,
     cursorStyle: React.PropTypes.object,
+    uiPosToRealPos: React.PropTypes.func,
+
+    onDoubleClickBlock: React.PropTypes.func,
 
   };
   static defaultProps = {
@@ -69,7 +72,7 @@ export class SequenceRow extends React.Component {
     showRuler2: true,
     showBlockBar: true,
     showAA: true,
-    cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2 },
+    cursorStyle: { fill: '#4E77BA', stoke: '#4E77BA', strokeWidth: 2, pointerEvents:'none' },
     selectionStyle: { fill: '#EDF2F8' },
     featureHeight: 18,
     ruler2d: 10,
@@ -88,6 +91,19 @@ export class SequenceRow extends React.Component {
     this.hideEnzyme = this.hideEnzyme.bind(this);
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
+
+    this.initCallBack();
+
+  }
+
+  initCallBack() {
+    this.onDoubleClickBlock = (e,id) => {
+      if(id != undefined && this.props.blocks && this.props.blocks[id]) {
+        console.log(id, this.props.blocks[id]);
+        const block = this.props.blocks[id].originalBlock;
+        this.props.onDoubleClickBlock(block,block.start,block.length);
+      }
+    }
   }
 
   shouldComponentUpdate(np, nextState) {
@@ -154,6 +170,7 @@ export class SequenceRow extends React.Component {
           key={`features${i}`}
           y={y0 + this.featureRow[i] * (featureHeight + 5)}
           height={featureHeight}
+          arrowStyle={feature.arrowStyle}
         />
       );
     }
@@ -217,16 +234,30 @@ export class SequenceRow extends React.Component {
 
     for (let i = 0; i < blocks.length; i++) {
       const b = blocks[i];
+      // re.push(
+      //   <rect
+      //     x={b.start * unitWidth}
+      //     y={y0}
+      //     width={b.len * unitWidth}
+      //     height={9}
+      //     fill={b.color}
+      //     key={`blocks${i}`}
+      //   />
+      // );
       re.push(
-        <rect
-          x={b.start * unitWidth}
+        <SequenceFeatureArrow
+          start={b.start}
+          len={b.len}
+          unitWidth={unitWidth}
+          height={18}
           y={y0}
-          width={b.len * unitWidth}
-          height={9}
-          fill={b.color}
-          key={`blocks${i}`}
+          color={b.color}
+          text={b.name}
+          key={i}
+          blockID={i}
+          onDoubleClick={this.onDoubleClickBlock}
         />
-      );
+      )
     }
 
     return re;
@@ -314,7 +345,7 @@ export class SequenceRow extends React.Component {
         start: block.start,
         length: block.len,
         style: {
-          fill: block.realLength === 0 ? '#B7BBC2' : '#2C3543',
+          fill: block.realLength === 0 || block.lowFocus ? '#B7BBC2' : '#2C3543',
         },
       });
     }
@@ -437,6 +468,7 @@ export class SequenceRow extends React.Component {
       showFeatures,
       showRuler,
       cursorStyle,
+      selectSpanNumbers,
       } = this.props;
 
     const sequenceRowWidth = sequence.length * unitWidth;
@@ -487,7 +519,7 @@ export class SequenceRow extends React.Component {
       y += 5;
       if (showBlockBar) {
         re.blockBarY = y;
-        y += 9;
+        y += 18;
         y += 5;
       }
 
@@ -625,7 +657,8 @@ export class SequenceRow extends React.Component {
                   fill: cursorStyle.fill,
                 }}
               >
-                {selectLeftPos + idxStart + 1}
+
+                {selectSpanNumbers[0] + 1}
               </text>
             </g>
             }
@@ -648,7 +681,7 @@ export class SequenceRow extends React.Component {
                   fill: cursorStyle.fill,
                 }}
               >
-                {selectRightPos + idxStart}
+                {selectSpanNumbers[1]}
               </text>
               }
             </g>
@@ -665,7 +698,7 @@ export class SequenceRow extends React.Component {
               texts={(() => {
                 const re = [];
                 for (let i = idxStart; i < idxStart + sequence.length; i += ruler2d) {
-                  re.push(i);
+                  re.push(this.props.uiPosToRealPos(i));
                 }
 
                 return re;

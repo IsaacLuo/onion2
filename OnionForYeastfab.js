@@ -99,7 +99,7 @@ export class OnionForYeastfab extends React.Component {
 
   //while user fires a menu command
   menuCommand(command, value) {
-    console.log('menuCommand', command, value);
+    // console.log('menuCommand', command, value);
     const dict = {};
     switch (command) {
       case 'showAll':
@@ -158,29 +158,11 @@ export class OnionForYeastfab extends React.Component {
 
     const selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
     const selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-    const selectedSeq = sequence.substr(selectionStart, selectionLength);
 
-    const menuTitle = this.state.menuTitle;
-
-    const editorHeight = height-42-86;
-
-    let sequenceEditorWidth;
-    let plasmidViewerWidth;
-    if(width>=1024){
-      sequenceEditorWidth = width*0.618;
-      plasmidViewerWidth = width-sequenceEditorWidth;
-    } else {
-      sequenceEditorWidth = width;
-      plasmidViewerWidth = width;
-
-    }
-
-
-
-    let seqObj = new DNASeq(sequence)
+    let seqObj = new DNASeq(sequence);
     let enzymes = seqObj.calcEnzymeSites(this.enzymeList);
 
-    const plasmidR = Math.min(plasmidViewerWidth/2-100,editorHeight/2-100);
+    const plasmidR = Math.min(width/2-100,height/2-100);
     const enzymeR = plasmidR+20;
 
     return (
@@ -207,8 +189,8 @@ export class OnionForYeastfab extends React.Component {
           showViewAngle={false}
           selectedFeature={-1}
           onWheel={()=>{}}
-          width={plasmidViewerWidth}
-          height={editorHeight}
+          width={width}
+          height={height}
           cursorPos={this.state.cursorPos}
           selectionStart={selectionStart}
           selectionLength={selectionLength}
