@@ -136,7 +136,7 @@ export class SequenceEditor extends React.Component {
     const _this = this;
 
     this.onScroll = (e) => {
-     // console.log('scrolling');
+      // console.log('scrolling');
       //_this.updateSequenceInWindow();
       if (this.props.onScroll) {
         this.props.onScroll(e);
@@ -793,7 +793,7 @@ export class SequenceEditor extends React.Component {
     let updateSet = new Set();
     for(let i = startRow; i<endRow; i++){
       for( let j = 0; j< this.splitBlocks[i].length; j++)
-      updateSet.add(this.splitBlocks[i][j].originalBlock);
+        updateSet.add(this.splitBlocks[i][j].originalBlock);
     }
 
     let count = updateSet.size;
