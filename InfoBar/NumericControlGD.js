@@ -60,26 +60,30 @@ export class NumericControlGD extends React.Component
       e.target.select();
     }
     this.onChange = (e) => {
+      let uiValue = this.positionCalculator.realPosTouiPos(e.target.value);
+      console.log('onchange',uiValue,e.target.value);
       this.setState({
-        value: this.positionCalculator.realPosTouiPos(e.target.value),
+        value: uiValue,
         showValue: true
       });
     };
 
     this.onBlur = (e) => {
       if (this.props.onChange) {
-        const { value, minValue, maxValue } = this.props;
+        const { value, minValue, maxValue} = this.props;
         let newValue = parseInt(e.target.value, 10);
+        console.log('onblur',newValue,e.target.value);
         if (!newValue) {
-          newValue = value;
+          //newValue = value;
         } else {
           if (newValue > maxValue) {
             newValue = maxValue;
           } else if (newValue < minValue) {
             newValue = minValue;
           }
+          this.props.onChange(this, newValue, e);
         }
-        this.props.onChange(this, newValue, e);
+
       }
     };
 
@@ -124,7 +128,7 @@ export class NumericControlGD extends React.Component
   }
 
   render() {
-    const { style, valueBoxStyle, offset } = this.props;
+    const { style, valueBoxStyle } = this.props;
     const { showValue } = this.state;
     let { upDownStyle } = this.props;
     upDownStyle = Object.assign({
@@ -135,7 +139,7 @@ export class NumericControlGD extends React.Component
 
     const realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
 
-    const value = showValue ? realValue + offset : '';
+    const value = showValue ? realValue : '';
     return (
       <div
         style = {Object.assign({

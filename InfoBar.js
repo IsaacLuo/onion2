@@ -43,8 +43,9 @@ export class InfoBar extends React.Component {
     this.initCallBack();
   }
 
-  onPropertyChange(props) {
-    const show =props.startPos>0 && props.endPos>props.startPos;
+  componentWillReceiveProps(props) {
+    const show =props.startPos>=0 && props.endPos>props.startPos;
+    console.log(props);
     this.setState({
       startPos: props.startPos,
       endPos: props.endPos,
@@ -57,29 +58,38 @@ export class InfoBar extends React.Component {
 
   initCallBack() {
     this.onChangeStart = (o, value, e) => {
-      this.setState({
-        startPos: value,
+      this.refreshParent({
+        startPos: value-1,
         showStart: true,
       });
-      this.refreshParent();
     };
 
     this.onChangeEnd = (o, value, e) => {
-      this.setState({
+      this.refreshParent({
         endPos: value,
         showEnd: true,
       });
-      this.refreshParent();
     };
   }
 
-  refreshParent() {
-    const {
+  refreshParent(para) {
+    let {
       startPos,
       endPos,
       showStart,
       showEnd,
-    } = this.state;
+    } = para;
+
+    if (!startPos) {
+      startPos = this.state.startPos;
+      showStart = this.state.showStart;
+    }
+    if (!endPos) {
+      endPos = this.state.endPos;
+      showEnd = this.state.showEnd;
+    }
+
+    this.setState({startPos,endPos,showStart,showEnd});
 
     if(this.props.onChange && showStart && showEnd && startPos>0) {
       if(endPos>startPos) {
@@ -154,13 +164,13 @@ export class InfoBar extends React.Component {
           </div>
 
           <NC
-            value={showStart?startPos:''}
+            value={startPos+1}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
             showValue={showStart}
             onChange={this.onChangeStart}
             blocks={blocks}
-            offset={1}
+            offset={0}
           />
 
         </div>
@@ -176,7 +186,7 @@ export class InfoBar extends React.Component {
           </div>
 
           <NC
-            value={showEnd?endPos:''}
+            value={endPos}
             showValue={showEnd}
             minValue={startPos}
             style={{ marginLeft: 8 }}

@@ -23175,9 +23175,10 @@
 	  }
 	
 	  _createClass(InfoBar, [{
-	    key: 'onPropertyChange',
-	    value: function onPropertyChange(props) {
-	      var show = props.startPos > 0 && props.endPos > props.startPos;
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(props) {
+	      var show = props.startPos >= 0 && props.endPos > props.startPos;
+	      console.log(props);
 	      this.setState({
 	        startPos: props.startPos,
 	        endPos: props.endPos,
@@ -23194,30 +23195,38 @@
 	      var _this2 = this;
 	
 	      this.onChangeStart = function (o, value, e) {
-	        _this2.setState({
-	          startPos: value,
+	        _this2.refreshParent({
+	          startPos: value - 1,
 	          showStart: true
 	        });
-	        _this2.refreshParent();
 	      };
 	
 	      this.onChangeEnd = function (o, value, e) {
-	        _this2.setState({
+	        _this2.refreshParent({
 	          endPos: value,
 	          showEnd: true
 	        });
-	        _this2.refreshParent();
 	      };
 	    }
 	  }, {
 	    key: 'refreshParent',
-	    value: function refreshParent() {
-	      var _state = this.state;
-	      var startPos = _state.startPos;
-	      var endPos = _state.endPos;
-	      var showStart = _state.showStart;
-	      var showEnd = _state.showEnd;
+	    value: function refreshParent(para) {
+	      var startPos = para.startPos;
+	      var endPos = para.endPos;
+	      var showStart = para.showStart;
+	      var showEnd = para.showEnd;
 	
+	
+	      if (!startPos) {
+	        startPos = this.state.startPos;
+	        showStart = this.state.showStart;
+	      }
+	      if (!endPos) {
+	        endPos = this.state.endPos;
+	        showEnd = this.state.showEnd;
+	      }
+	
+	      this.setState({ startPos: startPos, endPos: endPos, showStart: showStart, showEnd: showEnd });
 	
 	      if (this.props.onChange && showStart && showEnd && startPos > 0) {
 	        if (endPos > startPos) {
@@ -23237,11 +23246,11 @@
 	      var showTM = _props.showTM;
 	      var seq = _props.seq;
 	      var blocks = _props.blocks;
-	      var _state2 = this.state;
-	      var startPos = _state2.startPos;
-	      var endPos = _state2.endPos;
-	      var showStart = _state2.showStart;
-	      var showEnd = _state2.showEnd;
+	      var _state = this.state;
+	      var startPos = _state.startPos;
+	      var endPos = _state.endPos;
+	      var showStart = _state.showStart;
+	      var showEnd = _state.showEnd;
 	
 	
 	      var itemStyle = {
@@ -23289,13 +23298,13 @@
 	            'Start:'
 	          ),
 	          _react2.default.createElement(NC, {
-	            value: showStart ? startPos : '',
+	            value: startPos + 1,
 	            style: { marginLeft: 8 },
 	            valueBoxStyle: { height: 20 },
 	            showValue: showStart,
 	            onChange: this.onChangeStart,
 	            blocks: blocks,
-	            offset: 1
+	            offset: 0
 	          })
 	        ),
 	        showPos && _react2.default.createElement(
@@ -23311,7 +23320,7 @@
 	            'End:'
 	          ),
 	          _react2.default.createElement(NC, {
-	            value: showEnd ? endPos : '',
+	            value: endPos,
 	            showValue: showEnd,
 	            minValue: startPos,
 	            style: { marginLeft: 8 },
@@ -23651,8 +23660,10 @@
 	        e.target.select();
 	      };
 	      this.onChange = function (e) {
+	        var uiValue = _this3.positionCalculator.realPosTouiPos(e.target.value);
+	        console.log('onchange', uiValue, e.target.value);
 	        _this3.setState({
-	          value: _this3.positionCalculator.realPosTouiPos(e.target.value),
+	          value: uiValue,
 	          showValue: true
 	        });
 	      };
@@ -23665,16 +23676,17 @@
 	          var maxValue = _props.maxValue;
 	
 	          var newValue = parseInt(e.target.value, 10);
+	          console.log('onblur', newValue, e.target.value);
 	          if (!newValue) {
-	            newValue = value;
+	            //newValue = value;
 	          } else {
 	            if (newValue > maxValue) {
 	              newValue = maxValue;
 	            } else if (newValue < minValue) {
 	              newValue = minValue;
 	            }
+	            _this3.props.onChange(_this3, newValue, e);
 	          }
-	          _this3.props.onChange(_this3, newValue, e);
 	        }
 	      };
 	
@@ -23723,7 +23735,6 @@
 	      var _props2 = this.props;
 	      var style = _props2.style;
 	      var valueBoxStyle = _props2.valueBoxStyle;
-	      var offset = _props2.offset;
 	      var showValue = this.state.showValue;
 	      var upDownStyle = this.props.upDownStyle;
 	
@@ -23735,7 +23746,7 @@
 	
 	      var realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
 	
-	      var value = showValue ? realValue + offset : '';
+	      var value = showValue ? realValue : '';
 	      return _react2.default.createElement(
 	        'div',
 	        {
