@@ -122,7 +122,7 @@ export class MenuBar extends React.Component {
             />, 'showAll', showAll, '0px 0px 0px 10px')}
             {layerMenuItem('Features', 'showFeatures', showFeatures)}
             {layerMenuItem('Reverse Strand', 'showRS', showRS)}
-
+            {layerMenuItem('Enzyme', 'showEnzymes', showEnzymes)}
             {layerMenuItem('Amino Acids', 'showAA', showAA)}
             {layerMenuItem('Ruler', 'showRuler', showRuler)}
           </div>

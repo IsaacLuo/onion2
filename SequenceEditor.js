@@ -731,7 +731,7 @@ export class SequenceEditor extends React.Component {
           showStartPos={rowShowStartPos}
           seqMainStyle={this.seqMainStyle}
           seqCompStyle={this.seqCompStyle}
-          showEnzymes={false && showEnzymes}
+          showEnzymes={showEnzymes}
           showLadder={showLadder}
           showRS={showRS}
           showFeatures={showFeatures}

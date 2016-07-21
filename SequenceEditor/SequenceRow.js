@@ -313,7 +313,7 @@ export class SequenceRow extends React.Component {
           h={h}
           key={`rst${i}`}
           className={`enzymeText_${rs[i].id} noselect`}
-          style={{ cursor: 'default' }}
+          style={{ cursor: 'default',fontSize: 12, }}
           data-rsid={rs[i].id}
           onMouseOver={this.showEnzyme}
           onMouseOut={this.hideEnzyme}
