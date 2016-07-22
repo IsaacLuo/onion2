@@ -164,7 +164,7 @@ class OnionViewer extends React.Component {
     let height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
     const width = Math.max(300, _width);
     const height = Math.max(100, _height);
-    console.log('updateDimensions:', container, width, height, height2);
+    //console.log('updateDimensions:', container, width, height, height2);
     this.setState({ width, height });
   }
 

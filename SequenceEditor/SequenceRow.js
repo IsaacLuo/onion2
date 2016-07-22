@@ -99,7 +99,7 @@ export class SequenceRow extends React.Component {
   initCallBack() {
     this.onDoubleClickBlock = (e,id) => {
       if(id != undefined && this.props.blocks && this.props.blocks[id]) {
-        console.log(id, this.props.blocks[id]);
+        //console.log(id, this.props.blocks[id]);
         const block = this.props.blocks[id].originalBlock;
         this.props.onDoubleClickBlock(block,block.start,block.length);
       }

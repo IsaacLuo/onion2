@@ -61,7 +61,7 @@ export class NumericControlGD extends React.Component
     }
     this.onChange = (e) => {
       let uiValue = this.positionCalculator.realPosTouiPos(e.target.value);
-      console.log('onchange',uiValue,e.target.value);
+      //console.log('onchange',uiValue,e.target.value);
       this.setState({
         value: uiValue,
         showValue: true
@@ -72,7 +72,7 @@ export class NumericControlGD extends React.Component
       if (this.props.onChange) {
         const { value, minValue, maxValue} = this.props;
         let newValue = parseInt(e.target.value, 10);
-        console.log('onblur',newValue,e.target.value);
+        //console.log('onblur',newValue,e.target.value);
         if (!newValue) {
           //newValue = value;
         } else {

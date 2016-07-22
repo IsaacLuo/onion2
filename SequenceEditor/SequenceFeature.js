@@ -42,7 +42,7 @@ export class SequenceFeatureArrow extends React.Component {
 
     this.onDoubleClick = (e) => {
       if(this.props.onDoubleClick){
-        console.log('dbclick');
+        //console.log('dbclick');
         this.props.onDoubleClick(e, this.props.blockID);
       }
     };

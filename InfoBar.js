@@ -45,7 +45,6 @@ export class InfoBar extends React.Component {
 
   componentWillReceiveProps(props) {
     const show =props.startPos>=0 && props.endPos>props.startPos;
-    console.log(props);
     this.setState({
       startPos: props.startPos,
       endPos: props.endPos,
