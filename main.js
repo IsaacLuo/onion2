@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { OnionForGenomeDesigner } from './OnionForGenomeDesigner';
-import { OnionBuilder } from './constructor/OnionBuilder';
+import { OnionBuilder } from './GD/OnionBuilder';
 
 const $ = require('jquery');
 
