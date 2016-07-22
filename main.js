@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { OnionForGenomeDesigner } from './OnionForGenomeDesigner';
-import { OnionBuilder } from './GD/OnionBuilder';
-const manifest = require('json!./package.json');
+import { OnionBuilder } from './constructor/OnionBuilder';
 
 const $ = require('jquery');
 
@@ -40,20 +39,20 @@ class OnionViewer extends React.Component {
     this.onQueryNewBlocks = this.onionBuilder.updateSequence.bind(this.onionBuilder);
 
     this.getChildrenRecursive = (id) => {
-      gd.api.blocks.blockFlattenConstructAndLists(id)
+      constructor.api.blocks.blockFlattenConstructAndLists(id)
     };
 
     this.showBlockRange = () => {
       let leafBlocks = [];
-      const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+      const topSelectedBlocks = window.constructor.api.focus.focusGetBlockRange();
       let features = [];
 
       if (topSelectedBlocks && topSelectedBlocks.length) {
 
 
         for (let block of topSelectedBlocks) {
-          //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
-          const children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
+          //const children = window.constructor.api.blocks.blockGetChildrenRecursive(block.id);
+          const children = constructor.api.blocks.blockFlattenConstructAndLists(block.id);
 
           if (children && children.length === 0 ) {
             leafBlocks.push(block);
@@ -106,7 +105,7 @@ class OnionViewer extends React.Component {
       this.onionBuilder.setBlocks(leafBlocks);
     };
 
-    window.gd.store.subscribe((state, lastAction) => {
+    window.constructor.store.subscribe((state, lastAction) => {
       //console.log(`lastAction,`, lastAction);
       console.log(lastAction.type);
       if (lastAction.type === 'FOCUS_BLOCKS'
@@ -117,7 +116,7 @@ class OnionViewer extends React.Component {
         this.showBlockRange();
       } 
       else if (lastAction.type === 'FOCUS_FORCE_BLOCKS'){
-        const blocks = window.gd.api.focus.focusGetBlocks();
+        const blocks = window.constructor.api.focus.focusGetBlocks();
         this.showBlockRange();
       } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
         const block = lastAction.block;
@@ -199,7 +198,7 @@ function render(container, options) {
     height={height}
   />, container);
 
-  //var subscriber = window.gd.store.subscribe(function (state, lastAction) {
+  //var subscriber = window.constructor.store.subscribe(function (state, lastAction) {
   //  var last = [];
   //  var current = state.ui.currentBlocks;
   //  if (current &&
@@ -221,4 +220,4 @@ function render(container, options) {
 
 }
 
-window.gd.registerExtension(manifest, render);
+window.constructor.extensions.register('SequenceDetail', render);
