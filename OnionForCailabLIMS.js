@@ -4,7 +4,7 @@
 import React from 'react';
 import { SequenceEditor } from './SequenceEditor';
 import { onionFile } from './OnionFile';
-import { InfoBar } from './InfoBar';
+import { InfoBar } from './InfoBar/InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
 import { PlasmidViewer } from './PlasmidViewer';

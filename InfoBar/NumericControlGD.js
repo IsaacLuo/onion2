@@ -96,6 +96,13 @@ export class NumericControlGD extends React.Component
 
     this.onPlus = (e) => {
       let newValue = this.state.value + 1;
+      const { minValue, maxValue } = this.props;
+      if(minValue != undefined && newValue < minValue) {
+        newValue = minValue;
+      }
+      if (maxValue!=undefined && newValue > maxValue){
+        newValue = maxValue;
+      }
       const block = _this.positionCalculator.findBlockByIndex(newValue);
       if (block && block.realLength===0 && newValue > block.start) {
         newValue = this.state.value+block.length;
@@ -112,6 +119,10 @@ export class NumericControlGD extends React.Component
 
     this.onMinus = (e) => {
       let newValue = this.state.value - 1;
+      const { minValue } = this.props;
+      if(minValue != undefined && newValue < minValue) {
+        newValue = minValue;
+      }
       const block = _this.positionCalculator.findBlockByIndex(newValue);
       if (block && block.realLength===0 && newValue > block.start) {
         newValue = block.start;

@@ -4,7 +4,7 @@
 import React from 'react';
 import { SequenceEditor } from './SequenceEditor';
 import { onionFile } from './OnionFile';
-import { InfoBar } from './InfoBar';
+import { InfoBar } from './InfoBar/InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
 import {PositionCalculator} from './SequenceEditor/PositionCalculator';
@@ -354,7 +354,7 @@ export class OnionForGenomeDesigner extends React.Component {
           height={30}
           startPos={selectionLength > 0 ? selectionStart : -1}
           endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
-          seq={selectedSeq}
+          seq={sequence}
           blocks={blocks}
           showTM={false}
           style={{

@@ -3,9 +3,9 @@
  */
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import { DNASeq } from './Bio/DNASeq';
-import { NumericControl } from './InfoBar/NumericControl';
-import { NumericControlGD } from './InfoBar/NumericControlGD';
+import { DNASeq } from '../Bio/DNASeq';
+import { NumericControl } from './NumericControl';
+import { NumericControlGD } from './NumericControlGD';
 
 //The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component {
@@ -79,18 +79,18 @@ export class InfoBar extends React.Component {
       showEnd,
     } = para;
 
-    if (!startPos) {
+    if (startPos == undefined) {
       startPos = this.state.startPos;
       showStart = this.state.showStart;
     }
-    if (!endPos) {
+    if (endPos == undefined) {
       endPos = this.state.endPos;
       showEnd = this.state.showEnd;
     }
 
     this.setState({startPos,endPos,showStart,showEnd});
 
-    if(this.props.onChange && showStart && showEnd && startPos>0) {
+    if(this.props.onChange && showStart && showEnd && startPos>=0) {
       if(endPos>startPos) {
         this.props.onChange(startPos, endPos);
       }
@@ -170,6 +170,8 @@ export class InfoBar extends React.Component {
             onChange={this.onChangeStart}
             blocks={blocks}
             offset={0}
+            minValue={1}
+            maxValue={seq.length>1?seq.length:1}
           />
 
         </div>
@@ -187,7 +189,8 @@ export class InfoBar extends React.Component {
           <NC
             value={endPos}
             showValue={showEnd}
-            minValue={startPos}
+            minValue={1}
+            maxValue={seq.length>1?seq.length:1}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
             onChange={this.onChangeEnd}
