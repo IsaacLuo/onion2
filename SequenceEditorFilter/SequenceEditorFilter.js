@@ -1,5 +1,5 @@
 import React from 'react';
-import {SequenceEditor} from '../SequenceEditor';
+import {SequenceEditor} from '../SequenceEditor/SequenceEditor';
 import {BlockScrollBar} from './BlockScrollBar';
 import 'jquery';
 

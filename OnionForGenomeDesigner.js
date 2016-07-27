@@ -2,7 +2,7 @@
  * Created by Isaac on 21/01/2016.
  */
 import React from 'react';
-import { SequenceEditor } from './SequenceEditor';
+import { SequenceEditor } from './SequenceEditor/SequenceEditor';
 import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar/InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
@@ -154,12 +154,14 @@ export class OnionForGenomeDesigner extends React.Component {
     let titleColor = block ? block.color : "#000000";
     const menuTitle = block ? block.name : '';
 
-    this.setState({
-      cursorPos: 0,
-      startCursorPos: 0,
-      titleColor,
-      menuTitle,
-    });
+    if(menuTitle !== this.state.menuTitle || titleColor !== this.state.titleColor) {
+      this.setState({
+        cursorPos: 0,
+        startCursorPos: 0,
+        titleColor,
+        menuTitle,
+      });
+    }
   }
 
   //====================event response=====================

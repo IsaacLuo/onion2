@@ -1,10 +1,10 @@
 import React from 'react';
-import { SequenceRow } from './SequenceEditor/SequenceRow';
+import { SequenceRow } from './SequenceRow';
 import 'jquery';
-import { DNASeq } from './Bio/DNASeq';
-import { compareProps } from './reactHelper';
-import { PositionCalculator } from './SequenceEditor/PositionCalculator';
-import { StrainText } from './SequenceEditor/StrainText';
+import { DNASeq } from '../Bio/DNASeq';
+import { compareProps } from '../reactHelper';
+import { PositionCalculator } from './PositionCalculator';
+import { StrainText } from './StrainText';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
@@ -605,6 +605,7 @@ export class SequenceEditor extends React.Component {
           const end = Math.min(blockEnd - j * colNum, colNum);
           const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
           const realLength = blocks[i].realLength;
+          const isConnector = blocks[i].isConnector;
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
@@ -614,6 +615,7 @@ export class SequenceEditor extends React.Component {
               realStart,
               realLength,
               originalBlock: blocks[i],
+              isConnector,
             });
           }
         }

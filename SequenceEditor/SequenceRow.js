@@ -234,24 +234,15 @@ export class SequenceRow extends React.Component {
 
     for (let i = 0; i < blocks.length; i++) {
       const b = blocks[i];
-      // re.push(
-      //   <rect
-      //     x={b.start * unitWidth}
-      //     y={y0}
-      //     width={b.len * unitWidth}
-      //     height={9}
-      //     fill={b.color}
-      //     key={`blocks${i}`}
-      //   />
-      // );
+      const connectorOffset = b.isConnector ? 18 : 0;
       re.push(
         <SequenceFeatureArrow
           start={b.start}
           len={b.len}
           unitWidth={unitWidth}
           height={18}
-          y={y0}
-          color={b.color}
+          y={y0 + connectorOffset}
+          color={b.isConnector ? "#A5A6A2" : b.color}
           text={b.name}
           key={i}
           blockID={i}
@@ -442,6 +433,21 @@ export class SequenceRow extends React.Component {
     }
   }
 
+  calcBlockSpace() {
+    const {blocks, showBlockBar} = this.props;
+    if(!showBlockBar) {
+      return 0;
+    } else {
+      for (const block of blocks) {
+        if (block.isConnector) {
+          return 18*2;
+        }
+      }
+      return 18;
+    }
+
+  }
+
   render() {
     const {
       sequence,
@@ -489,6 +495,7 @@ export class SequenceRow extends React.Component {
     const calcElementY = () => {
       const re = {};
       let y = 0;
+      const { blocks } = this.props;
 
       if (showEnzymes) {
         re.enzymeH = this.calcEnzymeHeight();
@@ -519,7 +526,8 @@ export class SequenceRow extends React.Component {
       y += 5;
       if (showBlockBar) {
         re.blockBarY = y;
-        y += 18;
+        y += this.calcBlockSpace();
+        re.blockBarH = y;
         y += 5;
       }
 

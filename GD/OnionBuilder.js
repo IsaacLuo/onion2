@@ -20,6 +20,7 @@ export class OnionBuilder {
       const name = block.getName();
       let fakeLength = length === 0 ? 13 : length;
       const hash = md5 ? md5 : Math.random().toString(36).substr(2);
+      const isConnector = block.isHidden();
       this.onionBlocks.push({
         md5,
         hash,
@@ -30,6 +31,7 @@ export class OnionBuilder {
         realStart,
         realLength: length,
         gdBlock: block,
+        isConnector,
       });
 
       const { annotations } = block.sequence;

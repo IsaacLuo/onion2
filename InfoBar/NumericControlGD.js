@@ -73,7 +73,7 @@ export class NumericControlGD extends React.Component
         const { value, minValue, maxValue} = this.props;
         let newValue = parseInt(e.target.value, 10);
         //console.log('onblur',newValue,e.target.value);
-        if (!newValue) {
+        if (newValue == undefined) {
           //newValue = value;
         } else {
           if (newValue > maxValue) {
@@ -91,6 +91,8 @@ export class NumericControlGD extends React.Component
       if (e.which === 13) {
         this.onBlur(e);
         e.target.select();
+      } else if (e.which <48 || e.which >57){
+        e.preventDefault();
       }
     };
 
@@ -150,7 +152,11 @@ export class NumericControlGD extends React.Component
 
     const realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
 
-    const value = showValue ? realValue : '';
+    let value = '';
+    if(showValue && Number.isInteger(realValue)){
+       value = realValue ;
+    }
+
     return (
       <div
         style = {Object.assign({
@@ -164,7 +170,8 @@ export class NumericControlGD extends React.Component
           style = {Object.assign({
             display: 'inline-block',
             //color: showValue ? '#000000' : '#ffffff',
-          }, valueBoxStyle)} value = {value} size="5"
+          }, valueBoxStyle)}
+          value = {value} size="5"
           onChange={this.onChange}
           onKeyPress={this.onKeyPress}
           onFocus={this.onFocus}
