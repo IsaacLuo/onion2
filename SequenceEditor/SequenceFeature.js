@@ -128,7 +128,8 @@ export class SequenceFeatureArrow extends React.Component {
     const stroke = this.state.hovering ? 'red' : 'black';
     //const finalTextColor = this.state.hovering ? 'red' : textColor;
 
-    const fillColor = color ? color : '#A5A6A2';
+    const fillColor = color ? color : '#4B505E';
+    const textColor = fillColor === '#4B505E' ? '#6B6F7C' : 'black';
 
     let arrow;
 
@@ -227,7 +228,7 @@ export class SequenceFeatureArrow extends React.Component {
           style={{
             fontFamily,
             fontSize,
-            fill: 'black',
+            fill: textColor,
             alignmentBaseline: 'central',
             WebkitUserSelect: 'none',
             textAnchor,
