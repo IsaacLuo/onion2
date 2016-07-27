@@ -60,7 +60,8 @@ export class NumericControlGD extends React.Component
       e.target.select();
     }
     this.onChange = (e) => {
-      let uiValue = this.positionCalculator.realPosTouiPos(e.target.value);
+      //let uiValue = this.positionCalculator.realPosTouiPos(e.target.value);
+      let uiValue = parseInt(e.target.value);
       //console.log('onchange',uiValue,e.target.value);
       this.setState({
         value: uiValue,
@@ -97,8 +98,10 @@ export class NumericControlGD extends React.Component
     };
 
     this.onPlus = (e) => {
-      let newValue = this.state.value + 1;
       const { minValue, maxValue } = this.props;
+      if(this.state.value == null) this.state.value = minValue;
+      let newValue = this.state.value + 1;
+
       if(minValue != undefined && newValue < minValue) {
         newValue = minValue;
       }
@@ -120,8 +123,9 @@ export class NumericControlGD extends React.Component
     };
 
     this.onMinus = (e) => {
-      let newValue = this.state.value - 1;
       const { minValue } = this.props;
+      if(this.state.value == null) this.state.value = minValue;
+      let newValue = this.state.value - 1;
       if(minValue != undefined && newValue < minValue) {
         newValue = minValue;
       }
@@ -155,6 +159,9 @@ export class NumericControlGD extends React.Component
     let value = '';
     if(showValue && Number.isInteger(realValue)){
        value = realValue ;
+    }
+    if(value<1) {
+      value = '';
     }
 
     return (
