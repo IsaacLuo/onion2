@@ -45,26 +45,25 @@ class OnionViewer extends React.Component {
 
     this.showBlockRange = () => {
       let leafBlocks = [];
+      const project = window.gd.api.focus.focusGetProject();
+      let projectName = project.getName();
+
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+      let projectColor = "black";
+      if(topSelectedBlocks && topSelectedBlocks[0]) {
+        let constructBlock = window.gd.api.blocks.blockGetParentRoot(topSelectedBlocks[0].id)
+        if (!constructBlock) {
+          constructBlock = topSelectedBlocks[0];
+        }
+        projectName = constructBlock.getName();
+        projectColor = constructBlock.metadata.color;
+
+      }
       let features = [];
 
       if (topSelectedBlocks && topSelectedBlocks.length) {
 
-
-        for (let block of topSelectedBlocks) {
-          //const children = window.gd.api.blocks.blockGetChildrenRecursive(block.id);
-          const children = gd.api.blocks.blockFlattenConstructAndLists(block.id);
-
-          if (children && children.length === 0 ) {
-            leafBlocks.push(block);
-          } else {
-            for (let node of children) {
-              if (node.components && node.components.length === 0) {
-                leafBlocks.push(node);
-              }
-            }
-          }
-        }
+        this.onionBuilder.setTopLevelBlocks(topSelectedBlocks);
 
         //set annotations
         for(const topBlock of topSelectedBlocks){
@@ -90,20 +89,20 @@ class OnionViewer extends React.Component {
               realEnd: realEnd,
               text: annotation.name,
               strand: annotation.isForward ? '+' : '-',
-              color: annotation.color ? annotation.color : '#A5A6A2',
+              color: annotation.color ? annotation.color : '#C5C4C1',
             });
           }
         }
 
         this.setState({
-          title: topSelectedBlocks[0].getName(),
-          titleColor: topSelectedBlocks[0].metadata.color,
+          title: projectName, //topSelectedBlocks[0].getName(),
+          titleColor: projectColor,//topSelectedBlocks[0].metadata.color,
           features,
         });// =
 
       }
 
-      this.onionBuilder.setBlocks(leafBlocks);
+
     };
 
     window.gd.store.subscribe((state, lastAction) => {

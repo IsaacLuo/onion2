@@ -242,11 +242,12 @@ export class SequenceRow extends React.Component {
           unitWidth={unitWidth}
           height={18}
           y={y0 + connectorOffset}
-          color={b.isConnector ? "#A5A6A2" : b.color}
+          color={b.isConnector ? "#C5C4C1" : b.color}
           text={b.name}
           key={i}
           blockID={i}
           onDoubleClick={this.onDoubleClickBlock}
+          listName = {b.listName}
         />
       )
     }

@@ -5,6 +5,69 @@ export class OnionBuilder {
     this.features = [];
   }
 
+  setTopLevelBlocks(topLevelBlocks) {
+
+    let start = 0;
+    let realStart = 0;
+
+    this.onionBlocks = [];
+    this.features = [];
+    this.sequenceDict = {};
+
+    for (let block of topLevelBlocks) {
+      const children = window.gd.api.blocks.blockFlattenConstructAndLists(block.id);
+      for(const leafBlock of children) {
+        let listName =  null;
+        if (block.isList()){
+          listName = block.getName();
+        } else if(block.isConstruct()){
+          let listBlock = window.gd.api.blocks.blockGetListOwner(leafBlock.id,block.id);
+          if (listBlock && listBlock.isList()) {
+            listName = listBlock.getName();
+          }
+        }
+
+        const { length, md5 } = leafBlock.sequence;
+        const { color } = leafBlock.metadata;
+        const name = leafBlock.getName();
+        let fakeLength = length === 0 ? 13 : length;
+        const hash = md5 ? md5 : Math.random().toString(36).substr(2);
+        const isConnector = leafBlock.isHidden();
+        this.onionBlocks.push({
+          md5,
+          hash,
+          length: fakeLength,
+          name,
+          color,
+          start,
+          realStart,
+          realLength: length,
+          gdBlock: leafBlock,
+          listName,
+          isConnector,
+        });
+
+        const { annotations } = leafBlock.sequence;
+        for (const annotation of annotations) {
+          this.features.push({
+            start: annotation.start + start,
+            end: annotation.end + start,
+            realStart: annotation.start + realStart,
+            realEnd: annotation.end + realStart,
+            text: annotation.name,
+            color: annotation.color ? annotation.color : '#C5C4C1',
+          });
+        }
+
+        realStart += length;
+        start += fakeLength;
+
+      }
+    }
+
+    this.onBlockUpdated(0);
+  }
+
   setBlocks(blocks) {
     //
     this.originalBlocks = blocks;
@@ -14,6 +77,7 @@ export class OnionBuilder {
 
     let start = 0;
     let realStart = 0;
+
     for (let block of blocks) {
       const { length, md5 } = block.sequence;
       const { color } = block.metadata;
@@ -42,7 +106,7 @@ export class OnionBuilder {
           realStart: annotation.start + realStart,
           realEnd: annotation.end + realStart,
           text: annotation.name,
-          color: annotation.color ? annotation.color : '#A5A6A2',
+          color: annotation.color ? annotation.color : '#C5C4C1',
         });
       }
 

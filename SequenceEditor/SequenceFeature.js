@@ -22,7 +22,7 @@ export class SequenceFeatureArrow extends React.Component {
     height: 20,
     width: 0,
     y: 0,
-    color: '#A5A6A2',
+    color: '#C5C4C1',
     strand: 'none',
     arrowStyle: 'none'
   };
@@ -99,7 +99,7 @@ export class SequenceFeatureArrow extends React.Component {
   }
 
   render() {
-    const { unitWidth, height, len, start, color, text, strand, arrowStyle } = this.props;
+    const { unitWidth, height, len, start, color, text, strand, arrowStyle, listName } = this.props;
     const width = unitWidth * len;
     //let rectWidth = arrowStyle==='end' && strand !== '.' ? width-unitWidth/2 : width;
     const rectWidth = width;
@@ -107,19 +107,29 @@ export class SequenceFeatureArrow extends React.Component {
     const fontSize = 12;
     let titleOpacity;
     let textAnchor;
-    let filteredText = text;
+    let filteredText;
+    if (listName) {
+      filteredText = listName+" : "+text;
+    } else {
+      filteredText = text;
+    }
+
     let textOffset = width / 2;
     const span = 1;
 
-    const textLength = this.calcStringWidth(text) + unitWidth;
+    const textLength = this.calcStringWidth(filteredText) + unitWidth;
     if (rectWidth >= textLength) {
       titleOpacity = 1;
       textAnchor = 'middle';
       this.textOverflow = false;
+    // } else if(rectWidth >= this.calcStringWidth(text) + unitWidth) {
+    //   titleOpacity = 1;
+    //   textAnchor = 'middle';
+    //   this.textOverflow = false;
+    //   filteredText = text;
     } else {
       textOffset = 0;
-      //titleOpacity = (this.state.showTitle === true ? 1 : 0);
-      filteredText = this.filterCorrectString(text,width-span);
+      filteredText = this.filterCorrectString(filteredText,width-span);
       titleOpacity = 1;
       textAnchor = 'start';
       this.textOverflow = true;
@@ -129,7 +139,7 @@ export class SequenceFeatureArrow extends React.Component {
     //const finalTextColor = this.state.hovering ? 'red' : textColor;
 
     const fillColor = color ? color : '#4B505E';
-    const textColor = fillColor === '#4B505E' ? '#6B6F7C' : 'black';
+    const textColor = fillColor === '#4B505E' ? '#8f93a1' : 'black';
 
     let arrow;
 
