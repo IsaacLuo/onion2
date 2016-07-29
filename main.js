@@ -43,6 +43,22 @@ class OnionViewer extends React.Component {
       gd.api.blocks.blockFlattenConstructAndLists(id)
     };
 
+    this.showBlocks = (blocks) => {
+      if(blocks && blocks.length>0) {
+        const block  = blocks[0];
+        const projectName = block.getName();
+        const projectColor = block.metadata.color;
+
+        this.onionBuilder.setPlaneBlocks(blocks);
+
+        this.setState({
+          title: projectName, //topSelectedBlocks[0].getName(),
+          titleColor: projectColor,//topSelectedBlocks[0].metadata.color,
+          features: this.onionBuilder.getFeatures(),
+        });// =
+      }
+    }
+
     this.showBlockRange = () => {
       let leafBlocks = [];
       const project = window.gd.api.focus.focusGetProject();
@@ -117,7 +133,7 @@ class OnionViewer extends React.Component {
       } 
       else if (lastAction.type === 'FOCUS_FORCE_BLOCKS'){
         const blocks = window.gd.api.focus.focusGetBlocks();
-        this.showBlockRange();
+        this.showBlocks(blocks);
       } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
         const block = lastAction.block;
         this.onionBuilder.removeBlock(block.sequence.md5);
