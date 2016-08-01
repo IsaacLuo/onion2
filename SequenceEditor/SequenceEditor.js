@@ -604,9 +604,8 @@ export class SequenceEditor extends React.Component {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
           const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
-          const realLength = blocks[i].realLength;
-          const isConnector = blocks[i].isConnector;
-          const listName = blocks[i].listName;
+          const {realLength, isConnector, listName, isLowFocus} = blocks[i];
+
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
@@ -618,6 +617,7 @@ export class SequenceEditor extends React.Component {
               originalBlock: blocks[i],
               isConnector,
               listName,
+              isLowFocus,
             });
           }
         }

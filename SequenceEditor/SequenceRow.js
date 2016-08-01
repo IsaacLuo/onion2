@@ -338,7 +338,7 @@ export class SequenceRow extends React.Component {
         start: block.start,
         length: block.len,
         style: {
-          fill: block.realLength === 0 || block.lowFocus ? '#B7BBC2' : '#2C3543',
+          fill: block.realLength === 0 || block.isLowFocus ? '#B7BBC2' : '#2C3543',
         },
       });
     }

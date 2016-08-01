@@ -39,9 +39,6 @@ class OnionViewer extends React.Component {
 
     this.onQueryNewBlocks = this.onionBuilder.updateSequence.bind(this.onionBuilder);
 
-    this.getChildrenRecursive = (id) => {
-      gd.api.blocks.blockFlattenConstructAndLists(id)
-    };
 
     this.showBlocks = (blocks) => {
       if(blocks && blocks.length>0) {
@@ -65,6 +62,8 @@ class OnionViewer extends React.Component {
       let projectName = project.getName();
 
       const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
+      const focusedBlocks = window.gd.api.focus.focusGetBlocks();
+
       let projectColor = "black";
       if(topSelectedBlocks && topSelectedBlocks[0]) {
         let constructBlock = window.gd.api.blocks.blockGetParentRoot(topSelectedBlocks[0].id)
@@ -79,7 +78,7 @@ class OnionViewer extends React.Component {
 
       if (topSelectedBlocks && topSelectedBlocks.length) {
 
-        this.onionBuilder.setTopLevelBlocks(topSelectedBlocks);
+        this.onionBuilder.setTopLevelBlocks(topSelectedBlocks, focusedBlocks);
 
         //set annotations
         for(const topBlock of topSelectedBlocks){

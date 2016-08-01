@@ -5,7 +5,7 @@ export class OnionBuilder {
     this.features = [];
   }
 
-  setTopLevelBlocks(topLevelBlocks) {
+  setTopLevelBlocks(topLevelBlocks, focusedBlocks) {
 
     let start = 0;
     let realStart = 0;
@@ -14,7 +14,19 @@ export class OnionBuilder {
     this.features = [];
     this.sequenceDict = {};
 
+    const focusedBlockIds = [];
+    if (focusedBlocks){
+      for (const block of focusedBlocks){
+        focusedBlockIds.push(block.id);
+      }
+    }
+
     for (let block of topLevelBlocks) {
+      let isLowFocus = false;
+      if(focusedBlocks && focusedBlockIds.indexOf(block.id) === -1) {
+        isLowFocus = true;
+      }
+
       const children = window.gd.api.blocks.blockFlattenConstructAndLists(block.id);
       for(const leafBlock of children) {
         let listName =  null;
@@ -45,6 +57,7 @@ export class OnionBuilder {
           gdBlock: leafBlock,
           listName,
           isConnector,
+          isLowFocus,
         });
 
         const { annotations } = leafBlock.sequence;
