@@ -10,6 +10,7 @@ import { MenuBar } from './MenuBar';
 import {PositionCalculator} from './SequenceEditor/PositionCalculator';
 import { SequenceEditorFilter} from './SequenceEditorFilter/SequenceEditorFilter'
 
+
 const $ = require('jquery');
 window.$ = $;
 global.jQuery = $;
@@ -213,6 +214,10 @@ export class OnionForGenomeDesigner extends React.Component {
     }
   }
 
+  componentDidMount() {
+    //new Clipboard('.onionCopyButton');
+  }
+
   render() {
     //console.log("render ogd", this.props, this.state);
     //set a minimum size;
@@ -287,6 +292,7 @@ export class OnionForGenomeDesigner extends React.Component {
           }}
           tabIndex="-1"
           className = 'onionClipboard'
+          id = 'onionClipboard'
           onKeyDown={this.onHotKeyClipboard}
         />
         

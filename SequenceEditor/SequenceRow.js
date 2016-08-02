@@ -89,8 +89,6 @@ export class SequenceRow extends React.Component {
     this.onCDSBarMouseOutAA = this.onCDSBarMouseOutAA.bind(this);
     this.showEnzyme = this.showEnzyme.bind(this);
     this.hideEnzyme = this.hideEnzyme.bind(this);
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
 
     this.initCallBack();
 
@@ -104,6 +102,55 @@ export class SequenceRow extends React.Component {
         this.props.onDoubleClickBlock(block,block.start,block.length);
       }
     }
+
+    this.onMouseEnterCopyButton = () => {
+      $('.onionFloatCopyButton').css('opacity', 1);
+    }
+
+    this.onMouseLeaveCopyButton = () => {
+      $('.onionFloatCopyButton').css('opacity', 0);
+    }
+
+    this.onClickCopyForward = (e) => {
+      if(this.props.onCopyForward)
+        this.props.onCopyForward();
+
+      $('.onionFloatCopyButton').css('opacity', 0);
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+    this.onClickCopyReverse = (e) => {
+      if(this.props.onCopyReverse)
+        this.props.onCopyReverse();
+
+      $('.onionFloatCopyButton').css('opacity', 0);
+      e.stopPropagation();
+      e.preventDefault();
+    }
+
+
+    this.onMouseDown = (e) => {
+      const cursorPos = this.calcCursorPos(e);
+      if(e.shiftKey) {
+        this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
+      } else {
+        this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
+      }
+      this.selectMode=true;
+      $('body').css('-webkit-user-select', 'none');
+    }
+
+    this.onMouseMove = (e) => {
+      if (e.buttons === 1 && this.selectMode) {
+        const cursorPos = this.calcCursorPos(e);
+        this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
+      } else {
+        this.selectMode = false;
+      }
+    }
+
+
   }
 
   shouldComponentUpdate(np, nextState) {
@@ -111,24 +158,8 @@ export class SequenceRow extends React.Component {
     return update;
   }
 
-  onMouseDown(e) {
-    const cursorPos = this.calcCursorPos(e);
-    if(e.shiftKey) {
-      this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
-    } else {
-      this.props.onSetCursor(cursorPos + this.props.idxStart, this.props.rowNumber);
-    }
-    $('body').css('-webkit-user-select', 'none');
-  }
 
-  onMouseMove(e) {
-    //if(this.mouseDownFlag){
-    if (e.buttons === 1) {
-      const cursorPos = this.calcCursorPos(e);
-      this.props.onSetCursorMoving(cursorPos + this.props.idxStart, this.props.rowNumber);
-    }
-    //}
-  }
+
 
   onCDSBarSelectAA(obj, x, e) {
     const{ col1, row1, col0, row0 } = this.findRowCol(x);
@@ -694,7 +725,49 @@ export class SequenceRow extends React.Component {
                 {selectSpanNumbers[1]}
               </text>
               }
+
+              <g style={{opacity:0}}
+                 onMouseEnter={this.onMouseEnterCopyButton}
+                 onMouseLeave = {this.onMouseLeaveCopyButton}
+                 className="onionFloatCopyButton"
+              >
+                <g transform={`translate(${cursorRight + 5}, ${ep.selectionYB-30-29})`}
+                  onMouseDown={this.onClickCopyForward}
+                   style={{cursor:"pointer"}}
+                >
+                  <rect x="-2" y="-2" width="27" height="27" fill="white" stroke="black" strokeWidth="1"/>
+                  <g transform="scale(0.05)">
+                    <path d="M314.3,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124
+			C352.8,102.7,335.5,85.4,314.3,85.4z M325.8,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124
+			c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                    <path d="M401,0H174c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227
+			c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6
+			V38.6C439.6,17.3,422.4,0,401,0z"/>
+                    <line x1="118" y1="201.5" x2="264.7" y2="201.5" stroke="black" strokeWidth="20"/>
+                    <polygon points="224.9,235.4 258.8,201.5 224.9,167.5 253.6,167.5 287.5,201.5 253.6,235.4 			"/>
+                  </g>
+                </g>
+
+                <g transform={`translate(${cursorRight + 5}, ${ep.selectionYB-30})`}
+                   onMouseDown={this.onClickCopyReverse}
+                   style={{cursor:"pointer"}}
+                >
+                  <rect x="-2" y="-2" width="27" height="27" fill="white" stroke="black" strokeWidth="1"/>
+                  <g transform="scale(0.05)">
+                    <path d="M314.3,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124
+			C352.8,102.7,335.5,85.4,314.3,85.4z M325.8,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124
+			c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z"/>
+                    <path d="M401,0H174c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227
+			c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6
+			V38.6C439.6,17.3,422.4,0,401,0z"/>
+                    <line x1="288.5" y1="340.5" x2="141.9" y2="340.5" stroke="black" strokeWidth="20"/>
+                    <polygon points="181.7,306.5 147.8,340.5 181.7,374.4 152.9,374.4 119,340.5 152.9,306.5 			"/>
+                  </g>
+                </g>
+              </g>
+
             </g>
+
             }
 
             {showRuler &&
