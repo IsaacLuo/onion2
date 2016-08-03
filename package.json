@@ -3,10 +3,9 @@
   "version": "2.1.1",
   "description": "Onion Extensions",
   "geneticConstructor": {
-    "region": "sequenceDetail"
+    "region": "sequenceDetail",
+    "readable": "Sequence Detail"
   },
-  "region": "sequenceDetail",
-  "readable": "Sequence Detail",
   "scripts": {
     "build": "npm install && webpack -d main.js index.js"
   },

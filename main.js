@@ -58,15 +58,15 @@ class OnionViewer extends React.Component {
 
     this.showBlockRange = () => {
       let leafBlocks = [];
-      const project = window.gd.api.focus.focusGetProject();
+      const project = window.constructor.api.focus.focusGetProject();
       let projectName = project.getName();
 
-      const topSelectedBlocks = window.gd.api.focus.focusGetBlockRange();
-      const focusedBlocks = window.gd.api.focus.focusGetBlocks();
+      const topSelectedBlocks = window.constructor.api.focus.focusGetBlockRange();
+      const focusedBlocks = window.constructor.api.focus.focusGetBlocks();
 
       let projectColor = "black";
       if(topSelectedBlocks && topSelectedBlocks[0]) {
-        let constructBlock = window.gd.api.blocks.blockGetParentRoot(topSelectedBlocks[0].id)
+        let constructBlock = window.constructor.api.blocks.blockGetParentRoot(topSelectedBlocks[0].id)
         if (!constructBlock) {
           constructBlock = topSelectedBlocks[0];
         }
@@ -120,7 +120,7 @@ class OnionViewer extends React.Component {
 
     };
 
-    window.gd.store.subscribe((state, lastAction) => {
+    window.constructor.store.subscribe((state, lastAction) => {
       //console.log(`lastAction,`, lastAction);
       console.log(lastAction.type);
       if (lastAction.type === 'FOCUS_BLOCKS'
@@ -131,7 +131,7 @@ class OnionViewer extends React.Component {
         this.showBlockRange();
       } 
       else if (lastAction.type === 'FOCUS_FORCE_BLOCKS'){
-        const blocks = window.gd.api.focus.focusGetBlocks();
+        const blocks = window.constructor.api.focus.focusGetBlocks();
         this.showBlocks(blocks);
       } else if (lastAction.type === 'BLOCK_SET_SEQUENCE') {
         const block = lastAction.block;
@@ -173,12 +173,10 @@ class OnionViewer extends React.Component {
   //read dimensions of onion container
   updateDimensions() {
     const { container } = this.props;
-    const _width = $('.ProjectDetail-chrome').width();
-    const _height = $('.ProjectDetail-chrome').height();
-    let height2 = $('.ProjectDetail-chrome').get(0).getBoundingClientRect().height;
+    const _width = $('.ExtensionView-content').width();
+    const _height = $('.ExtensionView-content').height();
     const width = Math.max(300, _width);
     const height = Math.max(100, _height);
-    //console.log('updateDimensions:', container, width, height, height2);
     this.setState({ width, height });
   }
 
@@ -191,13 +189,13 @@ class OnionViewer extends React.Component {
         features={features}
         width={width}
         height={height}
-        blocks={blocks}
-        menuTitle={title}
-        titleColor={titleColor}
-        onQueryNewBlocks={this.onQueryNewBlocks}
-      />
-    );
-  }
+blocks={blocks}
+menuTitle={title}
+titleColor={titleColor}
+onQueryNewBlocks={this.onQueryNewBlocks}
+/>
+);
+}
 }
 
 function render(container, options) {
@@ -213,26 +211,7 @@ function render(container, options) {
     height={height}
   />, container);
 
-  //var subscriber = window.gd.store.subscribe(function (state, lastAction) {
-  //  var last = [];
-  //  var current = state.ui.currentBlocks;
-  //  if (current &&
-  //    current.length &&
-  //    (current.length !== last.length ||
-  //    !current.every(function (item, index) {return item !== last[index]}))
-  //  ) {
-  //
-  //    var block = state.blocks[current[0]];
-  //    block.getSequence().then(function (sequence) {
-  //      console.log(sequence);
-  //    });
-  //
-  //    console.log(current);
-  //    last = current;
-  //  }
-  //});
-
 
 }
 
-window.gd.registerExtension(manifest, render);
+window.constructor.extensions.register('SequenceDetail', render);

@@ -27,13 +27,13 @@ export class OnionBuilder {
         isLowFocus = true;
       }
 
-      const children = window.gd.api.blocks.blockFlattenConstructAndLists(block.id);
+      const children = window.constructor.api.blocks.blockFlattenConstructAndLists(block.id);
       for(const leafBlock of children) {
         let listName =  null;
         if (block.isList()){
           listName = block.getName();
         } else if(block.isConstruct()){
-          let listBlock = window.gd.api.blocks.blockGetListOwner(leafBlock.id,block.id);
+          let listBlock = window.constructor.api.blocks.blockGetListOwner(leafBlock.id,block.id);
           if (listBlock && listBlock.isList()) {
             listName = listBlock.getName();
           }
