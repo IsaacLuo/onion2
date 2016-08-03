@@ -103,8 +103,10 @@ export class SequenceRow extends React.Component {
       }
     }
 
-    this.onMouseEnterCopyButton = () => {
-      $('.onionFloatCopyButton').css('opacity', 1);
+    this.onMouseEnterCopyButton = (e) => {
+      if (e.buttons === 0) {
+        $('.onionFloatCopyButton').css('opacity', 1);
+      }
     }
 
     this.onMouseLeaveCopyButton = () => {
