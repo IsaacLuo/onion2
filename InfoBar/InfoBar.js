@@ -3,9 +3,9 @@
  */
 import React from 'react';
 //import ReactDOM from 'react-dom';
-import { DNASeq } from './Bio/DNASeq';
-import { NumericControl } from './InfoBar/NumericControl';
-import { NumericControlGD } from './InfoBar/NumericControlGD';
+import { DNASeq } from '../Bio/DNASeq';
+import { NumericControl } from './NumericControl';
+import { NumericControlGD } from './NumericControlGD';
 
 //The Inforbar shows the selection start site, end site, GC content and TM value
 export class InfoBar extends React.Component {
@@ -34,37 +34,73 @@ export class InfoBar extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      startPos: props.startPos,
+      endPos: props.endPos,
+      showStart: false,
+      showEnd: false,
+    };
     this.initCallBack();
   }
 
-  initCallBack() {
-    this.onChangeStart = (o, v, e) => {
-      this.showStartValue = true;
-      if (this.props.onChange) {
-        const { startPos, endPos } = this.props;
-        const vv = v;
-        if (startPos === endPos) {		//cursorMode
-          this.props.onChange(vv, vv);
-        } else {
-          this.props.onChange(vv, Math.max(endPos, vv));
-        }
-      }
+  componentWillReceiveProps(props) {
+    const show =props.startPos>=0 && props.endPos>props.startPos;
+    this.setState({
+      startPos: props.startPos,
+      endPos: props.endPos,
+      showStart: show,
+      showEnd: show,
+    });
+  }
 
-      return false;
+  //this.props.onChange(vv, Math.max(endPos, vv));
+
+  initCallBack() {
+    this.onChangeStart = (o, value, e) => {
+      this.refreshParent({
+        startPos: value-1,
+        showStart: true,
+      });
     };
 
-    this.onChangeEnd = (o, v, e) => {
-      if (this.props.onChange) {
-        const { startPos, endPos } = this.props;
-        const vv = v;
-        if (startPos === endPos && vv < startPos) {		//cursorMode
-          this.props.onChange(vv, vv);
-        } else {
-          this.props.onChange(Math.min(startPos, vv), vv);
-        }
-      }
+    this.onChangeEnd = (o, value, e) => {
+      this.refreshParent({
+        endPos: value,
+        showEnd: true,
+      });
     };
   }
+
+  refreshParent(para) {
+    let {
+      startPos,
+      endPos,
+      showStart,
+      showEnd,
+    } = para;
+
+    if (startPos == undefined) {
+      startPos = this.state.startPos;
+      showStart = this.state.showStart;
+    }
+    if (endPos == undefined) {
+      endPos = this.state.endPos;
+      showEnd = this.state.showEnd;
+    }
+
+    this.setState({startPos,endPos,showStart,showEnd});
+
+    if(this.props.onChange && showStart && showEnd && startPos>=0) {
+      if(endPos>startPos) {
+        this.props.onChange(startPos, endPos);
+      }
+      else if(endPos<startPos){
+        this.props.onChange(endPos,startPos);
+      }
+    }
+  }
+
+
 
   render() {
     const {
@@ -72,11 +108,16 @@ export class InfoBar extends React.Component {
       showLength,
       showGC,
       showTM,
-      startPos,
-      endPos,
       seq,
       blocks,
       } = this.props;
+    const {
+      startPos,
+      endPos,
+      showStart,
+      showEnd,
+    } = this.state;
+
     const itemStyle = {
       display: 'inline-block',
       marginTop: 9,
@@ -122,13 +163,15 @@ export class InfoBar extends React.Component {
           </div>
 
           <NC
-            value={startPos}
+            value={startPos+1}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
-            showValue={startPos >= 0}
+            showValue={showStart}
             onChange={this.onChangeStart}
             blocks={blocks}
-            offset={1}
+            offset={0}
+            minValue={1}
+            maxValue={seq.length>1?seq.length:1}
           />
 
         </div>
@@ -145,8 +188,9 @@ export class InfoBar extends React.Component {
 
           <NC
             value={endPos}
-            showValue={startPos < endPos}
-            minValue={startPos}
+            showValue={showEnd}
+            minValue={1}
+            maxValue={seq.length>1?seq.length:1}
             style={{ marginLeft: 8 }}
             valueBoxStyle={{ height: 20 }}
             onChange={this.onChangeEnd}

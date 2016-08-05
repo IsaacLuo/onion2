@@ -1,9 +1,11 @@
 {
   "name": "SequenceDetail",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Onion Extensions",
-  "region": "sequenceDetail",
-  "readable": "Sequence Detail",
+  "geneticConstructor": {
+    "region": "sequenceDetail",
+    "readable": "Sequence Detail"
+  },
   "scripts": {
     "build": "npm install && webpack -d main.js index.js"
   },
@@ -39,6 +41,7 @@
     "webpack-hot-middleware": "^2.9.1"
   },
   "dependencies": {
+    "clipboard": "^1.5.12",
     "d3": "^3.5.16",
     "json-loader": "^0.5.4"
   }
