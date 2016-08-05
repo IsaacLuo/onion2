@@ -7,8 +7,9 @@ const manifest = require('json!./package.json');
 const $ = require('jquery');
 
 
-
-// OnionViewer reads data from blocks, and converts it to onion format.
+/**
+ * OnionViewer is the container of the onion components. It reads data from blocks, and converts it to onion format.
+ */
 class OnionViewer extends React.Component {
   static propTypes = {
     container: React.PropTypes.object,
@@ -18,16 +19,22 @@ class OnionViewer extends React.Component {
     super(props);
     const { container } = props;
     this.state = {
+      //dimensions, it's fixed, should be modified by javascript if frame size is changed.
       width: props.width,
       height: props.height,
-      block: null,
+
+      // the converted blocks, in onion format.
+      blocks: null,
       rendered: Date.now(),
+
       title: '...',
       sequence: '',
     };
+
+    //onionBuilder is the the converter for GD project, to convert GD blocks to onion blocks
     this.onionBuilder = new OnionBuilder();
+    //when new blocks fetched, callback this function to update the editor.
     this.onionBuilder.setEventBlockUpdated( () => {
-      //console.log('!!!!!!sequence loaded', this.onionBuilder.getSequence());
       const { seq, completeFlag } = this.onionBuilder.getSequence();
       if (completeFlag || this.allowToRefresh) {
         this.setState({
