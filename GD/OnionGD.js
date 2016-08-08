@@ -2,30 +2,33 @@
  * Created by Isaac on 21/01/2016.
  */
 import React from 'react';
-import { SequenceEditor } from './SequenceEditor/SequenceEditor';
-import { onionFile } from './OnionFile';
-import { InfoBar } from './InfoBar/InfoBar';
-import { loadEnzymeList } from './Bio/Enzyme';
-import { MenuBar } from './MenuBar';
-import {PositionCalculator} from './SequenceEditor/PositionCalculator';
-import { SequenceEditorFilter} from './SequenceEditorFilter/SequenceEditorFilter'
-
+import { InfoBar } from './../InfoBar/InfoBar';
+import { loadEnzymeList } from './../Bio/Enzyme';
+import { MenuBar } from './../MenuBar';
+import { PositionCalculator } from './../SequenceEditor/PositionCalculator';
+import { SequenceEditorFilter } from './../SequenceEditorFilter/SequenceEditorFilter';
+import { themeColor } from 'defaultValues';
 
 const $ = require('jquery');
 window.$ = $;
 global.jQuery = $;
-import './css/GoogleFonts.css';
+import './../css/GoogleFonts.css';
 
-// OnionForGenomeDesigner assembles MenuBar, SequenceEditor and InfoBar together,
-// designed for genome-designer
-export class OnionForGenomeDesigner extends React.Component {
+/**
+ * OnionGD assembles MenuBar, SequenceEditor and InfoBar together,
+ * designed for genetic constructor
+ */
+export class OnionGD extends React.Component {
   static propTypes = {
     blocks: React.PropTypes.array,
     sequence: React.PropTypes.string,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+    titleColor: React.PropTypes.number,
+    features: React.PropTypes.array,
     onQueryNewBlocks: React.PropTypes.func,
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -46,12 +49,11 @@ export class OnionForGenomeDesigner extends React.Component {
       menuTitle: '',
       sequence: props.sequence, //DNA sequence, in ACGT
       features: props.features,
-      titleColor: props.titleColor ? props.titleColor : '#000000',
+      titleColor: props.titleColor ? props.titleColor : themeColor.defaultTitleColor,
 
       focus: true,
     };
-
-
+    
     this.enzymeList = loadEnzymeList('caiLab');
     this.positionCalculator = new PositionCalculator(this.state.blocks);
 
@@ -121,7 +123,7 @@ export class OnionForGenomeDesigner extends React.Component {
 
 
   componentDidMount() {
-    // console.log('OnionForGenomeDesigner mount');
+    // console.log('OnionGD mount');
     $(document).mousedown((e) => {
       if ($(e.target).closest('.onionPanel').length === 0) {
         if (this.state.focus !== false) this.setState({ focus: false, lastAction: 'loseFocus' });

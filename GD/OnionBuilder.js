@@ -261,7 +261,7 @@ export class OnionBuilder {
       }
     }
 
-    return { seq: seq.join(''), completeFlag };
+    return { sequence: seq.join(''), completeFlag };
   }
 
   getBlocks() {
