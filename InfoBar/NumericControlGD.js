@@ -60,26 +60,31 @@ export class NumericControlGD extends React.Component
       e.target.select();
     }
     this.onChange = (e) => {
+      //let uiValue = this.positionCalculator.realPosTouiPos(e.target.value);
+      let uiValue = parseInt(e.target.value);
+      //console.log('onchange',uiValue,e.target.value);
       this.setState({
-        value: this.positionCalculator.realPosTouiPos(e.target.value),
+        value: uiValue,
         showValue: true
       });
     };
 
     this.onBlur = (e) => {
       if (this.props.onChange) {
-        const { value, minValue, maxValue } = this.props;
+        const { value, minValue, maxValue} = this.props;
         let newValue = parseInt(e.target.value, 10);
-        if (!newValue) {
-          newValue = value;
+        //console.log('onblur',newValue,e.target.value);
+        if (newValue == undefined) {
+          //newValue = value;
         } else {
           if (newValue > maxValue) {
             newValue = maxValue;
           } else if (newValue < minValue) {
             newValue = minValue;
           }
+          this.props.onChange(this, newValue, e);
         }
-        this.props.onChange(this, newValue, e);
+
       }
     };
 
@@ -87,11 +92,22 @@ export class NumericControlGD extends React.Component
       if (e.which === 13) {
         this.onBlur(e);
         e.target.select();
+      } else if (e.which <48 || e.which >57){
+        e.preventDefault();
       }
     };
 
     this.onPlus = (e) => {
+      const { minValue, maxValue } = this.props;
+      if(this.state.value == null) this.state.value = minValue;
       let newValue = this.state.value + 1;
+
+      if(minValue != undefined && newValue < minValue) {
+        newValue = minValue;
+      }
+      if (maxValue!=undefined && newValue > maxValue){
+        newValue = maxValue;
+      }
       const block = _this.positionCalculator.findBlockByIndex(newValue);
       if (block && block.realLength===0 && newValue > block.start) {
         newValue = this.state.value+block.length;
@@ -107,7 +123,12 @@ export class NumericControlGD extends React.Component
     };
 
     this.onMinus = (e) => {
+      const { minValue } = this.props;
+      if(this.state.value == null) this.state.value = minValue;
       let newValue = this.state.value - 1;
+      if(minValue != undefined && newValue < minValue) {
+        newValue = minValue;
+      }
       const block = _this.positionCalculator.findBlockByIndex(newValue);
       if (block && block.realLength===0 && newValue > block.start) {
         newValue = block.start;
@@ -124,7 +145,7 @@ export class NumericControlGD extends React.Component
   }
 
   render() {
-    const { style, valueBoxStyle, offset } = this.props;
+    const { style, valueBoxStyle } = this.props;
     const { showValue } = this.state;
     let { upDownStyle } = this.props;
     upDownStyle = Object.assign({
@@ -135,7 +156,14 @@ export class NumericControlGD extends React.Component
 
     const realValue = this.positionCalculator.uiPosToRealPos(this.state.value);
 
-    const value = showValue ? realValue + offset : '';
+    let value = '';
+    if(showValue && Number.isInteger(realValue)){
+       value = realValue ;
+    }
+    if(value<1) {
+      value = '';
+    }
+
     return (
       <div
         style = {Object.assign({
@@ -149,7 +177,8 @@ export class NumericControlGD extends React.Component
           style = {Object.assign({
             display: 'inline-block',
             //color: showValue ? '#000000' : '#ffffff',
-          }, valueBoxStyle)} value = {value} size="5"
+          }, valueBoxStyle)}
+          value = {value} size="5"
           onChange={this.onChange}
           onKeyPress={this.onKeyPress}
           onFocus={this.onFocus}
