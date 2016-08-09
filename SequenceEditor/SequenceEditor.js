@@ -5,7 +5,7 @@ import { DNASeq } from '../Bio/DNASeq';
 import { compareProps } from '../reactHelper';
 import { PositionCalculator } from './PositionCalculator';
 import { StrainText } from './StrainText';
-import clipboard from 'clipboard-js';
+import clipboard from 'clipboard';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
