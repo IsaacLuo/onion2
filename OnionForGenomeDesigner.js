@@ -2,13 +2,14 @@
  * Created by Isaac on 21/01/2016.
  */
 import React from 'react';
-import { SequenceEditor } from './SequenceEditor';
+import { SequenceEditor } from './SequenceEditor/SequenceEditor';
 import { onionFile } from './OnionFile';
-import { InfoBar } from './InfoBar';
+import { InfoBar } from './InfoBar/InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
 import { MenuBar } from './MenuBar';
 import {PositionCalculator} from './SequenceEditor/PositionCalculator';
 import { SequenceEditorFilter} from './SequenceEditorFilter/SequenceEditorFilter'
+
 
 const $ = require('jquery');
 window.$ = $;
@@ -140,26 +141,18 @@ export class OnionForGenomeDesigner extends React.Component {
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
-      if (nextProps.blocks && nextProps.blocks[0]) this.state.menuTitle = nextProps.blocks[0].name;
-      else if (this.state.sequence) this.state.menuTitle = 'unknown';
-      else this.state.menuTitle = ' ';
-      this.state.features = [];
     }
 
     this.state.blocks = nextProps.blocks;
     this.positionCalculator.blocks = this.state.blocks;
     this.state.features = nextProps.features;
 
-    let block = this.positionCalculator.findBlockByIndex(0);
-    let titleColor = block ? block.color : "#000000";
-    const menuTitle = block ? block.name : '';
-
-    this.setState({
-      cursorPos: 0,
-      startCursorPos: 0,
-      titleColor,
-      menuTitle,
-    });
+    if(nextProps.menuTitle !== this.props.menuTitle) {
+      this.setState({
+        cursorPos: 0,
+        startCursorPos: 0,
+      });
+    }
   }
 
   //====================event response=====================
@@ -172,18 +165,9 @@ export class OnionForGenomeDesigner extends React.Component {
       if (pos < 0) pos = 0;
       else if (pos > sequenceLen) pos = sequenceLen;
 
-      //get new block Color
-      let block = this.positionCalculator.findBlockByIndex(pos);
-      let titleColor = block ? block.color : "#000000";
-
-      //const menuTitle = block ? block.name : '';
-      const menuTitle = this.props.menuTitle;
-
       this.setState({
         cursorPos: pos,
         startCursorPos: pos,
-        titleColor,
-        menuTitle,
       });
     }
   }
@@ -196,14 +180,10 @@ export class OnionForGenomeDesigner extends React.Component {
     //const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
     //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
     let block = this.positionCalculator.findBlockByIndex(startPos);
-    let titleColor = block ? block.color : "#000000";
-    const menuTitle = block ? block.name : '';
     this.setState({
       cursorPos : endPos,
       startCursorPos : startPos,
       lastAction: 'infoBarChanged',
-      titleColor,
-      menuTitle,
     });
   }
 
@@ -232,6 +212,10 @@ export class OnionForGenomeDesigner extends React.Component {
         this.setState(dict);
         break;
     }
+  }
+
+  componentDidMount() {
+    //new Clipboard('.onionCopyButton');
   }
 
   render() {
@@ -308,6 +292,7 @@ export class OnionForGenomeDesigner extends React.Component {
           }}
           tabIndex="-1"
           className = 'onionClipboard'
+          id = 'onionClipboard'
           onKeyDown={this.onHotKeyClipboard}
         />
         
@@ -354,7 +339,7 @@ export class OnionForGenomeDesigner extends React.Component {
           height={30}
           startPos={selectionLength > 0 ? selectionStart : -1}
           endPos={selectionLength > 0 ? selectionStart + selectionLength : -1}
-          seq={selectedSeq}
+          seq={sequence}
           blocks={blocks}
           showTM={false}
           style={{

@@ -1,10 +1,11 @@
 import React from 'react';
-import { SequenceRow } from './SequenceEditor/SequenceRow';
+import { SequenceRow } from './SequenceRow';
 import 'jquery';
-import { DNASeq } from './Bio/DNASeq';
-import { compareProps } from './reactHelper';
-import { PositionCalculator } from './SequenceEditor/PositionCalculator';
-import { StrainText } from './SequenceEditor/StrainText';
+import { DNASeq } from '../Bio/DNASeq';
+import { compareProps } from '../reactHelper';
+import { PositionCalculator } from './PositionCalculator';
+import { StrainText } from './StrainText';
+import clipboard from 'clipboard-js';
 
 //one of main components of onion, sequence editor
 export class SequenceEditor extends React.Component {
@@ -290,6 +291,24 @@ export class SequenceEditor extends React.Component {
     this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
 
     this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
+
+    this.onCopyForward = () => {
+      const {cursorPos, selectStartPos} = this.state;
+      const left = Math.min(cursorPos, selectStartPos);
+      const right = Math.max(cursorPos, selectStartPos);
+      const sub = this.props.sequence.substring(left,right)
+      clipboard.copy(sub);
+      console.log('copied:',sub);
+    }
+
+    this.onCopyReverse = () => {
+      const {cursorPos, selectStartPos} = this.state;
+      const left = Math.min(cursorPos, selectStartPos);
+      const right = Math.max(cursorPos, selectStartPos);
+      const sub = new DNASeq(this.props.sequence.substring(left,right)).reverseComplement().toString();
+      clipboard.copy(sub);
+      console.log('copied:',sub);
+    }
 
   }
 
@@ -604,7 +623,8 @@ export class SequenceEditor extends React.Component {
           const start = Math.max(blocks[i].start - j * colNum, 0);
           const end = Math.min(blockEnd - j * colNum, colNum);
           const realStart = blocks[i].realStart ? Math.max(blocks[i].realStart - j * colNum, 0) : start;
-          const realLength = blocks[i].realLength;
+          const {realLength, isConnector, listName, isLowFocus} = blocks[i];
+
           if (splitBlocks[j]) {
             splitBlocks[j].push({
               color: blocks[i].color,
@@ -614,6 +634,9 @@ export class SequenceEditor extends React.Component {
               realStart,
               realLength,
               originalBlock: blocks[i],
+              isConnector,
+              listName,
+              isLowFocus,
             });
           }
         }
@@ -748,6 +771,8 @@ export class SequenceEditor extends React.Component {
           onCalculatedHeight={this.onRowCalculatedHeight}
           onDoubleClickBlock={this.onDoubleClickBlock}
           onRendered={this.onRowRendered}
+          onCopyForward={this.onCopyForward}
+          onCopyReverse={this.onCopyReverse}
         />);
 
       j++;
@@ -756,35 +781,6 @@ export class SequenceEditor extends React.Component {
 
 
   updateSequenceInWindow(){
-    // const dom = document.getElementsByClassName('SequenceEditor')[0];
-    // const scrollPos = dom.scrollTop;
-    // const height = dom.offsetHeight;
-    // const scrollPosEnd = scrollPos + height;
-    // const scrollHeight = dom.scrollHeight;
-    // // find the first block and the last block
-    // const seqLength = this.props.sequence.length;
-    // const updateList = [];
-    // const debugList = [];
-    // const littleMore = height/2;
-    // for(const block of this.props.blocks) {
-    //   const blockStartPos  = (block.start)*scrollHeight/seqLength;
-    //   const blockEndPos = (block.start+block.length)*scrollHeight/seqLength;
-    //   if(
-    //       blockEndPos >= scrollPos-littleMore && blockEndPos <= scrollPosEnd+littleMore
-    //       ||
-    //       blockStartPos >= scrollPos-littleMore && blockStartPos <= scrollPosEnd+littleMore
-    //       ||
-    //       blockStartPos <=scrollPos && blockEndPos >=scrollPosEnd
-    //
-    //   )
-    //   {
-    //     updateList.push(block.md5);
-    //     debugList.push(block.name);
-    //
-    //   }
-    // }
-    // console.log(debugList);
-    // this.props.onQueryNewBlocks(updateList);
     let { startRow, endRow, sequence } = this.props;
 
     if (!startRow) startRow = 0;
@@ -801,13 +797,7 @@ export class SequenceEditor extends React.Component {
 
     const updateList = [];
     for(const block of updateSet){
-      // block.getSequence()
-      //   .then(sequence => {
-      //     //updateSet[block] = sequence;
-      //     //this.sequence = this.state.sequence.substr(0,block.start).toString() + sequence + this.state.sequence + this.state.sequence.substr(block.start+block.length, this.state.sequence.length).toString();
-      //     this.sequence = this.sequence.setSegment(block.start,block.length,sequence);
-      //     this.setState({sequence})
-      //   });
+
       updateList.push(block);
     }
     this.props.onQueryNewBlocks(updateList);

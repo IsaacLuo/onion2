@@ -1,5 +1,5 @@
 import React from 'react';
-import {SequenceEditor} from '../SequenceEditor';
+import {SequenceEditor} from '../SequenceEditor/SequenceEditor';
 import {BlockScrollBar} from './BlockScrollBar';
 import 'jquery';
 
@@ -71,35 +71,61 @@ export class SequenceEditorFilter extends React.Component {
     this.deltaY = 0;
 
     this.onWheel = (e) => {
-      let {topRow, totalRows} = this.state;
-      if (!e || !e.deltaY) {
-      } else {
-        
-        this.deltaY += e.deltaY;
-
-        if (this.deltaY>=100) {
-          topRow++;
-          if (topRow >= totalRows) {
-            topRow = totalRows - 1;
-          }
-          if (topRow < 0) {
-            topRow = 0
-          }
-          this.deltaY = 0;
-          this.setState({topRow});
-        } else if(this.deltaY<-100) {
-          topRow--;
-          if (topRow < 0) {
-            topRow = 0
-          }
-          this.deltaY = 0;
-          this.setState({topRow});
-        }
+      if(e && e.deltaY) {
+        this.scroll(e.deltaY);
       }
       e.preventDefault();
     }
 
+    this.onMouseMove = (e) => {
+      const {focus} = this.props;
+      if(e.buttons === 1 && focus) {
+        const frameTop = $('.SequenceEditorFilter').offset().top;
+        const frameBottom = frameTop + $('.SequenceEditorFilter').height();
+
+        if (e.clientY < frameTop) {
+            this.scroll(-50);
+        } else if (e.clientY > frameBottom) {
+          this.scroll(50);
+        }
+      }
+    }
   }
+
+  scroll(deltaY) {
+    let {topRow, totalRows} = this.state;
+    this.deltaY += deltaY;
+
+      if (this.deltaY>=100) {
+        topRow++;
+        if (topRow >= totalRows) {
+          topRow = totalRows - 1;
+        }
+        if (topRow < 0) {
+          topRow = 0
+        }
+        this.deltaY = 0;
+        this.setState({topRow});
+      } else if(this.deltaY<=-100) {
+        topRow--;
+        if (topRow < 0) {
+          topRow = 0
+        }
+        this.deltaY = 0;
+        this.setState({topRow});
+      }
+      $('.SequenceEditor').scrollTop(this.deltaY);
+    }
+
+  componentDidMount() {
+    $('body').on('mousemove',this.onMouseMove);
+  }
+
+  componentWillUnmount() {
+    $('body').unbind('mousemove',this.onMouseMove);
+  }
+
+  component
 
   render() {
     const {sequence, width, height, showLadder, showReverse, showRuler, blocks } =  this.props;
@@ -131,6 +157,7 @@ export class SequenceEditorFilter extends React.Component {
     return (
       <div
         onWheel={this.onWheel}
+        className="SequenceEditorFilter"
       >
         <div
           style={{

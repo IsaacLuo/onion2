@@ -5,6 +5,8 @@ var path = require('path');
 var webpack = require('webpack');
 var webpackBase = require('./webpack.config.base');
 
+var VERBOSE = false;
+
 module.exports = Object.assign({}, webpackBase, {
   // devtool: 'source-map',
   entry  : [
@@ -22,7 +24,21 @@ module.exports = Object.assign({}, webpackBase, {
       'process.env': {
         'NODE_ENV': JSON.stringify('dev')
       }
-    })
+    }),
+    new webpack.optimize.DedupePlugin(),
+
+      // Minimize all JavaScript output of chunks
+      // https://github.com/mishoo/UglifyJS2#compressor-options
+      new webpack.optimize.UglifyJsPlugin({
+        compress: {
+          screw_ie8: true, // jscs:ignore requireCamelCaseOrUpperCaseIdentifiers
+          warnings: VERBOSE,
+        },
+      }),
+
+      // A plugin for a more aggressive chunk merging strategy
+      // https://webpack.github.io/docs/list-of-plugins.html#aggressivemergingplugin
+      new webpack.optimize.AggressiveMergingPlugin()
   ],
   module : {
     loaders: [
