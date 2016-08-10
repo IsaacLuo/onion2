@@ -7,7 +7,7 @@ import { loadEnzymeList } from './../Bio/Enzyme';
 import { MenuBar } from './../MenuBar';
 import { PositionCalculator } from './../SequenceEditor/PositionCalculator';
 import { SequenceEditorFilter } from './../SequenceEditorFilter/SequenceEditorFilter';
-import { themeColor } from 'defaultValues';
+import { themeColor } from './defaultValues';
 
 const $ = require('jquery');
 window.$ = $;
@@ -24,7 +24,7 @@ export class OnionGD extends React.Component {
     sequence: React.PropTypes.string,
     width: React.PropTypes.number,
     height: React.PropTypes.number,
-    titleColor: React.PropTypes.number,
+    titleColor: React.PropTypes.string,
     features: React.PropTypes.array,
     onQueryNewBlocks: React.PropTypes.func,
   };
@@ -67,6 +67,8 @@ export class OnionGD extends React.Component {
 
   initCallBack() {
     this.onHotKey = (e) => {
+
+      //ctrl Key, move the focus to the onionClipboard, if C pressed then, copy
       if(e.keyCode===17 || e.keyCode === 91) {//&& e.keyCode===67) {
         // console.log('hotkey', e);
         const pos1 = this.state.cursorPos;

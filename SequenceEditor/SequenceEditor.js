@@ -155,6 +155,24 @@ export class SequenceEditor extends React.Component {
 
     };
 
+    this.onHotKey = (e) => {
+      const { cursorPos } = this.state;
+      console.log(e.keyCode);
+      switch (e.keyCode) {
+        case 38: //up
+          break;
+        case 40: //down
+          break;
+        case 37: //left
+          this.setState({cursorPos: cursorPos-1});
+          break;
+        case 39: //right
+          this.setState({cursorPos: cursorPos+1});
+          break;
+      }
+
+    }
+
     this.onSetCursor = (cursorPos, rowNumber) => {
       if (_this.props.focus) {
         if (_this.props.blocks) {
@@ -282,6 +300,7 @@ export class SequenceEditor extends React.Component {
     };
 
     this.onClick = (e) => {
+      
     }
 
     this.onDoubleClickBlock = (block,start,length) => {
@@ -858,6 +877,7 @@ export class SequenceEditor extends React.Component {
         onClick={this.onClick}
         onMouseDown={this.onMouseDown}
         onMouseUp={this.onMouseUp}
+        onKeyDown={this.onHotKey}
         className="SequenceEditor"
       >
         {this.textRows}
