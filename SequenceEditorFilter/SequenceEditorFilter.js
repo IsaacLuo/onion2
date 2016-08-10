@@ -51,8 +51,6 @@ export class SequenceEditorFilter extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     try {
-
-      this.seqLen = nextProps.sequence.length;
       this.colNum = Math.floor(nextProps.width / this.unitWidth) - 10;
       this.state.totalRows = Math.ceil(nextProps.sequence.length / this.colNum);
       if (this.state.topRow > this.state.totalRows) this.state.topRow = this.state.totalRows - 1;
@@ -90,6 +88,10 @@ export class SequenceEditorFilter extends React.Component {
         }
       }
     }
+
+    this.onSetTopRow = (topRow) => {
+      this.setState({ topRow });
+    }
   }
 
   scroll(deltaY) {
@@ -125,8 +127,6 @@ export class SequenceEditorFilter extends React.Component {
     $('body').unbind('mousemove',this.onMouseMove);
   }
 
-  component
-
   render() {
     const {sequence, width, height, showLadder, showReverse, showRuler, blocks } =  this.props;
     const {topRow, totalRows} = this.state;
@@ -147,10 +147,11 @@ export class SequenceEditorFilter extends React.Component {
 
     let newProp = {
       ...this.props,
-      startRow: topRow,
-      endRow: topRow + rowsToShow,
+      topRow,
+      bottomRow: topRow + rowsToShow,
       disableScroll: true,
       width: width-10,
+      onSetTopRow: this.onSetTopRow,
     };
 
 

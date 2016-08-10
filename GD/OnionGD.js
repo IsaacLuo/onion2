@@ -67,7 +67,6 @@ export class OnionGD extends React.Component {
 
   initCallBack() {
     this.onHotKey = (e) => {
-
       //ctrl Key, move the focus to the onionClipboard, if C pressed then, copy
       if(e.keyCode===17 || e.keyCode === 91) {//&& e.keyCode===67) {
         // console.log('hotkey', e);
