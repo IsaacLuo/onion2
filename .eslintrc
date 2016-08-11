@@ -20,6 +20,8 @@
     "id-length": [0,  {"properties": "never", "exceptions" : ["x", "y", "w", "h", "i", "e"]}],
     "no-console": [0],
     "no-debugger": [0],
+    "prefer-const": [0],
+    //"max-len": [1, {"code": 120}],
     "new-cap": [2, {"capIsNewExceptions": ["DragSource", "DropTarget", "DragDropContext"]}]
   }
 }

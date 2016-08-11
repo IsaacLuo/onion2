@@ -19,13 +19,28 @@ import './../css/GoogleFonts.css';
  * designed for genetic constructor
  */
 export class OnionGD extends React.Component {
+
+
   static propTypes = {
+    //an array of {color,length,listName,start...}
     blocks: React.PropTypes.array,
+
+    //sequence is just a string
     sequence: React.PropTypes.string,
+
+    //the window dimensions
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+
+    menuTitle: React.PropTypes.string,
+
+    //color in "#xxxxxx" format
     titleColor: React.PropTypes.string,
+
+    //an array of {start,end,color,text...}
     features: React.PropTypes.array,
+
+    //callback, call it when onion needs new blocks from backend.
     onQueryNewBlocks: React.PropTypes.func,
   };
 
@@ -53,23 +68,44 @@ export class OnionGD extends React.Component {
 
       focus: true,
     };
-    
+
+    // the enzymeList is not in use right now, but I'll keep it for a while
     this.enzymeList = loadEnzymeList('caiLab');
     this.positionCalculator = new PositionCalculator(this.state.blocks);
 
-    this.onSetCursor = this.onSetCursor.bind(this);
-    this.onInfoBarChange = this.onInfoBarChange.bind(this);
-    //this.onBlockChanged = this.onBlockChanged.bind(this);
-    this.menuCommand = this.menuCommand.bind(this);
     this.initCallBack();
 
   }
 
   initCallBack() {
+    /**
+     * set the cursor pos
+     * @param _pos
+     */
+    this.onSetCursor = (_pos) => {
+      if (this.state.focus && this.state.sequence) {
+        let pos = _pos;
+        const sequenceLen = this.state.sequence.length;
+        if (pos < 0) pos = 0;
+        else if (pos > sequenceLen) pos = sequenceLen;
+
+        this.setState({
+          cursorPos: pos,
+          startCursorPos: pos,
+        });
+      }
+    }
+
+    /**
+     * call it when a hot hey is pressed
+     * @param e
+     */
     this.onHotKey = (e) => {
+      this.onInfoBarChange = this.onInfoBarChange.bind(this);
+      this.menuCommand = this.menuCommand.bind(this);
 
       //ctrl Key, move the focus to the onionClipboard, if C pressed then, copy
-      if(e.keyCode===17 || e.keyCode === 91) {//&& e.keyCode===67) {
+      if (e.keyCode === 17 || e.keyCode === 91) {//&& e.keyCode===67) {
         // console.log('hotkey', e);
         const pos1 = this.state.cursorPos;
         const pos2 = this.state.startCursorPos;
@@ -82,50 +118,94 @@ export class OnionGD extends React.Component {
       }
     };
 
-    this.onHotKeyClipboard = (e) => {
-      if(e.ctrlKey && e.keyCode===67) {
-        // console.log('copy',e.target.value);
-      }
-    };
-
-    this.onSelect = (pos1, pos2) => {
+    /**
+     * set a selection zone
+     * @param cursorPos: the current cursor position
+     * @param startCursorPos: the "mouse down" cursor position
+     */
+    this.onSelect = (cursorPos, startCursorPos) => {
       if (this.state.focus) {
-        if (pos1 >= 0 && pos2 >= 0) {
+        if (cursorPos >= 0 && startCursorPos >= 0) {
           this.setState({
-            cursorPos: pos1,
-            startCursorPos: pos2,
+            cursorPos,
+            startCursorPos,
           });
         } else {
-          console.error(pos1, pos2);
+          console.error(cursorPos, startCursorPos);
         }
       }
     }
+
+    /**
+     * while user changes the value of start and end numeric control on info bar
+     * @param startPos
+     * @param endPos
+     */
+    this.onInfoBarChange = (startPos, endPos) => {
+      this.setState({
+        cursorPos: endPos,
+        startCursorPos: startPos,
+        lastAction: 'infoBarChanged',
+      });
+    }
+
+    /**
+     * while user fires a menu command
+     * @param command : command type to show or hide a layer.
+     * @param value : true or false
+     */
+    this.menuCommand = (command, value) => {
+      // console.log('menuCommand', command, value);
+      const dict = {};
+      switch (command) {
+        case 'showAll':
+          dict.showRS = value;
+          dict.showEnzymes = value;
+          dict.showFeatures = value;
+          dict.showRuler = value;
+          dict.showAA = value;
+          dict.lastAction = 'showAll';
+          this.setState(dict);
+          break;
+
+        default:
+          dict[command] = value;
+          dict.lastAction = command;
+          this.setState(dict);
+          break;
+      }
+    };
   }
 
   componentWillMount() {
-    const rulerString = ' !"#$^&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
-    const textRuler = [];
+    //set some divs which contains only one visible letter,
+    //to measure the letter width real time to prevent the size
+    //of letter vary in different browser
+    const rulerString = ' !"#$^&\'()*+,-./0123456789:;<=>?@' +
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~';
     $('body').append('<div class="textRuler"></div>');
 
-    for(const letter of rulerString) {
+    for (const letter of rulerString) {
       $('.textRuler').append(
           `<div
               class="rulerLetter"
               data-id="${letter}"
-              style="font-family: Helvetica, Arial, sans-serif; font-size: 12px; display: inline-block"
+              style="font-family: Helvetica, Arial, sans-serif;
+              font-size: 12px; display: inline-block"
           >
             ${letter}
           </div>`);
     }
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
+    //remove the ruler divs when unmount
     $('.textRuler').remove();
   }
 
 
   componentDidMount() {
-    // console.log('OnionGD mount');
+    // globally mousedown event responding, to set the onion Panel is focused or not.
     $(document).mousedown((e) => {
       if ($(e.target).closest('.onionPanel').length === 0) {
         if (this.state.focus !== false) this.setState({ focus: false, lastAction: 'loseFocus' });
@@ -133,15 +213,12 @@ export class OnionGD extends React.Component {
         if (this.state.focus !== true) this.setState({ focus: true, lastAction: 'gainFocus' });
       }
     });
-    $('.onionClipboard').focus(()=>{
-
+    $('.onionClipboard').focus(() => {
       $('.onionClipboard').select();
     });
-    //$(document).keypress(this.onHotKey);
   }
 
   componentWillReceiveProps(nextProps) {
-    //console.log('np',this.props, nextProps);
     if (nextProps.sequence !== this.props.sequence) {
       //reset state sequence
       this.state.sequence = nextProps.sequence;
@@ -151,7 +228,7 @@ export class OnionGD extends React.Component {
     this.positionCalculator.blocks = this.state.blocks;
     this.state.features = nextProps.features;
 
-    if(nextProps.menuTitle !== this.props.menuTitle) {
+    if (nextProps.menuTitle !== this.props.menuTitle) {
       this.setState({
         cursorPos: 0,
         startCursorPos: 0,
@@ -159,64 +236,6 @@ export class OnionGD extends React.Component {
     }
   }
 
-  //====================event response=====================
-
-  //while user move cursor by clicking
-  onSetCursor(_pos) {
-    if (this.state.focus && this.state.sequence) {
-      let pos = _pos;
-      const sequenceLen = this.state.sequence.length;
-      if (pos < 0) pos = 0;
-      else if (pos > sequenceLen) pos = sequenceLen;
-
-      this.setState({
-        cursorPos: pos,
-        startCursorPos: pos,
-      });
-    }
-  }
-
-  //while user drags on editor
-
-
-  //while user changes the value of start and end numeric control on info bar
-  onInfoBarChange(startPos, endPos) {
-    //const cursorPos = this.positionCalculator.realPosTouiPos(endPos);
-    //const startCursorPos = this.positionCalculator.realPosTouiPos(startPos);
-    let block = this.positionCalculator.findBlockByIndex(startPos);
-    this.setState({
-      cursorPos : endPos,
-      startCursorPos : startPos,
-      lastAction: 'infoBarChanged',
-    });
-  }
-
-  // onBlockChanged(block, e) {
-  //   this.setState({ menuTitle: block[0].name, lastAction: 'blockChanged' });
-  // }
-
-  //while user fires a menu command
-  menuCommand(command, value) {
-    // console.log('menuCommand', command, value);
-    const dict = {};
-    switch (command) {
-      case 'showAll':
-        dict.showRS = value;
-        dict.showEnzymes = value;
-        dict.showFeatures = value;
-        dict.showRuler = value;
-        dict.showAA = value;
-        dict.lastAction = 'showAll';
-        this.setState(dict);
-        break;
-
-      default:
-        dict[command] = value;
-        dict.lastAction = command;
-        this.setState(dict);
-        break;
-    }
-  }
 
   componentDidMount() {
     //new Clipboard('.onionCopyButton');
@@ -229,7 +248,7 @@ export class OnionGD extends React.Component {
     const height = Math.max(this.props.height, 100);
 
     const { showEnzymes, showRS, showFeatures, showRuler, showBlockBar, showAA } = this.state;
-    const {titleColor} = this.props;
+    const { titleColor } = this.props;
     let sequence;
     let features;
     let blocks = this.state.blocks;
@@ -247,33 +266,27 @@ export class OnionGD extends React.Component {
 
     let selectionStart = 0;
     let selectionLength = 0;
-    let selectionStartReal = 0;
-    let selectionLengthReal = 0;
-    let selectedSeq = '';
+    // let selectionStartReal = 0;
+    // let selectionLengthReal = 0;
+    // let selectedSeq = '';
 
     if (sequence) {
       selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
       selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-      if(selectionLength>0) {
-        selectedSeq = sequence.substr(selectionStart, selectionLength);
-      } else {
-        selectedSeq = sequence;
-      }
-      selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
-      selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
-
+      // if(selectionLength>0) {
+      //   selectedSeq = sequence.substr(selectionStart, selectionLength);
+      // } else {
+      //   selectedSeq = sequence;
+      //}
+      // selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
+      // selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
     }
-    //const menuTitle = this.state.menuTitle;
     const menuTitle = this.props.menuTitle;
 
     let enableFeatures = false;
-    if (features && features.length > 0)
+    if (features && features.length > 0) {
       enableFeatures = true;
-
-    //console.log(this.state);
-
-
-
+    }
 
     return (
       <div
@@ -295,11 +308,11 @@ export class OnionGD extends React.Component {
             top: '-1000',
           }}
           tabIndex="-1"
-          className = 'onionClipboard'
-          id = 'onionClipboard'
+          className = "onionClipboard"
+          id = "onionClipboard"
           onKeyDown={this.onHotKeyClipboard}
         />
-        
+
         <MenuBar
           title={menuTitle}
           showEnzymes={showEnzymes}
@@ -313,7 +326,6 @@ export class OnionGD extends React.Component {
           titleColor={titleColor}
         />
 
-
         <SequenceEditorFilter
           sequence={sequence}
           showComplement
@@ -322,7 +334,6 @@ export class OnionGD extends React.Component {
           onSelect={this.onSelect}
           enzymeList={this.enzymeList}
           width={width}
-          //height={height - 30 - 86}
           height={height - 30 - 64}
           showEnzymes={showEnzymes}
           showLadder={showRuler || !showRuler && showRS}
