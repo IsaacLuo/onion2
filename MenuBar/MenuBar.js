@@ -2,12 +2,15 @@
  * Created by luoyi on 1/12/2016.
  */
 import React from 'react';
-import { EyeIcon } from './MenuBar/EyeIcon';
-import './css/Onion.css';
+import { EyeIcon } from './EyeIcon';
+import '../css/Onion.css';
 import jQuery from 'jquery';
 const $ = jQuery;
 
-//SequenceEditor Menu
+/**
+ * SequenceEditor Menu
+ * The layer choosing menu, show or hide some layer
+ */
 export class MenuBar extends React.Component {
   static propTypes = {
     title: React.PropTypes.string,
@@ -27,23 +30,25 @@ export class MenuBar extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onSelect = this.onSelect.bind(this);
+    this.initCallBack();
   }
 
-  onSelect(e) {
-    const { onSelect } = this.props;
+  initCallBack() {
+    this.onSelect = (e) => {
+      const { onSelect } = this.props;
 
-    let target = e.target;
-    while (target.nodeName.toUpperCase() !== 'A') {
-      target = target.parentNode;
-    }
+      let target = e.target;
+      while (target.nodeName.toUpperCase() !== 'A') {
+        target = target.parentNode;
+      }
 
-    //I don't know why $.data() always returns true;
-    //const value = $target.data('val');
-    const cmd = target.getAttribute('data-cmd');
-    const value = target.getAttribute('data-val') === 'true';
-    //console.log(value);
-    onSelect(cmd, !value);
+      //I don't know why $.data() always returns true;
+      //const value = $target.data('val');
+      const cmd = target.getAttribute('data-cmd');
+      const value = target.getAttribute('data-val') === 'true';
+      //console.log(value);
+      onSelect(cmd, !value);
+    };
   }
 
   render() {
@@ -129,7 +134,7 @@ export class MenuBar extends React.Component {
         </div>
         <div
           style={{
-            padding:8,
+            padding: 8,
             //color: '#8EC78D',
             color: titleColor,
             fontSize: 20,

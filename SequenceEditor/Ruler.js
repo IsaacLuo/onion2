@@ -5,7 +5,7 @@ import React from 'react';
 import { compareProps } from './../reactHelper';
 
 // the ruler on the bottom of each SequenceRow
-export class RulerLocation extends React.Component {
+export class Ruler extends React.Component {
   static propTypes = {
     x: React.PropTypes.number,
     y: React.PropTypes.number,

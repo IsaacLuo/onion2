@@ -2,7 +2,7 @@ import React from 'react';
 import { compareProps } from './../reactHelper';
 
 //the arrow on PlasmidViewer
-export class SequenceFeatureArrow extends React.Component {
+export class FeatureArrow extends React.Component {
   static propTypes = {
     theme: React.PropTypes.string,
     start: React.PropTypes.number,

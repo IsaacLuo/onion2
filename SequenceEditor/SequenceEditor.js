@@ -7,17 +7,46 @@ import { PositionCalculator } from './PositionCalculator';
 import { StrainText } from './StrainText';
 import clipboard from 'clipboard-js';
 
-//one of main components of onion, sequence editor
+/**
+ * one of main components of onion, sequence editor
+ *
+ * structure
+ *
+ * <SequenceEditor>
+ *  <SequenceRow>
+ *    <RestrictionSite/>
+ *    <CuttingSite/>
+ *    <StrainText/>
+ *    <FeatureArrow/>
+ *    <CDSBar>
+ *      <AminoAcidMarker/>
+ *    </CDSBar>
+ *    <Ruler/>
+ *  </SequenceRow>
+ * </SeqeunceEditor>
+ */
 export class SequenceEditor extends React.Component {
   static propTypes = {
     sequence: React.PropTypes.string, //dna sequence, in ACGT
+    //the 'nowrap' has bug in chrome, keeping it for the future
     theme: React.PropTypes.oneOf(['normal', 'nowrap']),
+    //dimensions
     width: React.PropTypes.number,
     height: React.PropTypes.number,
+
+    // the enzyme type should be dispay in onion, currently, they are hided.
     enzymeList: React.PropTypes.array,
+
+    // an array of {start,end,color,text...}
     features: React.PropTypes.array,
+
+    // current cursor pos, from 0 to sequence.length
     cursorPos: React.PropTypes.number,
+
+    // selection start cursor pos, it's the position of the mousedown
     selectStartPos: React.PropTypes.number,
+
+    // showing layout switches
     showEnzymes: React.PropTypes.bool,
     showAA: React.PropTypes.bool,
     showLadder: React.PropTypes.bool,
@@ -26,22 +55,49 @@ export class SequenceEditor extends React.Component {
     showRuler: React.PropTypes.bool,
     showBlockBar: React.PropTypes.bool,
     showCursor: React.PropTypes.bool,
-    blocks: React.PropTypes.array,
-    style: React.PropTypes.object,
-    onBlockChanged: React.PropTypes.func,
-    onSetCursor: React.PropTypes.func,
-    onSelect: React.PropTypes.func,
-    onRowCalculatedHeight: React.PropTypes.func,
     showSelection: React.PropTypes.bool,
-    focus: React.PropTypes.bool,
-    onQueryNewBlocks: React.PropTypes.func,
 
+    //show the blue selection or gray selection
+    focus: React.PropTypes.bool,
+
+    //switch, usually false, but true if in the SequenceEditorFilter
+    disableScroll: React.PropTypes.bool,
+
+    //if SequenceEditorFilter is applied, there are topRow and bottomRow
     topRow: React.PropTypes.number,
     bottomRow: React.PropTypes.number,
 
+    // an array of {color,length,listName,start...}
+    blocks: React.PropTypes.array,
+
+    // css
+    style: React.PropTypes.object,
+
+    //call it when cursor moves to another block
+    onBlockChanged: React.PropTypes.func,
+
+    //call it when new cursor position is set
+    onSetCursor: React.PropTypes.func,
+
+    //call it when selection span is made
+    onSelect: React.PropTypes.func,
+
+    //call it when dimensions are changed.
+    onRowCalculatedHeight: React.PropTypes.func,
+
+    //call it when new block data is required (e.g. scrolling scrolling down)
+    onQueryNewBlocks: React.PropTypes.func,
+
+    //call it when scrolling the editor, however, it won't scroll if SequenceEditorFilter applied,
+    //Scroll filter will take over the virtual scrolling function
+    onScroll: React.PropTypes.func,
+
+    //onSetTopRow is applied when using SequenceEditorFilter, instead onScroll
+    onSetTopRow: React.PropTypes.func,
   };
+
   static defaultProps = {
-    sequence: '', //debug sequence, it should be repalced by inputing
+    sequence: '',
     theme: 'normal',
     showBlockBar: true, //show block bars in genome-designer
     style: {},
@@ -60,18 +116,11 @@ export class SequenceEditor extends React.Component {
     };
     //Maybe I need to render a letter first, then calculate its size, it's necessary because
     // the letter width is little difference on different browser.
-    //this.seqMainStyleStr = `display:inline-block;font-family:${this.myCSS.seqFontFamily};
-    // font-size:${this.myCSS.seqFontSize};color:'#2C3543';
-    // letterSpacing:0;position:absolute;left:0px;top:-100px`;
-    //jQuery("body").append(`<div id="bp1" style="${this.seqMainStyleStr}">A</div>`);
-    //var width = document.getElementById('bp1').getBoundingClientRect().width;
     this.seqMainStyle = {
       //	display: "inline-block",
       fontFamily: this.myCSS.seqFontFamily,
       fontSize: this.myCSS.seqFontSize,
       fill: '#2C3543',
-      //letterSpacing: (10 - 9.609375),
-      //letterSpacing: 0.8056146,
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };
@@ -79,7 +128,7 @@ export class SequenceEditor extends React.Component {
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
     this.sequence = new DNASeq(props.sequence);
-    if(props.enzymeList) {
+    if (props.enzymeList) {
       this.enzymeSites = this.sequence.calcEnzymeSites(props.enzymeList);
     }
 
@@ -98,13 +147,12 @@ export class SequenceEditor extends React.Component {
     //initial operations
     this.initialRowPos(props.sequence, props.width);
     this.initCallBack();
-    $('body').mouseup((e)=>{$('body').css('-webkit-user-select', 'text')});
-
+    $('body').mouseup((e) => {$('body').css('-webkit-user-select', 'text')});
 
   }
 
   componentWillReceiveProps(nextProps) {
-    if(nextProps.sequence) {
+    if (nextProps.sequence) {
       if (nextProps.sequence !== this.props.sequence || nextProps.width !== this.props.width) {
         this.sequence = new DNASeq(nextProps.sequence);
         this.initialRowPos(nextProps.sequence, nextProps.width);
@@ -129,45 +177,42 @@ export class SequenceEditor extends React.Component {
     const update = !compareProps(this.props, np) || !compareProps(this.state, ns);
     //return true;
     return update;
-
   }
 
 
   initCallBack() {
     const _this = this;
 
+    /**
+     * when the editor scrolling, but it won't work if SequenceEditorFilter is applied
+     * @param e : event
+     */
     this.onScroll = (e) => {
-     // console.log('scrolling');
-      //_this.updateSequenceInWindow();
       if (this.props.onScroll) {
         this.props.onScroll(e);
       }
-      if (this.props.disableScroll){
+      if (this.props.disableScroll) {
         e.preventDefault();
       }
     };
 
-    this.onMouseDown = (e) => {
-
-    };
-
-    this.onMouseUp = (e) => {
-
-    };
-
+    /**
+     * when key pressed, if it's arrow key, move the cursor
+     * @param e : event
+     */
     this.onHotKey = (e) => {
       const { cursorPos } = this.state;
       let newPos = cursorPos;
       const currentRow = Math.floor(newPos / this.colNum);
 
-      if (e.keyCode>=37 && e.keyCode<=40) {
-        let offset =0;
+      if (e.keyCode >= 37 && e.keyCode <= 40) {
+        let offset = 0;
         switch (e.keyCode) {
           case 38: //up
-            if ( cursorPos > this.colNum ) offset = -this.colNum;
+            if (cursorPos > this.colNum)offset = -this.colNum;
             break;
           case 40: //down
-            if ( cursorPos < this.props.sequence.length - this.colNum ) offset = this.colNum;
+            if (cursorPos < this.props.sequence.length - this.colNum)offset = this.colNum;
             break;
           case 37: //left
             if (cursorPos > 0) offset = -1;
@@ -175,14 +220,18 @@ export class SequenceEditor extends React.Component {
           case 39: //right
             if (cursorPos < this.props.sequence.length) offset = 1;
             break;
+          default:
+            break;
         }
         newPos += offset;
 
-        this.setState({cursorPos: newPos});
+        this.setState({ cursorPos: newPos });
+
+        //check if it has to scroll
         const newRow = Math.floor(newPos / this.colNum);
-        if(this.props.onSetTopRow && this.props.topRow != undefined) {
+        if (this.props.onSetTopRow && this.props.topRow != undefined) {
           const rowMove = newRow - currentRow;
-          if(rowMove !== 0 && this.props.topRow + rowMove >=0) {
+          if (rowMove !== 0 && this.props.topRow + rowMove >= 0) {
             console.log(rowMove);
             this.props.onSetTopRow(this.props.topRow + rowMove);
           }
@@ -230,13 +279,12 @@ export class SequenceEditor extends React.Component {
       }
     };
 
-    this.onSelect = (cursorPos, rowNumber, cursorPosStart, rowNumberStart) => {
+    this.onSelect = (cursorPos, cursorPosStart) => {
 
       if (_this.props.focus) {
         if (_this.props.blocks) {
           const currentBlock = _this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
-            //this.onSelecting(currentBlock.start, rowNumber, currentBlock.start + currentBlock.length);
             if(cursorPosStart >= 0) {
               if (cursorPosStart < cursorPos) {
                 if(cursorPos > currentBlock.start + currentBlock.length / 2) {
@@ -317,10 +365,6 @@ export class SequenceEditor extends React.Component {
 
 
     };
-
-    this.onClick = (e) => {
-      
-    }
 
     this.onDoubleClickBlock = (block,start,length) => {
       this.onSelect(start+length,null,start);
@@ -854,7 +898,6 @@ export class SequenceEditor extends React.Component {
           overflowX: 'hidden',
         }, style)}
         onWheel={this.onScroll}
-        onClick={this.onClick}
         className="SequenceEditor"
       >
       </div>);
@@ -897,8 +940,6 @@ export class SequenceEditor extends React.Component {
 
         onScroll={this.onScroll}
         onClick={this.onClick}
-        onMouseDown={this.onMouseDown}
-        onMouseUp={this.onMouseUp}
         onKeyDown={this.onHotKey}
         className="SequenceEditor"
       >

@@ -4,6 +4,9 @@
 import React from 'react';
 import '../css/Onion.css';
 
+/**
+ * just the eye icon in the menu bar
+ */
 export class EyeIcon extends React.Component {
   static propTypes = {
     width: React.PropTypes.number,

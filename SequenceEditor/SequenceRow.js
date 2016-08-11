@@ -1,7 +1,7 @@
 import React from 'react';
 import { StrainText } from './StrainText';
-import { SequenceFeatureArrow } from './SequenceFeature';
-import { RulerLocation } from './RulerLocation';
+import { FeatureArrow } from './FeatureArrow';
+import { Ruler } from './Ruler';
 import { CDSBar } from './CDSBar';
 import { CuttingSite } from './CuttingSite';
 import { RestrictionSite } from './RestrictionSite';
@@ -193,7 +193,7 @@ export class SequenceRow extends React.Component {
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
       re.push(
-        <SequenceFeatureArrow
+        <FeatureArrow
           start={feature.start - idxStart}
           unitWidth={unitWidth}
           len={feature.len}
@@ -270,7 +270,7 @@ export class SequenceRow extends React.Component {
       const b = blocks[i];
       const connectorOffset = b.isConnector ? 18 : 0;
       re.push(
-        <SequenceFeatureArrow
+        <FeatureArrow
           start={b.start}
           len={b.len}
           unitWidth={unitWidth}
@@ -773,7 +773,7 @@ export class SequenceRow extends React.Component {
             }
 
             {showRuler &&
-            <RulerLocation
+            <Ruler
               x={0}
               y={ep.ruler2Y}
               width={sequenceRowWidth}

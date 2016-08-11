@@ -6,7 +6,7 @@ import { SequenceEditor } from './SequenceEditor/SequenceEditor';
 import { onionFile } from './OnionFile';
 import { InfoBar } from './InfoBar/InfoBar';
 import { loadEnzymeList } from './Bio/Enzyme';
-import { MenuBar } from './MenuBar';
+import { MenuBar } from './MenuBar/MenuBar';
 import { PlasmidViewer } from './PlasmidViewer';
 
 import { DNASeq } from './Bio/DNASeq';

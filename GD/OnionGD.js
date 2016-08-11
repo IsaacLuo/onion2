@@ -4,7 +4,7 @@
 import React from 'react';
 import { InfoBar } from './../InfoBar/InfoBar';
 import { loadEnzymeList } from './../Bio/Enzyme';
-import { MenuBar } from './../MenuBar';
+import { MenuBar } from '../MenuBar/MenuBar';
 import { PositionCalculator } from './../SequenceEditor/PositionCalculator';
 import { SequenceEditorFilter } from './../SequenceEditorFilter/SequenceEditorFilter';
 import { themeColor } from './defaultValues';
@@ -17,6 +17,29 @@ import './../css/GoogleFonts.css';
 /**
  * OnionGD assembles MenuBar, SequenceEditor and InfoBar together,
  * designed for genetic constructor
+ *
+ * structure:
+ *
+ * <OnionGD>
+ *  <MenuBar/>
+ *  <SequenceEditorFilter>
+ *    <SequenceEditor>
+ *      <SequenceRow>
+ *        <RestrictionSite/>
+ *        <CuttingSite/>
+ *        <StrainText/>
+ *        <FeatureArrow/>
+ *        <CDSBar>
+ *          <AminoAcidMarker/>
+ *        </CDSBar>
+ *        <Ruler/>
+ *      </SequenceRow>
+ *    </SeqeunceEditor>
+ *  </SequenceEditorFilter>
+ *  <InfoBar>
+ *    <NumericControlGD/>
+ *  </InfoBar>
+ * </OnionGD>
  */
 export class OnionGD extends React.Component {
 
@@ -241,6 +264,7 @@ export class OnionGD extends React.Component {
     //new Clipboard('.onionCopyButton');
   }
 
+
   render() {
     //console.log("render ogd", this.props, this.state);
     //set a minimum size;
@@ -266,20 +290,11 @@ export class OnionGD extends React.Component {
 
     let selectionStart = 0;
     let selectionLength = 0;
-    // let selectionStartReal = 0;
-    // let selectionLengthReal = 0;
-    // let selectedSeq = '';
+
 
     if (sequence) {
       selectionStart = Math.min(this.state.cursorPos, this.state.startCursorPos);
       selectionLength = Math.abs(this.state.cursorPos - this.state.startCursorPos);
-      // if(selectionLength>0) {
-      //   selectedSeq = sequence.substr(selectionStart, selectionLength);
-      // } else {
-      //   selectedSeq = sequence;
-      //}
-      // selectionStartReal = Math.min(this.state.cursorPosReal, this.state.startCursorPosReal);
-      // selectionLengthReal = Math.abs(this.state.cursorPosReal - this.state.startCursorPosReal);
     }
     const menuTitle = this.props.menuTitle;
 
