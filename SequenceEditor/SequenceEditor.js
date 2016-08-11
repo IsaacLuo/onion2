@@ -36,8 +36,8 @@ export class SequenceEditor extends React.Component {
     focus: React.PropTypes.bool,
     onQueryNewBlocks: React.PropTypes.func,
 
-    startRow: React.PropTypes.number,
-    endRow: React.PropTypes.number,
+    topRow: React.PropTypes.number,
+    bottomRow: React.PropTypes.number,
 
   };
   static defaultProps = {
@@ -157,18 +157,37 @@ export class SequenceEditor extends React.Component {
 
     this.onHotKey = (e) => {
       const { cursorPos } = this.state;
-      console.log(e.keyCode);
-      switch (e.keyCode) {
-        case 38: //up
-          break;
-        case 40: //down
-          break;
-        case 37: //left
-          this.setState({cursorPos: cursorPos-1});
-          break;
-        case 39: //right
-          this.setState({cursorPos: cursorPos+1});
-          break;
+      let newPos = cursorPos;
+      const currentRow = Math.floor(newPos / this.colNum);
+
+      if (e.keyCode>=37 && e.keyCode<=40) {
+        let offset =0;
+        switch (e.keyCode) {
+          case 38: //up
+            if ( cursorPos > this.colNum ) offset = -this.colNum;
+            break;
+          case 40: //down
+            if ( cursorPos < this.props.sequence.length - this.colNum ) offset = this.colNum;
+            break;
+          case 37: //left
+            if (cursorPos > 0) offset = -1;
+            break;
+          case 39: //right
+            if (cursorPos < this.props.sequence.length) offset = 1;
+            break;
+        }
+        newPos += offset;
+
+        this.setState({cursorPos: newPos});
+        const newRow = Math.floor(newPos / this.colNum);
+        if(this.props.onSetTopRow && this.props.topRow != undefined) {
+          const rowMove = newRow - currentRow;
+          if(rowMove !== 0 && this.props.topRow + rowMove >=0) {
+            console.log(rowMove);
+            this.props.onSetTopRow(this.props.topRow + rowMove);
+          }
+        }
+
       }
 
     }
@@ -662,11 +681,11 @@ export class SequenceEditor extends React.Component {
       }
     }
 
-    let { startRow, endRow } = this.props;
-    if (!startRow) startRow = 0;
-    if (!endRow || endRow> Math.ceil(sequence.length/colNum)) endRow = Math.ceil(sequence.length/colNum);
+    let { topRow, bottomRow } = this.props;
+    if (!topRow) topRow = 0;
+    if (!bottomRow || bottomRow> Math.ceil(sequence.length/colNum)) bottomRow = Math.ceil(sequence.length/colNum);
 
-    for (let i = startRow*colNum, rowCount = startRow; rowCount<endRow; i += colNum, rowCount++) {
+    for (let i = topRow*colNum, rowCount = topRow; rowCount<bottomRow; i += colNum, rowCount++) {
       const featureFrags = this.findFeaturesInRow(i, colNum);
       //let aaFrags = this.findAAInRow(i,colNum);
 
@@ -800,13 +819,13 @@ export class SequenceEditor extends React.Component {
 
 
   updateSequenceInWindow(){
-    let { startRow, endRow, sequence } = this.props;
+    let { topRow, bottomRow, sequence } = this.props;
 
-    if (!startRow) startRow = 0;
-    if (!endRow || endRow> Math.ceil(sequence.length/this.colNum)) endRow = Math.ceil(sequence.length/this.colNum);
+    if (!topRow) topRow = 0;
+    if (!bottomRow || bottomRow> Math.ceil(sequence.length/this.colNum)) bottomRow = Math.ceil(sequence.length/this.colNum);
 
     let updateSet = new Set();
-    for(let i = startRow; i<endRow; i++){
+    for(let i = topRow; i<bottomRow; i++){
       for( let j = 0; j< this.splitBlocks[i].length; j++)
       updateSet.add(this.splitBlocks[i][j].originalBlock);
     }
@@ -872,7 +891,10 @@ export class SequenceEditor extends React.Component {
           height,
           overflowY: {overflowY},
           overflowX: 'hidden',
+          outlineWidth: 0
         },style)}
+        tabIndex="0"
+
         onScroll={this.onScroll}
         onClick={this.onClick}
         onMouseDown={this.onMouseDown}
