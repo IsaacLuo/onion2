@@ -114,6 +114,7 @@ export class SequenceEditor extends React.Component {
       seqFontSize: 12,
       seqFontUnitWidth: 7.1943, //9.609375,
     };
+
     //Maybe I need to render a letter first, then calculate its size, it's necessary because
     // the letter width is little difference on different browser.
     this.seqMainStyle = {
@@ -124,14 +125,17 @@ export class SequenceEditor extends React.Component {
       alignmentBaseline: 'before-edge',
       WebkitUserSelect: 'none',
     };
+
     this.seqCompStyle = Object.assign({ ...this.seqMainStyle }, { fill: '#B7BBC2' });
     this.unitWidth = this.myCSS.seqFontUnitWidth;
 
+    // sequence object, used to calculate complement
     this.sequence = new DNASeq(props.sequence);
     if (props.enzymeList) {
       this.enzymeSites = this.sequence.calcEnzymeSites(props.enzymeList);
     }
 
+    //calculate amino acids
     this.aas = this.calcAAs(props.sequence, props.features);
 
     this.state = {
@@ -141,8 +145,8 @@ export class SequenceEditor extends React.Component {
       showSelection: false,
     };
 
+    //calculator for real position and display position
     this.positionCalculator = new PositionCalculator(props.blocks);
-
 
     //initial operations
     this.initialRowPos(props.sequence, props.width);
@@ -241,7 +245,11 @@ export class SequenceEditor extends React.Component {
 
     }
 
-    this.onSetCursor = (cursorPos, rowNumber) => {
+    /**
+     * clicking on a SequenceRow will call this function
+     * @param cursorPos : new position
+     */
+    this.onSetCursor = (cursorPos) => {
       if (_this.props.focus) {
         if (_this.props.blocks) {
           //shift if in emptyBlock
@@ -279,15 +287,22 @@ export class SequenceEditor extends React.Component {
       }
     };
 
-    this.onSelect = (cursorPos, cursorPosStart) => {
+    /**
+     * fire by clicking + shift-clicking from SequenceRow
+     * @param cursorPos
+     * @param cursorPosStart
+     */
+    this.onSelect = (_cursorPos, _cursorPosStart) => {
+      let cursorPos = _cursorPos;
+      let cursorPosStart = _cursorPosStart;
 
       if (_this.props.focus) {
         if (_this.props.blocks) {
           const currentBlock = _this.findBlockByIndex(cursorPos);
           if (currentBlock && currentBlock.realLength === 0) {
-            if(cursorPosStart >= 0) {
+            if (cursorPosStart >= 0) {
               if (cursorPosStart < cursorPos) {
-                if(cursorPos > currentBlock.start + currentBlock.length / 2) {
+                if (cursorPos > currentBlock.start + currentBlock.length / 2) {
                   cursorPos = currentBlock.start + currentBlock.length;
                 } else {
                   cursorPos = currentBlock.start;
@@ -298,7 +313,7 @@ export class SequenceEditor extends React.Component {
               cursorPos = currentBlock.start + currentBlock.length;
               cursorPosStart = currentBlock.start;
             } else {
-              if(cursorPos > currentBlock.start + currentBlock.length / 2) {
+              if (cursorPos > currentBlock.start + currentBlock.length / 2) {
                 cursorPos = currentBlock.start + currentBlock.length;
               } else {
                 cursorPos = currentBlock.start;
@@ -307,7 +322,7 @@ export class SequenceEditor extends React.Component {
           }
         }
 
-        if (cursorPosStart>=0) {
+        if (cursorPosStart >= 0) {
           _this.setState({
             cursorPos,
             showCursor: true,
@@ -325,17 +340,23 @@ export class SequenceEditor extends React.Component {
         }
 
         if (_this.props.onSelect) {
-          if (cursorPosStart>=0) {
+          if (cursorPosStart >= 0) {
             //console.log('full start', cursorPosStart, cursorPos);
-            _this.props.onSelect(cursorPos, cursorPosStart, this.uiPosToRealPos(cursorPos), this.uiPosToRealPos(cursorPosStart));
+            _this.props.onSelect(cursorPos,
+              cursorPosStart,
+              this.uiPosToRealPos(cursorPos),
+              this.uiPosToRealPos(cursorPosStart));
           } else {
-            _this.props.onSelect(cursorPos, _this.state.selectStartPos, this.uiPosToRealPos(cursorPos), this.uiPosToRealPos(cursorPosStart));
+            _this.props.onSelect(cursorPos,
+              _this.state.selectStartPos,
+              this.uiPosToRealPos(cursorPos),
+              this.uiPosToRealPos(cursorPosStart));
           }
         }
       }
     };
 
-    this.onSetHighLight = (highLightStart, rowNumber, highLightEnd, rowNumberStart) => {
+    this.onSetHighLight = (highLightStart, highLightEnd) => {
       if (highLightStart === highLightEnd) {
         this.setState({
           highLightStart,
@@ -353,6 +374,11 @@ export class SequenceEditor extends React.Component {
       }
     };
 
+    /**
+     * Not finished yet, need more accurate method.
+     * @param row
+     * @param height
+     */
     this.onRowCalculatedHeight = (row, height) => {
       _this.rowHeight[row] = height;
       if (row > 0) {
@@ -360,39 +386,55 @@ export class SequenceEditor extends React.Component {
       } else {
         _this.rowY[0] = 0;
       }
-
-      //test if it in window, if yes, updateSequence
-
-
     };
 
-    this.onDoubleClickBlock = (block,start,length) => {
-      this.onSelect(start+length,null,start);
+    /**
+     * double click to select the span of block
+     * @param block
+     * @param start
+     * @param length
+     */
+    this.onDoubleClickBlock = (block, start, length) => {
+      this.onSelect(start + length, null, start);
     }
 
+    /**
+     * converter from display position to real position
+     */
     this.uiPosToRealPos = this.positionCalculator.uiPosToRealPos.bind(this.positionCalculator);
 
+    /**
+     * converter from real position to display position
+     */
     this.realPosTouiPos = this.positionCalculator.realPosTouiPos(this.positionCalculator);
 
+    /**
+     * copy Forward stand to clipboard, need clipboard_js
+     */
     this.onCopyForward = () => {
-      const {cursorPos, selectStartPos} = this.state;
+      const { cursorPos, selectStartPos } = this.state;
       const left = Math.min(cursorPos, selectStartPos);
       const right = Math.max(cursorPos, selectStartPos);
-      const sub = this.props.sequence.substring(left,right)
+      const sub = this.props.sequence.substring(left, right)
       clipboard.copy(sub);
-      console.log('copied:',sub);
+      console.log('copied:', sub);
     }
 
+    /**
+     * copy reverse stand to clipboard, need clipboard_js
+     */
     this.onCopyReverse = () => {
-      const {cursorPos, selectStartPos} = this.state;
+      const { cursorPos, selectStartPos } = this.state;
       const left = Math.min(cursorPos, selectStartPos);
       const right = Math.max(cursorPos, selectStartPos);
-      const sub = new DNASeq(this.props.sequence.substring(left,right)).reverseComplement().toString();
+      const sub = new DNASeq(this.props.sequence.substring(left, right))
+        .reverseComplement()
+        .toString();
       clipboard.copy(sub);
-      console.log('copied:',sub);
+      console.log('copied:', sub);
     }
 
-  }
+  } //end of initCallback();
 
   findBlockByIndex(index) {
     const { blocks } = this.props;
