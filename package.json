@@ -7,7 +7,10 @@
     "readable": "Sequence Detail"
   },
   "scripts": {
-    "build": "npm install && webpack -d main.js index.js"
+    "build": "npm install && webpack -d main.js index.js",
+    "debug": "./node_modules/.bin/webpack --config webpack.config.debug.js",
+    "release": "./node_modules/.bin/webpack --optimize-minimize",
+    "watch" : "./node_modules/.bin/webpack --watch"
   },
   "devDependencies": {
     "autoprefixer": "^6.3.3",
