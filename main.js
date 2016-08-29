@@ -214,4 +214,4 @@ function render(container, options) {
 
 }
 
-window.constructor.extensions.register('SequenceDetail', render);
+window.constructor.extensions.register('SequenceDetail', 'projectDetail', render);
