@@ -3,8 +3,14 @@
   "version": "2.1.1",
   "description": "Onion Extensions",
   "geneticConstructor": {
-    "region": "projectDetail",
-    "readable": "Sequence Detail"
+    "readable": "Sequence Detail",
+    "type": "Sequence Viewer",
+    "client": [
+      {
+        "file": "index.js",
+        "region": "projectDetail"
+      }
+    ]
   },
   "scripts": {
     "build": "npm install && webpack -d main.js index.js"
